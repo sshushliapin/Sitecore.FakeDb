@@ -22,7 +22,7 @@
       provider.CreateItem(itemId, ItemName, templateId, null, null);
 
       // assert
-      provider.ItemDefinitions[itemId].ShouldBeEquivalentTo(itemDefinition);
+      provider.DataStorage.ItemDefinitions[itemId].ShouldBeEquivalentTo(itemDefinition);
     }
 
     [Fact]
@@ -33,7 +33,7 @@
       var itemId = ID.NewID;
       var itemDefinition = new ItemDefinition(itemId, "home", ID.NewID, ID.Null);
 
-      provider.ItemDefinitions.Add(itemId, itemDefinition);
+      provider.DataStorage.ItemDefinitions.Add(itemId, itemDefinition);
 
       // act
       var result = provider.GetItemDefinition(itemId, null);

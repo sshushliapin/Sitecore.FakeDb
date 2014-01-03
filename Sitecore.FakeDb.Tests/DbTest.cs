@@ -20,7 +20,7 @@
     }
 
     [Fact]
-    public void ShouldCreateItem()
+    public void ShouldCreateItemUnderSitecoreContent()
     {
       var id = ID.NewID;
 
@@ -66,7 +66,9 @@
 
     public void Add(FItem item)
     {
-      ItemManager.CreateItem(item.Name, null, item.TemplateId);
+      var root = this.Database.GetItem(ItemIDs.ContentRoot);
+
+      ItemManager.CreateItem(item.Name, root, item.TemplateId);
     }
 
     public void Dispose()

@@ -1,28 +1,27 @@
 ﻿namespace Sitecore.FakeDb.Data.DataProviders
 {
-  using System.Collections.Generic;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
 
   public class FakeDbDataProvider : DataProvider
   {
-    private readonly IDictionary<ID, ItemDefinition> itemDefinitions = new Dictionary<ID, ItemDefinition>();
+    private readonly FakeDbDataStorage dataStorage = new FakeDbDataStorage();
 
-    public IDictionary<ID, ItemDefinition> ItemDefinitions
+    public FakeDbDataStorage DataStorage
     {
-      get { return this.itemDefinitions; }
+      get { return this.dataStorage; }
     }
 
     public override bool CreateItem(ID itemId, string itemName, ID templateId, ItemDefinition parent, CallContext context)
     {
-      this.ItemDefinitions.Add(itemId, new ItemDefinition(itemId, itemName, templateId, ID.Null));
+      this.DataStorage.ItemDefinitions.Add(itemId, new ItemDefinition(itemId, itemName, templateId, ID.Null));
 
       return base.CreateItem(itemId, itemName, templateId, parent, context);
     }
 
     public override ItemDefinition GetItemDefinition(ID itemId, CallContext context)
     {
-      return this.ItemDefinitions[itemId];
+      return this.DataStorage.ItemDefinitions[itemId];
     }
   }
 }
