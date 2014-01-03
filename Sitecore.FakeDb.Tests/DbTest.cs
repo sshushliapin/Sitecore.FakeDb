@@ -24,22 +24,35 @@
     {
       var id = ID.NewID;
 
-      using (var db = new Db { new FItem(id) })
+      using (var db = new Db { new FItem("myitem", id) })
       {
-        db.Database.GetItem(id).Should().NotBeNull();
+        var d = db.Database;
+        var i = d.GetItem(id);
+
+        i.Should().NotBeNull();
       }
     }
   }
 
   public class FItem
   {
-    public FItem(ID id)
+    public FItem(string name)
+      : this(name, ID.NewID)
     {
     }
 
-    public string Name { get; set; }
+    public FItem(string name, ID id)
+    {
+      this.Name = name;
+      this.ID = id;
+      this.TemplateID = ID.NewID;
+    }
 
-    public ID TemplateId { get; set; }
+    public string Name { get; private set; }
+
+    public ID ID { get; private set; }
+
+    public ID TemplateID { get; private set; }
   }
 
   public class Db : IDisposable, IEnumerable
@@ -53,10 +66,7 @@
 
     public Database Database
     {
-      get
-      {
-        return this.database;
-      }
+      get { return this.database; }
     }
 
     public IEnumerator GetEnumerator()
@@ -68,7 +78,8 @@
     {
       var root = this.Database.GetItem(ItemIDs.ContentRoot);
 
-      ItemManager.CreateItem(item.Name, root, item.TemplateId);
+      var i = ItemManager.CreateItem(item.Name, root, item.TemplateID);
+      Diagnostics.Assert.IsNotNull(i, "Unable to create an item.");
     }
 
     public void Dispose()

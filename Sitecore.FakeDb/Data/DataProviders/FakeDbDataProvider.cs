@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.DataProviders
 {
+  using Sitecore.Collections;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
 
@@ -16,12 +17,12 @@
     {
       this.DataStorage.ItemDefinitions.Add(itemId, new ItemDefinition(itemId, itemName, templateId, ID.Null));
 
-      return base.CreateItem(itemId, itemName, templateId, parent, context);
+      return true;
     }
 
     public override ItemDefinition GetItemDefinition(ID itemId, CallContext context)
     {
-      return this.DataStorage.ItemDefinitions[itemId];
+      return this.DataStorage.ItemDefinitions.ContainsKey(itemId) ? this.DataStorage.ItemDefinitions[itemId] : null;
     }
   }
 }

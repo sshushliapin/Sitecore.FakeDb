@@ -61,6 +61,7 @@
     <Compile Include="Data\DataProviders\FakeDbDataProviderTest.cs" />
     <Compile Include="Data\FakeDbDataStorageTest.cs" />
     <Compile Include="DbTest.cs" />
+    <Compile Include="FItemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityModel\FakeDomainProviderTest.cs" />
     <Compile Include="Security\FakeAuthorizationProviderTest.cs" />
