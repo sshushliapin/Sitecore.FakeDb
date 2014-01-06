@@ -50,15 +50,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Engines\DataCommands\FakeSaveItemCommand.cs" />
     <Compile Include="Data\FakeDatabase.cs" />
     <Compile Include="Data\DataProviders\FakeDbDataProvider.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Engines\FakeDbDataEngine.cs" />
     <Compile Include="Data\Engines\MemoryHistoryStorage.cs" />
     <Compile Include="Data\Engines\DataCommands\GetItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\CreateItemCommand.cs" />
     <Compile Include="Data\Engines\FakeDbDataStorage.cs" />
+    <Compile Include="Data\Items\ItemHelper.cs" />
     <Compile Include="Db.cs" />
     <Compile Include="FItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

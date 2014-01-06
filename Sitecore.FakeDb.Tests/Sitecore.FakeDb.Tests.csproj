@@ -59,7 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\SettingsTest.cs" />
+    <Compile Include="Data\Engines\DataCommands\FakeCreateItemCommandTest.cs" />
+    <Compile Include="Data\Engines\DataCommands\FakeSaveItemCommandTest.cs" />
     <Compile Include="Data\FakeDbDataStorageTest.cs" />
+    <Compile Include="Data\Items\ItemHelperTest.cs" />
     <Compile Include="DbTest.cs" />
     <Compile Include="FItemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

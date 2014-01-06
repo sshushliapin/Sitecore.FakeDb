@@ -2,9 +2,8 @@
 {
   using FluentAssertions;
   using Sitecore.Data;
-  using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Engines;
-  using Sitecore.Globalization;
+  using Sitecore.FakeDb.Data.Items;
   using Xunit;
   using Xunit.Extensions;
 
@@ -16,7 +15,7 @@
 
     public FakeDbDataStorageTest()
     {
-      database = Database.GetDatabase("master");
+      this.database = Database.GetDatabase("master");
       dataStorage = new FakeDbDataStorage(this.database);
     }
 
@@ -41,7 +40,7 @@
       // arrange
 
       var itemId = ID.NewID;
-      var item = this.CreateItem(itemId, "new item", ID.NewID);
+      var item = ItemHelper.CreateInstance("new item", itemId, ID.NewID, database);
 
       this.dataStorage.Items.Add(itemId, item);
 
@@ -53,11 +52,6 @@
       this.dataStorage.Items.ContainsKey(ItemIDs.RootID).Should().BeTrue();
       this.dataStorage.Items.ContainsKey(ItemIDs.ContentRoot).Should().BeTrue();
       this.dataStorage.Items.ContainsKey(ItemIDs.TemplateRoot).Should().BeTrue();
-    }
-
-    private Item CreateItem(ID itemId, string itemName, ID templateId)
-    {
-      return new Item(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), Language.Invariant, Version.First, new FieldList()), this.database);
     }
   }
 }

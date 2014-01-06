@@ -6,6 +6,13 @@
 
   public class DbTest
   {
+    private readonly ID itemId;
+
+    public DbTest()
+    {
+      itemId = ID.NewID;
+    }
+
     [Fact]
     public void ShouldHaveDefaultMasterDatabase()
     {
@@ -31,7 +38,7 @@
     }
 
     [Fact]
-    public void ShouldCreateItemUnderSitecoreContent()
+    public void ShouldCreateSimpleItem()
     {
       // arrange
       var id = new ID("{91494A40-B2AE-42B5-9469-1C7B023B886B}");
@@ -47,18 +54,36 @@
       }
     }
 
+    /// <summary>
+    /// Shoulds the cleanup items after dispose.
+    /// </summary>
     [Fact]
-    public void ShouldResetItemsInDatastorageOnDispose()
+    public void ShouldCleanupItemsAfterDispose()
     {
-      // arrage
-      var id = ID.NewID;
-
-      using (new Db { new FItem("myitem", id) })
+      // act
+      using (new Db { new FItem("myitem", this.itemId) })
       {
-        Database.GetDatabase("master").GetItem(id).Should().NotBeNull();
+        Database.GetDatabase("master").GetItem(this.itemId).Should().NotBeNull();
       }
 
-      Database.GetDatabase("master").GetItem(id).Should().BeNull();
+      // assert
+      Database.GetDatabase("master").GetItem(this.itemId).Should().BeNull();
+    }
+
+    [Fact]
+    public void ShouldCreateItemWithFields()
+    {
+      // act
+      using (var db = new Db
+               {
+                 new FItem("home", itemId) { {"Title", "Welcome!"}  }
+               })
+      {
+        var item = db.Database.GetItem(itemId);
+
+        // assert
+        item["Title"].Should().Be("Welcome!");
+      }
     }
   }
 }

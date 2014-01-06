@@ -3,7 +3,7 @@ namespace Sitecore.FakeDb.Data.Engines
   using System.Collections.Generic;
   using Sitecore.Data;
   using Sitecore.Data.Items;
-  using Sitecore.Globalization;
+  using Sitecore.FakeDb.Data.Items;
 
   public class FakeDbDataStorage
   {
@@ -37,9 +37,9 @@ namespace Sitecore.FakeDb.Data.Engines
 
     private void FillStandardItemDefinitions()
     {
-      this.items.Add(ItemIDs.RootID, new Item(ItemIDs.RootID, new ItemData(new ItemDefinition(ItemIDs.RootID, "sitecore", RootTemplateId, ID.Null), Language.Invariant, Version.First, new FieldList()), this.Database));
-      this.items.Add(ItemIDs.ContentRoot, new Item(ItemIDs.ContentRoot, new ItemData(new ItemDefinition(ItemIDs.ContentRoot, "content", TemplateIDs.MainSection, ID.Null), Language.Invariant, Version.First, new FieldList()), this.Database));
-      this.items.Add(ItemIDs.TemplateRoot, new Item(ItemIDs.TemplateRoot, new ItemData(new ItemDefinition(ItemIDs.TemplateRoot, "templates", TemplateIDs.MainSection, ID.Null), Language.Invariant, Version.First, new FieldList()), this.Database));
+      this.items.Add(ItemIDs.RootID, ItemHelper.CreateInstance("sitecore", ItemIDs.RootID, RootTemplateId, this.Database));
+      this.items.Add(ItemIDs.ContentRoot, ItemHelper.CreateInstance("content", ItemIDs.ContentRoot, TemplateIDs.MainSection, this.Database));
+      this.items.Add(ItemIDs.TemplateRoot, ItemHelper.CreateInstance("templates", ItemIDs.TemplateRoot, TemplateIDs.MainSection, this.Database));
     }
   }
 }
