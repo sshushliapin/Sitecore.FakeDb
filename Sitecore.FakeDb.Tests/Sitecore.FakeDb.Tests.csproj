@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\SettingsTest.cs" />
     <Compile Include="Data\FakeDbDataStorageTest.cs" />
     <Compile Include="DbTest.cs" />
     <Compile Include="FItemTest.cs" />

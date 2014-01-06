@@ -4,6 +4,7 @@ namespace Sitecore.FakeDb
   using System.Collections;
   using Sitecore.Data;
   using Sitecore.Data.Managers;
+  using Sitecore.FakeDb.Data;
 
   public class Db : IDisposable, IEnumerable
   {
@@ -34,6 +35,7 @@ namespace Sitecore.FakeDb
 
     public void Dispose()
     {
+      ((FakeDatabase)this.database).DataStorage.Reset();
     }
   }
 }

@@ -2,7 +2,6 @@
 {
   using FluentAssertions;
   using Sitecore.Data;
-  using Sitecore.SecurityModel;
   using Xunit;
 
   public class DbTest
@@ -49,10 +48,17 @@
     }
 
     [Fact]
-    public void ShouldResetItemsInDatastorageOnExit()
+    public void ShouldResetItemsInDatastorageOnDispose()
     {
       // arrage
+      var id = ID.NewID;
 
+      using (new Db { new FItem("myitem", id) })
+      {
+        Database.GetDatabase("master").GetItem(id).Should().NotBeNull();
+      }
+
+      Database.GetDatabase("master").GetItem(id).Should().BeNull();
     }
   }
 }
