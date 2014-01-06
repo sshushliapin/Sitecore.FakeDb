@@ -1,10 +1,8 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
-  using System;
-  using System.Collections;
   using FluentAssertions;
   using Sitecore.Data;
-  using Sitecore.Data.Managers;
+  using Sitecore.SecurityModel;
   using Xunit;
 
   public class DbTest
@@ -20,70 +18,41 @@
     }
 
     [Fact]
-    public void ShouldCreateItemUnderSitecoreContent()
+    public void ShouldReadDefaultContentItem()
     {
-      var id = ID.NewID;
-
-      using (var db = new Db { new FItem("myitem", id) })
+      // arrange
+      using (var db = new Db())
       {
-        var d = db.Database;
-        var i = d.GetItem(id);
+        // act
+        var item = db.Database.GetItem(ItemIDs.ContentRoot);
 
-        i.Should().NotBeNull();
+        // assert
+        item.Should().NotBeNull();
       }
     }
-  }
 
-  public class FItem
-  {
-    public FItem(string name)
-      : this(name, ID.NewID)
+    [Fact]
+    public void ShouldCreateItemUnderSitecoreContent()
     {
+      // arrange
+      var id = new ID("{91494A40-B2AE-42B5-9469-1C7B023B886B}");
+
+      // act
+      using (var db = new Db { new FItem("myitem", id) })
+      {
+        var i = db.Database.GetItem(id);
+
+        // assert
+        i.Should().NotBeNull();
+        i.Name.Should().Be("myitem");
+      }
     }
 
-    public FItem(string name, ID id)
+    [Fact]
+    public void ShouldResetItemsInDatastorageOnExit()
     {
-      this.Name = name;
-      this.ID = id;
-      this.TemplateID = ID.NewID;
-    }
+      // arrage
 
-    public string Name { get; private set; }
-
-    public ID ID { get; private set; }
-
-    public ID TemplateID { get; private set; }
-  }
-
-  public class Db : IDisposable, IEnumerable
-  {
-    private readonly Database database;
-
-    public Db()
-    {
-      this.database = Database.GetDatabase("master");
-    }
-
-    public Database Database
-    {
-      get { return this.database; }
-    }
-
-    public IEnumerator GetEnumerator()
-    {
-      throw new NotImplementedException();
-    }
-
-    public void Add(FItem item)
-    {
-      var root = this.Database.GetItem(ItemIDs.ContentRoot);
-
-      var i = ItemManager.CreateItem(item.Name, root, item.TemplateID);
-      Diagnostics.Assert.IsNotNull(i, "Unable to create an item.");
-    }
-
-    public void Dispose()
-    {
     }
   }
 }

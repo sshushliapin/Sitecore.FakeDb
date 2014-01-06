@@ -2,12 +2,24 @@
 {
   using FluentAssertions;
   using Sitecore.Data;
-  using Sitecore.FakeDb.Data;
+  using Sitecore.Data.Items;
+  using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.Globalization;
   using Xunit;
   using Xunit.Extensions;
 
   public class FakeDbDataStorageTest
   {
+    private readonly Database database;
+
+    private readonly FakeDbDataStorage dataStorage;
+
+    public FakeDbDataStorageTest()
+    {
+      database = Database.GetDatabase("master");
+      dataStorage = new FakeDbDataStorage(this.database);
+    }
+
     private const string RootId = "{11111111-1111-1111-1111-111111111111}";
     private const string ContentRoot = "{0DE95AE4-41AB-4D01-9EB0-67441B7C2450}";
     private const string TemplateRoot = "{3C1715FE-6A13-4FCF-845F-DE308BA9741D}";
@@ -18,32 +30,34 @@
     [InlineData(TemplateRoot, "templates", "{E3E2D58C-DF95-4230-ADC9-279924CECE84}")]
     public void ShouldInitializeDefaultSitecoreItems(string itemId, string itemName, string templateId)
     {
-      // arrange
-      var dataStorage = new FakeDbDataStorage();
-
       // assert
-      dataStorage.ItemDefinitions[ID.Parse(itemId)].ShouldBeEquivalentTo(new ItemDefinition(ID.Parse(itemId), itemName, ID.Parse(templateId), ID.Null));
+      dataStorage.Items[ID.Parse(itemId)].Name.Should().Be(itemName);
+      dataStorage.Items[ID.Parse(itemId)].TemplateID.ToString().Should().Be(templateId);
     }
 
     [Fact]
     public void ShouldResetItemDefinitionsToDefault()
     {
       // arrange
-      var dataStorage = new FakeDbDataStorage();
 
       var itemId = ID.NewID;
-      var newItemDefinition = new ItemDefinition(itemId, "new item", ID.NewID, ID.Null);
+      var item = this.CreateItem(itemId, "new item", ID.NewID);
 
-      dataStorage.ItemDefinitions.Add(itemId, newItemDefinition);
+      this.dataStorage.Items.Add(itemId, item);
 
       // act
-      dataStorage.Reset();
+      this.dataStorage.Reset();
 
       // assert
-      dataStorage.ItemDefinitions.ContainsKey(itemId).Should().BeFalse();
-      dataStorage.ItemDefinitions.ContainsKey(ItemIDs.RootID).Should().BeTrue();
-      dataStorage.ItemDefinitions.ContainsKey(ItemIDs.ContentRoot).Should().BeTrue();
-      dataStorage.ItemDefinitions.ContainsKey(ItemIDs.TemplateRoot).Should().BeTrue();
+      this.dataStorage.Items.ContainsKey(itemId).Should().BeFalse();
+      this.dataStorage.Items.ContainsKey(ItemIDs.RootID).Should().BeTrue();
+      this.dataStorage.Items.ContainsKey(ItemIDs.ContentRoot).Should().BeTrue();
+      this.dataStorage.Items.ContainsKey(ItemIDs.TemplateRoot).Should().BeTrue();
+    }
+
+    private Item CreateItem(ID itemId, string itemName, ID templateId)
+    {
+      return new Item(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), Language.Invariant, Version.First, new FieldList()), this.database);
     }
   }
 }

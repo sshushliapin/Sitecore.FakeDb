@@ -50,13 +50,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\DataProviders\FakeDbDataProvider.cs" />
-    <Compile Include="Data\FakeDbDataStorage.cs" />
+    <Compile Include="Data\FakeDatabase.cs" />
+    <Compile Include="Data\DataProviders\FakeDbDataProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Engines\FakeDbDataEngine.cs" />
+    <Compile Include="Data\Engines\MemoryHistoryStorage.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\CreateItemCommand.cs" />
+    <Compile Include="Data\Engines\FakeDbDataStorage.cs" />
+    <Compile Include="Db.cs" />
+    <Compile Include="FItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\AccessControl\FakeAuthorizationProvider.cs" />
     <Compile Include="Security\AccessControl\FakeAccessRightProvider.cs" />
     <Compile Include="SecurityModel\FakeDomainProvider.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
