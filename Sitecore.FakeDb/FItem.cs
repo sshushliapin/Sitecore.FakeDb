@@ -12,11 +12,18 @@ namespace Sitecore.FakeDb
     }
 
     public FItem(string name, ID id)
+      : this(name, id, ID.NewID)
+    {
+    }
+
+    public FItem(string name, ID id, ID templateId)
     {
       this.Name = name;
       this.ID = id;
-      this.TemplateID = ID.NewID;
+      this.TemplateID = templateId;
       this.Fields = new Dictionary<string, object>();
+      this.ParentID = ItemIDs.ContentRoot;
+      this.FullPath = Constants.ContentPath + "/" + name;
     }
 
     public string Name { get; private set; }
@@ -26,6 +33,10 @@ namespace Sitecore.FakeDb
     public ID TemplateID { get; private set; }
 
     public IDictionary<string, object> Fields { get; private set; }
+
+    public ID ParentID { get; set; }
+
+    public string FullPath { get; set; }
 
     public void Add(string fieldName, string fieldValue)
     {

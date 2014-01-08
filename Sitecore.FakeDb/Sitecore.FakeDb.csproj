@@ -50,7 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Engines\DataCommands\FakeSaveItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\CommandHelper.cs" />
+    <Compile Include="Data\Engines\DataCommands\SaveItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\ResolvePathCommand.cs" />
     <Compile Include="Data\FakeDatabase.cs" />
     <Compile Include="Data\DataProviders\FakeDbDataProvider.cs">
       <SubType>Code</SubType>

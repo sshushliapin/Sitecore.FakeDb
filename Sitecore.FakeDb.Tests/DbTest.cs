@@ -71,6 +71,26 @@
     }
 
     [Fact]
+    public void ShouldGetItemByPath()
+    {
+      // arrange
+      using (var db = new Db { new FItem("my item") })
+      {
+        db.Database.GetItem("/sitecore/content/my item").Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateItemTemplate()
+    {
+      // arrange & act
+      using (var db = new Db { new FItem("my item") })
+      {
+        db.Database.GetTemplate("/sitecore/templates/my item").Should().NotBeNull();
+      }
+    }
+
+    [Fact]
     public void ShouldCreateItemWithFields()
     {
       // act

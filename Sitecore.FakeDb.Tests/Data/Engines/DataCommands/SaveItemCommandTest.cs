@@ -8,20 +8,21 @@
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
+  using SaveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.SaveItemCommand;
 
-  public class FakeSaveItemCommandTest
+  public class SaveItemCommandTest
   {
     [Fact]
     public void ShouldCreateInstance()
     {
       // arrange
-      var command = new OpenFakeSaveItemCommand();
+      var command = new OpenSaveItemCommand();
 
       // act
       var instance = command.CreateInstance();
 
       // assert
-      instance.Should().BeOfType<FakeSaveItemCommand>();
+      instance.Should().BeOfType<SaveItemCommand>();
     }
 
     [Fact]
@@ -39,7 +40,7 @@
       var fields = new FieldList { { fieldId, "updated title" } };
       var updatedItem = ItemHelper.CreateInstance("updated item", itemId, fields);
 
-      var command = new OpenFakeSaveItemCommand();
+      var command = new OpenSaveItemCommand();
       command.Initialize(updatedItem);
       command.Engine = new DataEngine(database);
 
@@ -51,9 +52,9 @@
       database.DataStorage.Items[itemId][fieldId].Should().Be("updated title");
     }
 
-    private class OpenFakeSaveItemCommand : FakeSaveItemCommand
+    private class OpenSaveItemCommand : SaveItemCommand
     {
-      public new SaveItemCommand CreateInstance()
+      public new Sitecore.Data.Engines.DataCommands.SaveItemCommand CreateInstance()
       {
         return base.CreateInstance();
       }

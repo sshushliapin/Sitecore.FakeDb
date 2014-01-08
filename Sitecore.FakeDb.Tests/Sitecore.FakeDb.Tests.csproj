@@ -59,8 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\SettingsTest.cs" />
-    <Compile Include="Data\Engines\DataCommands\FakeCreateItemCommandTest.cs" />
-    <Compile Include="Data\Engines\DataCommands\FakeSaveItemCommandTest.cs" />
+    <Compile Include="Data\Engines\DataCommands\CreateItemCommandTest.cs" />
+    <Compile Include="Data\Engines\DataCommands\SaveItemCommandTest.cs" />
+    <Compile Include="Data\Engines\DataCommands\ResolvePathCommandTest.cs" />
     <Compile Include="Data\FakeDbDataStorageTest.cs" />
     <Compile Include="Data\Items\ItemHelperTest.cs" />
     <Compile Include="DbTest.cs" />

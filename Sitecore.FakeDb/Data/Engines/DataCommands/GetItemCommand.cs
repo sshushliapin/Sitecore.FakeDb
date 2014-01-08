@@ -1,19 +1,17 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using Sitecore.Data.Engines.DataCommands;
   using Sitecore.Data.Items;
 
-  public class FakeGetItemCommand : GetItemCommand
+  public class GetItemCommand : Sitecore.Data.Engines.DataCommands.GetItemCommand
   {
-    protected override GetItemCommand CreateInstance()
+    protected override Sitecore.Data.Engines.DataCommands.GetItemCommand CreateInstance()
     {
-      return new FakeGetItemCommand();
+      return new GetItemCommand();
     }
 
     protected override Item DoExecute()
     {
-      var database = (FakeDatabase)this.Database;
-      var dataStorage = database.DataStorage;
+      var dataStorage = CommandHelper.GetDataStorage(this);
 
       return dataStorage.Items.ContainsKey(ItemId) ? dataStorage.Items[ItemId] : null;
     }
