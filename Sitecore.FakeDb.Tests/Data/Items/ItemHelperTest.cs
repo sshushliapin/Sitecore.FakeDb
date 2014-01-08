@@ -30,7 +30,7 @@
       var database = Database.GetDatabase("master");
 
       // arrange
-      var item = ItemHelper.CreateInstance(Name, id, templateId, database);
+      var item = ItemHelper.CreateInstance(Name, id, templateId, new FieldList(), database);
 
       // assert
       item.Name.Should().Be(Name);

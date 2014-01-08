@@ -40,7 +40,7 @@
       // arrange
 
       var itemId = ID.NewID;
-      var item = ItemHelper.CreateInstance("new item", itemId, ID.NewID, database);
+      var item = ItemHelper.CreateInstance("new item", itemId, ID.NewID, new FieldList(), database);
 
       this.dataStorage.Items.Add(itemId, item);
 

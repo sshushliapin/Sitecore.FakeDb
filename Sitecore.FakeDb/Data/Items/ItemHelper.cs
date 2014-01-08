@@ -13,12 +13,17 @@
 
     public static Item CreateInstance(string itemName, ID itemId)
     {
-      return CreateInstance(itemName, itemId, ID.NewID, Database.GetDatabase("master"));
+      return CreateInstance(itemName, itemId, new FieldList());
     }
 
-    public static Item CreateInstance(string itemName, ID itemId, ID templateId, Database database)
+    public static Item CreateInstance(string itemName, ID itemId, FieldList fields)
     {
-      return new Item(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), Language.Invariant, Version.First, new FieldList()), database);
+      return CreateInstance(itemName, itemId, ID.NewID, fields, Database.GetDatabase("master"));
+    }
+
+    public static Item CreateInstance(string itemName, ID itemId, ID templateId, FieldList fields, Database database)
+    {
+      return new Item(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), Language.Invariant, Version.First, fields), database);
     }
   }
 }

@@ -37,9 +37,9 @@ namespace Sitecore.FakeDb.Data.Engines
 
     private void FillStandardItemDefinitions()
     {
-      this.items.Add(ItemIDs.RootID, ItemHelper.CreateInstance("sitecore", ItemIDs.RootID, RootTemplateId, this.Database));
-      this.items.Add(ItemIDs.ContentRoot, ItemHelper.CreateInstance("content", ItemIDs.ContentRoot, TemplateIDs.MainSection, this.Database));
-      this.items.Add(ItemIDs.TemplateRoot, ItemHelper.CreateInstance("templates", ItemIDs.TemplateRoot, TemplateIDs.MainSection, this.Database));
+      this.items.Add(ItemIDs.RootID, ItemHelper.CreateInstance("sitecore", ItemIDs.RootID, RootTemplateId, new FieldList(), this.Database));
+      this.items.Add(ItemIDs.ContentRoot, ItemHelper.CreateInstance("content", ItemIDs.ContentRoot, TemplateIDs.MainSection, new FieldList(), this.Database));
+      this.items.Add(ItemIDs.TemplateRoot, ItemHelper.CreateInstance("templates", ItemIDs.TemplateRoot, TemplateIDs.MainSection, new FieldList(), this.Database));
     }
   }
 }
