@@ -8,9 +8,9 @@
     public FakeDatabase(string name)
       : base(name)
     {
-      this.DataStorage = new FakeDbDataStorage(this);
+      this.DataStorage = new DataStorage(this);
     }
 
-    public FakeDbDataStorage DataStorage { get; private set; }
+    public DataStorage DataStorage { get; private set; }
   }
 }

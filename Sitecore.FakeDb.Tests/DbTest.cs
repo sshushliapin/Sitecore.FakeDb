@@ -83,10 +83,19 @@
     [Fact]
     public void ShouldCreateItemTemplate()
     {
-      // arrange & act
-      using (var db = new Db { new FItem("my item") })
+      // arrange
+      var templateId = ID.NewID;
+
+      // act
+      using (var db = new Db { new FItem("my item", itemId, templateId) })
       {
-        db.Database.GetTemplate("/sitecore/templates/my item").Should().NotBeNull();
+        // assert
+        var templateItem = db.Database.GetItem(templateId);
+        templateItem.Should().NotBeNull();
+        templateItem.Name.Should().Be("my item");
+        templateItem.ID.Should().Be(templateId);
+        templateItem.TemplateID.Should().Be(TemplateIDs.Template);
+        templateItem.Paths.FullPath.Should().Be("/sitecore/templates/my item");
       }
     }
 

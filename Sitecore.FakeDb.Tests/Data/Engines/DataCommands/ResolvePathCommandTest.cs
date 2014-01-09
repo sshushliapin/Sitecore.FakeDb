@@ -8,12 +8,16 @@
 
   public class ResolvePathCommandTest
   {
+    private readonly OpenResolvePathCommand command;
+
+    public ResolvePathCommandTest()
+    {
+      this.command = new OpenResolvePathCommand { Engine = new DataEngine(Database.GetDatabase("master")) };
+    }
+
     [Fact]
     public void ShouldCreateInstance()
     {
-      // arrange
-      var command = new OpenResolvePathCommand();
-
       // act & assert
       command.CreateInstance().Should().BeOfType<ResolvePathCommand>();
     }
@@ -23,8 +27,6 @@
     {
       // arrange
       const string Path = "/sitecore/content";
-
-      var command = new OpenResolvePathCommand { Engine = new DataEngine(Database.GetDatabase("master")) };
       command.Initialize(Path);
 
       // act
@@ -32,6 +34,19 @@
 
       // assert
       id.Should().Be(ItemIDs.ContentRoot);
+    }
+
+    [Fact]
+    public void ShouldReturnNullIfNoItemFound()
+    {
+      const string Path = "/sitecore/content/some path";
+      this.command.Initialize(Path);
+
+      // act
+      var id = this.command.DoExecute();
+
+      // assert
+      id.Should().BeNull();
     }
 
     private class OpenResolvePathCommand : ResolvePathCommand

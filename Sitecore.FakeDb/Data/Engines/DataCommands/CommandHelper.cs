@@ -4,7 +4,7 @@
 
   public static class CommandHelper
   {
-    public static FakeDbDataStorage GetDataStorage<TReturnType, TCommandType>(DataEngineCommand<TReturnType, TCommandType> command)
+    public static DataStorage GetDataStorage<TReturnType, TCommandType>(DataEngineCommand<TReturnType, TCommandType> command)
       where TCommandType : DataEngineCommand<TReturnType, TCommandType>, new()
     {
       var database = (FakeDatabase)command.Database;

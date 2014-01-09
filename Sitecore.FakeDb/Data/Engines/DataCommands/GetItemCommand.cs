@@ -13,7 +13,7 @@
     {
       var dataStorage = CommandHelper.GetDataStorage(this);
 
-      return dataStorage.Items.ContainsKey(ItemId) ? dataStorage.Items[ItemId] : null;
+      return dataStorage.GetSitecoreItem(ItemId);
     }
   }
 }

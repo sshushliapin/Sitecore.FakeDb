@@ -38,7 +38,7 @@
     {
       // arrange
       // TODO: Is the 'get root' returns '/sitecore/content'?
-      var destination = this.database.GetRootItem();
+      var destination = this.database.GetItem("/sitecore");
       var itemId = ID.NewID;
       var templateId = ID.NewID;
 
@@ -53,7 +53,7 @@
       item.Name.Should().Be("home");
       item.TemplateID.Should().Be(templateId);
       item.ParentID.Should().Be(destination.ID);
-      item.FullPath.Should().Be("/sitecore/content/home");
+      item.FullPath.Should().Be("/sitecore/home");
 
       dataStorage.Items.Should().ContainKey(itemId);
     }

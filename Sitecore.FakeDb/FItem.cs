@@ -2,8 +2,10 @@ namespace Sitecore.FakeDb
 {
   using System.Collections;
   using System.Collections.Generic;
+  using System.Diagnostics;
   using Sitecore.Data;
 
+  [DebuggerDisplay("Name = {Name}, ID = {ID}, FullPath = {FullPath}")]
   public class FItem : IEnumerable
   {
     public FItem(string name)

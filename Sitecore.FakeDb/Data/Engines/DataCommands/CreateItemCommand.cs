@@ -16,7 +16,10 @@
       var item = ItemHelper.CreateInstance(ItemName, ItemId, TemplateId, new FieldList(), Database);
 
       var dataStorage = CommandHelper.GetDataStorage(this);
-      dataStorage.FakeItems.Add(ItemId, new FItem(ItemName, ItemId, TemplateId) { ParentID = Destination.ID });
+
+      var fullPath = Destination.Paths.FullPath + "/" + ItemName;
+      dataStorage.FakeItems.Add(ItemId, new FItem(ItemName, ItemId, TemplateId) { ParentID = Destination.ID, FullPath = fullPath });
+      
       dataStorage.Items.Add(ItemId, item);
 
       return item;

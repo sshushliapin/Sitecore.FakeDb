@@ -51,6 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Engines\DataCommands\CommandHelper.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetParentCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetRootItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\SaveItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\ResolvePathCommand.cs" />
     <Compile Include="Data\FakeDatabase.cs" />
@@ -60,7 +62,7 @@
     <Compile Include="Data\Engines\MemoryHistoryStorage.cs" />
     <Compile Include="Data\Engines\DataCommands\GetItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\CreateItemCommand.cs" />
-    <Compile Include="Data\Engines\FakeDbDataStorage.cs" />
+    <Compile Include="Data\Engines\DataStorage.cs" />
     <Compile Include="Data\Items\ItemHelper.cs" />
     <Compile Include="Db.cs" />
     <Compile Include="FItem.cs" />

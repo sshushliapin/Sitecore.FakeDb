@@ -14,10 +14,9 @@
     {
       var dataStorage = CommandHelper.GetDataStorage(this);
 
-      // TODO: Throw meaningful exception here.
-      var itemId = dataStorage.FakeItems.Single(fi => fi.Value.FullPath == ItemPath).Key;
-
-      return itemId;
+      var kvp = dataStorage.FakeItems.SingleOrDefault(fi => fi.Value.FullPath == ItemPath);
+      
+      return kvp.Key;
     }
   }
 }
