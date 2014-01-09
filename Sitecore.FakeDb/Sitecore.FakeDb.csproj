@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Engines\DataCommands\CommandHelper.cs" />
+    <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\GetParentCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\GetRootItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\SaveItemCommand.cs" />
@@ -71,7 +72,9 @@
     <Compile Include="Security\AccessControl\FakeAccessRightProvider.cs" />
     <Compile Include="SecurityModel\FakeDomainProvider.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="TODO.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

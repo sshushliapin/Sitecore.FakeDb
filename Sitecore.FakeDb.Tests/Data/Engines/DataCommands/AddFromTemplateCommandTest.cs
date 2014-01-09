@@ -7,21 +7,21 @@
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Xunit;
 
-  public class CreateItemCommandTest
+  public class AddFromTemplateCommandTest
   {
     private readonly Database database;
 
-    private readonly OpenCreateItemCommand command;
+    private readonly OpenAddFromTemplateCommand command;
 
     private readonly ID itemId;
 
     private readonly ID templateId;
 
-    public CreateItemCommandTest()
+    public AddFromTemplateCommandTest()
     {
       this.database = Database.GetDatabase("master");
-      this.command = new OpenCreateItemCommand { Engine = new DataEngine(this.database) };
-
+      this.command = new OpenAddFromTemplateCommand { Engine = new DataEngine(this.database) };
+      
       this.itemId = ID.NewID;
       this.templateId = ID.NewID;
     }
@@ -32,7 +32,7 @@
       // arrange
       var destination = this.database.GetItem("/sitecore");
 
-      this.command.Initialize(this.itemId, "home", this.templateId, destination);
+      this.command.Initialize("home", templateId, destination, itemId);
 
       // act
       var item = this.command.DoExecute();
@@ -40,8 +40,8 @@
       // assert
       item.Should().NotBeNull();
       item.Name.Should().Be("home");
-      item.ID.Should().Be(this.itemId);
-      item.TemplateID.Should().Be(this.templateId);
+      item.ID.Should().Be(itemId);
+      item.TemplateID.Should().Be(templateId);
       item.Paths.FullPath.Should().Be("/sitecore/home");
     }
 
@@ -52,7 +52,7 @@
       var destination = this.database.GetItem("/sitecore");
       var dataStorage = CommandHelper.GetDataStorage(this.command);
 
-      this.command.Initialize(this.itemId, "home", this.templateId, destination);
+      this.command.Initialize("home", this.templateId, destination, this.itemId);
 
       // act
       this.command.DoExecute();
@@ -62,7 +62,7 @@
       dataStorage.Items.Should().ContainKey(itemId);
     }
 
-    private class OpenCreateItemCommand : CreateItemCommand
+    private class OpenAddFromTemplateCommand : AddFromTemplateCommand
     {
       public new Item DoExecute()
       {

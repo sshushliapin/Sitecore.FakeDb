@@ -24,6 +24,10 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public const string TemplateItemName = "Template";
 
+    public const string TemplateSectionItemName = "Template section";
+
+    public const string TemplateFieldItemName = "Template field";
+
     public DataStorage(Database database)
     {
       this.database = database;
@@ -75,7 +79,9 @@ namespace Sitecore.FakeDb.Data.Engines
       this.fakeItems.Add(ItemIDs.TemplateRoot, new FItem(TemplatesItemName, ItemIDs.TemplateRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/templates" });
 
       // TODO: Move 'Template' item to proper directory to correspond Sitecore structure.
-      this.fakeItems.Add(TemplateIDs.Template, new FItem(TemplateItemName, ItemIDs.TemplateRoot, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template" });
+      this.fakeItems.Add(TemplateIDs.Template, new FItem(TemplateItemName, TemplateIDs.Template, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template" });
+      this.fakeItems.Add(TemplateIDs.TemplateSection, new FItem(TemplateSectionItemName, TemplateIDs.TemplateSection, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
+      this.fakeItems.Add(TemplateIDs.TemplateField, new FItem(TemplateFieldItemName, TemplateIDs.TemplateField, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
     }
 
     private void FillDefaultSitecoreItems()
@@ -84,6 +90,8 @@ namespace Sitecore.FakeDb.Data.Engines
       this.items.Add(ItemIDs.ContentRoot, ItemHelper.CreateInstance(ContentItemName, ItemIDs.ContentRoot, TemplateIDs.MainSection, new FieldList(), this.Database));
       this.items.Add(ItemIDs.TemplateRoot, ItemHelper.CreateInstance(TemplatesItemName, ItemIDs.TemplateRoot, TemplateIDs.MainSection, new FieldList(), this.Database));
       this.items.Add(TemplateIDs.Template, ItemHelper.CreateInstance(TemplateItemName, TemplateIDs.Template, TemplateIDs.Template, new FieldList(), this.Database));
+      this.items.Add(TemplateIDs.TemplateSection, ItemHelper.CreateInstance(TemplateSectionItemName, TemplateIDs.TemplateSection, TemplateIDs.Template, new FieldList(), this.Database));
+      this.items.Add(TemplateIDs.TemplateField, ItemHelper.CreateInstance(TemplateFieldItemName, TemplateIDs.TemplateField, TemplateIDs.Template, new FieldList(), this.Database));
     }
   }
 }

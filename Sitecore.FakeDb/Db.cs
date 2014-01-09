@@ -2,6 +2,7 @@ namespace Sitecore.FakeDb
 {
   using System;
   using System.Collections;
+  using System.Linq;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
@@ -29,26 +30,45 @@ namespace Sitecore.FakeDb
 
     public void Add(FItem item)
     {
+      this.CreateTemplateIfMissing(item);
+
       var root = this.Database.GetItem(ItemIDs.ContentRoot);
+      var newItem = ItemManager.CreateItem(item.Name, root, item.TemplateID, item.ID);
 
-      this.CreateTemplateIfMissing(item.Name, item.TemplateID);
+      if (!item.Fields.Any())
+      {
+        return;
+      }
 
-      var i = ItemManager.CreateItem(item.Name, root, item.TemplateID, item.ID);
+      newItem.RuntimeSettings.ForceModified = true;
+      newItem.RuntimeSettings.ReadOnlyStatistics = true;
 
-      Diagnostics.Assert.IsNotNull(i, "Unable to create an item.");
+      using (new EditContext(newItem))
+      {
+        foreach (var field in item.Fields)
+        {
+          // TODO: Consider using Fields collection here.
+          newItem[field.Key] = field.Value.ToString();
+        }
+      }
     }
 
-    private void CreateTemplateIfMissing(string name, ID templateId)
+    private void CreateTemplateIfMissing(FItem item)
     {
-      var templateItem = this.Database.GetItem(templateId);
+      var templateItem = this.Database.GetItem(item.TemplateID);
       if (templateItem != null)
       {
         return;
       }
 
       var templatesRoot = this.Database.GetItem(ItemIDs.TemplateRoot);
-      ItemManager.CreateItem(name, templatesRoot, TemplateIDs.Template, templateId);
-      this.Database.Engines.TemplateEngine.Reset();
+      templateItem = ItemManager.CreateItem(item.Name, templatesRoot, TemplateIDs.Template, item.TemplateID);
+      var sectionItem = templateItem.Add("Data", new TemplateID(TemplateIDs.TemplateSection));
+
+      foreach (var field in item.Fields)
+      {
+        sectionItem.Add(field.Key, new TemplateID(TemplateIDs.TemplateField));
+      }
     }
 
     public void Dispose()

@@ -1,0 +1,1 @@
+﻿Implement Database.GetTemplate()

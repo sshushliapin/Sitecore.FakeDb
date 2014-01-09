@@ -6,12 +6,7 @@
 
   public class DbTest
   {
-    private readonly ID itemId;
-
-    public DbTest()
-    {
-      itemId = ID.NewID;
-    }
+    private readonly ID itemId = ID.NewID;
 
     [Fact]
     public void ShouldHaveDefaultMasterDatabase()
@@ -81,7 +76,7 @@
     }
 
     [Fact]
-    public void ShouldCreateItemTemplate()
+    public void ShouldCreateTemplateItem()
     {
       // arrange
       var templateId = ID.NewID;
@@ -96,6 +91,36 @@
         templateItem.ID.Should().Be(templateId);
         templateItem.TemplateID.Should().Be(TemplateIDs.Template);
         templateItem.Paths.FullPath.Should().Be("/sitecore/templates/my item");
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateTemplateSection()
+    {
+      // act
+      using (var db = new Db { new FItem("my item") })
+      {
+        // assert
+        var templateSection = db.Database.GetItem("/sitecore/templates/my item/Data");
+
+        // assert
+        templateSection.Should().NotBeNull();
+        templateSection.TemplateID.Should().Be(TemplateIDs.TemplateSection);
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateItemFields()
+    {
+      // act
+      using (var db = new Db { new FItem("my item") { { "Title", string.Empty } } })
+      {
+        // assert
+        var templateField = db.Database.GetItem("/sitecore/templates/my item/Data/Title");
+
+        // assert
+        templateField.Should().NotBeNull();
+        templateField.TemplateID.Should().Be(TemplateIDs.TemplateField);
       }
     }
 
