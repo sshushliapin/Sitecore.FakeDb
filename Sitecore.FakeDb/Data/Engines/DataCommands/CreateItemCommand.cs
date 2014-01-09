@@ -16,7 +16,7 @@
       var item = ItemHelper.CreateInstance(ItemName, ItemId, TemplateId, new FieldList(), Database);
 
       var dataStorage = CommandHelper.GetDataStorage(this);
-      dataStorage.FakeItems.Add(ItemId, new FItem(ItemName));
+      dataStorage.FakeItems.Add(ItemId, new FItem(ItemName, ItemId, TemplateId) { ParentID = Destination.ID });
       dataStorage.Items.Add(ItemId, item);
 
       return item;

@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
-  using System;
   using FluentAssertions;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
@@ -50,8 +49,11 @@
       this.command.DoExecute();
 
       // assert
-      dataStorage.FakeItems.Should().ContainKey(itemId);
-      dataStorage.FakeItems[itemId].Should().BeEquivalentTo(new FItem("home", itemId, templateId) { ParentID = ItemIDs.ContentRoot, FullPath = Constants.ContentPath });
+      var item = dataStorage.FakeItems[itemId];
+      item.Name.Should().Be("home");
+      item.TemplateID.Should().Be(templateId);
+      item.ParentID.Should().Be(destination.ID);
+      item.FullPath.Should().Be("/sitecore/content/home");
 
       dataStorage.Items.Should().ContainKey(itemId);
     }
