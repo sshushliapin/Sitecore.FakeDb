@@ -70,6 +70,7 @@
     <Compile Include="Data\DataStorageTest.cs" />
     <Compile Include="Data\FakeDatabaseTest.cs" />
     <Compile Include="Data\Items\ItemHelperTest.cs" />
+    <Compile Include="Data\Templates\FTemplateTest.cs" />
     <Compile Include="DbTest.cs" />
     <Compile Include="FItemTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
