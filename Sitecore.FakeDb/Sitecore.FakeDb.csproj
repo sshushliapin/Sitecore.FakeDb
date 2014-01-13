@@ -50,14 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Engines\DataCommands\CommandHelper.cs" />
+    <Compile Include="Data\DatabaseExtensions.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\GetParentCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\GetRootItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\SaveItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\ResolvePathCommand.cs" />
     <Compile Include="Data\FakeDatabase.cs" />
-    <Compile Include="Data\DataProviders\FakeDbDataProvider.cs">
+    <Compile Include="Data\DataProviders\FakeDataProvider.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data\Engines\MemoryHistoryStorage.cs" />
@@ -71,6 +71,7 @@
     <Compile Include="Security\AccessControl\FakeAuthorizationProvider.cs" />
     <Compile Include="Security\AccessControl\FakeAccessRightProvider.cs" />
     <Compile Include="SecurityModel\FakeDomainProvider.cs" />
+    <Compile Include="Templates\FTemplate.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TODO.txt" />

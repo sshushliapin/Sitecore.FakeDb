@@ -4,6 +4,7 @@
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
+  using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Xunit;
 
@@ -50,7 +51,7 @@
     {
       // arrange
       var destination = this.database.GetItem("/sitecore");
-      var dataStorage = CommandHelper.GetDataStorage(this.command);
+      var dataStorage = this.command.Database.GetDataStorage();
 
       this.command.Initialize(this.itemId, "home", this.templateId, destination);
 

@@ -4,6 +4,7 @@
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
+  using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
@@ -28,7 +29,7 @@
     public void ShouldReturnRootItem()
     {
       // arrange
-      var dataStorage = CommandHelper.GetDataStorage(this.command);
+      var dataStorage = this.command.Database.GetDataStorage();
 
       var childId = ID.NewID;
       var parentId = ID.NewID;

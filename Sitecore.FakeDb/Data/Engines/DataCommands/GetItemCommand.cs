@@ -11,7 +11,7 @@
 
     protected override Item DoExecute()
     {
-      var dataStorage = CommandHelper.GetDataStorage(this);
+      var dataStorage = this.Database.GetDataStorage();
 
       return dataStorage.GetSitecoreItem(ItemId);
     }

@@ -4,6 +4,7 @@ namespace Sitecore.FakeDb.Data.Engines
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Items;
+  using Sitecore.FakeDb.Templates;
 
   // TODO: Find better name.
   public class DataStorage
@@ -15,6 +16,8 @@ namespace Sitecore.FakeDb.Data.Engines
     private readonly IDictionary<ID, FItem> fakeItems;
 
     private readonly IDictionary<ID, Item> items;
+
+    private readonly IDictionary<ID, FTemplate> fakeTemplates;
 
     private const string SitecoreItemName = "sitecore";
 
@@ -33,6 +36,7 @@ namespace Sitecore.FakeDb.Data.Engines
       this.database = database;
       this.fakeItems = new Dictionary<ID, FItem>();
       this.items = new Dictionary<ID, Item>();
+      this.fakeTemplates = new Dictionary<ID, FTemplate>();
 
       this.FillDefaultFakeItems();
       this.FillDefaultSitecoreItems();
@@ -53,6 +57,11 @@ namespace Sitecore.FakeDb.Data.Engines
       get { return this.items; }
     }
 
+    public IDictionary<ID, FTemplate> FakeTemplates
+    {
+      get { return this.fakeTemplates; }
+    }
+
     public FItem GetFakeItem(ID itemId)
     {
       return this.FakeItems.ContainsKey(itemId) ? this.FakeItems[itemId] : null;
@@ -67,6 +76,7 @@ namespace Sitecore.FakeDb.Data.Engines
     {
       this.FakeItems.Clear();
       this.Items.Clear();
+      this.FakeTemplates.Clear();
 
       this.FillDefaultFakeItems();
       this.FillDefaultSitecoreItems();

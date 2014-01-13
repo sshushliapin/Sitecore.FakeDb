@@ -12,7 +12,7 @@
 
     protected override ID DoExecute()
     {
-      var dataStorage = CommandHelper.GetDataStorage(this);
+      var dataStorage = this.Database.GetDataStorage();
 
       var kvp = dataStorage.FakeItems.SingleOrDefault(fi => fi.Value.FullPath == ItemPath);
       

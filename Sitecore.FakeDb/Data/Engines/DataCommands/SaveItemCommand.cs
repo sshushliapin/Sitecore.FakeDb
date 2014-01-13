@@ -9,7 +9,7 @@
 
     protected override bool DoExecute()
     {
-      var dataStorage = CommandHelper.GetDataStorage(this);
+      var dataStorage = this.Database.GetDataStorage();
       dataStorage.Items[Item.ID] = Item;
 
       return true;

@@ -11,7 +11,7 @@
 
     protected override Item DoExecute()
     {
-      var dataStorage = CommandHelper.GetDataStorage(this);
+      var dataStorage = this.Database.GetDataStorage();
 
       var fakeItem = dataStorage.GetFakeItem(Item.ID);
       return fakeItem != null ? dataStorage.GetSitecoreItem(fakeItem.ParentID) : null;

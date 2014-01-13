@@ -2,6 +2,7 @@
 {
   using FluentAssertions;
   using Sitecore.Data;
+  using Sitecore.Data.Managers;
   using Xunit;
 
   public class DbTest
@@ -110,10 +111,27 @@
     }
 
     [Fact]
+    public void ShouldReadTemplate()
+    {
+      // arrange
+      using (var db = new Db { new FItem("my item") })
+      {
+        // act
+        var template = TemplateManager.GetTemplate("my item", db.Database);
+
+        // assert
+        template.Should().NotBeNull();
+      }
+    }
+
+    [Fact]
     public void ShouldCreateItemFields()
     {
       // act
-      using (var db = new Db { new FItem("my item") { { "Title", string.Empty } } })
+      using (var db = new Db
+                        {
+                          new FItem("my item") { { "Title", string.Empty } }
+                        })
       {
         // assert
         var templateField = db.Database.GetItem("/sitecore/templates/my item/Data/Title");

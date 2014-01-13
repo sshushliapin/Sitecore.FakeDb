@@ -5,6 +5,7 @@
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
+  using Sitecore.FakeDb.Templates;
   using Xunit;
   using Xunit.Extensions;
 
@@ -66,10 +67,15 @@
     }
 
     [Fact]
+    public void ShouldHaveEmptyFakeTemplates()
+    {
+      this.dataStorage.FakeTemplates.Should().BeEmpty();
+    }
+
+    [Fact]
     public void ShouldResetItemsToDefault()
     {
       // arrange
-
       var itemId = ID.NewID;
 
       this.dataStorage.FakeItems.Add(itemId, new FItem("new item"));
@@ -88,6 +94,19 @@
       this.dataStorage.Items.ContainsKey(ItemIDs.RootID).Should().BeTrue();
       this.dataStorage.Items.ContainsKey(ItemIDs.ContentRoot).Should().BeTrue();
       this.dataStorage.Items.ContainsKey(ItemIDs.TemplateRoot).Should().BeTrue();
+    }
+
+    [Fact]
+    public void ShouldResetTemplates()
+    {
+      // arrange
+      this.dataStorage.FakeTemplates.Add(ID.NewID, new FTemplate("some template", ID.NewID));
+
+      // act
+      this.dataStorage.Reset();
+
+      // assert
+      this.dataStorage.FakeTemplates.Should().BeEmpty();
     }
 
     [Fact]
