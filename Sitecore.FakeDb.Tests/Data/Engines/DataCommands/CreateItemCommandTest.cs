@@ -5,98 +5,67 @@
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
+  using Sitecore.FakeDb.Data.Items;
   using Xunit;
 
   public class CreateItemCommandTest
   {
-    private readonly FakeDatabase database;
-
-    private readonly OpenCreateItemCommand command;
-
-    private readonly ID itemId;
-
-    private readonly ID templateId;
-
-    public CreateItemCommandTest()
+    [Fact]
+    public void ShouldCreateInstance()
     {
-      // TODO: Use 'new'
-      this.database = (FakeDatabase)Database.GetDatabase("master");
+      // arrange
+      var command = new OpenCreateItemCommand();
 
-      var datastorage = Substitute.For<DataStorage>(this.database);
-      datastorage.GetFieldList(Arg.Any<ID>()).ReturnsForAnyArgs(new FieldList());
-      this.database.DataStorage = datastorage;
-
-      this.command = new OpenCreateItemCommand { Engine = new DataEngine(this.database) };
-
-      this.itemId = ID.NewID;
-      this.templateId = ID.NewID;
+      // act & assert
+      command.CreateInstance().Should().BeOfType<CreateItemCommand>();
     }
 
     [Fact]
-    public void ShouldCreateItemInstance()
+    public void ShouldCreateDefaultCreator()
     {
       // arrange
-      var destination = this.database.GetItem("/sitecore");
+      var command = new CreateItemCommand();
 
-      this.command.Initialize(this.itemId, "home", this.templateId, destination);
-
-      // act
-      var item = this.command.DoExecute();
-
-      // assert
-      item.Should().NotBeNull();
-      item.Name.Should().Be("home");
-      item.ID.Should().Be(this.itemId);
-      item.TemplateID.Should().Be(this.templateId);
-      item.Paths.FullPath.Should().Be("/sitecore/home");
+      // act & assert
+      command.ItemCreator.Should().NotBeNull();
     }
 
     [Fact]
-    public void ShouldPutItemInstanceIntoDataStorage()
+    public void ShouldCreateItem()
     {
       // arrange
-      var destination = this.database.GetItem("/sitecore");
-      var dataStorage = this.command.Database.GetDataStorage();
+      var item = ItemHelper.CreateInstance("home");
+      var itemId = ID.NewID;
+      var templateId = ID.NewID;
+      var database = Substitute.For<Database>("master");
+      var destination = ItemHelper.CreateInstance("parent");
 
-      this.command.Initialize(this.itemId, "home", this.templateId, destination);
+      var itemCreator = Substitute.For<ItemCreator>();
+      itemCreator.Create("home", itemId, templateId, database, destination).Returns(item);
 
-      // act
-      this.command.DoExecute();
-
-      // assert
-      dataStorage.FakeItems.Should().ContainKey(itemId);
-      dataStorage.Items.Should().ContainKey(itemId);
-    }
-
-    [Fact]
-    public void ShouldInitializeFields()
-    {
-      // arrange
-      var destination = this.database.GetItem("/sitecore");
-
-      var fieldId1 = ID.NewID;
-      var fieldId2 = ID.NewID;
-
-      this.database.DataStorage.GetFieldList(this.templateId).Returns(new FieldList { { fieldId1, "f1" }, { fieldId2, "f2" } });
-
-      this.command.Initialize(this.itemId, "home", this.templateId, destination);
+      var command = new OpenCreateItemCommand
+                      {
+                        Engine = new DataEngine(database),
+                        ItemCreator = itemCreator
+                      };
+      command.Initialize(itemId, "home", templateId, destination);
 
       // act
-      var item = this.command.DoExecute();
+      var result = command.DoExecute();
 
       // assert
-      item.Fields[fieldId1].Should().NotBeNull();
-      item.Fields[fieldId1].Value.Should().Be("f1");
-
-      item.Fields[fieldId2].Should().NotBeNull();
-      item.Fields[fieldId2].Value.Should().Be("f2");
+      result.Should().Be(item);
     }
 
     private class OpenCreateItemCommand : CreateItemCommand
     {
+      public new Sitecore.Data.Engines.DataCommands.CreateItemCommand CreateInstance()
+      {
+        return base.CreateInstance();
+      }
+
       public new Item DoExecute()
       {
         return base.DoExecute();

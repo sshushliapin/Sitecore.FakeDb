@@ -6,6 +6,7 @@
   using Sitecore.FakeDb.Data;
   using Xunit;
 
+  // TODO: The tests bellow depend from commands implementation which makes them brittle.
   public class DbTest
   {
     private readonly ID itemId = ID.NewID;
