@@ -1,5 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Data.DataProviders
 {
+  using System.Linq;
+  using Sitecore.Collections;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
   using Sitecore.Data.Templates;
@@ -7,12 +9,19 @@
 
   public class FakeDataProvider : DataProvider
   {
-    public override TemplateCollection GetTemplates(CallContext context)
+    public override IdCollection GetTemplateItemIds(CallContext context)
     {
       var dataStorage = this.Database.GetDataStorage();
 
-      var templates = new TemplateCollection();
+      var ids = dataStorage.FakeTemplates.Select(t => t.Key).ToArray();
 
+      return new IdCollection { ids };
+    }
+
+    public override TemplateCollection GetTemplates(CallContext context)
+    {
+      var dataStorage = this.Database.GetDataStorage();
+      var templates = new TemplateCollection();
 
       foreach (var ft in dataStorage.FakeTemplates.Values)
       {

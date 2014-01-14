@@ -7,6 +7,8 @@ namespace Sitecore.FakeDb
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.FakeDb.Data;
+  using Sitecore.FakeDb.Templates;
+  using Sitecore.SecurityModel;
 
   // TODO: Inherit from Database.
   public class Db : IDisposable, IEnumerable
@@ -41,13 +43,11 @@ namespace Sitecore.FakeDb
       }
 
       newItem.RuntimeSettings.ForceModified = true;
-      newItem.RuntimeSettings.ReadOnlyStatistics = true;
 
-      using (new EditContext(newItem))
+      using (new EditContext(newItem, SecurityCheck.Disable))
       {
         foreach (var field in item.Fields)
         {
-          // TODO: Consider using Fields collection here.
           newItem[field.Key] = field.Value.ToString();
         }
       }
@@ -55,20 +55,13 @@ namespace Sitecore.FakeDb
 
     private void CreateTemplateIfMissing(FItem item)
     {
-      var templateItem = this.Database.GetItem(item.TemplateID);
-      if (templateItem != null)
+      var dataStorage = this.database.GetDataStorage();
+      if (dataStorage.FakeTemplates.ContainsKey(item.TemplateID))
       {
         return;
       }
 
-      var templatesRoot = this.Database.GetItem(ItemIDs.TemplateRoot);
-      templateItem = ItemManager.CreateItem(item.Name, templatesRoot, TemplateIDs.Template, item.TemplateID);
-      var sectionItem = templateItem.Add("Data", new TemplateID(TemplateIDs.TemplateSection));
-
-      foreach (var field in item.Fields)
-      {
-        sectionItem.Add(field.Key, new TemplateID(TemplateIDs.TemplateField));
-      }
+      dataStorage.FakeTemplates.Add(item.TemplateID, new FTemplate(item.Name, item.TemplateID) { Fields = item.Fields.Keys });
     }
 
     public void Dispose()

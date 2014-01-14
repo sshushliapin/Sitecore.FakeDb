@@ -28,14 +28,27 @@
     }
 
     [Fact]
+    public void ShouldGetTemplateIds()
+    {
+      // arrange
+      var t1 = this.CreateTestTemplateToDataStorage();
+      var t2 = this.CreateTestTemplateToDataStorage();
+
+      // act
+      var templateIds = dataProvider.GetTemplateItemIds(null);
+
+      // assert
+      templateIds.Should().HaveCount(2);
+      templateIds[0].Should().Be(t1.ID);
+      templateIds[1].Should().Be(t2.ID);
+    }
+
+    [Fact]
     public void ShouldGetTemplatesFromDataStorage()
     {
       // arrange
-      var t1 = new FTemplate("t1", ID.NewID);
-      this.dataStorage.FakeTemplates.Add(t1.ID, t1);
-
-      var t2 = new FTemplate("t2", ID.NewID);
-      this.dataStorage.FakeTemplates.Add(t2.ID, t2);
+      var t1 = this.CreateTestTemplateToDataStorage();
+      var t2 = this.CreateTestTemplateToDataStorage();
 
       // act
       var templates = dataProvider.GetTemplates(null);
@@ -74,6 +87,14 @@
 
       // act & assert
       template.GetField("Title").Should().NotBeNull();
+    }
+
+    private FTemplate CreateTestTemplateToDataStorage()
+    {
+      var t2 = new FTemplate("t2", ID.NewID);
+      this.dataStorage.FakeTemplates.Add(t2.ID, t2);
+
+      return t2;
     }
   }
 }

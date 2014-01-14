@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Data\DatabaseExtensions.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\AddVersionCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\GetParentCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\GetRootItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\SaveItemCommand.cs" />

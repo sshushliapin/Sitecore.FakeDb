@@ -1,8 +1,9 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
+  using System.Linq;
   using FluentAssertions;
   using Sitecore.Data;
-  using Sitecore.Data.Managers;
+  using Sitecore.FakeDb.Data;
   using Xunit;
 
   public class DbTest
@@ -77,68 +78,18 @@
     }
 
     [Fact]
-    public void ShouldCreateTemplateItem()
+    public void ShouldCreateFakeTemplate()
     {
       // arrange
-      var templateId = ID.NewID;
-
-      // act
-      using (var db = new Db { new FItem("my item", itemId, templateId) })
-      {
-        // assert
-        var templateItem = db.Database.GetItem(templateId);
-        templateItem.Should().NotBeNull();
-        templateItem.Name.Should().Be("my item");
-        templateItem.ID.Should().Be(templateId);
-        templateItem.TemplateID.Should().Be(TemplateIDs.Template);
-        templateItem.Paths.FullPath.Should().Be("/sitecore/templates/my item");
-      }
-    }
-
-    [Fact]
-    public void ShouldCreateTemplateSection()
-    {
-      // act
-      using (var db = new Db { new FItem("my item") })
-      {
-        // assert
-        var templateSection = db.Database.GetItem("/sitecore/templates/my item/Data");
-
-        // assert
-        templateSection.Should().NotBeNull();
-        templateSection.TemplateID.Should().Be(TemplateIDs.TemplateSection);
-      }
-    }
-
-    [Fact]
-    public void ShouldReadTemplate()
-    {
-      // arrange
-      using (var db = new Db { new FItem("my item") })
+      using (var db = new Db { new FItem("my item") { { "my field", "" } } })
       {
         // act
-        var template = TemplateManager.GetTemplate("my item", db.Database);
+        var dataStorage = db.Database.GetDataStorage();
 
         // assert
-        template.Should().NotBeNull();
-      }
-    }
-
-    [Fact]
-    public void ShouldCreateItemFields()
-    {
-      // act
-      using (var db = new Db
-                        {
-                          new FItem("my item") { { "Title", string.Empty } }
-                        })
-      {
-        // assert
-        var templateField = db.Database.GetItem("/sitecore/templates/my item/Data/Title");
-
-        // assert
-        templateField.Should().NotBeNull();
-        templateField.TemplateID.Should().Be(TemplateIDs.TemplateField);
+        var template = dataStorage.FakeTemplates.Single();
+        template.Value.Name.Should().Be("my item");
+        template.Value.Fields.ShouldBeEquivalentTo(new[] { "my field" });
       }
     }
 

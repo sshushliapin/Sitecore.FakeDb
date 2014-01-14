@@ -3,6 +3,7 @@ namespace Sitecore.FakeDb.Data.Engines
   using System.Collections.Generic;
   using Sitecore.Data;
   using Sitecore.Data.Items;
+  using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.FakeDb.Templates;
 
@@ -33,6 +34,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public DataStorage(Database database)
     {
+      // TODO:[High] Concurrent dictionary makes tests unstable.
       this.database = database;
       this.fakeItems = new Dictionary<ID, FItem>();
       this.items = new Dictionary<ID, Item>();
@@ -102,6 +104,19 @@ namespace Sitecore.FakeDb.Data.Engines
       this.items.Add(TemplateIDs.Template, ItemHelper.CreateInstance(TemplateItemName, TemplateIDs.Template, TemplateIDs.Template, new FieldList(), this.Database));
       this.items.Add(TemplateIDs.TemplateSection, ItemHelper.CreateInstance(TemplateSectionItemName, TemplateIDs.TemplateSection, TemplateIDs.Template, new FieldList(), this.Database));
       this.items.Add(TemplateIDs.TemplateField, ItemHelper.CreateInstance(TemplateFieldItemName, TemplateIDs.TemplateField, TemplateIDs.Template, new FieldList(), this.Database));
+    }
+
+    public virtual FieldList GetFieldList(ID templateId)
+    {
+      Assert.IsTrue(this.FakeTemplates.ContainsKey(templateId), "Template '{0}' not found.", templateId);
+
+      var fields = new FieldList();
+      foreach (var field in this.FakeTemplates[templateId].Fields)
+      {
+        fields.Add(ID.NewID, field);
+      }
+
+      return fields;
     }
   }
 }

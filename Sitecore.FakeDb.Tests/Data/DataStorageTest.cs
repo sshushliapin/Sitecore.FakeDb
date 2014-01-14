@@ -1,5 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data
 {
+  using System;
+  using System.Linq;
   using FluentAssertions;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -126,6 +128,35 @@
       // act & assert
       dataStorage.GetFakeItem(ID.NewID).Should().BeNull();
       dataStorage.GetSitecoreItem(ID.NewID).Should().BeNull();
+    }
+
+    [Fact]
+    public void ShouldGetFieldListByTemplateId()
+    {
+      // arrange
+      var template = new FTemplate { "Field 1", "Field 2" };
+      dataStorage.FakeTemplates.Add(template.ID, template);
+
+      // act
+      var fieldList = dataStorage.GetFieldList(template.ID);
+
+      // assert
+      fieldList.Count.Should().Be(2);
+      fieldList[fieldList.GetFieldIDs()[0]].Should().Be("Field 1");
+      fieldList[fieldList.GetFieldIDs()[1]].Should().Be("Field 2");
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionIfNoTemplateFound()
+    {
+      // arrange
+      var missingTemplateId = new ID("{C4520D42-33CA-48C7-972D-6CEE1BC4B9A6}");
+
+      // act
+      Action a = () => dataStorage.GetFieldList(missingTemplateId);
+
+      // assert
+      a.ShouldThrow<InvalidOperationException>().WithMessage("Template \'{C4520D42-33CA-48C7-972D-6CEE1BC4B9A6}\' not found.");
     }
   }
 }

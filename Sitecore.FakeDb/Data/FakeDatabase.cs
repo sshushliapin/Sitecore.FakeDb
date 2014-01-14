@@ -11,6 +11,6 @@
       this.DataStorage = new DataStorage(this);
     }
 
-    public DataStorage DataStorage { get; private set; }
+    public DataStorage DataStorage { get; set; }
   }
 }

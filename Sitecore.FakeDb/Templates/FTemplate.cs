@@ -10,7 +10,7 @@
 
     public ID ID { get; private set; }
 
-    public ICollection<string> Fields { get; private set; }
+    public ICollection<string> Fields { get; set; }
 
     public FTemplate()
       : this(null, ID.NewID)
