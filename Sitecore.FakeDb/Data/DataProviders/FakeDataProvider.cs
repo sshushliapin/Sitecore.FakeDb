@@ -30,7 +30,7 @@
 
         foreach (var field in ft.Fields)
         {
-          section.AddField(field, ID.NewID);
+          section.AddField(field.Key, field.Value);
         }
 
         templates.Add(builder.Template);

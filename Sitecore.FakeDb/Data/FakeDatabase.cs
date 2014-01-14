@@ -5,12 +5,19 @@
 
   public class FakeDatabase : Database
   {
+    private DataStorage dataStorage = new DataStorage();
+
     public FakeDatabase(string name)
       : base(name)
     {
-      this.DataStorage = new DataStorage(this);
+      dataStorage = new DataStorage();
+      dataStorage.SetDatabase(this);
     }
 
-    public DataStorage DataStorage { get; set; }
+    public DataStorage DataStorage
+    {
+      get { return dataStorage; }
+      set { dataStorage = value; }
+    }
   }
 }

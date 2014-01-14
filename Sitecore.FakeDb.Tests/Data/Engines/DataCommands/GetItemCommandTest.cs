@@ -33,7 +33,7 @@
 
       var item = ItemHelper.CreateInstance(database);
 
-      var dataStorage = Substitute.For<DataStorage>(database);
+      var dataStorage = Substitute.For<DataStorage>();
       dataStorage.GetSitecoreItem(itemId).Returns(item);
       database.DataStorage = dataStorage;
 

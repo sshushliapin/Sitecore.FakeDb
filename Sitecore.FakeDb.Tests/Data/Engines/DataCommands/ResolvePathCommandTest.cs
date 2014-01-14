@@ -12,6 +12,7 @@
 
     public ResolvePathCommandTest()
     {
+      // TODO: Use fake database.
       this.command = new OpenResolvePathCommand { Engine = new DataEngine(Database.GetDatabase("master")) };
     }
 

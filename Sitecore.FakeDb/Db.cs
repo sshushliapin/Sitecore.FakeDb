@@ -2,6 +2,7 @@ namespace Sitecore.FakeDb
 {
   using System;
   using System.Collections;
+  using System.Collections.Generic;
   using System.Linq;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -62,7 +63,13 @@ namespace Sitecore.FakeDb
         return;
       }
 
-      dataStorage.FakeTemplates.Add(item.TemplateID, new FTemplate(item.Name, item.TemplateID) { Fields = item.Fields.Keys });
+      var fields = new Dictionary<string, ID>(item.Fields.Count);
+      foreach (var field in item.Fields)
+      {
+        fields.Add(field.Key, ID.NewID);
+      }
+
+      dataStorage.FakeTemplates.Add(item.TemplateID, new FTemplate(item.Name, item.TemplateID) { Fields = fields });
     }
 
     public void Dispose()

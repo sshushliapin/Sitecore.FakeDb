@@ -58,7 +58,7 @@
       var itemId = ID.NewID;
       var itemWithoutParent = ItemHelper.CreateInstance("item without parent", itemId, database);
 
-      database.DataStorage = Substitute.For<DataStorage>(database);
+      database.DataStorage = Substitute.For<DataStorage>();
       database.DataStorage.GetFakeItem(itemId).Returns(new FItem("item"));
 
       var command = new OpenGetParentCommand { Engine = new DataEngine(database) };

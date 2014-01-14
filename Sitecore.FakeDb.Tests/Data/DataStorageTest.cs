@@ -34,7 +34,8 @@
     public DataStorageTest()
     {
       this.database = Database.GetDatabase("master");
-      this.dataStorage = new DataStorage(this.database);
+      this.dataStorage = new DataStorage();
+      this.dataStorage.SetDatabase(database);
     }
 
     [Theory]
@@ -135,6 +136,9 @@
     {
       // arrange
       var template = new FTemplate { "Field 1", "Field 2" };
+      var fieldId1 = template.Fields["Field 1"];
+      var fieldId2 = template.Fields["Field 2"];
+
       dataStorage.FakeTemplates.Add(template.ID, template);
 
       // act
@@ -142,8 +146,8 @@
 
       // assert
       fieldList.Count.Should().Be(2);
-      fieldList[fieldList.GetFieldIDs()[0]].Should().Be("Field 1");
-      fieldList[fieldList.GetFieldIDs()[1]].Should().Be("Field 2");
+      fieldList[fieldId1].Should().BeEmpty();
+      fieldList[fieldId2].Should().BeEmpty();
     }
 
     [Fact]

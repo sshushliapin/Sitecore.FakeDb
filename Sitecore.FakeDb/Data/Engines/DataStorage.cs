@@ -1,5 +1,6 @@
 namespace Sitecore.FakeDb.Data.Engines
 {
+  using System.Collections.Concurrent;
   using System.Collections.Generic;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -11,8 +12,6 @@ namespace Sitecore.FakeDb.Data.Engines
   public class DataStorage
   {
     private static readonly ID RootTemplateId = new ID("{C6576836-910C-4A3D-BA03-C277DBD3B827}");
-
-    private readonly Database database;
 
     private readonly IDictionary<ID, FItem> fakeItems;
 
@@ -32,16 +31,13 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public const string TemplateFieldItemName = "Template field";
 
-    public DataStorage(Database database)
+    private Database database;
+
+    public DataStorage()
     {
-      // TODO:[High] Concurrent dictionary makes tests unstable.
-      this.database = database;
       this.fakeItems = new Dictionary<ID, FItem>();
       this.items = new Dictionary<ID, Item>();
       this.fakeTemplates = new Dictionary<ID, FTemplate>();
-
-      this.FillDefaultFakeItems();
-      this.FillDefaultSitecoreItems();
     }
 
     public Database Database
@@ -72,6 +68,12 @@ namespace Sitecore.FakeDb.Data.Engines
     public virtual Item GetSitecoreItem(ID itemId)
     {
       return this.FakeItems.ContainsKey(itemId) ? this.Items[itemId] : null;
+    }
+
+    public void SetDatabase(Database db)
+    {
+      this.database = db;
+      this.Reset();
     }
 
     public void Reset()
@@ -113,7 +115,20 @@ namespace Sitecore.FakeDb.Data.Engines
       var fields = new FieldList();
       foreach (var field in this.FakeTemplates[templateId].Fields)
       {
-        fields.Add(ID.NewID, field);
+
+
+
+
+
+
+
+
+
+
+
+
+
+        fields.Add(field.Value, string.Empty);
       }
 
       return fields;

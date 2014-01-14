@@ -88,9 +88,9 @@
         var dataStorage = db.Database.GetDataStorage();
 
         // assert
-        var template = dataStorage.FakeTemplates.Single();
-        template.Value.Name.Should().Be("my item");
-        template.Value.Fields.ShouldBeEquivalentTo(new[] { "my field" });
+        var template = dataStorage.FakeTemplates.Single().Value;
+        template.Name.Should().Be("my item");
+        template.Fields["my field"].Should().NotBeNull();
       }
     }
 

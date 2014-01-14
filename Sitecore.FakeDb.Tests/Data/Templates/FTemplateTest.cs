@@ -40,14 +40,15 @@
       template.Fields.Should().BeEmpty();
     }
 
+    // TODO:[High] The test below states that we cannot get fake item fields by id.
     [Fact]
-    public void ShouldSetTemplateFields()
+    public void ShouldCreateTemplateFieldsUsingNamesAsKeys()
     {
       // arrange
       var template = new FTemplate { "Title", "Description" };
 
       // assert
-      template.Fields.ShouldBeEquivalentTo(new[] { "Title", "Description" });
+      template.Fields.Keys.ShouldBeEquivalentTo(new[] { "Title", "Description" });
     }
   }
 }

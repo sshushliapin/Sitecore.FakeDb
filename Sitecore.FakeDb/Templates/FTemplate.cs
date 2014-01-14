@@ -10,7 +10,8 @@
 
     public ID ID { get; private set; }
 
-    public ICollection<string> Fields { get; set; }
+    // TODO: Key is a field name, value is a field id. It's hard to grasp.
+    public IDictionary<string, ID> Fields { get; set; }
 
     public FTemplate()
       : this(null, ID.NewID)
@@ -22,12 +23,12 @@
       this.Name = name ?? id.ToShortID().ToString(); ;
       this.ID = id;
 
-      this.Fields = new List<string>();
+      this.Fields = new Dictionary<string, ID>();
     }
 
     public void Add(string fieldName)
     {
-      this.Fields.Add(fieldName);
+      this.Fields.Add(fieldName, ID.NewID);
     }
 
     public IEnumerator GetEnumerator()
