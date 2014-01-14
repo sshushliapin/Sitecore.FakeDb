@@ -43,6 +43,7 @@ namespace Sitecore.FakeDb
       }
 
       newItem.RuntimeSettings.ForceModified = true;
+      newItem.RuntimeSettings.Temporary = true;
 
       using (new EditContext(newItem, SecurityCheck.Disable))
       {
