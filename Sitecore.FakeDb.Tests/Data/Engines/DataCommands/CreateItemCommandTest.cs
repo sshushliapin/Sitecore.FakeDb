@@ -36,11 +36,12 @@
     public void ShouldCreateItem()
     {
       // arrange
-      var item = ItemHelper.CreateInstance("home");
+      var database = Substitute.For<Database>("master");
+
       var itemId = ID.NewID;
       var templateId = ID.NewID;
-      var database = Substitute.For<Database>("master");
-      var destination = ItemHelper.CreateInstance("parent");
+      var item = ItemHelper.CreateInstance("home", database);
+      var destination = ItemHelper.CreateInstance("parent", database);
 
       var itemCreator = Substitute.For<ItemCreator>();
       itemCreator.Create("home", itemId, templateId, database, destination).Returns(item);

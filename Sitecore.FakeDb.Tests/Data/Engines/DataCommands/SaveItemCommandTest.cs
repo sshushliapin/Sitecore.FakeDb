@@ -3,9 +3,7 @@
   using FluentAssertions;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
-  using Sitecore.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data;
-  using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
   using SaveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.SaveItemCommand;
@@ -31,14 +29,14 @@
       // arrange
       var itemId = ID.NewID;
 
-      var originalItem = ItemHelper.CreateInstance("original item", itemId);
-
       var database = new FakeDatabase("master");
+
+      var originalItem = ItemHelper.CreateInstance("original item", itemId, ID.NewID, new FieldList(), database);
       database.DataStorage.Items.Add(itemId, originalItem);
 
       var fieldId = ID.NewID;
       var fields = new FieldList { { fieldId, "updated title" } };
-      var updatedItem = ItemHelper.CreateInstance("updated item", itemId, fields);
+      var updatedItem = ItemHelper.CreateInstance("updated item", itemId, ID.NewID, fields, database);
 
       var command = new OpenSaveItemCommand();
       command.Initialize(updatedItem);

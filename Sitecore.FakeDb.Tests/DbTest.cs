@@ -98,10 +98,7 @@
     public void ShouldCreateItemWithFields()
     {
       // act
-      using (var db = new Db
-               {
-                 new FItem("home", itemId) { {"Title", "Welcome!"}  }
-               })
+      using (var db = new Db { new FItem("home", itemId) { { "Title", "Welcome!" } } })
       {
         var item = db.Database.GetItem(itemId);
 

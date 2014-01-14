@@ -6,19 +6,19 @@
 
   public static class ItemHelper
   {
-    public static Item CreateInstance(string itemName)
+    public static Item CreateInstance(Database database)
     {
-      return CreateInstance(itemName, ID.NewID);
+      return CreateInstance(ID.NewID.ToString(), database);
     }
 
-    public static Item CreateInstance(string itemName, ID itemId)
+    public static Item CreateInstance(string itemName, Database database)
     {
-      return CreateInstance(itemName, itemId, new FieldList());
+      return CreateInstance(itemName, ID.NewID, ID.NewID, new FieldList(), database);
     }
 
-    public static Item CreateInstance(string itemName, ID itemId, FieldList fields)
+    public static Item CreateInstance(string itemName, ID itemId, FakeDatabase database)
     {
-      return CreateInstance(itemName, itemId, ID.NewID, fields, Database.GetDatabase("master"));
+      return CreateInstance(itemName, itemId, ID.NewID, new FieldList(), database);
     }
 
     public static Item CreateInstance(string itemName, ID itemId, ID templateId, FieldList fields, Database database)

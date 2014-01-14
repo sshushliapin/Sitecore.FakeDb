@@ -1,6 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Items
 {
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
@@ -13,7 +14,8 @@
     public void ShouldSimpleCreateItem()
     {
       // arrange
-      var item = ItemHelper.CreateInstance(Name);
+      var database = Substitute.For<Database>("master");
+      var item = ItemHelper.CreateInstance(Name, database);
 
       // assert
       item.Name.Should().Be(Name);
@@ -27,7 +29,7 @@
     {
       var id = ID.NewID;
       var templateId = ID.NewID;
-      var database = Database.GetDatabase("master");
+      var database = Substitute.For<Database>("master");
 
       // arrange
       var item = ItemHelper.CreateInstance(Name, id, templateId, new FieldList(), database);

@@ -64,12 +64,12 @@ namespace Sitecore.FakeDb.Data.Engines
       get { return this.fakeTemplates; }
     }
 
-    public FItem GetFakeItem(ID itemId)
+    public virtual FItem GetFakeItem(ID itemId)
     {
       return this.FakeItems.ContainsKey(itemId) ? this.FakeItems[itemId] : null;
     }
 
-    public Item GetSitecoreItem(ID itemId)
+    public virtual Item GetSitecoreItem(ID itemId)
     {
       return this.FakeItems.ContainsKey(itemId) ? this.Items[itemId] : null;
     }
