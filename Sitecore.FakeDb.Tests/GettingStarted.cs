@@ -9,7 +9,7 @@
     [Fact]
     public void CreateAndEditSimpleItem()
     {
-      using (var db = new Db { new FItem("home") { { "Title", "" } } })
+      using (var db = new Db { new FItem("home") { "Title" } })
       {
         var item = db.GetItem("/sitecore/content/home");
 

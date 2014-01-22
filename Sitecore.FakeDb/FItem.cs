@@ -40,6 +40,11 @@ namespace Sitecore.FakeDb
 
     public string FullPath { get; set; }
 
+    public void Add(string fieldName)
+    {
+      this.Fields.Add(fieldName, string.Empty);
+    }
+
     public void Add(string fieldName, string fieldValue)
     {
       this.Fields.Add(fieldName, fieldValue);

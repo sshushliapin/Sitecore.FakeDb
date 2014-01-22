@@ -82,7 +82,7 @@
     public void ShouldCreateFakeTemplate()
     {
       // arrange
-      using (var db = new Db { new FItem("my item") { { "my field", "" } } })
+      using (var db = new Db { new FItem("my item") { { "my field" } } })
       {
         // act
         var dataStorage = db.Database.GetDataStorage();
