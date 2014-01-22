@@ -4,6 +4,7 @@ namespace Sitecore.FakeDb
   using System.Collections;
   using System.Collections.Generic;
   using System.Linq;
+  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
@@ -70,11 +71,11 @@ namespace Sitecore.FakeDb
       }
 
       dataStorage.FakeTemplates.Add(item.TemplateID, new FTemplate(item.Name, item.TemplateID) { Fields = fields });
-    }
+      }
 
     public void Dispose()
     {
-      ((FakeDatabase)this.database).DataStorage.Reset();
+      Factory.Reset();
     }
   }
 }

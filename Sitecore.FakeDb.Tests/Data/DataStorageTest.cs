@@ -1,10 +1,10 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data
 {
   using System;
-  using System.Linq;
   using FluentAssertions;
   using Sitecore.Data;
   using Sitecore.Data.Items;
+  using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.FakeDb.Templates;
@@ -33,7 +33,7 @@
 
     public DataStorageTest()
     {
-      this.database = Database.GetDatabase("master");
+      this.database = new FakeDatabase("master");
       this.dataStorage = new DataStorage();
       this.dataStorage.SetDatabase(database);
     }

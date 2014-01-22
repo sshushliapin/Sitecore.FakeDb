@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines
 {
-  using System;
   using FluentAssertions;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -9,7 +8,7 @@
   using Sitecore.FakeDb.Templates;
   using Xunit;
 
-  public class ItemCreatorTest : IDisposable
+  public class ItemCreatorTest
   {
     private readonly FakeDatabase database;
 
@@ -23,11 +22,7 @@
 
     public ItemCreatorTest()
     {
-      this.database = (FakeDatabase)Database.GetDatabase("master");
-
-      this.database.DataStorage.SetDatabase(database);
-      this.database.DataStorage.Reset();
-
+      this.database = new FakeDatabase("master");
       this.destination = this.database.GetItem("/sitecore");
 
       this.itemCreator = new ItemCreator();
@@ -61,11 +56,6 @@
       // assert
       this.database.DataStorage.FakeItems.Should().ContainKey(itemId);
       this.database.DataStorage.Items.Should().ContainKey(itemId);
-    }
-
-    public void Dispose()
-    {
-      this.database.DataStorage.Reset();
     }
   }
 }

@@ -3,6 +3,7 @@
   using FluentAssertions;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
+  using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Xunit;
 
@@ -12,8 +13,7 @@
 
     public ResolvePathCommandTest()
     {
-      // TODO: Use fake database.
-      this.command = new OpenResolvePathCommand { Engine = new DataEngine(Database.GetDatabase("master")) };
+      this.command = new OpenResolvePathCommand { Engine = new DataEngine(new FakeDatabase("master")) };
     }
 
     [Fact]
