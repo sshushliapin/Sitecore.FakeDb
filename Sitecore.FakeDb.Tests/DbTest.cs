@@ -42,7 +42,7 @@
       var id = new ID("{91494A40-B2AE-42B5-9469-1C7B023B886B}");
 
       // act
-      using (var db = new Db { new FItem("myitem", id) })
+      using (var db = new Db { new DbItem("myitem", id) })
       {
         var i = db.Database.GetItem(id);
 
@@ -59,7 +59,7 @@
     public void ShouldCleanupItemsAfterDispose()
     {
       // act
-      using (new Db { new FItem("myitem", this.itemId) })
+      using (new Db { new DbItem("myitem", this.itemId) })
       {
         Database.GetDatabase("master").GetItem(this.itemId).Should().NotBeNull();
       }
@@ -72,7 +72,7 @@
     public void ShouldGetItemByPath()
     {
       // arrange
-      using (var db = new Db { new FItem("my item") })
+      using (var db = new Db { new DbItem("my item") })
       {
         db.Database.GetItem("/sitecore/content/my item").Should().NotBeNull();
       }
@@ -82,7 +82,7 @@
     public void ShouldCreateFakeTemplate()
     {
       // arrange
-      using (var db = new Db { new FItem("my item") { { "my field" } } })
+      using (var db = new Db { new DbItem("my item") { { "my field" } } })
       {
         // act
         var dataStorage = db.Database.GetDataStorage();
@@ -98,7 +98,7 @@
     public void ShouldCreateItemWithFields()
     {
       // act
-      using (var db = new Db { new FItem("home", itemId) { { "Title", "Welcome!" } } })
+      using (var db = new Db { new DbItem("home", itemId) { { "Title", "Welcome!" } } })
       {
         var item = db.Database.GetItem(itemId);
 

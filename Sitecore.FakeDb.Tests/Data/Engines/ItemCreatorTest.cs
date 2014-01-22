@@ -5,7 +5,6 @@
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
-  using Sitecore.FakeDb.Templates;
   using Xunit;
 
   public class ItemCreatorTest
@@ -32,7 +31,7 @@
     public void ShouldCreateItemInstance()
     {
       // arrange
-      this.database.DataStorage.FakeTemplates.Add(templateId, new FTemplate());
+      this.database.DataStorage.FakeTemplates.Add(templateId, new DbTemplate());
 
       // act
       var item = this.itemCreator.Create("home", this.itemId, this.templateId, this.database, destination);
@@ -48,7 +47,7 @@
     public void ShouldPutItemInstanceIntoDataStorage()
     {
       // arrange
-      this.database.DataStorage.FakeTemplates.Add(templateId, new FTemplate());
+      this.database.DataStorage.FakeTemplates.Add(templateId, new DbTemplate());
 
       // act
       this.itemCreator.Create("home", this.itemId, this.templateId, this.database, destination);

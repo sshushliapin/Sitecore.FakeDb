@@ -7,7 +7,6 @@
   using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
-  using Sitecore.FakeDb.Templates;
   using Xunit;
   using Xunit.Extensions;
 
@@ -81,7 +80,7 @@
       // arrange
       var itemId = ID.NewID;
 
-      this.dataStorage.FakeItems.Add(itemId, new FItem("new item"));
+      this.dataStorage.FakeItems.Add(itemId, new DbItem("new item"));
       this.dataStorage.Items.Add(itemId, ItemHelper.CreateInstance("new item", itemId, ID.NewID, new FieldList(), database));
 
       // act
@@ -103,7 +102,7 @@
     public void ShouldResetTemplates()
     {
       // arrange
-      this.dataStorage.FakeTemplates.Add(ID.NewID, new FTemplate("some template", ID.NewID));
+      this.dataStorage.FakeTemplates.Add(ID.NewID, new DbTemplate("some template", ID.NewID));
 
       // act
       this.dataStorage.Reset();
@@ -117,7 +116,7 @@
     {
       // act & assert
       dataStorage.GetFakeItem(ItemIDs.ContentRoot).Should().NotBeNull();
-      dataStorage.GetFakeItem(ItemIDs.ContentRoot).Should().BeOfType<FItem>();
+      dataStorage.GetFakeItem(ItemIDs.ContentRoot).Should().BeOfType<DbItem>();
 
       dataStorage.GetSitecoreItem(ItemIDs.ContentRoot).Should().NotBeNull();
       dataStorage.GetSitecoreItem(ItemIDs.ContentRoot).Should().BeOfType<Item>();
@@ -135,7 +134,7 @@
     public void ShouldGetFieldListByTemplateId()
     {
       // arrange
-      var template = new FTemplate { "Field 1", "Field 2" };
+      var template = new DbTemplate { "Field 1", "Field 2" };
       var fieldId1 = template.Fields["Field 1"];
       var fieldId2 = template.Fields["Field 2"];
 

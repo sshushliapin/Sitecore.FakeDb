@@ -6,19 +6,19 @@ namespace Sitecore.FakeDb
   using Sitecore.Data;
 
   [DebuggerDisplay("Name = {Name}, FullPath = {FullPath}")]
-  public class FItem : IEnumerable
+  public class DbItem : IEnumerable
   {
-    public FItem(string name)
+    public DbItem(string name)
       : this(name, ID.NewID)
     {
     }
 
-    public FItem(string name, ID id)
+    public DbItem(string name, ID id)
       : this(name, id, ID.NewID)
     {
     }
 
-    public FItem(string name, ID id, ID templateId)
+    public DbItem(string name, ID id, ID templateId)
     {
       this.Name = name;
       this.ID = id;

@@ -9,7 +9,6 @@ namespace Sitecore.FakeDb
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.FakeDb.Data;
-  using Sitecore.FakeDb.Templates;
   using Sitecore.SecurityModel;
 
   public class Db : IDisposable, IEnumerable
@@ -31,7 +30,7 @@ namespace Sitecore.FakeDb
       throw new NotImplementedException();
     }
 
-    public void Add(FItem item)
+    public void Add(DbItem item)
     {
       this.CreateTemplateIfMissing(item);
 
@@ -55,7 +54,7 @@ namespace Sitecore.FakeDb
       }
     }
 
-    private void CreateTemplateIfMissing(FItem item)
+    private void CreateTemplateIfMissing(DbItem item)
     {
       var dataStorage = this.database.GetDataStorage();
       if (dataStorage.FakeTemplates.ContainsKey(item.TemplateID))
@@ -69,7 +68,7 @@ namespace Sitecore.FakeDb
         fields.Add(field.Key, ID.NewID);
       }
 
-      dataStorage.FakeTemplates.Add(item.TemplateID, new FTemplate(item.Name, item.TemplateID) { Fields = fields });
+      dataStorage.FakeTemplates.Add(item.TemplateID, new DbTemplate(item.Name, item.TemplateID) { Fields = fields });
     }
 
     /// <summary>

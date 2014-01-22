@@ -3,13 +3,13 @@
   using FluentAssertions;
   using Xunit;
 
-  public class FItemTest
+  public class DbItemTest
   {
     [Fact]
     public void ShouldGenerateNewIdsIfNotSet()
     {
       // arrange
-      var item = new FItem("my item");
+      var item = new DbItem("my item");
 
       // act & assert
       item.ID.Should().NotBeNull();
@@ -19,14 +19,14 @@
     [Fact]
     public void ShouldCreateEmptyFieldsCollection()
     {
-      new FItem("home").Fields.Should().BeEmpty();
+      new DbItem("home").Fields.Should().BeEmpty();
     }
 
     [Fact]
     public void ShouldAddFields()
     {
       // arrange 
-      var item = new FItem("home") { { "Title", "Welcome!" } };
+      var item = new DbItem("home") { { "Title", "Welcome!" } };
 
       // act & assert
       item.Fields["Title"].Should().Be("Welcome!");
@@ -36,7 +36,7 @@
     public void ShouldSetSitecoreContentParentIdByDefault()
     {
       // arrange
-      var item = new FItem("home");
+      var item = new DbItem("home");
 
       // act & assert
       item.ParentID.Should().Be(ItemIDs.ContentRoot);
@@ -46,7 +46,7 @@
     public void ShouldSetSitecoreContentFullPathByDefault()
     {
       // arrange
-      var item = new FItem("home");
+      var item = new DbItem("home");
 
       // act & asert
       item.FullPath.Should().Be("/sitecore/content/home");

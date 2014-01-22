@@ -6,7 +6,6 @@
   using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.DataProviders;
   using Sitecore.FakeDb.Data.Engines;
-  using Sitecore.FakeDb.Templates;
   using Sitecore.Reflection;
   using Xunit;
 
@@ -67,7 +66,7 @@
     public void ShouldGetTemplatesWithDefaultDataSectionFromDataStorage()
     {
       // arrange
-      var t = new FTemplate();
+      var t = new DbTemplate();
       this.dataStorage.FakeTemplates.Add(t.ID, t);
 
       var template = this.dataProvider.GetTemplates(null).First();
@@ -80,7 +79,7 @@
     public void ShouldGetTemplateFields()
     {
       // arrange
-      var t = new FTemplate { "Title", "Description" };
+      var t = new DbTemplate { "Title", "Description" };
       this.dataStorage.FakeTemplates.Add(t.ID, t);
 
       var template = this.dataProvider.GetTemplates(null).First();
@@ -89,9 +88,9 @@
       template.GetField("Title").Should().NotBeNull();
     }
 
-    private FTemplate CreateTestTemplateToDataStorage()
+    private DbTemplate CreateTestTemplateToDataStorage()
     {
-      var t2 = new FTemplate("t2", ID.NewID);
+      var t2 = new DbTemplate("t2", ID.NewID);
       this.dataStorage.FakeTemplates.Add(t2.ID, t2);
 
       return t2;

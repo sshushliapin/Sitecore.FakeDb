@@ -33,10 +33,10 @@
       var database = new FakeDatabase("master");
       var dataStorage = database.GetDataStorage();
 
-      dataStorage.FakeItems.Add(childId, new FItem("child", childId) { ParentID = parentId });
+      dataStorage.FakeItems.Add(childId, new DbItem("child", childId) { ParentID = parentId });
       dataStorage.Items.Add(childId, ItemHelper.CreateInstance("child", childId, ID.NewID, new FieldList(), database));
 
-      dataStorage.FakeItems.Add(parentId, new FItem("parent", parentId));
+      dataStorage.FakeItems.Add(parentId, new DbItem("parent", parentId));
       dataStorage.Items.Add(parentId, ItemHelper.CreateInstance("parent", parentId, ID.NewID, new FieldList(), database));
 
       var command = new OpenGetParentCommand { Engine = new DataEngine(database) };
@@ -59,7 +59,7 @@
       var itemWithoutParent = ItemHelper.CreateInstance("item without parent", itemId, database);
 
       database.DataStorage = Substitute.For<DataStorage>();
-      database.DataStorage.GetFakeItem(itemId).Returns(new FItem("item"));
+      database.DataStorage.GetFakeItem(itemId).Returns(new DbItem("item"));
 
       var command = new OpenGetParentCommand { Engine = new DataEngine(database) };
       command.Initialize(itemWithoutParent);

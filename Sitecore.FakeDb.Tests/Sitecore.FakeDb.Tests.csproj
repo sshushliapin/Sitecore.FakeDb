@@ -74,9 +74,9 @@
     <Compile Include="Data\Engines\ItemCreatorTest.cs" />
     <Compile Include="Data\FakeDatabaseTest.cs" />
     <Compile Include="Data\Items\ItemHelperTest.cs" />
-    <Compile Include="Data\Templates\FTemplateTest.cs" />
+    <Compile Include="DbTemplateTest.cs" />
     <Compile Include="DbTest.cs" />
-    <Compile Include="FItemTest.cs" />
+    <Compile Include="DbItemTest.cs" />
     <Compile Include="GettingStarted.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityModel\FakeDomainProviderTest.cs" />

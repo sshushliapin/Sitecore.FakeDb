@@ -1,17 +1,16 @@
-﻿namespace Sitecore.FakeDb.Tests.Data.Templates
+﻿namespace Sitecore.FakeDb.Tests
 {
   using FluentAssertions;
   using Sitecore.Data;
-  using Sitecore.FakeDb.Templates;
   using Xunit;
 
-  public class FTemplateTest
+  public class DbTemplateTest
   {
     [Fact]
     public void ShouldGenerateDefaultNameAndId()
     {
       // arrange
-      var template = new FTemplate();
+      var template = new DbTemplate();
 
       // assert
       template.ID.Should().NotBeNull();
@@ -24,7 +23,7 @@
     public void ShouldCreateEmptyFieldsCollection()
     {
       // arrange
-      var template = new FTemplate();
+      var template = new DbTemplate();
 
       // act & assert
       template.Fields.Should().BeEmpty();
@@ -34,7 +33,7 @@
     public void ShouldCreateEmptyFieldsCollectionWhenSetNameAndId()
     {
       // arrange
-      var template = new FTemplate("t", ID.NewID);
+      var template = new DbTemplate("t", ID.NewID);
 
       // act & assert
       template.Fields.Should().BeEmpty();
@@ -45,7 +44,7 @@
     public void ShouldCreateTemplateFieldsUsingNamesAsKeys()
     {
       // arrange
-      var template = new FTemplate { "Title", "Description" };
+      var template = new DbTemplate { "Title", "Description" };
 
       // assert
       template.Fields.Keys.ShouldBeEquivalentTo(new[] { "Title", "Description" });
