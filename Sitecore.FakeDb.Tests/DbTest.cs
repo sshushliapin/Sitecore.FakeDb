@@ -106,5 +106,16 @@
         item["Title"].Should().Be("Welcome!");
       }
     }
+
+    [Fact]
+    public void ShouldGetItemFromSitecoreDatabase()
+    {
+      // arrange
+      using (var db = new Db())
+      {
+        // act & assert
+        db.GetItem("/sitecore/content").Should().NotBeNull();
+      }
+    }
   }
 }

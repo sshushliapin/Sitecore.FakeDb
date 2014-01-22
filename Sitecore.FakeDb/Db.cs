@@ -12,7 +12,6 @@ namespace Sitecore.FakeDb
   using Sitecore.FakeDb.Templates;
   using Sitecore.SecurityModel;
 
-  // TODO: Inherit from Database.
   public class Db : IDisposable, IEnumerable
   {
     private readonly Database database;
@@ -71,8 +70,21 @@ namespace Sitecore.FakeDb
       }
 
       dataStorage.FakeTemplates.Add(item.TemplateID, new FTemplate(item.Name, item.TemplateID) { Fields = fields });
-      }
+    }
 
+    /// <summary>
+    /// Gets the item.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <returns>The item.</returns>
+    public Item GetItem(string path)
+    {
+      return this.Database.GetItem(path);
+    }
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
     public void Dispose()
     {
       Factory.Reset();
