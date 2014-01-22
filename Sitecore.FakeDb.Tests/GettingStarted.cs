@@ -1,31 +1,44 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
-  using FluentAssertions;
-  using Sitecore.Data.Items;
   using Xunit;
 
   public class GettingStarted
   {
     [Fact]
+    public void CreateNewItem()
+    {
+      using (Db db = new Db
+                       {
+                         new DbItem("home") { { "Title", "Welcome!" } }
+                       })
+      {
+        Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
+
+        Assert.NotNull(homeItem);
+        Assert.Equal("Welcome!", homeItem["Title"]);
+      }
+    }
+
+    [Fact]
     public void CreateAndEditSimpleItem()
     {
-      using (var db = new Db { new DbItem("home") { "Title" } })
+      using (Db db = new Db { new DbItem("home") { "Title" } })
       {
         var item = db.GetItem("/sitecore/content/home");
 
-        using (new EditContext(item))
+        using (new Sitecore.Data.Items.EditContext(item))
         {
           item["Title"] = "Welcome!";
         }
 
-        item["Title"].Should().Be("Welcome!");
+        Assert.Equal("Welcome!", item["Title"]);
       }
     }
 
     [Fact]
     public void CreateItemHieararchy()
     {
-      using (var db = new Db
+      using (Db db = new Db
                         {
                           new DbItem("home")
                             {
@@ -38,7 +51,7 @@
       {
         var item = db.GetItem("/sitecore/content/home/articles/latest news");
 
-        item.Should().NotBeNull();
+        Assert.NotNull(item);
       }
     }
   }
