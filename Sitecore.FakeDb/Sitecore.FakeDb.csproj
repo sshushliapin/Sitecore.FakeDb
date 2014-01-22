@@ -55,6 +55,7 @@
     <Compile Include="Data\Engines\DataCommands\AddVersionCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\GetParentCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\GetRootItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\HasChildrenCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\SaveItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\ResolvePathCommand.cs" />
     <Compile Include="Data\Engines\ItemCreator.cs" />

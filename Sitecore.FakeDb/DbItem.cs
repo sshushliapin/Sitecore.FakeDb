@@ -2,6 +2,7 @@ namespace Sitecore.FakeDb
 {
   using System.Collections;
   using System.Collections.Generic;
+  using System.Collections.ObjectModel;
   using System.Diagnostics;
   using Sitecore.Data;
 
@@ -26,6 +27,7 @@ namespace Sitecore.FakeDb
       this.Fields = new Dictionary<string, object>();
       this.ParentID = ItemIDs.ContentRoot;
       this.FullPath = Constants.ContentPath + "/" + name;
+      this.Children = new Collection<DbItem>();
     }
 
     public string Name { get; private set; }
@@ -40,6 +42,8 @@ namespace Sitecore.FakeDb
 
     public string FullPath { get; set; }
 
+    public ICollection<DbItem> Children { get; private set; }
+
     public void Add(string fieldName)
     {
       this.Fields.Add(fieldName, string.Empty);
@@ -50,9 +54,17 @@ namespace Sitecore.FakeDb
       this.Fields.Add(fieldName, fieldValue);
     }
 
-    public IEnumerator GetEnumerator()
+    public void Add(DbItem child)
     {
-      throw new System.NotImplementedException();
+      child.ParentID = this.ID;
+      child.FullPath = this.FullPath + "/" + child.Name;
+
+      this.Children.Add(child);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return this.Children.GetEnumerator();
     }
   }
 }

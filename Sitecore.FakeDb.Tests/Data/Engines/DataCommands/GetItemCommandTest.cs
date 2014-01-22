@@ -28,9 +28,9 @@
     public void ShouldGetItemFromDataStorage()
     {
       // arrange
-      var itemId = ID.NewID;
       var database = new FakeDatabase("master");
 
+      var itemId = ID.NewID;
       var item = ItemHelper.CreateInstance(database);
 
       var dataStorage = Substitute.For<DataStorage>();

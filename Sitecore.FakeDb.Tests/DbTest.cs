@@ -95,6 +95,23 @@
     }
 
     [Fact]
+    public void ShouldCreateItemHierarchy()
+    {
+      // arrange & act
+      using (var db = new Db
+                        {
+                          new DbItem("parent")
+                            {
+                              new DbItem("child")
+                            }
+                        })
+      {
+        // assert
+        db.GetItem("/sitecore/content/parent/child").Should().NotBeNull();
+      }
+    }
+
+    [Fact]
     public void ShouldCreateItemWithFields()
     {
       // act

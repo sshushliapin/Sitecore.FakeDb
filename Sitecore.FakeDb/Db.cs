@@ -34,23 +34,26 @@ namespace Sitecore.FakeDb
     {
       this.CreateTemplateIfMissing(item);
 
-      var root = this.Database.GetItem(ItemIDs.ContentRoot);
+      var root = this.Database.GetItem(item.ParentID);
       var newItem = ItemManager.CreateItem(item.Name, root, item.TemplateID, item.ID);
 
-      if (!item.Fields.Any())
+      if (item.Fields.Any())
       {
-        return;
+        newItem.RuntimeSettings.ForceModified = true;
+        newItem.RuntimeSettings.Temporary = true;
+
+        using (new EditContext(newItem, SecurityCheck.Disable))
+        {
+          foreach (var field in item.Fields)
+          {
+            newItem[field.Key] = field.Value.ToString();
+          }
+        }
       }
 
-      newItem.RuntimeSettings.ForceModified = true;
-      newItem.RuntimeSettings.Temporary = true;
-
-      using (new EditContext(newItem, SecurityCheck.Disable))
+      foreach (var child in item.Children)
       {
-        foreach (var field in item.Fields)
-        {
-          newItem[field.Key] = field.Value.ToString();
-        }
+        this.Add(child);
       }
     }
 
