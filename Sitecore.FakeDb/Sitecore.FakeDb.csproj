@@ -50,14 +50,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\FakeClientDataStore.cs" />
     <Compile Include="Data\DatabaseExtensions.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\AddVersionCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\BlobStreamExistsCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\CopyItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\DeleteItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetBlobStreamCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\GetParentCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\GetRootItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetChildrenCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetVersionsCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\HasChildrenCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\MoveItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\RemoveDataCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\RemoveVersionCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\SaveItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\ResolvePathCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\SetBlobStreamCommand.cs" />
     <Compile Include="Data\Engines\ItemCreator.cs" />
     <Compile Include="Data\FakeDatabase.cs" />
     <Compile Include="Data\DataProviders\FakeDataProvider.cs">

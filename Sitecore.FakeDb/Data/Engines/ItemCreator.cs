@@ -15,9 +15,9 @@
       var item = ItemHelper.CreateInstance(itemName, itemId, templateId, fieldList, database);
 
       var fullPath = destination.Paths.FullPath + "/" + itemName;
-      dataStorage.FakeItems.Add(itemId, new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath });
-
-      dataStorage.Items.Add(itemId, item);
+      var dbitem = new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath };
+      dataStorage.FakeItems.Add(itemId, dbitem);
+      dataStorage.FakeItems[destination.ID].Children.Add(dbitem);
 
       return item;
     }

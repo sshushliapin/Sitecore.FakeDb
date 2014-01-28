@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines
 {
+  using System.Linq;
   using FluentAssertions;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -7,6 +8,7 @@
   using Sitecore.FakeDb.Data.Engines;
   using Xunit;
 
+  // TODO: Get rid of the copy-paste.
   public class ItemCreatorTest
   {
     private readonly FakeDatabase database;
@@ -31,10 +33,10 @@
     public void ShouldCreateItemInstance()
     {
       // arrange
-      this.database.DataStorage.FakeTemplates.Add(templateId, new DbTemplate());
+      this.database.DataStorage.FakeTemplates.Add(this.templateId, new DbTemplate());
 
       // act
-      var item = this.itemCreator.Create("home", this.itemId, this.templateId, this.database, destination);
+      var item = this.itemCreator.Create("home", this.itemId, this.templateId, this.database, this.destination);
 
       // assert
       item.Should().NotBeNull();
@@ -47,14 +49,26 @@
     public void ShouldPutItemInstanceIntoDataStorage()
     {
       // arrange
-      this.database.DataStorage.FakeTemplates.Add(templateId, new DbTemplate());
+      this.database.DataStorage.FakeTemplates.Add(this.templateId, new DbTemplate());
 
       // act
-      this.itemCreator.Create("home", this.itemId, this.templateId, this.database, destination);
+      this.itemCreator.Create("home", this.itemId, this.templateId, this.database, this.destination);
 
       // assert
-      this.database.DataStorage.FakeItems.Should().ContainKey(itemId);
-      this.database.DataStorage.Items.Should().ContainKey(itemId);
+      this.database.DataStorage.FakeItems.Should().ContainKey(this.itemId);
+    }
+
+    [Fact]
+    public void ShouldSetItemChildren()
+    {
+      // arrange
+      this.database.DataStorage.FakeTemplates.Add(this.templateId, new DbTemplate());
+
+      // act
+      this.itemCreator.Create("home", this.itemId, this.templateId, this.database, this.destination);
+
+      // assert
+      this.database.DataStorage.FakeItems[this.destination.ID].Children.Single().ID.Should().Be(this.itemId);
     }
   }
 }

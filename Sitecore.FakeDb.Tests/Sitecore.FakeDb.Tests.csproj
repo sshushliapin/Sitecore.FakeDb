@@ -65,6 +65,7 @@
     <Compile Include="Data\DataProviders\FakeDataProviderTest.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\CreateItemCommandTest.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetChildrenCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\HasChildrenCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetParentCommandTest.cs" />

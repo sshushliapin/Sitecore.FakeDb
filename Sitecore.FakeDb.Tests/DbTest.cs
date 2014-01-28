@@ -81,14 +81,11 @@
     [Fact]
     public void ShouldCreateFakeTemplate()
     {
-      // arrange
-      using (var db = new Db { new DbItem("my item") { { "my field" } } })
+      // arrange & act
+      using (var db = new Db { new DbItem("my item") { "my field" } })
       {
-        // act
-        var dataStorage = db.Database.GetDataStorage();
-
         // assert
-        var template = dataStorage.FakeTemplates.Single().Value;
+        var template = db.Database.GetDataStorage().FakeTemplates.Last().Value;
         template.Name.Should().Be("my item");
         template.Fields["my field"].Should().NotBeNull();
       }
@@ -115,12 +112,31 @@
     public void ShouldCreateItemWithFields()
     {
       // act
-      using (var db = new Db { new DbItem("home", itemId) { { "Title", "Welcome!" } } })
+      using (var db = new Db { new DbItem("home", this.itemId) { { "Title", "Welcome!" } } })
       {
-        var item = db.Database.GetItem(itemId);
+        var item = db.Database.GetItem(this.itemId);
 
         // assert
         item["Title"].Should().Be("Welcome!");
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateCoupleOfItemsWithFields()
+    {
+      // act
+      using (var db = new Db
+                        {
+                          new DbItem("item1") { { "Title", "Welcome from item 1!" } },
+                          new DbItem("item2") { { "Title", "Welcome from item 2!" } }
+                        })
+      {
+        var item1 = db.Database.GetItem("/sitecore/content/item1");
+        var item2 = db.Database.GetItem("/sitecore/content/item2");
+
+        // assert
+        item1["Title"].Should().Be("Welcome from item 1!");
+        item2["Title"].Should().Be("Welcome from item 2!");
       }
     }
 

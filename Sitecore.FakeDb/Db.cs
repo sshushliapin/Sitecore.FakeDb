@@ -9,7 +9,6 @@ namespace Sitecore.FakeDb
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.FakeDb.Data;
-  using Sitecore.SecurityModel;
 
   public class Db : IDisposable, IEnumerable
   {
@@ -35,19 +34,15 @@ namespace Sitecore.FakeDb
       this.CreateTemplateIfMissing(item);
 
       var root = this.Database.GetItem(item.ParentID);
-      var newItem = ItemManager.CreateItem(item.Name, root, item.TemplateID, item.ID);
+      ItemManager.CreateItem(item.Name, root, item.TemplateID, item.ID);
 
       if (item.Fields.Any())
       {
-        newItem.RuntimeSettings.ForceModified = true;
-        newItem.RuntimeSettings.Temporary = true;
-
-        using (new EditContext(newItem, SecurityCheck.Disable))
+        var dataStorage = this.Database.GetDataStorage();
+        var dbitem = dataStorage.FakeItems[item.ID];
+        foreach (var field in item.Fields)
         {
-          foreach (var field in item.Fields)
-          {
-            newItem[field.Key] = field.Value.ToString();
-          }
+          dbitem.Fields.Add(field);
         }
       }
 

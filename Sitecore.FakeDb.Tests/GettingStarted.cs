@@ -25,7 +25,6 @@
       using (Db db = new Db { new DbItem("home") { "Title" } })
       {
         var item = db.GetItem("/sitecore/content/home");
-
         using (new Sitecore.Data.Items.EditContext(item))
         {
           item["Title"] = "Welcome!";
@@ -36,22 +35,29 @@
     }
 
     [Fact]
-    public void CreateItemHieararchy()
+    public void CreateItemHierarchy()
     {
       using (Db db = new Db
-                        {
-                          new DbItem("home")
-                            {
-                              new DbItem("articles")
-                                {
-                                  new DbItem("latest news")
-                                }
-                            }
-                        })
+                       {
+                         new DbItem("home")
+                           {
+                             new DbItem("Articles")
+                               {
+                                 new DbItem("Getting Started") { { "Description", "Articles helping to get started." } },
+                                 new DbItem("Troubleshooting") { { "Description", "Articles with solutions to common problems." } }
+                               }
+                           }
+                       })
       {
-        var item = db.GetItem("/sitecore/content/home/articles/latest news");
+        Sitecore.Data.Items.Item articles = db.Database.GetItem("/sitecore/content/home/Articles");
 
-        Assert.NotNull(item);
+        Sitecore.Data.Items.Item gettingStartedArticle = articles.Children["Getting Started"];
+        Assert.NotNull(gettingStartedArticle);
+        Assert.Equal("Articles helping to get started.", gettingStartedArticle["Description"]);
+
+        Sitecore.Data.Items.Item troubleshootingArticle = articles.Children["Troubleshooting"];
+        Assert.NotNull(troubleshootingArticle);
+        Assert.Equal("Articles with solutions to common problems.", troubleshootingArticle["Description"]);
       }
     }
   }

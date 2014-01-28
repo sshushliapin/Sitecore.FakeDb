@@ -1,9 +1,11 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data;
+  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
   using SaveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.SaveItemCommand;
@@ -27,13 +29,10 @@
     public void ShouldUpdateExistingItemInDataStorage()
     {
       // arrange
+      var database = new FakeDatabase("master") { DataStorage = Substitute.For<DataStorage>() };
       var itemId = ID.NewID;
 
-      var database = new FakeDatabase("master");
-
-      var originalItem = ItemHelper.CreateInstance("original item", itemId, ID.NewID, new FieldList(), database);
-      database.DataStorage.Items.Add(itemId, originalItem);
-
+      database.DataStorage.FakeItems.Add(itemId, new DbItem("original item"));
       var fieldId = ID.NewID;
       var fields = new FieldList { { fieldId, "updated title" } };
       var updatedItem = ItemHelper.CreateInstance("updated item", itemId, ID.NewID, fields, database);
@@ -46,8 +45,8 @@
       command.DoExecute();
 
       // assert
-      database.DataStorage.Items[itemId].Name.Should().Be("updated item");
-      database.DataStorage.Items[itemId][fieldId].Should().Be("updated title");
+      database.DataStorage.FakeItems[itemId].Name.Should().Be("updated item");
+      database.DataStorage.FakeItems[itemId].Fields[fieldId.ToString()].Should().Be("updated title");
     }
 
     private class OpenSaveItemCommand : SaveItemCommand

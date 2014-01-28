@@ -20,7 +20,7 @@
 
     public DbTemplate(string name, ID id)
     {
-      this.Name = name ?? id.ToShortID().ToString(); ;
+      this.Name = name ?? id.ToShortID().ToString();
       this.ID = id;
 
       this.Fields = new Dictionary<string, ID>();
@@ -33,7 +33,7 @@
 
     public IEnumerator GetEnumerator()
     {
-      throw new System.NotImplementedException();
+      return this.Fields.GetEnumerator();
     }
   }
 }

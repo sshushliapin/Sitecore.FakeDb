@@ -27,38 +27,36 @@
     public void ShouldReturnRootItem()
     {
       // arrange
-      var childId = ID.NewID;
+      var database = new FakeDatabase("master") { DataStorage = Substitute.For<DataStorage>() };
+
       var parentId = ID.NewID;
+      var childId = ID.NewID;
 
-      var database = new FakeDatabase("master");
-      var dataStorage = database.GetDataStorage();
+      var parentItem = ItemHelper.CreateInstance();
+      var childItem = ItemHelper.CreateInstance(childId);
 
-      dataStorage.FakeItems.Add(childId, new DbItem("child", childId) { ParentID = parentId });
-      dataStorage.Items.Add(childId, ItemHelper.CreateInstance("child", childId, ID.NewID, new FieldList(), database));
-
-      dataStorage.FakeItems.Add(parentId, new DbItem("parent", parentId));
-      dataStorage.Items.Add(parentId, ItemHelper.CreateInstance("parent", parentId, ID.NewID, new FieldList(), database));
+      database.DataStorage.GetFakeItem(childId).Returns(new DbItem("child", childId) { ParentID = parentId });
+      database.DataStorage.GetSitecoreItem(parentId).Returns(parentItem);
 
       var command = new OpenGetParentCommand { Engine = new DataEngine(database) };
-      command.Initialize(dataStorage.Items[childId]);
+      command.Initialize(childItem);
 
       // act
-      var parent = command.DoExecute();
+      var result = command.DoExecute();
 
       // assert
-      parent.ID.Should().Be(parentId);
+      result.Should().Be(parentItem);
     }
 
     [Fact]
     public void ShouldReturnNullIfNoParentFound()
     {
       // arrange
-      var database = new FakeDatabase("master");
+      var database = new FakeDatabase("master") { DataStorage = Substitute.For<DataStorage>() };
 
       var itemId = ID.NewID;
       var itemWithoutParent = ItemHelper.CreateInstance("item without parent", itemId, database);
 
-      database.DataStorage = Substitute.For<DataStorage>();
       database.DataStorage.GetFakeItem(itemId).Returns(new DbItem("item"));
 
       var command = new OpenGetParentCommand { Engine = new DataEngine(database) };

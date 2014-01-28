@@ -2,6 +2,7 @@
 {
   using System.Linq;
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.DataProviders;
@@ -9,7 +10,6 @@
   using Sitecore.Reflection;
   using Xunit;
 
-  // TODO:[High] To think how to instantiate and configure data provider in the test instead of using a real instance from config file.
   public class FakeDataProviderTest
   {
     private readonly FakeDataProvider dataProvider;
@@ -18,11 +18,12 @@
 
     public FakeDataProviderTest()
     {
-      this.dataProvider = new FakeDataProvider();
-
       var database = new FakeDatabase("master");
-      this.dataStorage = database.DataStorage;
 
+      this.dataStorage = Substitute.For<DataStorage>();
+      database.DataStorage = this.dataStorage;
+
+      this.dataProvider = new FakeDataProvider();
       ReflectionUtil.CallMethod(database, "AddDataProvider", new object[] { this.dataProvider });
     }
 
@@ -30,36 +31,32 @@
     public void ShouldGetTemplateIds()
     {
       // arrange
-      var t1 = this.CreateTestTemplateToDataStorage();
-      var t2 = this.CreateTestTemplateToDataStorage();
+      var t1 = this.CreateTestTemplateInDataStorage();
+      var t2 = this.CreateTestTemplateInDataStorage();
 
       // act
-      var templateIds = dataProvider.GetTemplateItemIds(null);
+      var templateIds = this.dataProvider.GetTemplateItemIds(null);
 
       // assert
-      templateIds.Should().HaveCount(2);
-      templateIds[0].Should().Be(t1.ID);
-      templateIds[1].Should().Be(t2.ID);
+      templateIds.Count.Should().Be(2);
+      templateIds.Should().Contain(t1.ID);
+      templateIds.Should().Contain(t2.ID);
     }
 
     [Fact]
     public void ShouldGetTemplatesFromDataStorage()
     {
       // arrange
-      var t1 = this.CreateTestTemplateToDataStorage();
-      var t2 = this.CreateTestTemplateToDataStorage();
+      var t1 = this.CreateTestTemplateInDataStorage();
+      var t2 = this.CreateTestTemplateInDataStorage();
 
       // act
-      var templates = dataProvider.GetTemplates(null);
+      var templates = this.dataProvider.GetTemplates(null);
 
       // assert
-      templates.Should().HaveCount(2);
-
-      templates[0].Name.Should().Be(t1.Name);
-      templates[0].ID.Should().Be(t1.ID);
-
-      templates[1].Name.Should().Be(t2.Name);
-      templates[1].ID.Should().Be(t2.ID);
+      templates.Count.Should().Be(2);
+      templates.GetTemplate(t1.ID).Name.Should().Be(t1.Name);
+      templates.GetTemplate(t2.ID).Name.Should().Be(t2.Name);
     }
 
     [Fact]
@@ -88,12 +85,13 @@
       template.GetField("Title").Should().NotBeNull();
     }
 
-    private DbTemplate CreateTestTemplateToDataStorage()
+    private DbTemplate CreateTestTemplateInDataStorage()
     {
-      var t2 = new DbTemplate("t2", ID.NewID);
-      this.dataStorage.FakeTemplates.Add(t2.ID, t2);
+      var templateId = ID.NewID;
+      var template = new DbTemplate(templateId.ToString(), templateId);
+      this.dataStorage.FakeTemplates.Add(template.ID, template);
 
-      return t2;
+      return template;
     }
   }
 }

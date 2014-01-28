@@ -30,7 +30,7 @@ namespace Sitecore.FakeDb
       this.Children = new Collection<DbItem>();
     }
 
-    public string Name { get; private set; }
+    public string Name { get; set; }
 
     public ID ID { get; private set; }
 
