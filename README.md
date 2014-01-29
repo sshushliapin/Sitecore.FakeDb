@@ -29,6 +29,11 @@ It is possible to get the value of the 'Title' field:
       string title = homeItem["Title"];
       Assert.Equal("Welcome!", title);
 
+The value can also be accessed using item fields collection:
+
+      title = homeItem.Fields["Title"].Value;
+      Assert.Equal("Welcome!", title);
+        
 Now we can update the field with some new value:
 
       using (new Sitecore.Data.Items.EditContext(homeItem))
