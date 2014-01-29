@@ -5,32 +5,38 @@
   public class GettingStarted
   {
     [Fact]
-    public void CreateNewItem()
-    {
-      using (Db db = new Db
-                       {
-                         new DbItem("home") { { "Title", "Welcome!" } }
-                       })
-      {
-        Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
-
-        Assert.NotNull(homeItem);
-        Assert.Equal("Welcome!", homeItem["Title"]);
-      }
-    }
-
-    [Fact]
     public void CreateAndEditSimpleItem()
     {
-      using (Db db = new Db { new DbItem("home") { "Title" } })
+      // Let's create a fake in-memory database. The code below creates new template 'Home' with default section 'Data' and single field 'Title'.
+      // Then it creates item 'Home' based on the template and sets the 'Title' field value to 'Welcome!':
+      using (Db db = new Db { new DbItem("home") { { "Title", "Welcome!" } } })
       {
-        var item = db.GetItem("/sitecore/content/home");
-        using (new Sitecore.Data.Items.EditContext(item))
+        // do smth important here.
+
+        // Now we can access Sitecore database inside of the 'using' statement. By default 'master' database is used:
+        Sitecore.Data.Database database = db.Database;
+
+        // The database can also be resolved in native Sitecore style:
+        database = Sitecore.Data.Database.GetDatabase("master");
+
+        // Now we can access the 'Home' item by path. By default all the items created under '/sitecore/content':
+        Sitecore.Data.Items.Item homeItem = database.GetItem("/sitecore/content/home");
+
+        // It is possible to get the value of the 'Title' field:
+        string title = homeItem["Title"];
+        Assert.Equal("Welcome!", title);
+
+        // The value can also be accessed using item fields collection:
+        title = homeItem.Fields["Title"].Value;
+        Assert.Equal("Welcome!", title);
+
+        // Now we can update the field with some new value:
+        using (new Sitecore.Data.Items.EditContext(homeItem))
         {
-          item["Title"] = "Welcome!";
+          homeItem["Title"] = "Hi there!";
         }
 
-        Assert.Equal("Welcome!", item["Title"]);
+        Assert.Equal("Hi there!", homeItem["Title"]);
       }
     }
 
@@ -52,11 +58,9 @@
         Sitecore.Data.Items.Item articles = db.Database.GetItem("/sitecore/content/home/Articles");
 
         Sitecore.Data.Items.Item gettingStartedArticle = articles.Children["Getting Started"];
-        Assert.NotNull(gettingStartedArticle);
         Assert.Equal("Articles helping to get started.", gettingStartedArticle["Description"]);
 
         Sitecore.Data.Items.Item troubleshootingArticle = articles.Children["Troubleshooting"];
-        Assert.NotNull(troubleshootingArticle);
         Assert.Equal("Articles with solutions to common problems.", troubleshootingArticle["Description"]);
       }
     }
