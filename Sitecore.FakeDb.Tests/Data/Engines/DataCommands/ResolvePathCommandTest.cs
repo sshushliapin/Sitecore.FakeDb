@@ -1,6 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data;
@@ -9,16 +10,12 @@
 
   public class ResolvePathCommandTest
   {
-    private readonly OpenResolvePathCommand command;
-
-    public ResolvePathCommandTest()
-    {
-      this.command = new OpenResolvePathCommand { Engine = new DataEngine(new FakeDatabase("master")) };
-    }
-
     [Fact]
     public void ShouldCreateInstance()
     {
+      // arrange
+      var command = new OpenResolvePathCommand();
+
       // act & assert
       command.CreateInstance().Should().BeOfType<ResolvePathCommand>();
     }
@@ -28,6 +25,9 @@
     {
       // arrange
       const string Path = "/sitecore/content";
+
+      var database = Substitute.For<FakeDatabase>("master");
+      var command = new OpenResolvePathCommand { Engine = new DataEngine(database) };
       command.Initialize(Path);
 
       // act
@@ -41,10 +41,13 @@
     public void ShouldReturnNullIfNoItemFound()
     {
       const string Path = "/sitecore/content/some path";
-      this.command.Initialize(Path);
+
+      var database = Substitute.For<FakeDatabase>("master");
+      var command = new OpenResolvePathCommand { Engine = new DataEngine(database) };
+      command.Initialize(Path);
 
       // act
-      var id = this.command.DoExecute();
+      var id = command.DoExecute();
 
       // assert
       id.Should().BeNull();

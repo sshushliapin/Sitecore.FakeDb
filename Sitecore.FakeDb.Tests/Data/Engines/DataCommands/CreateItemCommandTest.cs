@@ -40,17 +40,14 @@
 
       var itemId = ID.NewID;
       var templateId = ID.NewID;
-      var item = ItemHelper.CreateInstance("home", database);
-      var destination = ItemHelper.CreateInstance("parent", database);
+
+      var item = ItemHelper.CreateInstance();
+      var destination = ItemHelper.CreateInstance();
 
       var itemCreator = Substitute.For<ItemCreator>();
       itemCreator.Create("home", itemId, templateId, database, destination).Returns(item);
 
-      var command = new OpenCreateItemCommand
-                      {
-                        Engine = new DataEngine(database),
-                        ItemCreator = itemCreator
-                      };
+      var command = new OpenCreateItemCommand { Engine = new DataEngine(database), ItemCreator = itemCreator };
       command.Initialize(itemId, "home", templateId, destination);
 
       // act

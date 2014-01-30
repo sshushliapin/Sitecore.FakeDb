@@ -18,7 +18,7 @@
 
       foreach (Field field in Item.Fields)
       {
-        var key = string.IsNullOrEmpty(field.Key) ? field.ID.ToString() : field.Key;
+        var key = string.IsNullOrEmpty(field.Name) ? field.ID.ToString() : field.Name;
         if (fakeItem.Fields.ContainsKey(key))
         {
           fakeItem.Fields[key] = field.Value;

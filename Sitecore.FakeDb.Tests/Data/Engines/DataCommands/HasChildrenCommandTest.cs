@@ -24,17 +24,17 @@
 
     [Fact]
     public void ShouldReturnTrueIfHasChildren()
-    { // arrange
-      var database = new FakeDatabase("master");
+    {
+      // arrange
+      var database = Substitute.For<FakeDatabase>("master");
+      database.DataStorage = Substitute.For<DataStorage>();
 
       var itemId = ID.NewID;
-      var sitecoreItem = ItemHelper.CreateInstance(itemId, database);
+      var sitecoreItem = ItemHelper.CreateInstance(itemId);
       var fakeItemWithChildren = new DbItem("parent", itemId) { new DbItem("child") };
 
-      var dataStorage = Substitute.For<DataStorage>();
-      dataStorage.GetSitecoreItem(itemId).Returns(sitecoreItem);
-      dataStorage.GetFakeItem(itemId).Returns(fakeItemWithChildren);
-      database.DataStorage = dataStorage;
+      database.DataStorage.GetSitecoreItem(itemId).Returns(sitecoreItem);
+      database.DataStorage.GetFakeItem(itemId).Returns(fakeItemWithChildren);
 
       var command = new OpenHasChildrenCommand { Engine = new DataEngine(database) };
       command.Initialize(sitecoreItem);
@@ -48,17 +48,17 @@
 
     [Fact]
     public void ShouldReturnFalseIfNoChildren()
-    { // arrange
-      var database = new FakeDatabase("master");
+    {
+      // arrange
+      var database = Substitute.For<FakeDatabase>("master");
+      database.DataStorage = Substitute.For<DataStorage>();
 
       var itemId = ID.NewID;
-      var sitecoreItem = ItemHelper.CreateInstance(itemId, database);
+      var sitecoreItem = ItemHelper.CreateInstance(itemId);
       var fakeItemWithoutChildren = new DbItem("item", itemId);
 
-      var dataStorage = Substitute.For<DataStorage>();
-      dataStorage.GetSitecoreItem(itemId).Returns(sitecoreItem);
-      dataStorage.GetFakeItem(itemId).Returns(fakeItemWithoutChildren);
-      database.DataStorage = dataStorage;
+      database.DataStorage.GetSitecoreItem(itemId).Returns(sitecoreItem);
+      database.DataStorage.GetFakeItem(itemId).Returns(fakeItemWithoutChildren);
 
       var command = new OpenHasChildrenCommand { Engine = new DataEngine(database) };
       command.Initialize(sitecoreItem);

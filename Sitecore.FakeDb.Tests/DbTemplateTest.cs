@@ -41,7 +41,7 @@
 
     // TODO:[High] The test below states that we cannot get fake item fields by id.
     [Fact]
-    public void ShouldCreateTemplateFieldsUsingNamesAsKeys()
+    public void ShouldCreateTemplateFieldsUsingNamesAsLowercaseKeys()
     {
       // arrange
       var template = new DbTemplate { "Title", "Description" };

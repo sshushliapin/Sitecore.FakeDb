@@ -8,15 +8,8 @@
 
     public ItemCreator ItemCreator
     {
-      get
-      {
-        return this.itemCreator ?? (itemCreator = new ItemCreator());
-      }
-
-      set
-      {
-        this.itemCreator = value;
-      }
+      get { return this.itemCreator ?? (this.itemCreator = new ItemCreator()); }
+      set { this.itemCreator = value; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand CreateInstance()
@@ -26,7 +19,7 @@
 
     protected override Item DoExecute()
     {
-      return this.ItemCreator.Create(ItemName, NewId, TemplateId, Database, Destination);
+      return this.ItemCreator.Create(this.ItemName, this.NewId, this.TemplateId, this.Database, this.Destination);
     }
   }
 }

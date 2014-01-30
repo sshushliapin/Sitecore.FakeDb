@@ -29,10 +29,13 @@
     public void ShouldUpdateExistingItemInDataStorage()
     {
       // arrange
-      var database = new FakeDatabase("master") { DataStorage = Substitute.For<DataStorage>() };
+      var database = Substitute.For<FakeDatabase>("master");
+      database.DataStorage = Substitute.For<DataStorage>();
+
       var itemId = ID.NewID;
 
       database.DataStorage.FakeItems.Add(itemId, new DbItem("original item"));
+
       var fieldId = ID.NewID;
       var fields = new FieldList { { fieldId, "updated title" } };
       var updatedItem = ItemHelper.CreateInstance("updated item", itemId, ID.NewID, fields, database);

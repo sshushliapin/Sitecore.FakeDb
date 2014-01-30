@@ -28,14 +28,13 @@
     public void ShouldGetItemFromDataStorage()
     {
       // arrange
-      var database = new FakeDatabase("master");
+      var database = Substitute.For<FakeDatabase>("master");
+      database.DataStorage = Substitute.For<DataStorage>();
 
       var itemId = ID.NewID;
-      var item = ItemHelper.CreateInstance(database);
+      var item = ItemHelper.CreateInstance();
 
-      var dataStorage = Substitute.For<DataStorage>();
-      dataStorage.GetSitecoreItem(itemId).Returns(item);
-      database.DataStorage = dataStorage;
+      database.DataStorage.GetSitecoreItem(itemId).Returns(item);
 
       var command = new OpenGetItemCommand { Engine = new DataEngine(database) };
       command.Initialize(itemId, Language.Invariant, Version.Latest);

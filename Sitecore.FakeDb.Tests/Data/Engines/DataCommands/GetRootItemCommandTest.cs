@@ -29,9 +29,10 @@
     {
       // arrange
       var database = Substitute.For<FakeDatabase>("master");
-      var rootItem = ItemHelper.CreateInstance(database);
-
       database.DataStorage = Substitute.For<DataStorage>();
+
+      var rootItem = ItemHelper.CreateInstance();
+
       database.DataStorage.GetSitecoreItem(ItemIDs.RootID).Returns(rootItem);
 
       var command = new OpenGetRootItemCommand { Engine = new DataEngine(database) };

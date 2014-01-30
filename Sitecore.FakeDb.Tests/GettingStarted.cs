@@ -37,6 +37,19 @@
         }
 
         Assert.Equal("Hi there!", homeItem["Title"]);
+
+        // Having an item it is easy to add a new child. The code below creates new item 'About' under the home item and sets title:
+        var templateId = new Sitecore.Data.TemplateID(homeItem.TemplateID);
+        var aboutItem = homeItem.Add("About", templateId);
+
+        using (new Sitecore.Data.Items.EditContext(aboutItem))
+        {
+          aboutItem["Title"] = "About us";
+        }
+
+        // When the item is no more needed it can be removed:
+        aboutItem.Delete();
+        Assert.Null(database.GetItem(aboutItem.ID));
       }
     }
 

@@ -27,7 +27,8 @@
     public void ShouldReturnRootItem()
     {
       // arrange
-      var database = new FakeDatabase("master") { DataStorage = Substitute.For<DataStorage>() };
+      var database = Substitute.For<FakeDatabase>("master");
+      database.DataStorage = Substitute.For<DataStorage>();
 
       var parentId = ID.NewID;
       var childId = ID.NewID;
@@ -52,12 +53,10 @@
     public void ShouldReturnNullIfNoParentFound()
     {
       // arrange
-      var database = new FakeDatabase("master") { DataStorage = Substitute.For<DataStorage>() };
+      var database = Substitute.For<FakeDatabase>("master");
+      database.DataStorage = Substitute.For<DataStorage>();
 
-      var itemId = ID.NewID;
-      var itemWithoutParent = ItemHelper.CreateInstance("item without parent", itemId, database);
-
-      database.DataStorage.GetFakeItem(itemId).Returns(new DbItem("item"));
+      var itemWithoutParent = ItemHelper.CreateInstance();
 
       var command = new OpenGetParentCommand { Engine = new DataEngine(database) };
       command.Initialize(itemWithoutParent);

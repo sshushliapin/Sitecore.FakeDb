@@ -26,8 +26,8 @@
     public void ShouldReturnItemChildren()
     {
       // arrange
-      var dataStorage = Substitute.For<DataStorage>();
-      var database = new FakeDatabase("master") { DataStorage = dataStorage };
+      var database = Substitute.For<FakeDatabase>("master");
+      database.DataStorage = Substitute.For<DataStorage>();
 
       var dbchild1 = new DbItem("child1");
       var dbchild2 = new DbItem("child2");
@@ -35,11 +35,11 @@
 
       var child1 = ItemHelper.CreateInstance();
       var child2 = ItemHelper.CreateInstance();
-      var item = ItemHelper.CreateInstance(dbitem.ID, database);
+      var item = ItemHelper.CreateInstance(dbitem.ID);
 
-      dataStorage.GetFakeItem(dbitem.ID).Returns(dbitem);
-      dataStorage.GetSitecoreItem(dbchild1.ID).Returns(child1);
-      dataStorage.GetSitecoreItem(dbchild2.ID).Returns(child2);
+      database.DataStorage.GetFakeItem(dbitem.ID).Returns(dbitem);
+      database.DataStorage.GetSitecoreItem(dbchild1.ID).Returns(child1);
+      database.DataStorage.GetSitecoreItem(dbchild2.ID).Returns(child2);
 
       var command = new OpenGetChildrenCommand { Engine = new DataEngine(database) };
       command.Initialize(item);
