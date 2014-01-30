@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System;
   using System.Linq;
   using Sitecore.Data;
 
@@ -13,9 +14,8 @@
     protected override ID DoExecute()
     {
       var dataStorage = this.Database.GetDataStorage();
+      var kvp = dataStorage.FakeItems.SingleOrDefault(fi => string.Compare(fi.Value.FullPath, ItemPath, StringComparison.OrdinalIgnoreCase) == 0);
 
-      var kvp = dataStorage.FakeItems.SingleOrDefault(fi => fi.Value.FullPath == ItemPath);
-      
       return kvp.Key;
     }
   }

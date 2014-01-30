@@ -7,6 +7,7 @@
   using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Xunit;
+  using Xunit.Extensions;
 
   public class ResolvePathCommandTest
   {
@@ -20,15 +21,15 @@
       command.CreateInstance().Should().BeOfType<ResolvePathCommand>();
     }
 
-    [Fact]
-    public void ShouldResolvePath()
+    [Theory]
+    [InlineData("/sitecore/content")]
+    [InlineData("/Sitecore/Content")]
+    public void ShouldResolvePath(string path)
     {
       // arrange
-      const string Path = "/sitecore/content";
-
       var database = Substitute.For<FakeDatabase>("master");
       var command = new OpenResolvePathCommand { Engine = new DataEngine(database) };
-      command.Initialize(Path);
+      command.Initialize(path);
 
       // act
       var id = command.DoExecute();
