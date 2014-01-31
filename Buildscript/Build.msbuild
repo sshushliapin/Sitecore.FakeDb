@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="ReleaseBuild" ToolsVersion="4.0">
+  <Import Project="Build.config" />
+
+  <UsingTask TaskName="xunit" AssemblyFile="$(XUnitPath)\xunit.runner.msbuild.dll" />
+
+  <Target Name="Clean">
+    <MSBuild Projects="@(ProjectToBuild)" Targets="Clean" Properties="Configuration=Debug" />
+    <MSBuild Projects="@(ProjectToBuild)" Targets="Clean" Properties="Configuration=Release" />
+    <RemoveDir Directories="$(ReleaseFolder)" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="Clean">
+    <MSBuild Projects="@(ProjectToBuild)" Properties="Configuration=Release" />
+  </Target>
+
+  <Target Name="Tools">
+    <Exec Command="$(NuGetPath)\nuget.exe restore -PackagesDirectory $(PackagesDirectory)" />
+  </Target>
+
+  <Target Name="Test" DependsOnTargets="Tools;Build">
+    <xunit Assemblies="@(TestAssemblies)" />
+  </Target>
+
+  <Target Name="CopyToReleaseFolder" DependsOnTargets="Test">
+    <MakeDir Directories="$(ReleaseFolder)" />
+    <Copy SourceFiles="@(BuildOutput)" DestinationFolder="$(ReleaseFolder)" />
+  </Target>
+
+  <Target Name="ReleaseBuild" DependsOnTargets="CopyToReleaseFolder" />
+</Project>
