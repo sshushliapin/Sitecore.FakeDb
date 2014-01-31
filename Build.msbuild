@@ -10,15 +10,15 @@
     <RemoveDir Directories="$(ReleaseFolder)" />
   </Target>
 
-  <Target Name="Build" DependsOnTargets="Clean">
+  <Target Name="Packages">
+    <Exec Command="$(NuGetPath)\nuget.exe restore -PackagesDirectory $(PackagesDirectory)" WorkingDirectory="$(WorkingDirectory)" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="Clean;Packages">
     <MSBuild Projects="@(ProjectToBuild)" Properties="Configuration=Release" />
   </Target>
 
-  <Target Name="Tools">
-    <Exec Command="$(NuGetPath)\nuget.exe restore -PackagesDirectory $(PackagesDirectory)" />
-  </Target>
-
-  <Target Name="Test" DependsOnTargets="Tools;Build">
+  <Target Name="Test" DependsOnTargets="Build">
     <xunit Assemblies="@(TestAssemblies)" />
   </Target>
 
