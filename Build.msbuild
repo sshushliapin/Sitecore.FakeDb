@@ -27,5 +27,9 @@
     <Copy SourceFiles="@(BuildOutput)" DestinationFolder="$(ReleaseFolder)" />
   </Target>
 
-  <Target Name="ReleaseBuild" DependsOnTargets="CopyToReleaseFolder" />
+  <Target Name="NuGetPackage" DependsOnTargets="CopyToReleaseFolder">
+    <Exec Command="$(NuGetPath)\nuget.exe pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\Release -Build" WorkingDirectory="$(WorkingDirectory)" />
+  </Target>
+
+  <Target Name="ReleaseBuild" DependsOnTargets="NuGetPackage" />
 </Project>
