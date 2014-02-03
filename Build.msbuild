@@ -11,24 +11,23 @@
   </Target>
 
   <Target Name="Packages">
-    <Exec Command="$(NuGetPath)\nuget.exe restore -PackagesDirectory $(PackagesDirectory)" WorkingDirectory="$(WorkingDirectory)" />
+    <Exec Command="$(NuGet) restore -PackagesDirectory $(PackagesDirectory)" WorkingDirectory="$(SourceFolder)" />
   </Target>
 
   <Target Name="Build" DependsOnTargets="Clean;Packages">
-    <MSBuild Projects="@(ProjectToBuild)" Properties="Configuration=Release" />
+    <MSBuild Projects="$(ProjectToBuild)" Properties="Configuration=Release" />
   </Target>
 
   <Target Name="Test" DependsOnTargets="Build">
-    <xunit Assemblies="@(TestAssemblies)" />
+    <xunit Assembly="$(TestAssembly)" />
   </Target>
 
-  <Target Name="CopyToReleaseFolder" DependsOnTargets="Test">
+  <Target Name="ReleaseFolder" DependsOnTargets="Test">
     <MakeDir Directories="$(ReleaseFolder)" />
-    <Copy SourceFiles="@(BuildOutput)" DestinationFolder="$(ReleaseFolder)" />
   </Target>
 
-  <Target Name="NuGetPackage" DependsOnTargets="CopyToReleaseFolder">
-    <Exec Command="$(NuGetPath)\nuget.exe pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\Release -Build" WorkingDirectory="$(WorkingDirectory)" />
+  <Target Name="NuGetPackage" DependsOnTargets="ReleaseFolder">
+    <Exec Command="$(NuGet) pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\$(ReleaseFolder) -Build" WorkingDirectory="$(SourceFolder)" />
   </Target>
 
   <Target Name="ReleaseBuild" DependsOnTargets="NuGetPackage" />
