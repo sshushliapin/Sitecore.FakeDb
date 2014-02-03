@@ -58,6 +58,24 @@ namespace Sitecore.FakeDb.Data.Engines
       return this.FakeItems.ContainsKey(itemId) ? this.FakeItems[itemId] : null;
     }
 
+    public virtual DbTemplate GetFakeTemplate(ID templateId)
+    {
+      return this.FakeTemplates.ContainsKey(templateId) ? this.FakeTemplates[templateId] : null;
+    }
+
+    public virtual FieldList GetFieldList(ID templateId)
+    {
+      Assert.IsTrue(this.FakeTemplates.ContainsKey(templateId), "Template '{0}' not found.", templateId);
+
+      var fields = new FieldList();
+      foreach (var field in this.FakeTemplates[templateId].Fields)
+      {
+        fields.Add(field.Value, string.Empty);
+      }
+
+      return fields;
+    }
+
     public virtual Item GetSitecoreItem(ID itemId)
     {
       if (!this.FakeItems.ContainsKey(itemId))
@@ -135,19 +153,6 @@ namespace Sitecore.FakeDb.Data.Engines
       this.fakeItems.Add(TemplateIDs.TemplateSection, new DbItem(TemplateSectionItemName, TemplateIDs.TemplateSection, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
       this.fakeItems.Add(TemplateIDs.TemplateField, new DbItem(TemplateFieldItemName, TemplateIDs.TemplateField, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
       this.fakeItems.Add(TemplateIDs.BranchTemplate, new DbItem(BranchItemName, TemplateIDs.BranchTemplate, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
-    }
-
-    public virtual FieldList GetFieldList(ID templateId)
-    {
-      Assert.IsTrue(this.FakeTemplates.ContainsKey(templateId), "Template '{0}' not found.", templateId);
-
-      var fields = new FieldList();
-      foreach (var field in this.FakeTemplates[templateId].Fields)
-      {
-        fields.Add(field.Value, string.Empty);
-      }
-
-      return fields;
     }
   }
 }

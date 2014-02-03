@@ -19,23 +19,16 @@
     }
 
     [Fact]
-    public void ShouldCreateEmptyFieldsCollection()
+    public void ShouldCreateNewDbItem()
     {
-      // arrange
-      var item = new DbItem("home");
-
-      // assert
-      item.Fields.Should().BeEmpty();
-    }
-
-    [Fact]
-    public void ShouldCreateEmptyChildrenCollection()
-    {
-      // arrange
+      // arrange & act
       var item = new DbItem("home");
 
       // assert
       item.Children.Should().BeEmpty();
+      item.Fields.Should().BeEmpty();
+      item.FullPath.Should().BeNull();
+      item.ParentID.Should().BeNull();
     }
 
     [Fact]
@@ -46,26 +39,6 @@
 
       // act & assert
       item.Fields["Title"].Should().Be("Welcome!");
-    }
-
-    [Fact]
-    public void ShouldSetSitecoreContentParentIdByDefault()
-    {
-      // arrange
-      var item = new DbItem("home");
-
-      // act & assert
-      item.ParentID.Should().Be(ItemIDs.ContentRoot);
-    }
-
-    [Fact]
-    public void ShouldSetSitecoreContentFullPathByDefault()
-    {
-      // arrange
-      var item = new DbItem("home");
-
-      // act & asert
-      item.FullPath.Should().Be("/sitecore/content/home");
     }
 
     [Fact]
@@ -95,20 +68,6 @@
 
       // assert
       child.ParentID.Should().Be(parentId);
-    }
-
-    [Fact]
-    public void ChildItemShouldGetFullPath()
-    {
-      // arrange
-      var parent = new DbItem("parent");
-      var child = new DbItem("child");
-
-      // act
-      parent.Add(child);
-
-      // assert
-      child.FullPath.Should().Be("/sitecore/content/parent/child");
     }
   }
 }

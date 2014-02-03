@@ -9,9 +9,12 @@ namespace Sitecore.FakeDb
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.FakeDb.Data;
+  using Sitecore.FakeDb.Data.Engines;
 
   public class Db : IDisposable, IEnumerable
   {
+    private static readonly ID DefaultItemRoot = ItemIDs.ContentRoot;
+
     private readonly Database database;
 
     public Db()
@@ -24,6 +27,11 @@ namespace Sitecore.FakeDb
       get { return this.database; }
     }
 
+    private DataStorage DataStorage
+    {
+      get { return this.Database.GetDataStorage(); }
+    }
+
     public IEnumerator GetEnumerator()
     {
       throw new NotImplementedException();
@@ -31,31 +39,16 @@ namespace Sitecore.FakeDb
 
     public void Add(DbItem item)
     {
-      this.CreateTemplateIfMissing(item);
-
-      var root = this.Database.GetItem(item.ParentID);
-      ItemManager.CreateItem(item.Name, root, item.TemplateID, item.ID);
-
-      if (item.Fields.Any())
-      {
-        var dataStorage = this.Database.GetDataStorage();
-        var dbitem = dataStorage.FakeItems[item.ID];
-        foreach (var field in item.Fields)
-        {
-          dbitem.Fields.Add(field);
-        }
-      }
-
-      foreach (var child in item.Children)
-      {
-        this.Add(child);
-      }
+      this.CreateTemplate(item);
+      this.CreateItem(item);
+      this.CreateItemFields(item);
+      this.SetFullPath(item);
+      this.AddChildren(item);
     }
 
-    private void CreateTemplateIfMissing(DbItem item)
+    protected virtual void CreateTemplate(DbItem item)
     {
-      var dataStorage = this.database.GetDataStorage();
-      if (dataStorage.FakeTemplates.ContainsKey(item.TemplateID))
+      if (DataStorage.FakeTemplates.ContainsKey(item.TemplateID))
       {
         return;
       }
@@ -66,7 +59,53 @@ namespace Sitecore.FakeDb
         fields.Add(field.Key, ID.NewID);
       }
 
-      dataStorage.FakeTemplates.Add(item.TemplateID, new DbTemplate(item.Name, item.TemplateID) { Fields = fields });
+      DataStorage.FakeTemplates.Add(item.TemplateID, new DbTemplate(item.Name, item.TemplateID) { Fields = fields });
+    }
+
+    protected virtual void CreateItem(DbItem item)
+    {
+      if (ID.IsNullOrEmpty(item.ParentID))
+      {
+        item.ParentID = DefaultItemRoot;
+      }
+
+      var root = this.Database.GetItem(item.ParentID);
+      ItemManager.CreateItem(item.Name, root, item.TemplateID, item.ID);
+    }
+
+    protected virtual void CreateItemFields(DbItem item)
+    {
+      if (!item.Fields.Any())
+      {
+        return;
+      }
+
+      var dbitem = DataStorage.FakeItems[item.ID];
+      foreach (var field in item.Fields)
+      {
+        dbitem.Fields.Add(field);
+      }
+    }
+
+    protected virtual void SetFullPath(DbItem item)
+    {
+      if (item.ParentID == DefaultItemRoot)
+      {
+        item.FullPath = Constants.ContentPath + "/" + item.Name;
+        return;
+      }
+
+      var parent = this.DataStorage.GetFakeItem(item.ParentID);
+      item.FullPath = parent.FullPath + "/" + item.Name;
+    }
+
+    protected virtual void AddChildren(DbItem item)
+    {
+      foreach (var child in item.Children)
+      {
+        child.FullPath = item.FullPath + "/" + child.Name;
+        this.Add(child);
+      }
     }
 
     /// <summary>

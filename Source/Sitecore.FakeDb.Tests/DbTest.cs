@@ -141,6 +141,69 @@
     }
 
     [Fact]
+    public void ShouldSetSitecoreContentParentIdByDefault()
+    {
+      // arrange
+      var item = new DbItem("home");
+
+      // act
+      using (new Db { item })
+      {
+        // assert
+        item.ParentID.Should().Be(ItemIDs.ContentRoot);
+      }
+    }
+
+    [Fact]
+    public void ShouldSetSitecoreContentFullPathByDefault()
+    {
+      // arrange
+      var item = new DbItem("home");
+
+      // act
+      using (new Db { item })
+      {
+        // asert
+        item.FullPath.Should().Be("/sitecore/content/home");
+      }
+    }
+
+    [Fact]
+    public void ShouldSetChildItemFullPathOnDbInit()
+    {
+      // arrange
+      var parent = new DbItem("parent");
+      var child = new DbItem("child");
+
+      parent.Add(child);
+
+      // act
+      using (new Db { parent })
+      {
+        // assert
+        child.FullPath.Should().Be("/sitecore/content/parent/child");
+      }
+    }
+
+    [Fact]
+    public void ShouldSetChildItemFullIfParentIdIsSet()
+    {
+      // arrange
+      var parent = new DbItem("parent");
+      var child = new DbItem("child");
+
+      // act
+      using (var db = new Db { parent })
+      {
+        child.ParentID = parent.ID;
+        db.Add(child);
+
+        // assert
+        child.FullPath.Should().Be("/sitecore/content/parent/child");
+      }
+    }
+
+    [Fact]
     public void ShouldGetItemFromSitecoreDatabase()
     {
       // arrange

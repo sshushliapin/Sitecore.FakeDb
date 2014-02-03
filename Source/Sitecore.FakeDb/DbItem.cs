@@ -25,8 +25,6 @@ namespace Sitecore.FakeDb
       this.ID = id;
       this.TemplateID = templateId;
       this.Fields = new Dictionary<string, object>();
-      this.ParentID = ItemIDs.ContentRoot;
-      this.FullPath = Constants.ContentPath + "/" + name;
       this.Children = new Collection<DbItem>();
     }
 
@@ -40,7 +38,7 @@ namespace Sitecore.FakeDb
 
     public ID ParentID { get; set; }
 
-    public string FullPath { get; set; }
+    public string FullPath { get; internal set; }
 
     public ICollection<DbItem> Children { get; private set; }
 
@@ -57,7 +55,6 @@ namespace Sitecore.FakeDb
     public void Add(DbItem child)
     {
       child.ParentID = this.ID;
-      child.FullPath = this.FullPath + "/" + child.Name;
 
       this.Children.Add(child);
     }
