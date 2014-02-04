@@ -67,6 +67,7 @@
     <Compile Include="Data\Engines\DataCommands\DeleteItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\CreateItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetChildrenCommandTest.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetVersionsCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\HasChildrenCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetParentCommandTest.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Data\FakeDatabaseTest.cs" />
     <Compile Include="Data\Items\ItemHelperTest.cs" />
     <Compile Include="Data\Items\EditContextTest.cs" />
+    <Compile Include="DbFieldCollectionTest.cs" />
     <Compile Include="DbTemplateTest.cs" />
     <Compile Include="DbTest.cs" />
     <Compile Include="DbItemTest.cs" />

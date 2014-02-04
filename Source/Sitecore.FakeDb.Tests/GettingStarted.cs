@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
+  using System.Collections.Generic;
   using Xunit;
 
   public class GettingStarted
@@ -60,15 +61,22 @@
                        {
                          new DbItem("home")
                            {
-                             new DbItem("Articles")
+                             Fields = new DbFieldCollection { { "Title", "Welcome to Sitecore!" } },
+                             Children = new[]
                                {
-                                 new DbItem("Getting Started") { { "Description", "Articles helping to get started." } },
-                                 new DbItem("Troubleshooting") { { "Description", "Articles with solutions to common problems." } }
+                                 new DbItem("Articles")
+                                 {
+                                   new DbItem("Getting Started") { { "Description", "Articles helping to get started." } },
+                                   new DbItem("Troubleshooting") { { "Description", "Articles with solutions to common problems." } }
+                                 }
                                }
                            }
                        })
       {
-        Sitecore.Data.Items.Item articles = db.Database.GetItem("/sitecore/content/home/Articles");
+        Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
+        Assert.Equal("Welcome to Sitecore!", home["Title"]);
+
+        Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/home/Articles");
 
         Sitecore.Data.Items.Item gettingStartedArticle = articles.Children["Getting Started"];
         Assert.Equal("Articles helping to get started.", gettingStartedArticle["Description"]);

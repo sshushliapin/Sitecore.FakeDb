@@ -49,7 +49,7 @@
 
       // assert
       database.DataStorage.FakeItems[itemId].Name.Should().Be("updated item");
-      database.DataStorage.FakeItems[itemId].Fields[fieldId.ToString()].Should().Be("updated title");
+      database.DataStorage.FakeItems[itemId].Fields[fieldId].Value.Should().Be("updated title");
     }
 
     private class OpenSaveItemCommand : SaveItemCommand

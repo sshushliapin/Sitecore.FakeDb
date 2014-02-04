@@ -1,7 +1,6 @@
 ﻿namespace Sitecore.FakeDb
 {
   using System.Collections;
-  using System.Collections.Generic;
   using Sitecore.Data;
 
   public class DbTemplate : IEnumerable
@@ -10,8 +9,7 @@
 
     public ID ID { get; private set; }
 
-    // TODO: Key is a field name, value is a field id. It's hard to grasp.
-    public IDictionary<string, ID> Fields { get; set; }
+    public DbFieldCollection Fields { get; set; }
 
     public DbTemplate()
       : this(null, ID.NewID)
@@ -23,12 +21,12 @@
       this.Name = name ?? id.ToShortID().ToString();
       this.ID = id;
 
-      this.Fields = new Dictionary<string, ID>();
+      this.Fields = new DbFieldCollection();
     }
 
     public void Add(string fieldName)
     {
-      this.Fields.Add(fieldName, ID.NewID);
+      this.Fields.Add(fieldName);
     }
 
     public IEnumerator GetEnumerator()

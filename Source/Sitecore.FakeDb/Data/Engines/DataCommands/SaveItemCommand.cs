@@ -18,14 +18,13 @@
 
       foreach (Field field in Item.Fields)
       {
-        var key = string.IsNullOrEmpty(field.Name) ? field.ID.ToString() : field.Name;
-        if (fakeItem.Fields.ContainsKey(key))
+        if (fakeItem.Fields.InnerFields.ContainsKey(field.ID))
         {
-          fakeItem.Fields[key] = field.Value;
+          fakeItem.Fields[field.ID].Value = field.Value;
         }
         else
         {
-          fakeItem.Fields.Add(key, field.Value);
+          fakeItem.Fields.Add(new DbField { ID = field.ID, Name = field.Name, Value = field.Value });
         }
       }
 

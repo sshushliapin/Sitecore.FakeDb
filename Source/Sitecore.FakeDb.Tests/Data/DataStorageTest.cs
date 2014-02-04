@@ -119,9 +119,10 @@
     public void ShouldGetFieldListByTemplateId()
     {
       // arrange
-      var template = new DbTemplate { "Field 1", "Field 2" };
-      var fieldId1 = template.Fields["Field 1"];
-      var fieldId2 = template.Fields["Field 2"];
+      var field1 = new DbField();
+      var field2 = new DbField();
+
+      var template = new DbTemplate { Fields = new DbFieldCollection { field1, field2 } };
 
       this.dataStorage.FakeTemplates.Add(template.ID, template);
 
@@ -130,8 +131,8 @@
 
       // assert
       fieldList.Count.Should().Be(2);
-      fieldList[fieldId1].Should().BeEmpty();
-      fieldList[fieldId2].Should().BeEmpty();
+      fieldList[field1.ID].Should().BeEmpty();
+      fieldList[field2.ID].Should().BeEmpty();
     }
 
     [Fact]

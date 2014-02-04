@@ -1,12 +1,10 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
-  using System.Linq;
+  using System.Collections.Generic;
   using FluentAssertions;
   using Sitecore.Data;
-  using Sitecore.FakeDb.Data;
   using Xunit;
 
-  // TODO: The tests bellow depend from commands implementation which makes them brittle.
   public class DbTest
   {
     private readonly ID itemId = ID.NewID;
@@ -79,29 +77,10 @@
     }
 
     [Fact]
-    public void ShouldCreateFakeTemplate()
+    public void ShouldCreateItemHierarchyAndReadChildByPath()
     {
       // arrange & act
-      using (var db = new Db { new DbItem("my item") { "my field" } })
-      {
-        // assert
-        var template = db.Database.GetDataStorage().FakeTemplates.Last().Value;
-        template.Name.Should().Be("my item");
-        template.Fields["my field"].Should().NotBeNull();
-      }
-    }
-
-    [Fact]
-    public void ShouldCreateItemHierarchy()
-    {
-      // arrange & act
-      using (var db = new Db
-                        {
-                          new DbItem("parent")
-                            {
-                              new DbItem("child")
-                            }
-                        })
+      using (var db = new Db { new DbItem("parent") { new DbItem("child") } })
       {
         // assert
         db.GetItem("/sitecore/content/parent/child").Should().NotBeNull();
@@ -211,6 +190,26 @@
       {
         // act & assert
         db.GetItem("/sitecore/content").Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateItemWithFieldsAndChildren()
+    {
+      // arrange & act
+      using (var db = new Db
+               {
+                 new DbItem("parent")
+                   {
+                     Fields = new DbFieldCollection { { "Title", "Welcome to parent item!" } },
+                     Children = new[] { new DbItem("child") { { "Title", "Welcome to child item!" } } }
+                   }
+               })
+      {
+        // assert
+        var parent = db.GetItem("/sitecore/content/parent");
+        parent["Title"].Should().Be("Welcome to parent item!");
+        parent.Children["child"]["Title"].Should().Be("Welcome to child item!");
       }
     }
   }

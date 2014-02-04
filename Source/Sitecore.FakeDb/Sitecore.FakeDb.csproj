@@ -80,6 +80,8 @@
     <Compile Include="Data\Engines\DataStorage.cs" />
     <Compile Include="Data\Items\ItemHelper.cs" />
     <Compile Include="Db.cs" />
+    <Compile Include="DbField.cs" />
+    <Compile Include="DbFieldCollection.cs" />
     <Compile Include="DbItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\AccessControl\FakeAuthorizationProvider.cs" />

@@ -2,7 +2,6 @@
 {
   using System.Linq;
   using FluentAssertions;
-  using Sitecore.Data;
   using Xunit;
 
   public class DbItemTest
@@ -38,7 +37,7 @@
       var item = new DbItem("home") { { "Title", "Welcome!" } };
 
       // act & assert
-      item.Fields["Title"].Should().Be("Welcome!");
+      item.Fields.Should().ContainSingle(f => f.Name == "Title" && f.Value == "Welcome!");
     }
 
     [Fact]
@@ -53,21 +52,6 @@
 
       // assert
       parent.Children.Single().Should().BeEquivalentTo(child);
-    }
-
-    [Fact]
-    public void ChildItemShouldGetParentId()
-    {
-      // arrange
-      var parentId = ID.NewID;
-      var parent = new DbItem("parent", parentId);
-      var child = new DbItem("child");
-
-      // act
-      parent.Add(child);
-
-      // assert
-      child.ParentID.Should().Be(parentId);
     }
   }
 }

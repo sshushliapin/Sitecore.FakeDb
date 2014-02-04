@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
+  using System.Linq;
   using FluentAssertions;
   using Sitecore.Data;
   using Xunit;
@@ -47,7 +48,7 @@
       var template = new DbTemplate { "Title", "Description" };
 
       // assert
-      template.Fields.Keys.ShouldBeEquivalentTo(new[] { "Title", "Description" });
+      template.Fields.Select(f => f.Name).ShouldBeEquivalentTo(new[] { "Title", "Description" });
     }
   }
 }

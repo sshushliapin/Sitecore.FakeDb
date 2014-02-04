@@ -6,7 +6,6 @@ namespace Sitecore.FakeDb.Data.Engines
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Items;
-  using Sitecore.SecurityModel;
 
   public class DataStorage
   {
@@ -70,7 +69,7 @@ namespace Sitecore.FakeDb.Data.Engines
       var fields = new FieldList();
       foreach (var field in this.FakeTemplates[templateId].Fields)
       {
-        fields.Add(field.Value, string.Empty);
+        fields.Add(field.ID, string.Empty);
       }
 
       return fields;
@@ -85,39 +84,17 @@ namespace Sitecore.FakeDb.Data.Engines
 
       var fakeItem = this.FakeItems[itemId];
 
-      // TODO: Cleanup
       var fields = new FieldList();
       if (this.FakeTemplates.ContainsKey(fakeItem.TemplateID))
       {
-        var fakeTemplate = this.FakeTemplates[fakeItem.TemplateID];
-
         fields = this.GetFieldList(fakeItem.TemplateID);
         foreach (var field in fakeItem.Fields)
         {
-          var fieldId = fakeTemplate.Fields[field.Key];
-
-          fields.Add(fieldId, field.Value.ToString());
+          fields.Add(field.ID, field.Value);
         }
       }
 
       var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.Database);
-
-      if (!fakeItem.Fields.Any())
-      {
-        return item;
-      }
-
-      item.RuntimeSettings.ForceModified = true;
-      // TODO:[Med] This will never call for the SaveItemCommand. Should be avoided.
-      item.RuntimeSettings.Temporary = true;
-
-      using (new EditContext(item, SecurityCheck.Disable))
-      {
-        foreach (var field in fakeItem.Fields)
-        {
-          item[field.Key] = field.Value.ToString();
-        }
-      }
 
       return item;
     }

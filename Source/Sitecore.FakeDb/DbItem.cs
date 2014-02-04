@@ -24,7 +24,7 @@ namespace Sitecore.FakeDb
       this.Name = name;
       this.ID = id;
       this.TemplateID = templateId;
-      this.Fields = new Dictionary<string, object>();
+      this.Fields = new DbFieldCollection();
       this.Children = new Collection<DbItem>();
     }
 
@@ -34,18 +34,13 @@ namespace Sitecore.FakeDb
 
     public ID TemplateID { get; private set; }
 
-    public IDictionary<string, object> Fields { get; private set; }
+    public DbFieldCollection Fields { get; set; }
 
     public ID ParentID { get; set; }
 
     public string FullPath { get; internal set; }
 
-    public ICollection<DbItem> Children { get; private set; }
-
-    public void Add(string fieldName)
-    {
-      this.Fields.Add(fieldName, string.Empty);
-    }
+    public ICollection<DbItem> Children { get; set; }
 
     public void Add(string fieldName, string fieldValue)
     {
@@ -54,8 +49,6 @@ namespace Sitecore.FakeDb
 
     public void Add(DbItem child)
     {
-      child.ParentID = this.ID;
-
       this.Children.Add(child);
     }
 

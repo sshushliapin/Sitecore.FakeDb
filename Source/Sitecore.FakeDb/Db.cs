@@ -2,7 +2,6 @@ namespace Sitecore.FakeDb
 {
   using System;
   using System.Collections;
-  using System.Collections.Generic;
   using System.Linq;
   using Sitecore.Configuration;
   using Sitecore.Data;
@@ -53,10 +52,11 @@ namespace Sitecore.FakeDb
         return;
       }
 
-      var fields = new Dictionary<string, ID>(item.Fields.Count);
-      foreach (var field in item.Fields)
+      var fields = new DbFieldCollection();
+      foreach (var itemField in item.Fields)
       {
-        fields.Add(field.Key, ID.NewID);
+        var templatefield = new DbField { ID = itemField.ID, Name = itemField.Name };
+        fields.Add(templatefield);
       }
 
       DataStorage.FakeTemplates.Add(item.TemplateID, new DbTemplate(item.Name, item.TemplateID) { Fields = fields });
@@ -103,6 +103,7 @@ namespace Sitecore.FakeDb
     {
       foreach (var child in item.Children)
       {
+        child.ParentID = item.ID;
         child.FullPath = item.FullPath + "/" + child.Name;
         this.Add(child);
       }
