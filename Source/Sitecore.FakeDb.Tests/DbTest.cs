@@ -194,6 +194,20 @@
     }
 
     [Fact]
+    public void ShouldGetItemParent()
+    {
+      // arrange
+      using (Db db = new Db { new DbItem("item") })
+      {
+        // act
+        var parent = db.GetItem("/sitecore/content/item").Parent;
+
+        // assert
+        parent.Paths.FullPath.Should().Be("/sitecore/content");
+      }
+    }
+
+    [Fact]
     public void ShouldCreateItemWithFieldsAndChildren()
     {
       // arrange & act

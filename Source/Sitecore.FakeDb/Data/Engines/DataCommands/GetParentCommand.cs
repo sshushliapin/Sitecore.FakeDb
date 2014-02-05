@@ -13,7 +13,13 @@
     {
       var dataStorage = this.Database.GetDataStorage();
 
+      if (Item.ID == ItemIDs.RootID)
+      {
+        return null;
+      }
+
       var fakeItem = dataStorage.GetFakeItem(Item.ID);
+
       return fakeItem != null ? dataStorage.GetSitecoreItem(fakeItem.ParentID) : null;
     }
   }

@@ -56,16 +56,40 @@
       var database = Substitute.For<FakeDatabase>("master");
       database.DataStorage = Substitute.For<DataStorage>();
 
-      var itemWithoutParent = ItemHelper.CreateInstance();
+      var item = ItemHelper.CreateInstance();
+      database.DataStorage.GetFakeItem(item.ID).Returns(Arg.Any<DbItem>());
 
       var command = new OpenGetParentCommand { Engine = new DataEngine(database) };
-      command.Initialize(itemWithoutParent);
+      command.Initialize(item);
 
       // act
       var parent = command.DoExecute();
 
       // assert
       parent.Should().BeNull();
+      database.DataStorage.DidNotReceiveWithAnyArgs().GetSitecoreItem(null);
+    }
+
+    [Fact]
+    public void ShouldNotTryToLocateParentForSitecoreRoot()
+    {
+      // arrange
+      var database = Substitute.For<FakeDatabase>("master");
+      database.DataStorage = Substitute.For<DataStorage>();
+
+      var rootId = ItemIDs.RootID;
+      var item = ItemHelper.CreateInstance(rootId);
+      database.DataStorage.GetFakeItem(rootId).Returns(new DbItem("sitecore", rootId));
+
+      var command = new OpenGetParentCommand { Engine = new DataEngine(database) };
+      command.Initialize(item);
+
+      // act
+      var parent = command.DoExecute();
+
+      // assert
+      parent.Should().BeNull();
+      database.DataStorage.DidNotReceiveWithAnyArgs().GetSitecoreItem(null);
     }
 
     private class OpenGetParentCommand : GetParentCommand
