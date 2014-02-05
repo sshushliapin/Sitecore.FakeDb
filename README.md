@@ -1,7 +1,7 @@
 Sitecore FakeDb
 ===============
 
-A friendly unit testing framework for Sitecore.
+A unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory. Designed to minimize efforts for the test content initialization keeping focus on the minimal test data rather than comprehensive content tree representation.
 
 ### Getting started
 
