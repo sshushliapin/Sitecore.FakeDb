@@ -6,9 +6,10 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
+    <projectUrl>https://github.com/sergeyshushlyapin/Sitecore.FakeDb</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <copyright>Copyright 2014</copyright>
+    <tags>Sitecore, unit testing</tags>
   </metadata>
   <files>
     <file src="..\Sitecore.FakeDb.Tests\App.config" target="content" />
