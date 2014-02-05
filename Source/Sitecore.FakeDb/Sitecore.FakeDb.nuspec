@@ -6,7 +6,7 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>https://github.com/sergeyshushlyapin/Sitecore.FakeDb/LICENSE</licenseUrl>
+    <licenseUrl>https://github.com/sergeyshushlyapin/Sitecore.FakeDb/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/sergeyshushlyapin/Sitecore.FakeDb</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
