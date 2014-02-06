@@ -74,7 +74,6 @@
     <Compile Include="Data\DataProviders\FakeDataProvider.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Engines\MemoryHistoryStorage.cs" />
     <Compile Include="Data\Engines\DataCommands\GetItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\CreateItemCommand.cs" />
     <Compile Include="Data\Engines\DataStorage.cs" />
