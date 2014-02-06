@@ -3,71 +3,55 @@ Sitecore FakeDb
 
 A unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory. Designed to minimize efforts for the test content initialization keeping focus on the minimal test data rather than comprehensive content tree representation.
 
-Installation
-------------
+### How do I install Sitecore FakeDb
 
-The package is available on NuGet. To install Sitecore FakeDb, run the following command in the Package Manager Console:
+The package is available on NuGet. To install the package, run the following command in the Package Manager Console:
 
       Install-Package Sitecore.FakeDb
       
-Then go to the App.config of the project you have the package installed and set path to the license.xml file in LicenseFile setting.
+When the package installation is done, go to the App.config file of the project you have the package installed and set path to the license.xml file in LicenseFile setting.
 
-Getting started
----------------
 
-Let's create a fake in-memory database. The code below creates new template 'Home' with default section 'Data' and single field 'Title'. Then it creates new item 'Home' based on the template and sets the 'Title' field value to 'Welcome!':
+### How do I create a simple item
 
-      using (Db db = new Db { new DbItem("Home") { { "Title", "Welcome!" } } })
+The code below creates a fake in-memory database with a single item Home that contains field Title with value 'Welcome!' ([xUnit](http://xunit.codeplex.com/) and [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions) are used):
+
+    [Fact]
+    public void HowDoICreateASimpleItem()
+    {
+      using (var db = new Db { new DbItem("Home") { { "Title", "Welcome!" } } })
       {
-        // put your code here.
-      }
-
-The database is already initialized and test items are created under Sitecore Content item. We can get the home item using db.Database property ([FluentAssertions](https://github.com/dennisdoomen/FluentAssertions) library is used in the examples below):
-
-        Sitecore.Data.Database database = db.Database;
-        Sitecore.Data.Items.Item homeItem = database.GetItem("/sitecore/content/home");
+        Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
         homeItem["Title"].Should().Be("Welcome!");
-        homeItem.Fields["Title"].Value.Should().Be("Welcome!");
-        
-The item can be edited using EditContext:
+      }
+    }
 
-        using (new Sitecore.Data.Items.EditContext(homeItem))
-        {
-          homeItem["Title"] = "Hi there!";
-        }
+### How do I create an item hierarchy
 
-        homeItem["Title"].Should().Be("Hi there!");
+    [Fact]
+    public void HowDoICreateAnItemHierarchy()
+    {
+      using (var db = new Db
+                        {
+                          new DbItem("Articles") { new DbItem("Getting Started"), new DbItem("Troubleshooting") }
+                        })
+      {
+        db.GetItem("/sitecore/content/Articles").Should().NotBeNull();
+        db.GetItem("/sitecore/content/Articles/Getting Started").Should().NotBeNull();
+        db.GetItem("/sitecore/content/Articles/Troubleshooting").Should().NotBeNull();
+      }
+    }
 
-Having the item in place it is easy to add a child item. The code below creates new item About under the Home item and sets title:
+### How do I create and configure an advanced item hierarchy
 
-        var templateId = new Sitecore.Data.TemplateID(homeItem.TemplateID);
-        var aboutItem = homeItem.Add("About", templateId);
-        using (new Sitecore.Data.Items.EditContext(aboutItem))
-        {
-          aboutItem["Title"] = "About us";
-        }
-
-        aboutItem["Title"].Should().Be("About us");
-
-Parent and child items can be accessed via appropriate properties:
-
-        homeItem.Children["About"].Paths.FullPath.Should().Be("/sitecore/content/Home/About");
-        aboutItem.Parent.Paths.FullPath.Should().Be("/sitecore/content/Home");
-
-When the item is no more needed it can be removed:
-
-        homeItem.Delete();
-        database.GetItem(homeItem.ID).Should().BeNull();
-        
-### Advanced item hierarchy initialization        
-
-With FakeDb it is possible to ititialize content with multiple items configured. The code below shows how to create advanced item hierarchy. First of all it creates Home item and sets welcome text in the Title field. The Home item contains folder Articles with two children, each of them has got own description specified:
-
+    [Fact]
+    public void HowDoICreateAndConfigureAdvancedItemHierarchy()
+    {
       using (Db db = new Db
         {
           new DbItem("home")
             {
-              Fields = new DbFieldCollection { { "Title", "Welcome to Sitecore!" } },
+              Fields = new DbFieldCollection { { "Title", "Welcome!" } },
               Children = new[]
                 {
                   new DbItem("Articles")
@@ -79,11 +63,10 @@ With FakeDb it is possible to ititialize content with multiple items configured.
             }
         })
       {
-        Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
-        home["Title"].Should().Be("Welcome to Sitecore!");
+        Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
+        homeItem["Title"].Should().Be("Welcome!");
 
         Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/home/Articles");
-        articles.Should().NotBeNull();
 
         Sitecore.Data.Items.Item gettingStartedArticle = articles.Children["Getting Started"];
         gettingStartedArticle["Description"].Should().Be("Articles helping to get started.");
@@ -91,3 +74,14 @@ With FakeDb it is possible to ititialize content with multiple items configured.
         Sitecore.Data.Items.Item troubleshootingArticle = articles.Children["Troubleshooting"];
         troubleshootingArticle["Description"].Should().Be("Articles with solutions to common problems.");
       }
+    }
+    
+### What can I do with Sitecore FakeDb
+
+Sitecore FakeDb allows you to perform the next manipulations with items in memory:
+
+* create and edit items
+* read items by path or id
+* access item children
+* access item parent
+* delete items
