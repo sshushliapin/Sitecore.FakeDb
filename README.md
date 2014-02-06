@@ -3,7 +3,17 @@ Sitecore FakeDb
 
 A unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory. Designed to minimize efforts for the test content initialization keeping focus on the minimal test data rather than comprehensive content tree representation.
 
-### Getting started
+Installation
+------------
+
+The package is available on NuGet. To install Sitecore FakeDb, run the following command in the Package Manager Console:
+
+      Install-Package Sitecore.FakeDb
+      
+Then go to the App.config of the project you have the package installed and set path to the license.xml file in LicenseFile setting.
+
+Getting started
+---------------
 
 Let's create a fake in-memory database. The code below creates new template 'Home' with default section 'Data' and single field 'Title'. Then it creates new item 'Home' based on the template and sets the 'Title' field value to 'Welcome!':
 
