@@ -3,7 +3,7 @@
   using Sitecore.Security.Accounts;
   using Sitecore.Security.Authentication;
 
-  public class StubAuthenticationProvider : AuthenticationProvider
+  public class FakeAuthenticationProvider : AuthenticationProvider
   {
     public override bool Login(User user)
     {
