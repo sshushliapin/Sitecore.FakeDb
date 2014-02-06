@@ -39,6 +39,9 @@
     <Reference Include="Ploeh.AutoFixture">
       <HintPath>..\packages\AutoFixture.3.16.3\lib\net40\Ploeh.AutoFixture.dll</HintPath>
     </Reference>
+    <Reference Include="Sitecore.ContentSearch">
+      <HintPath>..\packages\Sitecore\Sitecore.ContentSearch.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\packages\Sitecore\Sitecore.Kernel.dll</HintPath>
     </Reference>
@@ -62,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\SettingsTest.cs" />
+    <Compile Include="ContentSearch\ContentSearchConfigurationTest.cs" />
     <Compile Include="Data\DataProviders\FakeDataProviderTest.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\DeleteItemCommandTest.cs" />
