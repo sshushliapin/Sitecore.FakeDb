@@ -17,8 +17,13 @@ namespace Sitecore.FakeDb
     private readonly Database database;
 
     public Db()
+      : this("master")
     {
-      this.database = Database.GetDatabase("master");
+    }
+
+    public Db(string databaseName)
+    {
+      this.database = Database.GetDatabase(databaseName);
     }
 
     public Database Database
@@ -112,7 +117,7 @@ namespace Sitecore.FakeDb
     /// <summary>
     /// Gets the item.
     /// </summary>
-    /// <param name="path">The path.</param>
+    /// <param databaseName="path">The path.</param>
     /// <returns>The item.</returns>
     public Item GetItem(string path)
     {

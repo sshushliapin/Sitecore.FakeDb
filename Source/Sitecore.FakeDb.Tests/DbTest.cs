@@ -1,9 +1,9 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
-  using System.Collections.Generic;
   using FluentAssertions;
   using Sitecore.Data;
   using Xunit;
+  using Xunit.Extensions;
 
   public class DbTest
   {
@@ -17,6 +17,19 @@
 
       // act & assert
       db.Database.Name.Should().Be("master");
+    }
+
+    [Theory]
+    [InlineData("master")]
+    [InlineData("web")]
+    [InlineData("core")]
+    public void ShouldResolveDatabaseByName(string name)
+    {
+      // arrange
+      var db = new Db(name);
+
+      // act & assert
+      db.Database.Name.Should().Be(name);
     }
 
     [Fact]
