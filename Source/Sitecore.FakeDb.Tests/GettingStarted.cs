@@ -1,6 +1,12 @@
 ﻿namespace Examples
 {
+  using System;
+  using System.Linq;
   using FluentAssertions;
+  using NSubstitute;
+  using Sitecore.Analytics.Data.DataAccess;
+  using Sitecore.Common;
+  using Sitecore.ContentSearch.SearchTypes;
   using Sitecore.FakeDb;
   using Xunit;
 
@@ -59,6 +65,48 @@
 
         Sitecore.Data.Items.Item troubleshootingArticle = articles.Children["Troubleshooting"];
         troubleshootingArticle["Description"].Should().Be("Articles with solutions to common problems.");
+      }
+    }
+
+    [Fact]
+    public void HowDoIMockContentSearchLogic()
+    {
+      // arrange
+      try
+      {
+        var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
+        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Add("my_index", index);
+
+        using (var db = new Db { new DbItem("home") })
+        {
+          var searchResultItem = Substitute.For<SearchResultItem>();
+          searchResultItem.GetItem().Returns(db.GetItem("/sitecore/content/home"));
+          index.CreateSearchContext().GetQueryable<SearchResultItem>().Returns((new[] { searchResultItem }).AsQueryable());
+
+          // act
+          Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<SearchResultItem>().Single().GetItem();
+
+          // assert
+          result.Paths.FullPath.Should().Be("/sitecore/content/home");
+        }
+      }
+      finally
+      {
+        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Remove("my_index");
+      }
+    }
+
+    [Fact]
+    public void HowDoIMockTrackerVisitor()
+    {
+      // arrange
+      var visitor = Substitute.For<Visitor>(Guid.NewGuid());
+
+      // act
+      using (new Switcher<Visitor>(visitor))
+      {
+        // assert
+        Sitecore.Analytics.Tracker.Visitor.Should().Be(visitor);
       }
     }
 
