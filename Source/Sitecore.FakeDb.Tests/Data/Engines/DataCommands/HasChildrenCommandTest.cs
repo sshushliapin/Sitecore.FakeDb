@@ -30,14 +30,14 @@
       database.DataStorage = Substitute.For<DataStorage>();
 
       var itemId = ID.NewID;
-      var sitecoreItem = ItemHelper.CreateInstance(itemId);
+      var item = ItemHelper.CreateInstance(itemId);
       var fakeItemWithChildren = new DbItem("parent", itemId) { new DbItem("child") };
 
-      database.DataStorage.GetSitecoreItem(itemId).Returns(sitecoreItem);
+      database.DataStorage.GetSitecoreItem(itemId, item.Language).Returns(item);
       database.DataStorage.GetFakeItem(itemId).Returns(fakeItemWithChildren);
 
       var command = new OpenHasChildrenCommand { Engine = new DataEngine(database) };
-      command.Initialize(sitecoreItem);
+      command.Initialize(item);
 
       // act
       var result = command.DoExecute();
@@ -57,7 +57,7 @@
       var sitecoreItem = ItemHelper.CreateInstance(itemId);
       var fakeItemWithoutChildren = new DbItem("item", itemId);
 
-      database.DataStorage.GetSitecoreItem(itemId).Returns(sitecoreItem);
+      database.DataStorage.GetSitecoreItem(itemId, sitecoreItem.Language).Returns(sitecoreItem);
       database.DataStorage.GetFakeItem(itemId).Returns(fakeItemWithoutChildren);
 
       var command = new OpenHasChildrenCommand { Engine = new DataEngine(database) };

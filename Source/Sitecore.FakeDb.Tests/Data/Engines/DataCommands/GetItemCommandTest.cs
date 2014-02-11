@@ -9,7 +9,6 @@
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
-  using Sitecore.Globalization;
   using Xunit;
 
   public class GetItemCommandTest
@@ -34,10 +33,10 @@
       var itemId = ID.NewID;
       var item = ItemHelper.CreateInstance();
 
-      database.DataStorage.GetSitecoreItem(itemId).Returns(item);
+      database.DataStorage.GetSitecoreItem(itemId, item.Language).Returns(item);
 
       var command = new OpenGetItemCommand { Engine = new DataEngine(database) };
-      command.Initialize(itemId, Language.Invariant, Version.Latest);
+      command.Initialize(itemId, item.Language, Version.Latest);
 
       // act
       var result = command.DoExecute();
@@ -45,6 +44,8 @@
       // assert
       result.Should().Be(item);
     }
+
+
 
     private class OpenGetItemCommand : GetItemCommand
     {

@@ -38,8 +38,8 @@
       var item = ItemHelper.CreateInstance(dbitem.ID);
 
       database.DataStorage.GetFakeItem(dbitem.ID).Returns(dbitem);
-      database.DataStorage.GetSitecoreItem(dbchild1.ID).Returns(child1);
-      database.DataStorage.GetSitecoreItem(dbchild2.ID).Returns(child2);
+      database.DataStorage.GetSitecoreItem(dbchild1.ID, item.Language).Returns(child1);
+      database.DataStorage.GetSitecoreItem(dbchild2.ID, item.Language).Returns(child2);
 
       var command = new OpenGetChildrenCommand { Engine = new DataEngine(database) };
       command.Initialize(item);

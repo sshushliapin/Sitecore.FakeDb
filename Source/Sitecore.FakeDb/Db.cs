@@ -9,6 +9,7 @@ namespace Sitecore.FakeDb
   using Sitecore.Data.Managers;
   using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.Globalization;
 
   public class Db : IDisposable, IEnumerable
   {
@@ -114,14 +115,14 @@ namespace Sitecore.FakeDb
       }
     }
 
-    /// <summary>
-    /// Gets the item.
-    /// </summary>
-    /// <param databaseName="path">The path.</param>
-    /// <returns>The item.</returns>
     public Item GetItem(string path)
     {
       return this.Database.GetItem(path);
+    }
+
+    public Item GetItem(string path, string language)
+    {
+      return this.Database.GetItem(path, Language.Parse(language));
     }
 
     /// <summary>

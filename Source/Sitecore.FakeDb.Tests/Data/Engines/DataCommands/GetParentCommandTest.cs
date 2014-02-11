@@ -37,7 +37,7 @@
       var childItem = ItemHelper.CreateInstance(childId);
 
       database.DataStorage.GetFakeItem(childId).Returns(new DbItem("child", childId) { ParentID = parentId });
-      database.DataStorage.GetSitecoreItem(parentId).Returns(parentItem);
+      database.DataStorage.GetSitecoreItem(parentId, parentItem.Language).Returns(parentItem);
 
       var command = new OpenGetParentCommand { Engine = new DataEngine(database) };
       command.Initialize(childItem);
@@ -67,7 +67,7 @@
 
       // assert
       parent.Should().BeNull();
-      database.DataStorage.DidNotReceiveWithAnyArgs().GetSitecoreItem(null);
+      database.DataStorage.DidNotReceiveWithAnyArgs().GetSitecoreItem(null, null);
     }
 
     [Fact]
@@ -89,7 +89,7 @@
 
       // assert
       parent.Should().BeNull();
-      database.DataStorage.DidNotReceiveWithAnyArgs().GetSitecoreItem(null);
+      database.DataStorage.DidNotReceiveWithAnyArgs().GetSitecoreItem(null, null);
     }
 
     private class OpenGetParentCommand : GetParentCommand

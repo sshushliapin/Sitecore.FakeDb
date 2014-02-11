@@ -12,7 +12,7 @@
       var dataStorage = database.GetDataStorage();
       if (dataStorage.GetFakeItem(itemId) != null)
       {
-        return dataStorage.GetSitecoreItem(itemId);
+        return dataStorage.GetSitecoreItem(itemId, destination.Language);
       }
 
       var fieldList = dataStorage.GetFieldList(templateId);

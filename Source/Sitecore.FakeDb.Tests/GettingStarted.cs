@@ -5,9 +5,9 @@
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Analytics.Data.DataAccess;
-  using Sitecore.Common;
   using Sitecore.ContentSearch.SearchTypes;
   using Sitecore.FakeDb;
+  using Sitecore.FakeDb.Extensions;
   using Xunit;
 
   public class GettingStarted
@@ -69,6 +69,24 @@
     }
 
     [Fact]
+    public void HowDoICreateALocalizableItem()
+    {
+      // arrange & act
+      using (var db = new Db
+                        {
+                          new DbItem("home")
+                            {
+                              new LocalizableField("Title") { { "en", "Hello!" }, { "da", "Hej!" } },
+                            }
+                        })
+      {
+        // assert
+        db.GetItem("/sitecore/content/home", "en")["Title"].Should().Be("Hello!");
+        db.GetItem("/sitecore/content/home", "da")["Title"].Should().Be("Hej!");
+      }
+    }
+
+    [Fact]
     public void HowDoIMockContentSearchLogic()
     {
       // arrange
@@ -103,7 +121,7 @@
       var visitor = Substitute.For<Visitor>(Guid.NewGuid());
 
       // act
-      using (new Switcher<Visitor>(visitor))
+      using (new Sitecore.Common.Switcher<Visitor>(visitor))
       {
         // assert
         Sitecore.Analytics.Tracker.Visitor.Should().Be(visitor);

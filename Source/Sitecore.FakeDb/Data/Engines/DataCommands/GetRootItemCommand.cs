@@ -13,7 +13,7 @@
     {
       var dataStorage = this.Database.GetDataStorage();
 
-      return dataStorage.GetSitecoreItem(ItemIDs.RootID);
+      return dataStorage.GetSitecoreItem(ItemIDs.RootID, this.Language);
     }
   }
 }

@@ -13,14 +13,14 @@
     {
       var dataStorage = this.Database.GetDataStorage();
 
-      if (Item.ID == ItemIDs.RootID)
+      if (this.Item.ID == ItemIDs.RootID)
       {
         return null;
       }
 
-      var fakeItem = dataStorage.GetFakeItem(Item.ID);
+      var fakeItem = dataStorage.GetFakeItem(this.Item.ID);
 
-      return fakeItem != null ? dataStorage.GetSitecoreItem(fakeItem.ParentID) : null;
+      return fakeItem != null ? dataStorage.GetSitecoreItem(fakeItem.ParentID, this.Item.Language) : null;
     }
   }
 }

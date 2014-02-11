@@ -14,10 +14,10 @@
     {
       var dataStorage = this.Database.GetDataStorage();
 
-      var item = dataStorage.GetFakeItem(Item.ID);
+      var item = dataStorage.GetFakeItem(this.Item.ID);
       var itemList = new ItemList();
-      
-      itemList.AddRange(item.Children.Select(child => dataStorage.GetSitecoreItem(child.ID)));
+
+      itemList.AddRange(item.Children.Select(child => dataStorage.GetSitecoreItem(child.ID, this.Item.Language)));
 
       return itemList;
     }

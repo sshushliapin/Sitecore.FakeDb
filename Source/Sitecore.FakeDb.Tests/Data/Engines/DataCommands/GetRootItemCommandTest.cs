@@ -33,7 +33,7 @@
 
       var rootItem = ItemHelper.CreateInstance();
 
-      database.DataStorage.GetSitecoreItem(ItemIDs.RootID).Returns(rootItem);
+      database.DataStorage.GetSitecoreItem(ItemIDs.RootID, rootItem.Language).Returns(rootItem);
 
       var command = new OpenGetRootItemCommand { Engine = new DataEngine(database) };
       command.Initialize(Language.Invariant, Version.Latest);

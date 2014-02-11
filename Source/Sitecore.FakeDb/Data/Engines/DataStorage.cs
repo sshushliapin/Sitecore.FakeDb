@@ -1,11 +1,11 @@
 namespace Sitecore.FakeDb.Data.Engines
 {
   using System.Collections.Generic;
-  using System.Linq;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Items;
+  using Sitecore.Globalization;
 
   public class DataStorage
   {
@@ -75,7 +75,7 @@ namespace Sitecore.FakeDb.Data.Engines
       return fields;
     }
 
-    public virtual Item GetSitecoreItem(ID itemId)
+    public virtual Item GetSitecoreItem(ID itemId, Language language)
     {
       if (!this.FakeItems.ContainsKey(itemId))
       {
@@ -88,9 +88,13 @@ namespace Sitecore.FakeDb.Data.Engines
       if (this.FakeTemplates.ContainsKey(fakeItem.TemplateID))
       {
         fields = this.GetFieldList(fakeItem.TemplateID);
-        foreach (var field in fakeItem.Fields)
+
+        using (new LanguageSwitcher(language))
         {
-          fields.Add(field.ID, field.Value);
+          foreach (var field in fakeItem.Fields)
+          {
+            fields.Add(field.ID, field.Value);
+          }
         }
       }
 

@@ -2,6 +2,8 @@
 {
   using FluentAssertions;
   using Sitecore.Data;
+  using Sitecore.FakeDb.Extensions;
+  using Sitecore.Globalization;
   using Xunit;
   using Xunit.Extensions;
 
@@ -237,6 +239,34 @@
         var parent = db.GetItem("/sitecore/content/parent");
         parent["Title"].Should().Be("Welcome to parent item!");
         parent.Children["child"]["Title"].Should().Be("Welcome to child item!");
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateItemWithUnversionedSharedFieldsByDefault()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") { { "Title", "Hello!" } } })
+      {
+        db.Database.GetItem("/sitecore/content/home", Language.Parse("en"))["Title"].Should().Be("Hello!");
+        db.Database.GetItem("/sitecore/content/home", Language.Parse("uk-UA"))["Title"].Should().Be("Hello!");
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateItemOfSpecificLanguageUfingAdvancedFields()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home")
+                            {
+                              new LocalizableField("Title") { { "en", "Hello!" }, { "da", "Hej!" } },
+                            }
+                        })
+      {
+        db.Database.GetItem("/sitecore/content/home", Language.Parse("en"))["Title"].Should().Be("Hello!");
+        db.Database.GetItem("/sitecore/content/home", Language.Parse("da"))["Title"].Should().Be("Hej!");
       }
     }
   }

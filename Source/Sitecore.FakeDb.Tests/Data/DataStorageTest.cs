@@ -7,6 +7,7 @@
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.Globalization;
   using Xunit;
   using Xunit.Extensions;
 
@@ -103,8 +104,8 @@
       this.dataStorage.GetFakeItem(ItemIDs.ContentRoot).Should().NotBeNull();
       this.dataStorage.GetFakeItem(ItemIDs.ContentRoot).Should().BeOfType<DbItem>();
 
-      this.dataStorage.GetSitecoreItem(ItemIDs.ContentRoot).Should().NotBeNull();
-      this.dataStorage.GetSitecoreItem(ItemIDs.ContentRoot).Should().BeOfType<Item>();
+      this.dataStorage.GetSitecoreItem(ItemIDs.ContentRoot, Language.Current).Should().NotBeNull();
+      this.dataStorage.GetSitecoreItem(ItemIDs.ContentRoot, Language.Current).Should().BeOfType<Item>();
     }
 
     [Fact]
@@ -112,7 +113,7 @@
     {
       // act & assert
       this.dataStorage.GetFakeItem(ID.NewID).Should().BeNull();
-      this.dataStorage.GetSitecoreItem(ID.NewID).Should().BeNull();
+      this.dataStorage.GetSitecoreItem(ID.NewID, Language.Current).Should().BeNull();
     }
 
     [Fact]
@@ -146,6 +147,11 @@
 
       // assert
       a.ShouldThrow<InvalidOperationException>().WithMessage("Template \'{C4520D42-33CA-48C7-972D-6CEE1BC4B9A6}\' not found.");
+    }
+
+    [Fact]
+    public void SohouldStoreItemFieldsInDifferentLanguages()
+    {
     }
   }
 }

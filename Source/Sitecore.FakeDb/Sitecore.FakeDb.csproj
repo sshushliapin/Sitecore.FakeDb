@@ -82,6 +82,7 @@
     <Compile Include="DbField.cs" />
     <Compile Include="DbFieldCollection.cs" />
     <Compile Include="DbItem.cs" />
+    <Compile Include="Extensions\AdvancedField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\AccessControl\FakeAuthorizationProvider.cs" />
     <Compile Include="Security\AccessControl\FakeAccessRightProvider.cs" />
