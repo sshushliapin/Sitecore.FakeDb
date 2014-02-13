@@ -2,7 +2,6 @@
 {
   using FluentAssertions;
   using Sitecore.Data;
-  using Sitecore.FakeDb.Extensions;
   using Sitecore.Globalization;
   using Xunit;
   using Xunit.Extensions;
@@ -254,16 +253,10 @@
     }
 
     [Fact]
-    public void ShouldCreateItemOfSpecificLanguageUfingAdvancedFields()
+    public void ShouldCreateItemInSpecificLanguage()
     {
       // arrange
-      using (var db = new Db
-                        {
-                          new DbItem("home")
-                            {
-                              new LocalizableField("Title") { { "en", "Hello!" }, { "da", "Hej!" } },
-                            }
-                        })
+      using (var db = new Db { new DbItem("home") { new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } } } })
       {
         db.Database.GetItem("/sitecore/content/home", Language.Parse("en"))["Title"].Should().Be("Hello!");
         db.Database.GetItem("/sitecore/content/home", Language.Parse("da"))["Title"].Should().Be("Hej!");

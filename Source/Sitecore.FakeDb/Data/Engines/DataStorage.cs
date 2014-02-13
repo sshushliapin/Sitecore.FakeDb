@@ -89,12 +89,10 @@ namespace Sitecore.FakeDb.Data.Engines
       {
         fields = this.GetFieldList(fakeItem.TemplateID);
 
-        using (new LanguageSwitcher(language))
+        foreach (var field in fakeItem.Fields)
         {
-          foreach (var field in fakeItem.Fields)
-          {
-            fields.Add(field.ID, field.Value);
-          }
+          var value = field.LocalizableValues.ContainsKey(language.Name) ? field.LocalizableValues[language.Name] : field.Value;
+          fields.Add(field.ID, value);
         }
       }
 

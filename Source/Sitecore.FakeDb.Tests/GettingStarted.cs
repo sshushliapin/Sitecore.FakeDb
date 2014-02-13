@@ -7,7 +7,6 @@
   using Sitecore.Analytics.Data.DataAccess;
   using Sitecore.ContentSearch.SearchTypes;
   using Sitecore.FakeDb;
-  using Sitecore.FakeDb.Extensions;
   using Xunit;
 
   public class GettingStarted
@@ -33,6 +32,24 @@
         db.GetItem("/sitecore/content/Articles").Should().NotBeNull();
         db.GetItem("/sitecore/content/Articles/Getting Started").Should().NotBeNull();
         db.GetItem("/sitecore/content/Articles/Troubleshooting").Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void HowDoICreateAMultilingualItem()
+    {
+      // arrange & act
+      using (var db = new Db
+                        {
+                          new DbItem("home")
+                            {
+                              new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } },
+                            }
+                        })
+      {
+        // assert
+        db.GetItem("/sitecore/content/home", "en")["Title"].Should().Be("Hello!");
+        db.GetItem("/sitecore/content/home", "da")["Title"].Should().Be("Hej!");
       }
     }
 
@@ -65,24 +82,6 @@
 
         Sitecore.Data.Items.Item troubleshootingArticle = articles.Children["Troubleshooting"];
         troubleshootingArticle["Description"].Should().Be("Articles with solutions to common problems.");
-      }
-    }
-
-    [Fact]
-    public void HowDoICreateALocalizableItem()
-    {
-      // arrange & act
-      using (var db = new Db
-                        {
-                          new DbItem("home")
-                            {
-                              new LocalizableField("Title") { { "en", "Hello!" }, { "da", "Hej!" } },
-                            }
-                        })
-      {
-        // assert
-        db.GetItem("/sitecore/content/home", "en")["Title"].Should().Be("Hello!");
-        db.GetItem("/sitecore/content/home", "da")["Title"].Should().Be("Hej!");
       }
     }
 

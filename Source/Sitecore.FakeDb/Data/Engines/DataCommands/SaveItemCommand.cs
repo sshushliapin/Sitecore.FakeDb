@@ -24,7 +24,7 @@
         }
         else
         {
-          fakeItem.Fields.Add(new DbField { ID = field.ID, Name = field.Name, Value = field.Value });
+          fakeItem.Fields.Add(new DbField(field.Name) { ID = field.ID, Value = field.Value });
         }
       }
 

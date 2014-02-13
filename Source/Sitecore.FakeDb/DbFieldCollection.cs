@@ -17,25 +17,19 @@
 
     public DbField this[ID id]
     {
-      get
-      {
-        return this.fields.Values.Single(f => f.ID == id);
-      }
-
-      set
-      {
-        this.fields[value.ID] = value;
-      }
+      get { return this.fields.Values.Single(f => f.ID == id); }
+      set { this.fields[value.ID] = value; }
     }
 
     public void Add(string fieldName)
     {
-      Add(fieldName, string.Empty);
+      this.Add(fieldName, string.Empty);
     }
 
     public void Add(string fieldName, string fieldValue)
     {
-      var field = new DbField { Name = fieldName, ID = ID.NewID, Value = fieldValue };
+      // TODO: Get rid of NewID.
+      var field = new DbField(fieldName) { ID = ID.NewID, Value = fieldValue };
       this.fields.Add(field.ID, field);
     }
 

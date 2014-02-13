@@ -14,7 +14,7 @@
       var collection = new DbFieldCollection();
 
       // act
-      collection.Add(new DbField());
+      collection.Add(new DbField("Title"));
 
       // assert
       collection.Count().Should().Be(1);
@@ -25,11 +25,11 @@
     {
       // arrange
       var id = ID.NewID;
-      var field = new DbField { ID = id };
+      var field = new DbField("Title") { ID = id };
       var collection = new DbFieldCollection { field };
 
       // act & assert
-      collection[id].Should().Be(field);
+      collection[id].ShouldBeEquivalentTo(field);
     }
 
     [Fact]
@@ -37,8 +37,8 @@
     {
       // arrange
       var id = ID.NewID;
-      var originalField = new DbField { ID = id };
-      var newField = new DbField { ID = id };
+      var originalField = new DbField("Title") { ID = id };
+      var newField = new DbField("Title") { ID = id };
 
       var collection = new DbFieldCollection { originalField };
 
@@ -46,7 +46,7 @@
       collection[id] = newField;
 
       // assert
-      collection[id].Should().Be(newField);
+      collection[id].ShouldBeEquivalentTo(newField);
     }
 
     [Fact]

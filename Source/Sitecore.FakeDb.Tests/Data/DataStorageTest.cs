@@ -120,8 +120,8 @@
     public void ShouldGetFieldListByTemplateId()
     {
       // arrange
-      var field1 = new DbField();
-      var field2 = new DbField();
+      var field1 = new DbField("Title");
+      var field2 = new DbField("Title");
 
       var template = new DbTemplate { Fields = new DbFieldCollection { field1, field2 } };
 
