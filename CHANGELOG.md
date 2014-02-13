@@ -1,3 +1,6 @@
+0.3.0
+* [NEW] Introduced multilingual item configuration
+
 0.2.0
 * [NEW] Added possibility to set database name in FakeDb constructor
 * [NEW] Added content search confguration so that one can mock search indexes in unit tests
