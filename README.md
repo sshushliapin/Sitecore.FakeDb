@@ -28,17 +28,45 @@ The code below creates a fake in-memory database with a single item Home that co
 
 ### How do I create an item hierarchy
 
+This code creates a root item Articles and two child items Getting Started and Troubleshooting:
+
     [Fact]
     public void HowDoICreateAnItemHierarchy()
     {
       using (var db = new Db
                         {
-                          new DbItem("Articles") { new DbItem("Getting Started"), new DbItem("Troubleshooting") }
+                          new DbItem("Articles")
+                            {
+                              new DbItem("Getting Started"),
+                              new DbItem("Troubleshooting")
+                            }
                         })
       {
         db.GetItem("/sitecore/content/Articles").Should().NotBeNull();
         db.GetItem("/sitecore/content/Articles/Getting Started").Should().NotBeNull();
         db.GetItem("/sitecore/content/Articles/Troubleshooting").Should().NotBeNull();
+      }
+    }
+    
+### How do I create a multilingual item
+
+The next example demonstrates how to configure field values for different languages:
+
+    [Fact]
+    public void HowDoICreateAMultilingualItem()
+    {
+      // arrange & act
+      using (var db = new Db
+                        {
+                          new DbItem("home")
+                            {
+                              new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } },
+                            }
+                        })
+      {
+        // assert
+        db.GetItem("/sitecore/content/home", "en")["Title"].Should().Be("Hello!");
+        db.GetItem("/sitecore/content/home", "da")["Title"].Should().Be("Hej!");
       }
     }
 
@@ -116,21 +144,8 @@ The example below creates and configure a content search index mock so that it r
       var visitor = Substitute.For<Visitor>(Guid.NewGuid());
 
       // act
-      using (new Switcher<Visitor>(visitor))
+      using (new Sitecore.Common.Switcher<Visitor>(visitor))
       {
         // assert
         Sitecore.Analytics.Tracker.Visitor.Should().Be(visitor);
       }
-    
-### What can I do with Sitecore FakeDb
-
-Sitecore FakeDb allows you to perform the next manipulations in unit tests:
-
-* create and edit items in memory
-* read items by path or id
-* access item children
-* access item parent
-* delete items
-* initialize and configure 'master', 'web' or 'core' database
-* mock the Content Search API
-* mock Analytics Visitor
