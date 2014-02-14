@@ -12,6 +12,7 @@
 
   <Target Name="Packages">
     <Exec Command="$(NuGet) restore -PackagesDirectory $(PackagesDirectory)" WorkingDirectory="$(SourceFolder)" />
+    <Exec Command="$(NuGet) update Sitecore.FakeDb.sln" WorkingDirectory="$(SourceFolder)" />
   </Target>
 
   <Target Name="Build" DependsOnTargets="Clean;Packages">
