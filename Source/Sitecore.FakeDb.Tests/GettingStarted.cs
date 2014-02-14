@@ -38,7 +38,6 @@
     [Fact]
     public void HowDoICreateAMultilingualItem()
     {
-      // arrange & act
       using (var db = new Db
                         {
                           new DbItem("home")
@@ -47,9 +46,23 @@
                             }
                         })
       {
-        // assert
         db.GetItem("/sitecore/content/home", "en")["Title"].Should().Be("Hello!");
         db.GetItem("/sitecore/content/home", "da")["Title"].Should().Be("Hej!");
+      }
+    }
+
+    [Fact]
+    public void HowDoIMockAuthenticationProvider()
+    {
+      // create mock and configure behaviour of the authentication provider
+      var provider = Substitute.For<Sitecore.Security.Authentication.AuthenticationProvider>();
+      provider.Login("John", false).Returns(true);
+
+      // substitute authentication provider with mock
+      using (new Sitecore.Common.Switcher<Sitecore.Security.Authentication.AuthenticationProvider>(provider))
+      {
+        // use authentication manager in your code
+        Sitecore.Security.Authentication.AuthenticationManager.Login("John", false).Should().BeTrue();
       }
     }
 
