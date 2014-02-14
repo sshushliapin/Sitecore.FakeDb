@@ -102,6 +102,8 @@ The next example demonstrates how to configure field values for different langua
 ## Security
 ### How do I mock the authentication provider
 
+The next example mocks the authentication provider and substitutes it so that authentication manager calls the mocked provider. [NSubstitute](http://nsubstitute.github.io/) mocking framework is used:
+
     [Fact]
     public void HowDoIMockAuthenticationProvider()
     {
