@@ -3,7 +3,6 @@ Sitecore FakeDb
 
 A unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory. Designed to minimize efforts for the test content initialization keeping focus on the minimal test data rather than comprehensive content tree representation.
 
-## Getting started
 ### How do I install Sitecore FakeDb
 
 The package is available on NuGet. To install the package, run the following command in the Package Manager Console:
@@ -102,6 +101,7 @@ The next example demonstrates how to configure field values for different langua
 
 ## Security
 ### How do I mock the authentication provider
+
     [Fact]
     public void HowDoIMockAuthenticationProvider()
     {
@@ -109,7 +109,7 @@ The next example demonstrates how to configure field values for different langua
       var provider = Substitute.For<Sitecore.Security.Authentication.AuthenticationProvider>();
       provider.Login("John", false).Returns(true);
 
-      // substitute authentication provider with mock
+      // substitute authentication provider with the mock
       using (new Sitecore.Common.Switcher<Sitecore.Security.Authentication.AuthenticationProvider>(provider))
       {
         // use authentication manager in your code
