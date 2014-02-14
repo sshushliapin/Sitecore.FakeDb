@@ -3,6 +3,7 @@ Sitecore FakeDb
 
 A unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory. Designed to minimize efforts for the test content initialization keeping focus on the minimal test data rather than comprehensive content tree representation.
 
+## Getting started
 ### How do I install Sitecore FakeDb
 
 The package is available on NuGet. To install the package, run the following command in the Package Manager Console:
@@ -10,7 +11,6 @@ The package is available on NuGet. To install the package, run the following com
       Install-Package Sitecore.FakeDb
       
 When the package installation is done, go to the App.config file of the project you have the package installed and set path to the license.xml file in LicenseFile setting.
-
 
 ### How do I create a simple item
 
@@ -58,13 +58,9 @@ The next example demonstrates how to configure field values for different langua
       // arrange & act
       using (var db = new Db
                         {
-                          new DbItem("home")
-                            {
-                              new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } },
-                            }
+                          new DbItem("home") { new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } } }
                         })
       {
-        // assert
         db.GetItem("/sitecore/content/home", "en")["Title"].Should().Be("Hello!");
         db.GetItem("/sitecore/content/home", "da")["Title"].Should().Be("Hej!");
       }
@@ -103,7 +99,25 @@ The next example demonstrates how to configure field values for different langua
         troubleshootingArticle["Description"].Should().Be("Articles with solutions to common problems.");
       }
     }
-    
+
+## Security
+### How do I mock the authentication provider
+    [Fact]
+    public void HowDoIMockAuthenticationProvider()
+    {
+      // create mock and configure behaviour of the authentication provider
+      var provider = Substitute.For<Sitecore.Security.Authentication.AuthenticationProvider>();
+      provider.Login("John", false).Returns(true);
+
+      // substitute authentication provider with mock
+      using (new Sitecore.Common.Switcher<Sitecore.Security.Authentication.AuthenticationProvider>(provider))
+      {
+        // use authentication manager in your code
+        Sitecore.Security.Authentication.AuthenticationManager.Login("John", false).Should().BeTrue();
+      }
+    }
+
+## Miscellaneous    
 ### How do I mock the content search logic
 The example below creates and configure a content search index mock so that it returns Home item:
 
