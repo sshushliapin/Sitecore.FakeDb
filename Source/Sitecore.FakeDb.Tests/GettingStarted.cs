@@ -40,10 +40,7 @@
     {
       using (var db = new Db
                         {
-                          new DbItem("home")
-                            {
-                              new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } },
-                            }
+                          new DbItem("home") { new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } } }
                         })
       {
         db.GetItem("/sitecore/content/home", "en")["Title"].Should().Be("Hello!");

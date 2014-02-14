@@ -1,3 +1,6 @@
+0.4.0
+* [NEW] Configured switching authorization provider so that it can be substituted with a mock
+
 0.3.0
 * [NEW] Introduced multilingual item configuration
 
