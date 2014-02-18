@@ -3,7 +3,7 @@
   using Sitecore.Security.AccessControl;
   using Sitecore.Security.Accounts;
 
-  public class FakeAuthorizationProvider : AuthorizationProvider
+  public class AuthorizationProviderStub : AuthorizationProvider
   {
     public override AccessRuleCollection GetAccessRules(ISecurable entity)
     {

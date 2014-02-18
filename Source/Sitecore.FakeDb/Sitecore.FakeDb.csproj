@@ -83,10 +83,11 @@
     <Compile Include="DbFieldCollection.cs" />
     <Compile Include="DbItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\AccessControl\FakeAuthorizationProvider.cs" />
+    <Compile Include="Security\AccessControl\AuthorizationProviderStub.cs" />
     <Compile Include="Security\AccessControl\FakeAccessRightProvider.cs" />
     <Compile Include="SecurityModel\FakeDomainProvider.cs" />
     <Compile Include="DbTemplate.cs" />
+    <Compile Include="Security\AccessControl\SwitchingAuthorizationProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
