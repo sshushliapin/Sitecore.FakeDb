@@ -12,7 +12,7 @@
 
   <Target Name="Packages">
     <Exec Command="$(NuGet) restore -PackagesDirectory $(PackagesDirectory)" WorkingDirectory="$(SourceFolder)" />
-    <Exec Command="$(NuGet) update Sitecore.FakeDb.sln" WorkingDirectory="$(SourceFolder)" />
+    <!--<Exec Command="$(NuGet) update Sitecore.FakeDb.sln" WorkingDirectory="$(SourceFolder)" />-->
   </Target>
 
   <Target Name="Build" DependsOnTargets="Clean;Packages">
@@ -28,7 +28,11 @@
   </Target>
 
   <Target Name="NuGetPackage" DependsOnTargets="ReleaseFolder">
+    <Copy SourceFiles="README.md" DestinationFiles="$(ReleaseFolder)\Readme.txt" />
+    
     <Exec Command="$(NuGet) pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\$(ReleaseFolder) -Build" WorkingDirectory="$(SourceFolder)" />
+
+    <Delete Files="$(ReleaseFolder)\Readme.txt" />
   </Target>
 
   <Target Name="ReleaseBuild" DependsOnTargets="NuGetPackage" />
