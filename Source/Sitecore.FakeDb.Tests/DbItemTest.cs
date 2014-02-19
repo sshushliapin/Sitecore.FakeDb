@@ -2,6 +2,7 @@
 {
   using System.Linq;
   using FluentAssertions;
+  using Sitecore.FakeDb.Security.AccessControl;
   using Xunit;
 
   public class DbItemTest
@@ -52,6 +53,26 @@
 
       // assert
       parent.Children.Single().Should().BeEquivalentTo(child);
+    }
+
+    [Fact]
+    public void ShouldCreateNewItemAccess()
+    {
+      // arrange
+      var item = new DbItem("home");
+
+      // act
+      item.Access.Should().BeOfType<DbItemAccess>();
+    }
+
+    [Fact]
+    public void ShouldSetItemAccess()
+    {
+      // arrange
+      var item = new DbItem("home") { Access = new DbItemAccess { CanRead = false } };
+
+      // act & assert
+      item.Access.CanRead.Should().BeFalse();
     }
   }
 }

@@ -100,6 +100,19 @@ The next example demonstrates how to configure field values for different langua
     }
 
 ## Security
+### How do I configure item access
+
+    [Fact]
+    public void HowDoIConfigureItemAccess()
+    {
+      // arrange & act
+      using (var db = new Db { new DbItem("home") { Access = new DbItemAccess { CanRead = false } } })
+      {
+        // assert
+        db.GetItem("/sitecore/content/home").Should().BeNull();
+      }
+    }
+
 ### How do I mock the authentication provider
 
 The next example mocks the authentication provider and substitutes it so that authentication manager calls the mocked provider. [NSubstitute](http://nsubstitute.github.io/) mocking framework is used:

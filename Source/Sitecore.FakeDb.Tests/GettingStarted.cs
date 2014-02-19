@@ -7,10 +7,13 @@
   using Sitecore.Analytics.Data.DataAccess;
   using Sitecore.ContentSearch.SearchTypes;
   using Sitecore.FakeDb;
+  using Sitecore.FakeDb.Security.AccessControl;
   using Xunit;
 
   public class GettingStarted
   {
+    #region Content
+
     [Fact]
     public void HowDoICreateASimpleItem()
     {
@@ -48,6 +51,21 @@
       }
     }
 
+    #endregion
+
+    #region Security
+
+    [Fact]
+    public void HowDoIConfigureItemAccess()
+    {
+      // arrange & act
+      using (var db = new Db { new DbItem("home") { Access = new DbItemAccess { CanRead = false } } })
+      {
+        // assert
+        db.GetItem("/sitecore/content/home").Should().BeNull();
+      }
+    }
+
     [Fact]
     public void HowDoIMockAuthenticationProvider()
     {
@@ -62,6 +80,8 @@
         Sitecore.Security.Authentication.AuthenticationManager.Login("John", false).Should().BeTrue();
       }
     }
+
+    #endregion
 
     [Fact]
     public void HowDoICreateAndConfigureAdvancedItemHierarchy()

@@ -1,3 +1,7 @@
+0.5.0
+* [NEW] Introduced basic item access confuguration
+* [NEW] Readme with examples included into package
+
 0.4.0
 * [NEW] Configured switching authorization provider so that it can be substituted with a mock
 

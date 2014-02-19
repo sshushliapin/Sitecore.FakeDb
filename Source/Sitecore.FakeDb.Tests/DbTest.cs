@@ -1,7 +1,11 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
+  using System;
   using FluentAssertions;
   using Sitecore.Data;
+  using Sitecore.Data.Items;
+  using Sitecore.Exceptions;
+  using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Globalization;
   using Xunit;
   using Xunit.Extensions;
@@ -260,6 +264,49 @@
       {
         db.Database.GetItem("/sitecore/content/home", Language.Parse("en"))["Title"].Should().Be("Hello!");
         db.Database.GetItem("/sitecore/content/home", Language.Parse("da"))["Title"].Should().Be("Hej!");
+      }
+    }
+
+    [Fact]
+    public void ShouldDenyItemReadAccess()
+    {
+      // arrange & act
+      using (var db = new Db { new DbItem("home") { Access = new DbItemAccess { CanRead = false } } })
+      {
+        // assert
+        db.GetItem("/sitecore/content/home").Should().BeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldDenyItemWriteAccess()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") { Access = new DbItemAccess { CanWrite = false } } })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // act
+        Action action = () => new EditContext(item);
+
+        // assert
+        action.ShouldThrow<UnauthorizedAccessException>();
+      }
+    }
+
+    [Fact]
+    public void ShouldDenyItemCreateAccess()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") { Access = new DbItemAccess { CanCreate = false } } })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // act
+        Action action = () => item.Add("child", item.Template);
+
+        // assert
+        action.ShouldThrow<AccessDeniedException>();
       }
     }
   }

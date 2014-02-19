@@ -9,7 +9,9 @@ namespace Sitecore.FakeDb
   using Sitecore.Data.Managers;
   using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Globalization;
+  using Sitecore.Security.AccessControl;
 
   public class Db : IDisposable, IEnumerable
   {
@@ -25,6 +27,9 @@ namespace Sitecore.FakeDb
     public Db(string databaseName)
     {
       this.database = Database.GetDatabase(databaseName);
+
+      // TODO:[High] Should not be here
+      ((FakeAuthorizationProvider)AuthorizationManager.Provider).DataStorage = this.DataStorage;
     }
 
     public Database Database
@@ -49,6 +54,7 @@ namespace Sitecore.FakeDb
       this.CreateItemFields(item);
       this.SetFullPath(item);
       this.AddChildren(item);
+      this.SetAccess(item);
     }
 
     protected virtual void CreateTemplate(DbItem item)
@@ -113,6 +119,13 @@ namespace Sitecore.FakeDb
         child.FullPath = item.FullPath + "/" + child.Name;
         this.Add(child);
       }
+    }
+
+    private void SetAccess(DbItem item)
+    {
+      var fakeItem = this.DataStorage.GetFakeItem(item.ID);
+
+      fakeItem.Access = item.Access;
     }
 
     public Item GetItem(string path)

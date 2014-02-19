@@ -96,6 +96,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityModel\FakeDomainProviderTest.cs" />
     <Compile Include="Security\AccessControl\AuthorizationManagerTest.cs" />
+    <Compile Include="Security\AccessControl\DbItemAccessTest.cs" />
+    <Compile Include="Security\AccessControl\FakeAuthorizationProviderTest.cs" />
     <Compile Include="Security\AccessControl\SwitchingAuthorizationProviderTest.cs" />
     <Compile Include="Security\Authentication\AuthenticationManagerTest.cs" />
     <Compile Include="Security\AuthorizationProviderStubTest.cs" />

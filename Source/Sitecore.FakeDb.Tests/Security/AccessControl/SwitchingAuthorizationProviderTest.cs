@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security.AccessControl
 {
+  using System.Collections.Specialized;
   using FluentAssertions;
   using NSubstitute;
   using Ploeh.AutoFixture;
@@ -51,6 +52,19 @@
         // assert
         this.mockableProvider.GetAccess(entity, account, accessRight).Should().Be(accessResult);
       }
+    }
+
+    [Fact]
+    public void ShouldResolveAuthorizationProviderStubAsDefaultCurrentProvider()
+    {
+      // arrange
+      var provider = new SwitchingAuthorizationProvider();
+
+      // act
+      provider.Initialize("switcher", new NameValueCollection());
+
+      // assert
+      provider.CurrentProvider.Should().BeOfType<AuthorizationProviderStub>();
     }
   }
 }

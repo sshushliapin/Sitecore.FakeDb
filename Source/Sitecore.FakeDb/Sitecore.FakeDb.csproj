@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Security\AccessControl\DbItemAccess.cs" />
     <Compile Include="Configuration\FakeClientDataStore.cs" />
     <Compile Include="Data\DatabaseExtensions.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommand.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Security\AccessControl\FakeAccessRightProvider.cs" />
     <Compile Include="SecurityModel\FakeDomainProvider.cs" />
     <Compile Include="DbTemplate.cs" />
+    <Compile Include="Security\AccessControl\FakeAuthorizationProvider.cs" />
     <Compile Include="Security\AccessControl\SwitchingAuthorizationProvider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

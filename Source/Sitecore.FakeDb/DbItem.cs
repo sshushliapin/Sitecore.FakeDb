@@ -5,6 +5,7 @@ namespace Sitecore.FakeDb
   using System.Collections.ObjectModel;
   using System.Diagnostics;
   using Sitecore.Data;
+  using Sitecore.FakeDb.Security.AccessControl;
 
   [DebuggerDisplay("Name = {Name}, FullPath = {FullPath}")]
   public class DbItem : IEnumerable
@@ -24,6 +25,7 @@ namespace Sitecore.FakeDb
       this.Name = name;
       this.ID = id;
       this.TemplateID = templateId;
+      this.Access = new DbItemAccess();
       this.Fields = new DbFieldCollection();
       this.Children = new Collection<DbItem>();
     }
@@ -41,6 +43,8 @@ namespace Sitecore.FakeDb
     public string FullPath { get; internal set; }
 
     public ICollection<DbItem> Children { get; set; }
+
+    public DbItemAccess Access { get; set; }
 
     public void Add(string fieldName, string fieldValue)
     {
