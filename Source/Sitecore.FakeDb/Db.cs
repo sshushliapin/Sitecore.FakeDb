@@ -7,6 +7,7 @@ namespace Sitecore.FakeDb
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
+  using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Security.AccessControl;
@@ -49,6 +50,8 @@ namespace Sitecore.FakeDb
 
     public void Add(DbItem item)
     {
+      Assert.ArgumentNotNull(item, "item");
+
       this.CreateTemplate(item);
       this.CreateItem(item);
       this.CreateItemFields(item);
@@ -57,9 +60,17 @@ namespace Sitecore.FakeDb
       this.SetAccess(item);
     }
 
+    public void Add(DbTemplate template)
+    {
+      Assert.ArgumentNotNull(template, "template");
+      Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A tamplete with the same id has already been added.");
+
+      this.DataStorage.FakeTemplates.Add(template.ID, template);
+    }
+
     protected virtual void CreateTemplate(DbItem item)
     {
-      if (DataStorage.FakeTemplates.ContainsKey(item.TemplateID))
+      if (this.DataStorage.FakeTemplates.ContainsKey(item.TemplateID))
       {
         return;
       }
@@ -71,7 +82,7 @@ namespace Sitecore.FakeDb
         fields.Add(templatefield);
       }
 
-      DataStorage.FakeTemplates.Add(item.TemplateID, new DbTemplate(item.Name, item.TemplateID) { Fields = fields });
+      this.DataStorage.FakeTemplates.Add(item.TemplateID, new DbTemplate(item.Name, item.TemplateID) { Fields = fields });
     }
 
     protected virtual void CreateItem(DbItem item)
@@ -92,7 +103,7 @@ namespace Sitecore.FakeDb
         return;
       }
 
-      var dbitem = DataStorage.FakeItems[item.ID];
+      var dbitem = this.DataStorage.FakeItems[item.ID];
       foreach (var field in item.Fields)
       {
         dbitem.Fields.Add(field);
@@ -123,6 +134,8 @@ namespace Sitecore.FakeDb
 
     private void SetAccess(DbItem item)
     {
+      Assert.ArgumentNotNull(item, "item");
+
       var fakeItem = this.DataStorage.GetFakeItem(item.ID);
 
       fakeItem.Access = item.Access;
@@ -130,17 +143,29 @@ namespace Sitecore.FakeDb
 
     public Item GetItem(string path)
     {
-      return this.Database.GetItem(path);
-    }
+      Assert.ArgumentNotNullOrEmpty(path, "path");
 
-    public Item GetItem(ID id)
-    {
-      return this.Database.GetItem(id);
+      return this.Database.GetItem(path);
     }
 
     public Item GetItem(string path, string language)
     {
+      Assert.ArgumentNotNullOrEmpty(language, "language");
+
       return this.Database.GetItem(path, Language.Parse(language));
+    }
+
+    public Item GetItem(ID id)
+    {
+
+      return this.Database.GetItem(id);
+    }
+
+    public Item GetItem(ID id, string language)
+    {
+      Assert.ArgumentNotNullOrEmpty(language, "language");
+
+      return this.Database.GetItem(id, Language.Parse(language));
     }
 
     /// <summary>

@@ -96,6 +96,17 @@
     }
 
     [Fact]
+    public void ShouldGetItemByPathAndLanguage()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        // act & assert
+        db.GetItem("/sitecore/content/home", "en").Should().NotBeNull();
+      }
+    }
+
+    [Fact]
     public void ShouldGetItemById()
     {
       // arrange
@@ -104,6 +115,18 @@
       {
         // act & assert
         db.GetItem(id).Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldGetItemByIdAndLanguage()
+    {
+      // arrange
+      var id = ID.NewID;
+      using (var db = new Db { new DbItem("my item", id) })
+      {
+        // act & assert
+        db.GetItem(id, "en").Should().NotBeNull();
       }
     }
 
@@ -320,6 +343,34 @@
 
         // assert
         action.ShouldThrow<AccessDeniedException>();
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateItemTemplate()
+    {
+      // arrange
+      using (var db = new Db { new DbTemplate("products") })
+      {
+        // act & assert
+        db.Database.GetTemplate("products").Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionIfTemplateIdIsAlreadyExists()
+    {
+      // arrange
+      var id = ID.NewID;
+      using (var db = new Db())
+      {
+        db.Add(new DbTemplate("products", id));
+
+        // act
+        Action action = () => db.Add(new DbTemplate("products", id));
+
+        // assert
+        action.ShouldThrow<ArgumentException>().WithMessage("A tamplete with the same id has already been added.*");
       }
     }
   }

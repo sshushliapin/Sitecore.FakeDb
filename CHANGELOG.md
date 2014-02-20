@@ -1,3 +1,7 @@
+0.6.0
+* [NEW] Can create an item template.
+* [NEW] Db.GetItem() can now get items by id.
+
 0.5.0
 * [NEW] Introduced basic item access confuguration
 * [NEW] Readme with examples included into package

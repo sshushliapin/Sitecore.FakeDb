@@ -12,7 +12,12 @@
     public DbFieldCollection Fields { get; set; }
 
     public DbTemplate()
-      : this(null, ID.NewID)
+      : this(null)
+    {
+    }
+
+    public DbTemplate(string products)
+      : this(products, ID.NewID)
     {
     }
 
