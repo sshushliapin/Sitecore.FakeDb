@@ -12,11 +12,10 @@
     public DbField(string name)
     {
       this.Name = name;
-      this.ID = ID.NewID;
       this.LocalizableValues = new Dictionary<string, string>();
     }
 
-    public string Name { get; set; }
+    public string Name { get; private set; }
 
     public ID ID { get; set; }
 

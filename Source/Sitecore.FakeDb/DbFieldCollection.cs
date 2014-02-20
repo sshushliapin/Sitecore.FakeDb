@@ -28,13 +28,18 @@
 
     public void Add(string fieldName, string fieldValue)
     {
-      // TODO: Get rid of NewID.
-      var field = new DbField(fieldName) { ID = ID.NewID, Value = fieldValue };
-      this.fields.Add(field.ID, field);
+      var field = new DbField(fieldName) { Value = fieldValue };
+
+      this.Add(field);
     }
 
     public void Add(DbField field)
     {
+      if (ID.IsNullOrEmpty(field.ID))
+      {
+        field.ID = ID.NewID;
+      }
+
       this.fields.Add(field.ID, field);
     }
 
