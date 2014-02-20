@@ -109,7 +109,7 @@
     }
 
     [Fact]
-    public void ShouldGetNullIdNoItemPresent()
+    public void ShouldGetNullIdIfNoItemPresent()
     {
       // act & assert
       this.dataStorage.GetFakeItem(ID.NewID).Should().BeNull();
@@ -120,12 +120,13 @@
     public void ShouldGetFieldListByTemplateId()
     {
       // arrange
+      var templateId = ID.NewID;
       var field1 = new DbField("Title");
       var field2 = new DbField("Title");
 
-      var template = new DbTemplate { Fields = new DbFieldCollection { field1, field2 } };
+      var template = new DbTemplate() { ID = templateId, Fields = { field1, field2 } };
 
-      this.dataStorage.FakeTemplates.Add(template.ID, template);
+      this.dataStorage.FakeTemplates.Add(templateId, template);
 
       // act
       var fieldList = this.dataStorage.GetFieldList(template.ID);

@@ -8,19 +8,6 @@
   public class DbTemplateTest
   {
     [Fact]
-    public void ShouldGenerateDefaultNameAndId()
-    {
-      // arrange
-      var template = new DbTemplate();
-
-      // assert
-      template.ID.Should().NotBeNull();
-      template.ID.Should().NotBe(ID.Null);
-
-      template.Name.Should().Be(template.ID.ToShortID().ToString());
-    }
-
-    [Fact]
     public void ShouldCreateEmptyFieldsCollection()
     {
       // arrange

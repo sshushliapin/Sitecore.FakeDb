@@ -373,5 +373,20 @@
         action.ShouldThrow<ArgumentException>().WithMessage("A tamplete with the same id has already been added.*");
       }
     }
+
+    [Fact]
+    public void ShouldGenerateTemplateIdIfNotSet()
+    {
+      // arrange
+      var template = new DbTemplate { ID = null };
+
+      // act
+      using (var db = new Db { template })
+      {
+        // assert
+        template.ID.Should().NotBeNull();
+        template.ID.Should().NotBe(ID.Null);
+      }
+    }
   }
 }

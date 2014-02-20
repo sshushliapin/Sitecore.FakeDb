@@ -60,21 +60,24 @@ namespace Sitecore.FakeDb
       this.SetAccess(item);
     }
 
-    public void Add(DbTemplate template)
+    public virtual void Add(DbTemplate template)
     {
       Assert.ArgumentNotNull(template, "template");
-      Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A tamplete with the same id has already been added.");
+
+      if (ID.IsNullOrEmpty(template.ID))
+      {
+        template.ID = ID.NewID;
+      }
+      else
+      {
+        Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A tamplete with the same id has already been added.");
+      }
 
       this.DataStorage.FakeTemplates.Add(template.ID, template);
     }
 
     protected virtual void CreateTemplate(DbItem item)
     {
-      if (this.DataStorage.FakeTemplates.ContainsKey(item.TemplateID))
-      {
-        return;
-      }
-
       var fields = new DbFieldCollection();
       foreach (var itemField in item.Fields)
       {
@@ -82,7 +85,9 @@ namespace Sitecore.FakeDb
         fields.Add(templatefield);
       }
 
-      this.DataStorage.FakeTemplates.Add(item.TemplateID, new DbTemplate(item.Name, item.TemplateID) { Fields = fields });
+      var template = new DbTemplate(item.Name, item.TemplateID) { Fields = fields };
+
+      this.Add(template);
     }
 
     protected virtual void CreateItem(DbItem item)
@@ -157,7 +162,6 @@ namespace Sitecore.FakeDb
 
     public Item GetItem(ID id)
     {
-
       return this.Database.GetItem(id);
     }
 

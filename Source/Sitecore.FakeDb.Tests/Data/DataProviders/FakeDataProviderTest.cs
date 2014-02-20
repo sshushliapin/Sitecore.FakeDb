@@ -63,26 +63,25 @@
     public void ShouldGetTemplatesWithDefaultDataSectionFromDataStorage()
     {
       // arrange
-      var t = new DbTemplate();
-      this.dataStorage.FakeTemplates.Add(t.ID, t);
+      var template = this.CreateTestTemplateInDataStorage();
 
-      var template = this.dataProvider.GetTemplates(null).First();
+      var result = this.dataProvider.GetTemplates(null).First();
 
       // act & assert
-      template.GetSection("Data").Should().NotBeNull();
+      result.GetSection("Data").Should().NotBeNull();
     }
 
     [Fact]
     public void ShouldGetTemplateFields()
     {
       // arrange
-      var t = new DbTemplate { "Title", "Description" };
-      this.dataStorage.FakeTemplates.Add(t.ID, t);
+      var template = this.CreateTestTemplateInDataStorage();
+      template.Fields.Add("Title");
 
-      var template = this.dataProvider.GetTemplates(null).First();
+      var result = this.dataProvider.GetTemplates(null).First();
 
       // act & assert
-      template.GetField("Title").Should().NotBeNull();
+      result.GetField("Title").Should().NotBeNull();
     }
 
     private DbTemplate CreateTestTemplateInDataStorage()
