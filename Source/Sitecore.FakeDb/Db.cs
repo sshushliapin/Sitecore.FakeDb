@@ -133,6 +133,11 @@ namespace Sitecore.FakeDb
       return this.Database.GetItem(path);
     }
 
+    public Item GetItem(ID id)
+    {
+      return this.Database.GetItem(id);
+    }
+
     public Item GetItem(string path, string language)
     {
       return this.Database.GetItem(path, Language.Parse(language));

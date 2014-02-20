@@ -90,7 +90,20 @@
       // arrange
       using (var db = new Db { new DbItem("my item") })
       {
-        db.Database.GetItem("/sitecore/content/my item").Should().NotBeNull();
+        // act & assert
+        db.GetItem("/sitecore/content/my item").Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldGetItemById()
+    {
+      // arrange
+      var id = ID.NewID;
+      using (var db = new Db { new DbItem("my item", id) })
+      {
+        // act & assert
+        db.GetItem(id).Should().NotBeNull();
       }
     }
 
