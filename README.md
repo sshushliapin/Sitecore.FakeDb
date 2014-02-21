@@ -78,17 +78,14 @@ The next example demonstrates how to configure field values for different langua
     [Fact]
     public void HowDoICreateAnItemOfSpecificTemplate()
     {
-      // arrange
       Sitecore.Data.TemplateID templateId = new Sitecore.Data.TemplateID(Sitecore.Data.ID.NewID);
 
-      // act
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
         {
           new Sitecore.FakeDb.DbTemplate("products", templateId) { "Name" },
           new Sitecore.FakeDb.DbItem("Apple", templateId)
         })
       {
-        // assert
         Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/apple");
         item.TemplateID.Should().Be(templateId.ID);
         item.Fields["Name"].Should().NotBeNull();
@@ -101,13 +98,11 @@ The next example demonstrates how to configure field values for different langua
     [Fact]
     public void HowDoIConfigureItemAccess()
     {
-      // arrange & act
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
         {
           new Sitecore.FakeDb.DbItem("home") { Access = { CanRead = false } }
         })
       {
-        // assert
         Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/home");
         item.Should().BeNull();
       }
@@ -139,7 +134,6 @@ The example below creates and configure a content search index mock so that it r
     [Fact]
     public void HowDoIMockContentSearchLogic()
     {
-      // arrange
       try
       {
         var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
@@ -151,10 +145,8 @@ The example below creates and configure a content search index mock so that it r
           searchResultItem.GetItem().Returns(db.GetItem("/sitecore/content/home"));
           index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Returns((new[] { searchResultItem }).AsQueryable());
 
-          // act
           Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Single().GetItem();
 
-          // assert
           result.Paths.FullPath.Should().Be("/sitecore/content/home");
         }
       }
@@ -169,13 +161,10 @@ The example below creates and configure a content search index mock so that it r
     [Fact]
     public void HowDoIMockTrackerVisitor()
     {
-      // arrange
       var visitor = Substitute.For<Sitecore.Analytics.Data.DataAccess.Visitor>(Guid.NewGuid());
 
-      // act
       using (new Sitecore.Common.Switcher<Sitecore.Analytics.Data.DataAccess.Visitor>(visitor))
       {
-        // assert
         Sitecore.Analytics.Tracker.Visitor.Should().Be(visitor);
       }
     }
