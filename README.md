@@ -78,16 +78,16 @@ The next example demonstrates how to configure field values for different langua
     [Fact]
     public void HowDoICreateAnItemOfSpecificTemplate()
     {
-      Sitecore.Data.TemplateID templateId = new Sitecore.Data.TemplateID(Sitecore.Data.ID.NewID);
+      Sitecore.Data.ID templateId = Sitecore.Data.ID.NewID;
 
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
         {
           new Sitecore.FakeDb.DbTemplate("products", templateId) { "Name" },
-          new Sitecore.FakeDb.DbItem("Apple", templateId)
+          new Sitecore.FakeDb.DbItem("Apple") { TemplateID = templateId }
         })
       {
         Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/apple");
-        item.TemplateID.Should().Be(templateId.ID);
+        item.TemplateID.Should().Be(templateId);
         item.Fields["Name"].Should().NotBeNull();
       }
     }

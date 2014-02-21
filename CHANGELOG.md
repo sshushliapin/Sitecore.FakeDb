@@ -1,3 +1,6 @@
+0.6.1
+* [FIX] Fixed namespace conflict in DbItem constructors
+
 0.6.0
 * [NEW] Can create an item of specific template
 * [NEW] Share templates between items with similar fields

@@ -20,11 +20,6 @@ namespace Sitecore.FakeDb
     {
     }
 
-    public DbItem(string name, TemplateID templateId)
-      : this(name, ID.NewID, templateId.ID)
-    {
-    }
-
     public DbItem(string name, ID id, ID templateId)
     {
       this.Name = name;

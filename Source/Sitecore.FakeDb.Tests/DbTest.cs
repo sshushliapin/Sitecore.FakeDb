@@ -361,18 +361,18 @@
     public void ShouldCreateItemOfPredefinedTemplate()
     {
       // arrange
-      var templateId = new TemplateID(ID.NewID);
+      var templateId = ID.NewID;
 
       // act
       using (var db = new Db
                         {
                           new DbTemplate("products", templateId) { "Name" },
-                          new DbItem("Apple", templateId)
+                          new DbItem("Apple") { TemplateID = templateId }
                         })
       {
         // assert
         var item = db.Database.GetItem("/sitecore/content/apple");
-        item.TemplateID.Should().Be(templateId.ID);
+        item.TemplateID.Should().Be(templateId);
         item.Fields["Name"].Should().NotBeNull();
       }
     }
@@ -450,7 +450,7 @@
       using (var db = new Db
                         {
                           new DbItem("article 1") { { "Title", "A1" } },
-                          new DbItem("article 2", new TemplateID(ID.NewID)) { { "Title", "A2" } }
+                          new DbItem("article 2", ID.NewID, ID.NewID) { { "Title", "A2" } }
                         })
       {
         var template1 = db.GetItem("/sitecore/content/article 1").TemplateID;
