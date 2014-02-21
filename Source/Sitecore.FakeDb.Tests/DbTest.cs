@@ -349,11 +349,31 @@
     [Fact]
     public void ShouldCreateItemTemplate()
     {
-      // arrange
+      // arrange & act
       using (var db = new Db { new DbTemplate("products") })
       {
-        // act & assert
+        // assert
         db.Database.GetTemplate("products").Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateItemOfPredefinedTemplate()
+    {
+      // arrange
+      var templateId = new TemplateID(ID.NewID);
+
+      // act
+      using (var db = new Db
+                        {
+                          new DbTemplate("products", templateId) { "Name" },
+                          new DbItem("Apple", templateId)
+                        })
+      {
+        // assert
+        var item = db.Database.GetItem("/sitecore/content/apple");
+        item.TemplateID.Should().Be(templateId.ID);
+        item.Fields["Name"].Should().NotBeNull();
       }
     }
 
@@ -362,10 +382,8 @@
     {
       // arrange
       var id = ID.NewID;
-      using (var db = new Db())
+      using (var db = new Db { new DbTemplate("products", id) })
       {
-        db.Add(new DbTemplate("products", id));
-
         // act
         Action action = () => db.Add(new DbTemplate("products", id));
 
@@ -381,11 +399,65 @@
       var template = new DbTemplate { ID = null };
 
       // act
-      using (var db = new Db { template })
+      using (new Db { template })
       {
         // assert
         template.ID.Should().NotBeNull();
         template.ID.Should().NotBe(ID.Null);
+      }
+    }
+
+    [Fact]
+    public void ShouldShareTemplateForItemsWithFields()
+    {
+      // arrange & act
+      using (var db = new Db
+                        {
+                          new DbItem("article 1") { { "Title", "A1" } },
+                          new DbItem("article 2") { { "Title", "A2" } }
+                        })
+      {
+        var template1 = db.GetItem("/sitecore/content/article 1").TemplateID;
+        var template2 = db.GetItem("/sitecore/content/article 2").TemplateID;
+
+        // assert
+        template1.Should().Be(template2);
+      }
+    }
+
+    [Fact]
+    public void ShouldNotShareTemplateForItemsWithDifferentFields()
+    {
+      // arrange & act
+      using (var db = new Db
+                        {
+                          new DbItem("some item") { { "some field", "some value" } },
+                          new DbItem("another item") { { "another field", "another value" } }
+                        })
+      {
+        var template1 = db.GetItem("/sitecore/content/some item").TemplateID;
+        var template2 = db.GetItem("/sitecore/content/another item").TemplateID;
+
+        // assert
+        template1.Should().NotBe(template2);
+      }
+    }
+
+    [Fact]
+    public void ShouldNotShareTemplateForItemsIfTemplatesSetExplicitly()
+    {
+      // arrange & act
+      using (var db = new Db
+                        {
+                          new DbItem("article 1") { { "Title", "A1" } },
+                          new DbItem("article 2", new TemplateID(ID.NewID)) { { "Title", "A2" } }
+                        })
+      {
+        var template1 = db.GetItem("/sitecore/content/article 1").TemplateID;
+        var template2 = db.GetItem("/sitecore/content/article 2").TemplateID;
+
+        // assert
+        template1.Should().NotBe(template2);
       }
     }
   }

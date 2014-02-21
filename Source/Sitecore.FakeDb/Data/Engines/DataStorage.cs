@@ -11,10 +11,6 @@ namespace Sitecore.FakeDb.Data.Engines
   {
     private static readonly ID RootTemplateId = new ID("{C6576836-910C-4A3D-BA03-C277DBD3B827}");
 
-    private readonly IDictionary<ID, DbItem> fakeItems;
-
-    private readonly IDictionary<ID, DbTemplate> fakeTemplates;
-
     private const string SitecoreItemName = "sitecore";
 
     private const string ContentItemName = "content";
@@ -29,42 +25,44 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public const string BranchItemName = "Branch";
 
-    private Database database;
-
     public DataStorage()
     {
-      this.fakeItems = new Dictionary<ID, DbItem>();
-      this.fakeTemplates = new Dictionary<ID, DbTemplate>();
+      this.FakeItems = new Dictionary<ID, DbItem>();
+      this.FakeTemplates = new Dictionary<ID, DbTemplate>();
     }
 
-    public Database Database
-    {
-      get { return this.database; }
-    }
+    /// <summary>
+    /// Gets the database.
+    /// </summary>
+    public Database Database { get; private set; }
 
-    public IDictionary<ID, DbItem> FakeItems
-    {
-      get { return this.fakeItems; }
-    }
+    /// <summary>
+    /// Gets the fake items.
+    /// </summary>
+    public IDictionary<ID, DbItem> FakeItems { get; private set; }
 
-    public IDictionary<ID, DbTemplate> FakeTemplates
-    {
-      get { return this.fakeTemplates; }
-    }
+    public IDictionary<ID, DbTemplate> FakeTemplates { get; private set; }
 
     public virtual DbItem GetFakeItem(ID itemId)
     {
+      Assert.ArgumentCondition(!ID.IsNullOrEmpty(itemId), "itemId", "Value cannot be null.");
+
       return this.FakeItems.ContainsKey(itemId) ? this.FakeItems[itemId] : null;
     }
 
     public virtual DbTemplate GetFakeTemplate(ID templateId)
     {
+      Assert.ArgumentCondition(!ID.IsNullOrEmpty(templateId), "templateId", "Value cannot be null.");
+
       return this.FakeTemplates.ContainsKey(templateId) ? this.FakeTemplates[templateId] : null;
     }
 
     public virtual FieldList GetFieldList(ID templateId)
     {
-      Assert.IsTrue(this.FakeTemplates.ContainsKey(templateId), "Template '{0}' not found.", templateId);
+      Assert.ArgumentCondition(!ID.IsNullOrEmpty(templateId), "templateId", "Value cannot be null.");
+
+      var templates = this.GetFakeTemplate(templateId);
+      Assert.IsNotNull(templates, "Template '{0}' not found.", templateId);
 
       var fields = new FieldList();
       foreach (var field in this.FakeTemplates[templateId].Fields)
@@ -103,7 +101,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public void SetDatabase(Database db)
     {
-      this.database = db;
+      this.Database = db;
       this.Reset();
     }
 
@@ -116,22 +114,22 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FillDefaultFakeItems();
     }
 
-    private void FillDefaultFakeTemplates()
+    protected virtual void FillDefaultFakeTemplates()
     {
       this.FakeTemplates.Add(TemplateIDs.Template, new DbTemplate(TemplateItemName, TemplateIDs.Template));
     }
 
-    private void FillDefaultFakeItems()
+    protected virtual void FillDefaultFakeItems()
     {
-      this.fakeItems.Add(ItemIDs.RootID, new DbItem(SitecoreItemName, ItemIDs.RootID, RootTemplateId) { ParentID = ID.Null, FullPath = "/sitecore" });
-      this.fakeItems.Add(ItemIDs.ContentRoot, new DbItem(ContentItemName, ItemIDs.ContentRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/content" });
-      this.fakeItems.Add(ItemIDs.TemplateRoot, new DbItem(TemplatesItemName, ItemIDs.TemplateRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/templates" });
+      this.FakeItems.Add(ItemIDs.RootID, new DbItem(SitecoreItemName, ItemIDs.RootID, RootTemplateId) { ParentID = ID.Null, FullPath = "/sitecore" });
+      this.FakeItems.Add(ItemIDs.ContentRoot, new DbItem(ContentItemName, ItemIDs.ContentRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/content" });
+      this.FakeItems.Add(ItemIDs.TemplateRoot, new DbItem(TemplatesItemName, ItemIDs.TemplateRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/templates" });
 
       // TODO: Move 'Template' item to proper directory to correspond Sitecore structure.
-      this.fakeItems.Add(TemplateIDs.Template, new DbItem(TemplateItemName, TemplateIDs.Template, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template" });
-      this.fakeItems.Add(TemplateIDs.TemplateSection, new DbItem(TemplateSectionItemName, TemplateIDs.TemplateSection, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
-      this.fakeItems.Add(TemplateIDs.TemplateField, new DbItem(TemplateFieldItemName, TemplateIDs.TemplateField, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
-      this.fakeItems.Add(TemplateIDs.BranchTemplate, new DbItem(BranchItemName, TemplateIDs.BranchTemplate, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
+      this.FakeItems.Add(TemplateIDs.Template, new DbItem(TemplateItemName, TemplateIDs.Template, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template" });
+      this.FakeItems.Add(TemplateIDs.TemplateSection, new DbItem(TemplateSectionItemName, TemplateIDs.TemplateSection, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
+      this.FakeItems.Add(TemplateIDs.TemplateField, new DbItem(TemplateFieldItemName, TemplateIDs.TemplateField, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
+      this.FakeItems.Add(TemplateIDs.BranchTemplate, new DbItem(BranchItemName, TemplateIDs.BranchTemplate, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
     }
   }
 }

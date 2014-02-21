@@ -18,7 +18,10 @@ The code below creates a fake in-memory database with a single item Home that co
     [Fact]
     public void HowDoICreateASimpleItem()
     {
-      using (var db = new Db { new DbItem("Home") { { "Title", "Welcome!" } } })
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("Home") { { "Title", "Welcome!" } }
+        })
       {
         Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
         homeItem["Title"].Should().Be("Welcome!");
@@ -32,18 +35,18 @@ This code creates a root item Articles and two child items Getting Started and T
     [Fact]
     public void HowDoICreateAnItemHierarchy()
     {
-      using (var db = new Db
-                        {
-                          new DbItem("Articles")
-                            {
-                              new DbItem("Getting Started"),
-                              new DbItem("Troubleshooting")
-                            }
-                        })
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("Articles")
+            {
+              new Sitecore.FakeDb.DbItem("Getting Started"),
+              new Sitecore.FakeDb.DbItem("Troubleshooting")
+            }
+        })
       {
-        db.GetItem("/sitecore/content/Articles").Should().NotBeNull();
-        db.GetItem("/sitecore/content/Articles/Getting Started").Should().NotBeNull();
-        db.GetItem("/sitecore/content/Articles/Troubleshooting").Should().NotBeNull();
+        Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/Articles");
+        articles["Getting Started"].Should().NotBeNull();
+        articles["Troubleshooting"].Should().NotBeNull();
       }
     }
     
@@ -54,48 +57,41 @@ The next example demonstrates how to configure field values for different langua
     [Fact]
     public void HowDoICreateAMultilingualItem()
     {
-      // arrange & act
-      using (var db = new Db
-                        {
-                          new DbItem("home") { new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } } }
-                        })
-      {
-        db.GetItem("/sitecore/content/home", "en")["Title"].Should().Be("Hello!");
-        db.GetItem("/sitecore/content/home", "da")["Title"].Should().Be("Hej!");
-      }
-    }
-
-### How do I create and configure an advanced item hierarchy
-
-    [Fact]
-    public void HowDoICreateAndConfigureAdvancedItemHierarchy()
-    {
-      using (Db db = new Db
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
         {
-          new DbItem("home")
+          new Sitecore.FakeDb.DbItem("home")
             {
-              Fields = new DbFieldCollection { { "Title", "Welcome!" } },
-              Children = new[]
-                {
-                  new DbItem("Articles")
-                    {
-                      new DbItem("Getting Started") { { "Description", "Articles helping to get started." } },
-                      new DbItem("Troubleshooting") { { "Description", "Articles with solutions to common problems." } }
-                    }
-                }
+              new Sitecore.FakeDb.DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } }
             }
         })
       {
-        Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
-        homeItem["Title"].Should().Be("Welcome!");
+        Sitecore.Data.Items.Item homeEn = db.GetItem("/sitecore/content/home", "en");
+        homeEn["Title"].Should().Be("Hello!");
 
-        Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/home/Articles");
+        Sitecore.Data.Items.Item homeDa = db.GetItem("/sitecore/content/home", "da");
+        homeDa["Title"].Should().Be("Hej!");
+      }
+    }
 
-        Sitecore.Data.Items.Item gettingStartedArticle = articles.Children["Getting Started"];
-        gettingStartedArticle["Description"].Should().Be("Articles helping to get started.");
+### How do I create an item of specific template
 
-        Sitecore.Data.Items.Item troubleshootingArticle = articles.Children["Troubleshooting"];
-        troubleshootingArticle["Description"].Should().Be("Articles with solutions to common problems.");
+    [Fact]
+    public void HowDoICreateAnItemOfSpecificTemplate()
+    {
+      // arrange
+      Sitecore.Data.TemplateID templateId = new Sitecore.Data.TemplateID(Sitecore.Data.ID.NewID);
+
+      // act
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbTemplate("products", templateId) { "Name" },
+          new Sitecore.FakeDb.DbItem("Apple", templateId)
+        })
+      {
+        // assert
+        Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/apple");
+        item.TemplateID.Should().Be(templateId.ID);
+        item.Fields["Name"].Should().NotBeNull();
       }
     }
 
@@ -106,10 +102,14 @@ The next example demonstrates how to configure field values for different langua
     public void HowDoIConfigureItemAccess()
     {
       // arrange & act
-      using (var db = new Db { new DbItem("home") { Access = new DbItemAccess { CanRead = false } } })
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home") { Access = { CanRead = false } }
+        })
       {
         // assert
-        db.GetItem("/sitecore/content/home").Should().BeNull();
+        Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/home");
+        item.Should().BeNull();
       }
     }
 
@@ -124,7 +124,7 @@ The next example mocks the authentication provider and substitutes it so that au
       var provider = Substitute.For<Sitecore.Security.Authentication.AuthenticationProvider>();
       provider.Login("John", false).Returns(true);
 
-      // substitute authentication provider with the mock
+      // substitute authentication provider with mock
       using (new Sitecore.Common.Switcher<Sitecore.Security.Authentication.AuthenticationProvider>(provider))
       {
         // use authentication manager in your code
@@ -145,14 +145,14 @@ The example below creates and configure a content search index mock so that it r
         var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
         Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Add("my_index", index);
 
-        using (var db = new Db { new DbItem("home") })
+        using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db { new Sitecore.FakeDb.DbItem("home") })
         {
-          var searchResultItem = Substitute.For<SearchResultItem>();
+          var searchResultItem = Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
           searchResultItem.GetItem().Returns(db.GetItem("/sitecore/content/home"));
-          index.CreateSearchContext().GetQueryable<SearchResultItem>().Returns((new[] { searchResultItem }).AsQueryable());
+          index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Returns((new[] { searchResultItem }).AsQueryable());
 
           // act
-          Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<SearchResultItem>().Single().GetItem();
+          Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Single().GetItem();
 
           // assert
           result.Paths.FullPath.Should().Be("/sitecore/content/home");
@@ -170,11 +170,12 @@ The example below creates and configure a content search index mock so that it r
     public void HowDoIMockTrackerVisitor()
     {
       // arrange
-      var visitor = Substitute.For<Visitor>(Guid.NewGuid());
+      var visitor = Substitute.For<Sitecore.Analytics.Data.DataAccess.Visitor>(Guid.NewGuid());
 
       // act
-      using (new Sitecore.Common.Switcher<Visitor>(visitor))
+      using (new Sitecore.Common.Switcher<Sitecore.Analytics.Data.DataAccess.Visitor>(visitor))
       {
         // assert
         Sitecore.Analytics.Tracker.Visitor.Should().Be(visitor);
       }
+    }

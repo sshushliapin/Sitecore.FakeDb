@@ -38,7 +38,7 @@ namespace Sitecore.FakeDb
       get { return this.database; }
     }
 
-    private DataStorage DataStorage
+    protected DataStorage DataStorage
     {
       get { return this.Database.GetDataStorage(); }
     }
@@ -55,12 +55,12 @@ namespace Sitecore.FakeDb
       this.CreateTemplate(item);
       this.CreateItem(item);
       this.CreateItemFields(item);
+      this.CreateChildren(item);
       this.SetFullPath(item);
-      this.AddChildren(item);
       this.SetAccess(item);
     }
 
-    public virtual void Add(DbTemplate template)
+    public void Add(DbTemplate template)
     {
       Assert.ArgumentNotNull(template, "template");
 
@@ -76,8 +76,55 @@ namespace Sitecore.FakeDb
       this.DataStorage.FakeTemplates.Add(template.ID, template);
     }
 
+    public Item GetItem(ID id)
+    {
+      return this.Database.GetItem(id);
+    }
+
+    public Item GetItem(ID id, string language)
+    {
+      Assert.ArgumentNotNullOrEmpty(language, "language");
+
+      return this.Database.GetItem(id, Language.Parse(language));
+    }
+
+    public Item GetItem(string path)
+    {
+      Assert.ArgumentNotNullOrEmpty(path, "path");
+
+      return this.Database.GetItem(path);
+    }
+
+    public Item GetItem(string path, string language)
+    {
+      Assert.ArgumentNotNullOrEmpty(language, "language");
+
+      return this.Database.GetItem(path, Language.Parse(language));
+    }
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose()
+    {
+      Factory.Reset();
+    }
+
     protected virtual void CreateTemplate(DbItem item)
     {
+      var isResolved = this.ResolveTemplate(item);
+      if (isResolved)
+      {
+        return;
+      }
+
+      if (!ID.IsNullOrEmpty(item.TemplateID) && this.DataStorage.GetFakeTemplate(item.TemplateID) != null)
+      {
+        return;
+      }
+
+      item.TemplateID = ID.NewID;
+
       var fields = new DbFieldCollection();
       foreach (var itemField in item.Fields)
       {
@@ -88,6 +135,31 @@ namespace Sitecore.FakeDb
       var template = new DbTemplate(item.Name, item.TemplateID) { Fields = fields };
 
       this.Add(template);
+    }
+
+    protected virtual bool ResolveTemplate(DbItem item)
+    {
+      if (!ID.IsNullOrEmpty(item.TemplateID))
+      {
+        return false;
+      }
+
+      var lastItem = this.DataStorage.FakeItems.Values.Last();
+      var lastItemTemplateKeys = string.Concat(lastItem.Fields.InnerFields.Values.Select(f => f.Name));
+      var itemTemplateKeys = string.Concat(item.Fields.InnerFields.Values.Select(f => f.Name));
+
+      if (lastItemTemplateKeys != itemTemplateKeys)
+      {
+        return false;
+      }
+
+      item.TemplateID = lastItem.TemplateID;
+      for (var i = 0; i < item.Fields.Count(); i++)
+      {
+        item.Fields.ElementAt(i).ID = lastItem.Fields.ElementAt(0).ID;
+      }
+
+      return true;
     }
 
     protected virtual void CreateItem(DbItem item)
@@ -115,6 +187,16 @@ namespace Sitecore.FakeDb
       }
     }
 
+    protected virtual void CreateChildren(DbItem item)
+    {
+      foreach (var child in item.Children)
+      {
+        child.ParentID = item.ID;
+        child.FullPath = item.FullPath + "/" + child.Name;
+        this.Add(child);
+      }
+    }
+
     protected virtual void SetFullPath(DbItem item)
     {
       if (item.ParentID == DefaultItemRoot)
@@ -127,57 +209,11 @@ namespace Sitecore.FakeDb
       item.FullPath = parent.FullPath + "/" + item.Name;
     }
 
-    protected virtual void AddChildren(DbItem item)
+    protected virtual void SetAccess(DbItem item)
     {
-      foreach (var child in item.Children)
-      {
-        child.ParentID = item.ID;
-        child.FullPath = item.FullPath + "/" + child.Name;
-        this.Add(child);
-      }
-    }
-
-    private void SetAccess(DbItem item)
-    {
-      Assert.ArgumentNotNull(item, "item");
-
       var fakeItem = this.DataStorage.GetFakeItem(item.ID);
 
       fakeItem.Access = item.Access;
-    }
-
-    public Item GetItem(string path)
-    {
-      Assert.ArgumentNotNullOrEmpty(path, "path");
-
-      return this.Database.GetItem(path);
-    }
-
-    public Item GetItem(string path, string language)
-    {
-      Assert.ArgumentNotNullOrEmpty(language, "language");
-
-      return this.Database.GetItem(path, Language.Parse(language));
-    }
-
-    public Item GetItem(ID id)
-    {
-      return this.Database.GetItem(id);
-    }
-
-    public Item GetItem(ID id, string language)
-    {
-      Assert.ArgumentNotNullOrEmpty(language, "language");
-
-      return this.Database.GetItem(id, Language.Parse(language));
-    }
-
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public void Dispose()
-    {
-      Factory.Reset();
     }
   }
 }

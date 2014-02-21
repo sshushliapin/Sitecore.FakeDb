@@ -4,10 +4,6 @@
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Analytics.Data.DataAccess;
-  using Sitecore.ContentSearch.SearchTypes;
-  using Sitecore.FakeDb;
-  using Sitecore.FakeDb.Security.AccessControl;
   using Xunit;
 
   public class GettingStarted
@@ -17,7 +13,10 @@
     [Fact]
     public void HowDoICreateASimpleItem()
     {
-      using (var db = new Db { new DbItem("Home") { { "Title", "Welcome!" } } })
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("Home") { { "Title", "Welcome!" } }
+        })
       {
         Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
         homeItem["Title"].Should().Be("Welcome!");
@@ -27,27 +26,57 @@
     [Fact]
     public void HowDoICreateAnItemHierarchy()
     {
-      using (var db = new Db
-                        {
-                          new DbItem("Articles") { new DbItem("Getting Started"), new DbItem("Troubleshooting") }
-                        })
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("Articles")
+            {
+              new Sitecore.FakeDb.DbItem("Getting Started"),
+              new Sitecore.FakeDb.DbItem("Troubleshooting")
+            }
+        })
       {
-        db.GetItem("/sitecore/content/Articles").Should().NotBeNull();
-        db.GetItem("/sitecore/content/Articles/Getting Started").Should().NotBeNull();
-        db.GetItem("/sitecore/content/Articles/Troubleshooting").Should().NotBeNull();
+        Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/Articles");
+        articles["Getting Started"].Should().NotBeNull();
+        articles["Troubleshooting"].Should().NotBeNull();
       }
     }
 
     [Fact]
     public void HowDoICreateAMultilingualItem()
     {
-      using (var db = new Db
-                        {
-                          new DbItem("home") { new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } } }
-                        })
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home")
+            {
+              new Sitecore.FakeDb.DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } }
+            }
+        })
       {
-        db.GetItem("/sitecore/content/home", "en")["Title"].Should().Be("Hello!");
-        db.GetItem("/sitecore/content/home", "da")["Title"].Should().Be("Hej!");
+        Sitecore.Data.Items.Item homeEn = db.GetItem("/sitecore/content/home", "en");
+        homeEn["Title"].Should().Be("Hello!");
+
+        Sitecore.Data.Items.Item homeDa = db.GetItem("/sitecore/content/home", "da");
+        homeDa["Title"].Should().Be("Hej!");
+      }
+    }
+
+    [Fact]
+    public void HowDoICreateAnItemOfSpecificTemplate()
+    {
+      // arrange
+      Sitecore.Data.TemplateID templateId = new Sitecore.Data.TemplateID(Sitecore.Data.ID.NewID);
+
+      // act
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbTemplate("products", templateId) { "Name" },
+          new Sitecore.FakeDb.DbItem("Apple", templateId)
+        })
+      {
+        // assert
+        Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/apple");
+        item.TemplateID.Should().Be(templateId.ID);
+        item.Fields["Name"].Should().NotBeNull();
       }
     }
 
@@ -59,10 +88,14 @@
     public void HowDoIConfigureItemAccess()
     {
       // arrange & act
-      using (var db = new Db { new DbItem("home") { Access = new DbItemAccess { CanRead = false } } })
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home") { Access = { CanRead = false } }
+        })
       {
         // assert
-        db.GetItem("/sitecore/content/home").Should().BeNull();
+        Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/home");
+        item.Should().BeNull();
       }
     }
 
@@ -83,37 +116,7 @@
 
     #endregion
 
-    [Fact]
-    public void HowDoICreateAndConfigureAdvancedItemHierarchy()
-    {
-      using (Db db = new Db
-        {
-          new DbItem("home")
-            {
-              Fields = new DbFieldCollection { { "Title", "Welcome!" } },
-              Children = new[]
-                {
-                  new DbItem("Articles")
-                    {
-                      new DbItem("Getting Started") { { "Description", "Articles helping to get started." } },
-                      new DbItem("Troubleshooting") { { "Description", "Articles with solutions to common problems." } }
-                    }
-                }
-            }
-        })
-      {
-        Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
-        homeItem["Title"].Should().Be("Welcome!");
-
-        Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/home/Articles");
-
-        Sitecore.Data.Items.Item gettingStartedArticle = articles.Children["Getting Started"];
-        gettingStartedArticle["Description"].Should().Be("Articles helping to get started.");
-
-        Sitecore.Data.Items.Item troubleshootingArticle = articles.Children["Troubleshooting"];
-        troubleshootingArticle["Description"].Should().Be("Articles with solutions to common problems.");
-      }
-    }
+    #region Miscellaneous
 
     [Fact]
     public void HowDoIMockContentSearchLogic()
@@ -124,14 +127,14 @@
         var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
         Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Add("my_index", index);
 
-        using (var db = new Db { new DbItem("home") })
+        using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db { new Sitecore.FakeDb.DbItem("home") })
         {
-          var searchResultItem = Substitute.For<SearchResultItem>();
+          var searchResultItem = Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
           searchResultItem.GetItem().Returns(db.GetItem("/sitecore/content/home"));
-          index.CreateSearchContext().GetQueryable<SearchResultItem>().Returns((new[] { searchResultItem }).AsQueryable());
+          index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Returns((new[] { searchResultItem }).AsQueryable());
 
           // act
-          Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<SearchResultItem>().Single().GetItem();
+          Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Single().GetItem();
 
           // assert
           result.Paths.FullPath.Should().Be("/sitecore/content/home");
@@ -147,29 +150,16 @@
     public void HowDoIMockTrackerVisitor()
     {
       // arrange
-      var visitor = Substitute.For<Visitor>(Guid.NewGuid());
+      var visitor = Substitute.For<Sitecore.Analytics.Data.DataAccess.Visitor>(Guid.NewGuid());
 
       // act
-      using (new Sitecore.Common.Switcher<Visitor>(visitor))
+      using (new Sitecore.Common.Switcher<Sitecore.Analytics.Data.DataAccess.Visitor>(visitor))
       {
         // assert
         Sitecore.Analytics.Tracker.Visitor.Should().Be(visitor);
       }
     }
 
-    [Fact]
-    public void ShouldSetAsContextItem()
-    {
-      using (var db = new Db { new DbItem("Home") })
-      {
-        var item = db.GetItem("/sitecore/content/home");
-        using (new Sitecore.Data.Items.ContextItemSwitcher(item))
-        {
-          Sitecore.Context.Item.Should().Be(item);
-        }
-
-        Sitecore.Context.Item.Should().BeNull();
-      }
-    }
+    #endregion
   }
 }

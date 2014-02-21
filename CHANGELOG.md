@@ -1,6 +1,7 @@
 0.6.0
-* [NEW] Can create an item template.
-* [NEW] Db.GetItem() can now get items by id.
+* [NEW] Can create an item of specific template
+* [NEW] Share templates between items with similar fields
+* [NEW] Db.GetItem() can now get items by id
 
 0.5.0
 * [NEW] Introduced basic item access confuguration
