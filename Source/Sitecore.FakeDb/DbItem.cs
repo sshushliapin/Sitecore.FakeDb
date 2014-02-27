@@ -40,7 +40,7 @@ namespace Sitecore.FakeDb
 
     public ID ParentID { get; set; }
 
-    public string FullPath { get; internal set; }
+    public string FullPath { get; set; }
 
     public ICollection<DbItem> Children { get; set; }
 

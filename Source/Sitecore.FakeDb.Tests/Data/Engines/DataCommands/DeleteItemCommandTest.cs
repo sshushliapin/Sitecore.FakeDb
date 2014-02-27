@@ -1,52 +1,50 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
   using FluentAssertions;
-  using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
-  using Sitecore.FakeDb.Data;
+  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
 
-  public class DeleteItemCommandTest
+  public class DeleteItemCommandTest : CommandTestBase
   {
+    private readonly OpenDeleteItemCommand command;
+
+    public DeleteItemCommandTest()
+    {
+      this.command = new OpenDeleteItemCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
+    }
+
     [Fact]
     public void ShouldCreateInstance()
     {
-      // arrange
-      var command = new OpenDeleteItemCommand();
-
       // act & assert
-      command.CreateInstance().Should().BeOfType<DeleteItemCommand>();
+      this.command.CreateInstance().Should().BeOfType<DeleteItemCommand>();
     }
 
     [Fact]
     public void ShouldDeleteItemFromDataStorageAndReturnTrue()
     {
       // arrange
-      var database = Substitute.For<FakeDatabase>("master");
-
       var itemId = ID.NewID;
-      database.DataStorage.FakeItems.Add(itemId, new DbItem("item"));
 
-      var command = new OpenDeleteItemCommand { Engine = new DataEngine(database) };
-      command.Initialize(ItemHelper.CreateInstance(itemId), ID.NewID);
+      this.dataStorage.FakeItems.Add(itemId, new DbItem("item"));
+      this.command.Initialize(ItemHelper.CreateInstance(itemId), ID.NewID);
 
       // act
-      var result = command.DoExecute();
+      var result = this.command.DoExecute();
 
       // assert
       result.Should().BeTrue();
-      database.DataStorage.FakeItems.Should().NotContainKey(itemId);
+      this.dataStorage.FakeItems.Should().NotContainKey(itemId);
     }
 
     [Fact]
     public void ShouldDeleteItemDescendants()
     {
       // arrange
-      var database = Substitute.For<FakeDatabase>("master");
-
       var itemId = ID.NewID;
       var desc1Id = ID.NewID;
       var desc2Id = ID.NewID;
@@ -58,32 +56,28 @@
       item.Children.Add(desc1);
       desc1.Children.Add(desc2);
 
-      database.DataStorage.FakeItems.Add(itemId, item);
-      database.DataStorage.FakeItems.Add(desc1Id, desc1);
-      database.DataStorage.FakeItems.Add(desc2Id, desc2);
+      this.dataStorage.FakeItems.Add(itemId, item);
+      this.dataStorage.FakeItems.Add(desc1Id, desc1);
+      this.dataStorage.FakeItems.Add(desc2Id, desc2);
 
-      var command = new OpenDeleteItemCommand { Engine = new DataEngine(database) };
-      command.Initialize(ItemHelper.CreateInstance(itemId), ID.NewID);
+      this.command.Initialize(ItemHelper.CreateInstance(itemId), ID.NewID);
 
       // act
-      command.DoExecute();
+      this.command.DoExecute();
 
       // assert
-      database.DataStorage.FakeItems.Should().NotContainKey(desc1Id);
-      database.DataStorage.FakeItems.Should().NotContainKey(desc2Id);
+      this.dataStorage.FakeItems.Should().NotContainKey(desc1Id);
+      this.dataStorage.FakeItems.Should().NotContainKey(desc2Id);
     }
 
     [Fact]
     public void ShouldReturnFalseIfNoItemFound()
     {
       // arrange
-      var database = Substitute.For<FakeDatabase>("master");
-
-      var command = new OpenDeleteItemCommand { Engine = new DataEngine(database) };
-      command.Initialize(ItemHelper.CreateInstance(), ID.NewID);
+      this.command.Initialize(ItemHelper.CreateInstance(), ID.NewID);
 
       // act
-      var result = command.DoExecute();
+      var result = this.command.DoExecute();
 
       // assert
       result.Should().BeFalse();
@@ -91,6 +85,11 @@
 
     private class OpenDeleteItemCommand : DeleteItemCommand
     {
+      public OpenDeleteItemCommand(DataStorage dataStorage)
+        : base(dataStorage)
+      {
+      }
+
       public new Sitecore.Data.Engines.DataCommands.DeleteItemCommand CreateInstance()
       {
         return base.CreateInstance();

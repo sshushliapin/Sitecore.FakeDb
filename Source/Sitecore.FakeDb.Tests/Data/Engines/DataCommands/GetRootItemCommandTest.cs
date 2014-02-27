@@ -2,23 +2,22 @@
 {
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
   using Xunit;
+  using Version = Sitecore.Data.Version;
 
-  public class GetRootItemCommandTest
+  public class GetRootItemCommandTest : CommandTestBase
   {
     [Fact]
     public void ShouldCreateInstance()
     {
       // arrange
-      var command = new OpenGetRootItemCommand();
+      var command = new OpenGetRootItemCommand(this.dataStorage);
 
       // act & assert
       command.CreateInstance().Should().BeOfType<GetRootItemCommand>();
@@ -28,14 +27,11 @@
     public void ShouldReturnRootItem()
     {
       // arrange
-      var database = Substitute.For<FakeDatabase>("master");
-      database.DataStorage = Substitute.For<DataStorage>();
-
       var rootItem = ItemHelper.CreateInstance();
 
-      database.DataStorage.GetSitecoreItem(ItemIDs.RootID, rootItem.Language).Returns(rootItem);
+      dataStorage.GetSitecoreItem(ItemIDs.RootID, rootItem.Language).Returns(rootItem);
 
-      var command = new OpenGetRootItemCommand { Engine = new DataEngine(database) };
+      var command = new OpenGetRootItemCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
       command.Initialize(Language.Invariant, Version.Latest);
 
       // act
@@ -47,6 +43,11 @@
 
     private class OpenGetRootItemCommand : GetRootItemCommand
     {
+      public OpenGetRootItemCommand(DataStorage dataStorage)
+        : base(dataStorage)
+      {
+      }
+
       public new Sitecore.Data.Engines.DataCommands.GetRootItemCommand CreateInstance()
       {
         return base.CreateInstance();

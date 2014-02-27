@@ -8,7 +8,6 @@ namespace Sitecore.FakeDb
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.Diagnostics;
-  using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Globalization;
@@ -29,6 +28,10 @@ namespace Sitecore.FakeDb
     {
       this.database = Database.GetDatabase(databaseName);
 
+      //TODO:[Stopper] unit test
+      DataStorage.Current = (DataStorage)Factory.CreateObject("dataStorage", true);
+      DataStorage.Current.SetDatabase(this.database);
+
       // TODO:[High] Should not be here
       ((FakeAuthorizationProvider)AuthorizationManager.Provider).DataStorage = this.DataStorage;
     }
@@ -40,7 +43,7 @@ namespace Sitecore.FakeDb
 
     protected DataStorage DataStorage
     {
-      get { return this.Database.GetDataStorage(); }
+      get { return DataStorage.Current; }
     }
 
     public IEnumerator GetEnumerator()
@@ -107,6 +110,7 @@ namespace Sitecore.FakeDb
     /// </summary>
     public void Dispose()
     {
+      DataStorage.Current = null;
       Factory.Reset();
     }
 
@@ -144,19 +148,22 @@ namespace Sitecore.FakeDb
         return false;
       }
 
-      var lastItem = this.DataStorage.FakeItems.Values.Last();
-      var lastItemTemplateKeys = string.Concat(lastItem.Fields.InnerFields.Values.Select(f => f.Name));
-      var itemTemplateKeys = string.Concat(item.Fields.InnerFields.Values.Select(f => f.Name));
-
-      if (lastItemTemplateKeys != itemTemplateKeys)
+      var lastItem = this.DataStorage.FakeItems.Values.LastOrDefault();
+      if (lastItem != null)
       {
-        return false;
-      }
+        var lastItemTemplateKeys = string.Concat(lastItem.Fields.InnerFields.Values.Select(f => f.Name));
+        var itemTemplateKeys = string.Concat(item.Fields.InnerFields.Values.Select(f => f.Name));
 
-      item.TemplateID = lastItem.TemplateID;
-      for (var i = 0; i < item.Fields.Count(); i++)
-      {
-        item.Fields.ElementAt(i).ID = lastItem.Fields.ElementAt(0).ID;
+        if (lastItemTemplateKeys != itemTemplateKeys)
+        {
+          return false;
+        }
+
+        item.TemplateID = lastItem.TemplateID;
+        for (var i = 0; i < item.Fields.Count(); i++)
+        {
+          item.Fields.ElementAt(i).ID = lastItem.Fields.ElementAt(0).ID;
+        }
       }
 
       return true;

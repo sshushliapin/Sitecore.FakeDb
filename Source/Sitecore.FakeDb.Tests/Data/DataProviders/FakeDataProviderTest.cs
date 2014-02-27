@@ -21,9 +21,8 @@
       var database = new FakeDatabase("master");
 
       this.dataStorage = Substitute.For<DataStorage>();
-      database.DataStorage = this.dataStorage;
 
-      this.dataProvider = new FakeDataProvider();
+      this.dataProvider = new FakeDataProvider(this.dataStorage);
       ReflectionUtil.CallMethod(database, "AddDataProvider", new object[] { this.dataProvider });
     }
 
@@ -63,7 +62,7 @@
     public void ShouldGetTemplatesWithDefaultDataSectionFromDataStorage()
     {
       // arrange
-      var template = this.CreateTestTemplateInDataStorage();
+      this.CreateTestTemplateInDataStorage();
 
       var result = this.dataProvider.GetTemplates(null).First();
 

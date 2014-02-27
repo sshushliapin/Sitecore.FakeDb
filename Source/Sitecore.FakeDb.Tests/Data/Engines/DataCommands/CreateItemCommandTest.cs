@@ -10,13 +10,13 @@
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
 
-  public class CreateItemCommandTest
+  public class CreateItemCommandTest : CommandTestBase
   {
     [Fact]
     public void ShouldCreateInstance()
     {
       // arrange
-      var command = new OpenCreateItemCommand();
+      var command = new OpenCreateItemCommand(this.dataStorage);
 
       // act & assert
       command.CreateInstance().Should().BeOfType<CreateItemCommand>();
@@ -26,28 +26,27 @@
     public void ShouldCreateDefaultCreator()
     {
       // arrange
-      var command = new CreateItemCommand();
+      var command = new CreateItemCommand(this.dataStorage);
 
       // act & assert
       command.ItemCreator.Should().NotBeNull();
+      command.ItemCreator.DataStorage.Should().Be(this.dataStorage);
     }
 
     [Fact]
     public void ShouldCreateItem()
     {
       // arrange
-      var database = Substitute.For<Database>("master");
-
       var itemId = ID.NewID;
       var templateId = ID.NewID;
 
       var item = ItemHelper.CreateInstance();
       var destination = ItemHelper.CreateInstance();
 
-      var itemCreator = Substitute.For<ItemCreator>();
+      var itemCreator = Substitute.For<ItemCreator>(this.dataStorage);
       itemCreator.Create("home", itemId, templateId, database, destination).Returns(item);
 
-      var command = new OpenCreateItemCommand { Engine = new DataEngine(database), ItemCreator = itemCreator };
+      var command = new OpenCreateItemCommand(this.dataStorage) { Engine = new DataEngine(this.database), ItemCreator = itemCreator };
       command.Initialize(itemId, "home", templateId, destination);
 
       // act
@@ -59,6 +58,11 @@
 
     private class OpenCreateItemCommand : CreateItemCommand
     {
+      public OpenCreateItemCommand(DataStorage dataStorage)
+        : base(dataStorage)
+      {
+      }
+
       public new Sitecore.Data.Engines.DataCommands.CreateItemCommand CreateInstance()
       {
         return base.CreateInstance();

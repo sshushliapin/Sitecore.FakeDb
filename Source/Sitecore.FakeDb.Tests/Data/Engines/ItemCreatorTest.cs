@@ -15,6 +15,8 @@
   {
     private readonly FakeDatabase database;
 
+    private readonly DataStorage dataStorage;
+
     private readonly ID itemId = ID.NewID;
 
     private readonly ID templateId = ID.NewID;
@@ -26,13 +28,14 @@
     public ItemCreatorTest()
     {
       this.database = Substitute.For<FakeDatabase>("master");
-      this.database.DataStorage = Substitute.For<DataStorage>();
+      this.dataStorage = Substitute.For<DataStorage>();
 
       this.destination = ItemHelper.CreateInstance();
-      this.database.DataStorage.GetFakeItem(this.destination.ID).Returns(new DbItem("destination"));
-      this.database.DataStorage.GetFieldList(this.templateId).Returns(new FieldList());
 
-      this.itemCreator = new ItemCreator();
+      this.dataStorage.GetFakeItem(this.destination.ID).Returns(new DbItem("destination"));
+      this.dataStorage.GetFieldList(this.templateId).Returns(new FieldList());
+
+      this.itemCreator = new ItemCreator(this.dataStorage);
     }
 
     [Fact]
@@ -55,7 +58,7 @@
       this.itemCreator.Create("home", this.itemId, this.templateId, this.database, this.destination);
 
       // assert
-      this.database.DataStorage.FakeItems.Should().ContainKey(this.itemId);
+      this.dataStorage.FakeItems.Should().ContainKey(this.itemId);
     }
 
     [Fact]
@@ -63,7 +66,7 @@
     {
       // arrange
       var item = new DbItem("destination");
-      this.database.DataStorage.GetFakeItem(this.destination.ID).Returns(item);
+      this.dataStorage.GetFakeItem(this.destination.ID).Returns(item);
 
       // act
       this.itemCreator.Create("home", this.itemId, this.templateId, this.database, this.destination);
@@ -77,7 +80,7 @@
     {
       // arrange
       var item = new DbItem("home");
-      this.database.DataStorage.GetFakeItem(this.itemId).Returns(item);
+      this.dataStorage.GetFakeItem(this.itemId).Returns(item);
 
       // act
       var item1 = this.itemCreator.Create("home", this.itemId, this.templateId, this.database, this.destination);

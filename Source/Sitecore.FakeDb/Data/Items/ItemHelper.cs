@@ -2,6 +2,7 @@
 {
   using Sitecore.Data;
   using Sitecore.Data.Items;
+  using Sitecore.Diagnostics;
   using Sitecore.Globalization;
 
   public static class ItemHelper
@@ -38,6 +39,12 @@
 
     public static Item CreateInstance(string itemName, ID itemId, ID templateId, FieldList fields, Database database)
     {
+      Assert.ArgumentNotNullOrEmpty(itemName, "itemName");
+      Assert.ArgumentNotNull(itemId, "itemId");
+      Assert.ArgumentNotNull(templateId, "templateId");
+      Assert.ArgumentNotNull(fields, "fields");
+      Assert.ArgumentNotNull(database, "database");
+
       return new Item(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), Language.Invariant, Version.First, fields), database);
     }
   }

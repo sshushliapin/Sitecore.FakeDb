@@ -5,25 +5,35 @@
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
   using Sitecore.Data.Templates;
+  using Sitecore.FakeDb.Data.Engines;
   using CallContext = Sitecore.Data.DataProviders.CallContext;
 
   public class FakeDataProvider : DataProvider
   {
+    private readonly DataStorage dataStorage;
+
+    public FakeDataProvider(DataStorage dataStorage)
+    {
+      this.dataStorage = dataStorage;
+    }
+
+    public virtual DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
+    }
+
     public override IdCollection GetTemplateItemIds(CallContext context)
     {
-      var dataStorage = this.Database.GetDataStorage();
-
-      var ids = dataStorage.FakeTemplates.Select(t => t.Key).ToArray();
+      var ids = this.DataStorage.FakeTemplates.Select(t => t.Key).ToArray();
 
       return new IdCollection { ids };
     }
 
     public override TemplateCollection GetTemplates(CallContext context)
     {
-      var dataStorage = this.Database.GetDataStorage();
       var templates = new TemplateCollection();
 
-      foreach (var ft in dataStorage.FakeTemplates.Values)
+      foreach (var ft in this.DataStorage.FakeTemplates.Values)
       {
         var builder = new Template.Builder(ft.Name, ft.ID, new TemplateCollection());
         var section = builder.AddSection("Data", ID.NewID);

@@ -10,13 +10,13 @@
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
 
-  public class AddFromTemplateCommandTest
+  public class AddFromTemplateCommandTest : CommandTestBase
   {
     [Fact]
     public void ShouldCreateInstance()
     {
       // arrange
-      var command = new OpenAddFromTemplateCommand();
+      var command = new OpenAddFromTemplateCommand(this.dataStorage);
 
       // act & assert
       command.CreateInstance().Should().BeOfType<AddFromTemplateCommand>();
@@ -26,28 +26,27 @@
     public void ShouldCreateDefaultCreator()
     {
       // arrange
-      var command = new AddFromTemplateCommand();
+      var command = new AddFromTemplateCommand(this.dataStorage);
 
       // act & assert
       command.ItemCreator.Should().NotBeNull();
+      command.ItemCreator.DataStorage.Should().Be(this.dataStorage);
     }
 
     [Fact]
     public void ShouldCreateItem()
     {
       // arrange
-      var database = Substitute.For<Database>("master");
-
       var itemId = ID.NewID;
       var templateId = ID.NewID;
 
       var item = ItemHelper.CreateInstance();
       var destination = ItemHelper.CreateInstance();
 
-      var itemCreator = Substitute.For<ItemCreator>();
+      var itemCreator = Substitute.For<ItemCreator>(this.dataStorage);
       itemCreator.Create("home", itemId, templateId, database, destination).Returns(item);
 
-      var command = new OpenAddFromTemplateCommand { Engine = new DataEngine(database), ItemCreator = itemCreator };
+      var command = new OpenAddFromTemplateCommand(this.dataStorage) { Engine = new DataEngine(database), ItemCreator = itemCreator };
       command.Initialize("home", templateId, destination, itemId);
 
       // act
@@ -59,6 +58,11 @@
 
     private class OpenAddFromTemplateCommand : AddFromTemplateCommand
     {
+      public OpenAddFromTemplateCommand(DataStorage dataStorage)
+        : base(dataStorage)
+      {
+      }
+
       public new Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand CreateInstance()
       {
         return base.CreateInstance();

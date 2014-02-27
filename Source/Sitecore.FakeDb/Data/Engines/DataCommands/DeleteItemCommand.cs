@@ -2,19 +2,32 @@
 {
   using System.Collections.Generic;
   using Sitecore.Data;
+  using Sitecore.Diagnostics;
 
   public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand
   {
+    private readonly DataStorage dataStorage;
+
+    public DeleteItemCommand(DataStorage dataStorage)
+    {
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
+
+      this.dataStorage = dataStorage;
+    }
+
+    public virtual DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
+    }
+
     protected override Sitecore.Data.Engines.DataCommands.DeleteItemCommand CreateInstance()
     {
-      return new DeleteItemCommand();
+      return new DeleteItemCommand(this.DataStorage);
     }
 
     protected override bool DoExecute()
     {
-      var dataStorage = this.Database.GetDataStorage();
-
-      return RemoveRecursive(dataStorage.FakeItems, Item.ID);
+      return this.RemoveRecursive(this.DataStorage.FakeItems, Item.ID);
     }
 
     private bool RemoveRecursive(IDictionary<ID, DbItem> fakeItems, ID itemId)

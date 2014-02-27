@@ -149,10 +149,5 @@
       // assert
       a.ShouldThrow<InvalidOperationException>().WithMessage("Template \'{C4520D42-33CA-48C7-972D-6CEE1BC4B9A6}\' not found.");
     }
-
-    [Fact]
-    public void SohouldStoreItemFieldsInDifferentLanguages()
-    {
-    }
   }
 }

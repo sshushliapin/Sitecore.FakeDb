@@ -2,9 +2,11 @@
 {
   using System;
   using FluentAssertions;
+  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Exceptions;
+  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Globalization;
   using Xunit;
@@ -15,6 +17,20 @@
     private readonly ID itemId = ID.NewID;
 
     [Fact]
+    public void ShouldInitializeAndDisposeDataStorage()
+    {
+      // arrange & act
+      using (new Db())
+      {
+        // assert
+        DataStorage.Current.Should().NotBeNull();
+        DataStorage.Current.Should().BeSameAs(Factory.CreateObject("dataStorage", true));
+      }
+
+      DataStorage.Current.Should().BeNull();
+    }
+
+    [Fact]
     public void ShouldHaveDefaultMasterDatabase()
     {
       // arrange
@@ -22,6 +38,17 @@
 
       // act & assert
       db.Database.Name.Should().Be("master");
+    }
+
+    [Fact]
+    public void ShouldSetDatabaseInDataStorage()
+    {
+      // arrange & act
+      using (var db = new Db())
+      {
+        // assert
+        DataStorage.Current.Database.Should().BeSameAs(db.Database);
+      }
     }
 
     [Theory]

@@ -7,22 +7,34 @@
   // TODO: To think aboud better name.
   public class ItemCreator
   {
+    private readonly DataStorage dataStorage;
+
+    public ItemCreator(DataStorage dataStorage)
+    {
+      this.dataStorage = dataStorage;
+    }
+
+    public virtual DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
+    }
+
     public virtual Item Create(string itemName, ID itemId, ID templateId, Database database, Item destination)
     {
-      var dataStorage = database.GetDataStorage();
-      if (dataStorage.GetFakeItem(itemId) != null)
+      if (this.DataStorage.GetFakeItem(itemId) != null)
       {
-        return dataStorage.GetSitecoreItem(itemId, destination.Language);
+        return this.DataStorage.GetSitecoreItem(itemId, destination.Language);
       }
 
-      var fieldList = dataStorage.GetFieldList(templateId);
+      var fieldList = this.DataStorage.GetFieldList(templateId);
       var item = ItemHelper.CreateInstance(itemName, itemId, templateId, fieldList, database);
 
-      var fullPath = destination.Paths.FullPath + "/" + itemName;
+      var parentItem = this.DataStorage.GetFakeItem(destination.ID);
+      var fullPath = parentItem.FullPath + "/" + itemName;
       var dbitem = new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath };
 
-      dataStorage.FakeItems.Add(itemId, dbitem);
-      dataStorage.GetFakeItem(destination.ID).Children.Add(dbitem);
+      this.DataStorage.FakeItems.Add(itemId, dbitem);
+      this.DataStorage.GetFakeItem(destination.ID).Children.Add(dbitem);
 
       return item;
     }

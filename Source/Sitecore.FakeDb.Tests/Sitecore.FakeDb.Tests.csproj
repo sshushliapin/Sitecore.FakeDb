@@ -68,10 +68,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analytics\TrackerTest.cs" />
-    <Compile Include="Configuration\SettingsTest.cs" />
+    <Compile Include="Configuration\ConfigurationTest.cs" />
     <Compile Include="ContentSearch\ContentSearchConfigurationTest.cs" />
     <Compile Include="Data\DataProviders\FakeDataProviderTest.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommandTest.cs" />
+    <Compile Include="Data\Engines\DataCommands\CommandTestBase.cs" />
     <Compile Include="Data\Engines\DataCommands\DeleteItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\CreateItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetChildrenCommandTest.cs" />

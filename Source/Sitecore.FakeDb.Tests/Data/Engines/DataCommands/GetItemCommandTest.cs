@@ -2,22 +2,22 @@
 {
   using FluentAssertions;
   using NSubstitute;
+  using Sitecore.Common;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
 
-  public class GetItemCommandTest
+  public class GetItemCommandTest : CommandTestBase
   {
     [Fact]
     public void ShouldCreateInstance()
     {
       // arrange
-      var command = new OpenGetItemCommand();
+      var command = new OpenGetItemCommand(this.dataStorage);
 
       // act & assert
       command.CreateInstance().Should().BeOfType<GetItemCommand>();
@@ -27,15 +27,12 @@
     public void ShouldGetItemFromDataStorage()
     {
       // arrange
-      var database = Substitute.For<FakeDatabase>("master");
-      database.DataStorage = Substitute.For<DataStorage>();
-
       var itemId = ID.NewID;
       var item = ItemHelper.CreateInstance();
 
-      database.DataStorage.GetSitecoreItem(itemId, item.Language).Returns(item);
+      this.dataStorage.GetSitecoreItem(itemId, item.Language).Returns(item);
 
-      var command = new OpenGetItemCommand { Engine = new DataEngine(database) };
+      var command = new OpenGetItemCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
       command.Initialize(itemId, item.Language, Version.Latest);
 
       // act
@@ -45,10 +42,13 @@
       result.Should().Be(item);
     }
 
-
-
     private class OpenGetItemCommand : GetItemCommand
     {
+      public OpenGetItemCommand(DataStorage dataStorage)
+        : base(dataStorage)
+      {
+      }
+
       public new Sitecore.Data.Engines.DataCommands.GetItemCommand CreateInstance()
       {
         return base.CreateInstance();

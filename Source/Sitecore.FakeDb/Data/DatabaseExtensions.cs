@@ -5,9 +5,9 @@
 
   public static class DatabaseExtensions
   {
-    public static DataStorage GetDataStorage(this Database database)
-    {
-      return ((FakeDatabase)database).DataStorage;
-    }
+    //public static DataStorage GetDataStorage(this Database database)
+    //{
+    //  return DataStorage.Current;
+    //}
   }
 }
