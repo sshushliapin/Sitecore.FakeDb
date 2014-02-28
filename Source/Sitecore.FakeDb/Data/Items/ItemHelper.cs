@@ -7,16 +7,6 @@
 
   public static class ItemHelper
   {
-    public static Item CreateInstance()
-    {
-      return CreateInstance(Database.GetDatabase("master"));
-    }
-
-    public static Item CreateInstance(ID itemId)
-    {
-      return CreateInstance(itemId, Database.GetDatabase("master"));
-    }
-
     public static Item CreateInstance(Database database)
     {
       return CreateInstance(ID.NewID.ToString(), database);

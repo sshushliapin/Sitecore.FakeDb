@@ -40,8 +40,8 @@
       var itemId = ID.NewID;
       var templateId = ID.NewID;
 
-      var item = ItemHelper.CreateInstance();
-      var destination = ItemHelper.CreateInstance();
+      var item = ItemHelper.CreateInstance(this.database);
+      var destination = ItemHelper.CreateInstance(this.database);
 
       var itemCreator = Substitute.For<ItemCreator>(this.dataStorage);
       itemCreator.Create("home", itemId, templateId, database, destination).Returns(item);

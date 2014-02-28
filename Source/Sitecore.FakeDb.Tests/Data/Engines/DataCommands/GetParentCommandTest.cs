@@ -33,8 +33,8 @@
       var parentId = ID.NewID;
       var childId = ID.NewID;
 
-      var parentItem = ItemHelper.CreateInstance();
-      var childItem = ItemHelper.CreateInstance(childId);
+      var parentItem = ItemHelper.CreateInstance(this.database);
+      var childItem = ItemHelper.CreateInstance(childId, this.database);
 
       this.dataStorage.GetFakeItem(childId).Returns(new DbItem("child", childId) { ParentID = parentId });
       this.dataStorage.GetSitecoreItem(parentId, parentItem.Language).Returns(parentItem);
@@ -52,7 +52,7 @@
     public void ShouldReturnNullIfNoParentFound()
     {
       // arrange
-      var item = ItemHelper.CreateInstance();
+      var item = ItemHelper.CreateInstance(this.database);
       this.dataStorage.GetFakeItem(item.ID).Returns(Arg.Any<DbItem>());
       this.command.Initialize(item);
 
@@ -69,7 +69,7 @@
     {
       // arrange
       var rootId = ItemIDs.RootID;
-      var item = ItemHelper.CreateInstance(rootId);
+      var item = ItemHelper.CreateInstance(rootId, this.database);
 
       dataStorage.GetFakeItem(rootId).Returns(new DbItem("sitecore", rootId));
 

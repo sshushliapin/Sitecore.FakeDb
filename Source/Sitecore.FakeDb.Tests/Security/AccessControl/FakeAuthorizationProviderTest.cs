@@ -1,8 +1,10 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security.AccessControl
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Ploeh.AutoFixture;
+  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
@@ -13,16 +15,19 @@
   using Xunit;
   using Xunit.Extensions;
 
-  public class FakeAuthorizationProviderTest
+  public class FakeAuthorizationProviderTest : IDisposable
   {
     private readonly FakeAuthorizationProvider provider;
 
     private readonly Fixture fixture;
 
+    private readonly Database database;
+
     public FakeAuthorizationProviderTest()
     {
       this.provider = new FakeAuthorizationProvider();
       this.fixture = new Fixture();
+      this.database = Database.GetDatabase("master");
     }
 
     [Fact]
@@ -50,7 +55,7 @@
       var itemId = ID.NewID;
 
       var entity = Substitute.For<ISecurable>();
-      entity.GetUniqueId().Returns(ItemHelper.CreateInstance(itemId).GetUniqueId());
+      entity.GetUniqueId().Returns(ItemHelper.CreateInstance(itemId, this.database).GetUniqueId());
 
       var item = new DbItem("propertyName");
       ReflectionUtil.SetProperty(item.Access, propertyName, false);
@@ -65,6 +70,11 @@
 
       // assert
       accessResult.Permission.Should().Be(AccessPermission.Deny);
+    }
+
+    public void Dispose()
+    {
+      Factory.Reset();
     }
   }
 }

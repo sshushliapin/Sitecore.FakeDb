@@ -27,7 +27,7 @@
     public void ShouldReturnRootItem()
     {
       // arrange
-      var rootItem = ItemHelper.CreateInstance();
+      var rootItem = ItemHelper.CreateInstance(this.database);
 
       dataStorage.GetSitecoreItem(ItemIDs.RootID, rootItem.Language).Returns(rootItem);
 

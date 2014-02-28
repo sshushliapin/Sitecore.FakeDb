@@ -1,16 +1,17 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines
 {
+  using System;
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
+  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
 
-  // TODO: Get rid of the copy-paste.
-  public class ItemCreatorTest
+  public class ItemCreatorTest : IDisposable
   {
     private readonly Database database;
 
@@ -29,7 +30,7 @@
       this.database = Database.GetDatabase("master");
       this.dataStorage = Substitute.For<DataStorage>();
 
-      this.destination = ItemHelper.CreateInstance();
+      this.destination = ItemHelper.CreateInstance(this.database);
 
       this.dataStorage.GetFakeItem(this.destination.ID).Returns(new DbItem("destination"));
       this.dataStorage.GetFieldList(this.templateId).Returns(new FieldList());
@@ -87,6 +88,11 @@
 
       // assert
       item1.Should().Be(item2);
+    }
+
+    public void Dispose()
+    {
+      Factory.Reset();
     }
   }
 }

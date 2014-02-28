@@ -2,7 +2,6 @@
 {
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Common;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
@@ -28,7 +27,7 @@
     {
       // arrange
       var itemId = ID.NewID;
-      var item = ItemHelper.CreateInstance();
+      var item = ItemHelper.CreateInstance(this.database);
 
       this.dataStorage.GetSitecoreItem(itemId, item.Language).Returns(item);
 

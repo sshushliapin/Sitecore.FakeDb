@@ -29,9 +29,9 @@
       var dbchild2 = new DbItem("child2");
       var dbitem = new DbItem("item") { dbchild1, dbchild2 };
 
-      var child1 = ItemHelper.CreateInstance();
-      var child2 = ItemHelper.CreateInstance();
-      var item = ItemHelper.CreateInstance(dbitem.ID);
+      var child1 = ItemHelper.CreateInstance(this.database);
+      var child2 = ItemHelper.CreateInstance(this.database);
+      var item = ItemHelper.CreateInstance(dbitem.ID, this.database);
 
       this.dataStorage.GetFakeItem(dbitem.ID).Returns(dbitem);
       this.dataStorage.GetSitecoreItem(dbchild1.ID, item.Language).Returns(child1);
