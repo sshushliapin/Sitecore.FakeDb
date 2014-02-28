@@ -6,7 +6,6 @@
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Exceptions;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Globalization;
   using Xunit;
@@ -18,17 +17,28 @@
     private readonly ID itemId = ID.NewID;
 
     [Fact]
-    public void ShouldInitializeAndDisposeDataStorage()
+    public void ShouldInitializeDataStorage()
     {
       // arrange & act
-      using (new Db())
+      using (var db = new Db())
       {
         // assert
-        DataStorage.Current.Should().NotBeNull();
-        DataStorage.Current.Should().BeSameAs(Factory.CreateObject("dataStorage", true));
+        db.DataStorage.Should().NotBeNull();
+        db.DataStorage.Should().BeSameAs(Factory.CreateObject("dataStorage", true));
       }
+    }
 
-      DataStorage.Current.Should().BeNull();
+    [Fact]
+    public void ShouldResetDataStorageOnDispose()
+    {
+      // arrange
+      var db = new Db();
+
+      // act
+      db.Dispose();
+
+      // assert
+      db.DataStorage.Should().BeNull();
     }
 
     [Fact]
@@ -48,7 +58,7 @@
       using (var db = new Db())
       {
         // assert
-        DataStorage.Current.Database.Should().BeSameAs(db.Database);
+        db.DataStorage.Database.Should().BeSameAs(db.Database);
       }
     }
 

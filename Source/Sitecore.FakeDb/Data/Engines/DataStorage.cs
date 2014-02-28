@@ -33,9 +33,6 @@ namespace Sitecore.FakeDb.Data.Engines
       this.Reset();
     }
 
-    /// <summary>
-    /// Gets the database.
-    /// </summary>
     // TODO:[Mid] Should be removed.
     public Database Database { get; private set; }
 
@@ -45,8 +42,6 @@ namespace Sitecore.FakeDb.Data.Engines
     public IDictionary<ID, DbItem> FakeItems { get; private set; }
 
     public IDictionary<ID, DbTemplate> FakeTemplates { get; private set; }
-
-    public static DataStorage Current { get; set; }
 
     public virtual DbItem GetFakeItem(ID itemId)
     {

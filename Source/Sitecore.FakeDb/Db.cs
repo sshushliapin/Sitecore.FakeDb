@@ -28,10 +28,9 @@ namespace Sitecore.FakeDb
     {
       this.database = Database.GetDatabase(databaseName);
 
-      //TODO:[Stopper] unit test
-      DataStorage.Current = (DataStorage)Factory.CreateObject("dataStorage", true);
-      DataStorage.Current.SetDatabase(this.database);
-
+      this.DataStorage = (DataStorage)Factory.CreateObject("dataStorage", true);
+      this.DataStorage.SetDatabase(this.database);
+      
       // TODO:[High] Should not be here
       ((FakeAuthorizationProvider)AuthorizationManager.Provider).DataStorage = this.DataStorage;
     }
@@ -41,10 +40,7 @@ namespace Sitecore.FakeDb
       get { return this.database; }
     }
 
-    protected DataStorage DataStorage
-    {
-      get { return DataStorage.Current; }
-    }
+    protected internal DataStorage DataStorage { get; set; }
 
     public IEnumerator GetEnumerator()
     {
@@ -110,7 +106,7 @@ namespace Sitecore.FakeDb
     /// </summary>
     public void Dispose()
     {
-      DataStorage.Current = null;
+      this.DataStorage = null;
       Factory.Reset();
     }
 
