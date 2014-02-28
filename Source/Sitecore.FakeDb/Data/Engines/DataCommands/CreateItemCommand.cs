@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using Sitecore.Configuration;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
 
@@ -8,6 +9,11 @@
     private readonly DataStorage dataStorage;
 
     private ItemCreator itemCreator;
+
+    public CreateItemCommand()
+      : this((DataStorage)Factory.CreateObject("dataStorage", true))
+    {
+    }
 
     public CreateItemCommand(DataStorage dataStorage)
     {

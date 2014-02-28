@@ -1,11 +1,17 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using Sitecore.Configuration;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
 
   public class GetParentCommand : Sitecore.Data.Engines.DataCommands.GetParentCommand
   {
     private readonly DataStorage dataStorage;
+
+    public GetParentCommand()
+      : this((DataStorage)Factory.CreateObject("dataStorage", true))
+    {
+    }
 
     public GetParentCommand(DataStorage dataStorage)
     {

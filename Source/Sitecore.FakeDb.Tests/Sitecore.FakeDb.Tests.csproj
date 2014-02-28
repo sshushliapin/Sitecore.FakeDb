@@ -89,7 +89,6 @@
     <Compile Include="Data\Engines\DataCommands\ResolvePathCommandTest.cs" />
     <Compile Include="Data\DataStorageTest.cs" />
     <Compile Include="Data\Engines\ItemCreatorTest.cs" />
-    <Compile Include="Data\FakeDatabaseTest.cs" />
     <Compile Include="Data\Items\ItemHelperTest.cs" />
     <Compile Include="Data\Items\EditContextTest.cs" />
     <Compile Include="DbFieldCollectionTest.cs" />

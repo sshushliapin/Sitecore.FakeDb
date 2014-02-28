@@ -2,11 +2,17 @@
 {
   using System.Linq;
   using Sitecore.Collections;
+  using Sitecore.Configuration;
   using Sitecore.Diagnostics;
 
   public class GetChildrenCommand : Sitecore.Data.Engines.DataCommands.GetChildrenCommand
   {
     private readonly DataStorage dataStorage;
+
+    public GetChildrenCommand()
+      : this((DataStorage)Factory.CreateObject("dataStorage", true))
+    {
+    }
 
     public GetChildrenCommand(DataStorage dataStorage)
     {

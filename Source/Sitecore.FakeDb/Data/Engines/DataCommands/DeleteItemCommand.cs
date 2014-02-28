@@ -1,12 +1,18 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Collections.Generic;
+  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
   public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand
   {
     private readonly DataStorage dataStorage;
+
+    public DeleteItemCommand()
+      : this((DataStorage)Factory.CreateObject("dataStorage", true))
+    {
+    }
 
     public DeleteItemCommand(DataStorage dataStorage)
     {

@@ -2,12 +2,18 @@
 {
   using System;
   using System.Linq;
+  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
   public class ResolvePathCommand : Sitecore.Data.Engines.DataCommands.ResolvePathCommand
   {
     private readonly DataStorage dataStorage;
+
+    public ResolvePathCommand()
+      : this((DataStorage)Factory.CreateObject("dataStorage", true))
+    {
+    }
 
     public ResolvePathCommand(DataStorage dataStorage)
     {
