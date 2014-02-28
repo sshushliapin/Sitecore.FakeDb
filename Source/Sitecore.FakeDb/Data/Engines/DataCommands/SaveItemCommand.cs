@@ -26,11 +26,35 @@
 
     protected override bool DoExecute()
     {
-      var fakeItem = this.DataStorage.FakeItems[Item.ID];
+      var fakeItem = this.DataStorage.GetFakeItem(Item.ID);
 
-      fakeItem.Name = Item.Name;
+      this.UpdateBasicData(fakeItem);
+      this.UpdateFields(fakeItem);
 
-      foreach (Field field in Item.Fields)
+      return true;
+    }
+
+    protected virtual void UpdateBasicData(DbItem fakeItem)
+    {
+      var oldName = fakeItem.Name;
+      var newName = this.Item.Name;
+
+      if (oldName == newName)
+      {
+        return;
+      }
+
+      fakeItem.Name = this.Item.Name;
+      var fullPath = fakeItem.FullPath;
+      if (!string.IsNullOrEmpty(fullPath))
+      {
+        fakeItem.FullPath = fullPath.Substring(0, fullPath.LastIndexOf(oldName, System.StringComparison.Ordinal)) + newName;
+      }
+    }
+
+    protected virtual void UpdateFields(DbItem fakeItem)
+    {
+      foreach (Field field in this.Item.Fields)
       {
         if (fakeItem.Fields.InnerFields.ContainsKey(field.ID))
         {
@@ -41,8 +65,6 @@
           fakeItem.Fields.Add(new DbField(field.Name) { ID = field.ID, Value = field.Value });
         }
       }
-
-      return true;
     }
   }
 }

@@ -1,24 +1,29 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
   using FluentAssertions;
-  using Sitecore.Common;
+  using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
+  using Xunit.Extensions;
   using SaveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.SaveItemCommand;
 
   public class SaveItemCommandTest : CommandTestBase
   {
+    private readonly OpenSaveItemCommand command;
+
+    public SaveItemCommandTest()
+    {
+      this.command = new OpenSaveItemCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
+    }
+
     [Fact]
     public void ShouldCreateInstance()
     {
-      // arrange
-      var command = new OpenSaveItemCommand(this.dataStorage);
-
       // act
-      var instance = command.CreateInstance();
+      var instance = this.command.CreateInstance();
 
       // assert
       instance.Should().BeOfType<SaveItemCommand>();
@@ -30,24 +35,45 @@
       // arrange
       var itemId = ID.NewID;
 
-      dataStorage.FakeItems.Add(itemId, new DbItem("original item"));
+      var originalItem = new DbItem("original item");
+      this.dataStorage.GetFakeItem(itemId).Returns(originalItem);
+      this.dataStorage.FakeItems.Add(itemId, originalItem);
 
       var fieldId = ID.NewID;
       var fields = new FieldList { { fieldId, "updated title" } };
       var updatedItem = ItemHelper.CreateInstance("updated item", itemId, ID.NewID, fields, database);
 
-      var command = new OpenSaveItemCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
-      command.Initialize(updatedItem);
+      this.command.Initialize(updatedItem);
 
-      using (new Switcher<DataStorage>(dataStorage))
-      {
-        // act
-        command.DoExecute();
+      // act
+      this.command.DoExecute();
 
-        // assert
-        dataStorage.FakeItems[itemId].Name.Should().Be("updated item");
-        dataStorage.FakeItems[itemId].Fields[fieldId].Value.Should().Be("updated title");
-      }
+      // assert
+      dataStorage.FakeItems[itemId].Name.Should().Be("updated item");
+      dataStorage.FakeItems[itemId].Fields[fieldId].Value.Should().Be("updated title");
+    }
+
+    [Theory]
+    [InlineData("/sitecore/content/original item", "/sitecore/content/updated item")]
+    [InlineData("/sitecore/content/original item/original item", "/sitecore/content/original item/updated item")]
+    public void ShouldUpdateItemPathAfterRename(string originalPath, string expectedPath)
+    {
+      // arrange
+      var itemId = ID.NewID;
+
+      var originalItem = new DbItem("original item") { FullPath = originalPath };
+      this.dataStorage.GetFakeItem(itemId).Returns(originalItem);
+      this.dataStorage.FakeItems.Add(itemId, originalItem);
+
+      var updatedItem = ItemHelper.CreateInstance("updated item", itemId, this.database);
+
+      this.command.Initialize(updatedItem);
+
+      // act
+      this.command.DoExecute();
+
+      // assertt
+      dataStorage.FakeItems[itemId].FullPath.Should().Be(expectedPath);
     }
 
     private class OpenSaveItemCommand : SaveItemCommand
