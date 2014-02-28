@@ -1,3 +1,7 @@
+0.6.2
+* [FIX] Removed FakeDatabase class
+* [FIX] Fixed item path updating after rename
+
 0.6.1
 * [FIX] Fixed namespace conflict in DbItem constructors
 

@@ -11,6 +11,7 @@
   using Sitecore.Globalization;
   using Xunit;
   using Xunit.Extensions;
+  using Version = Sitecore.Data.Version;
 
   public class DbTest
   {
@@ -201,6 +202,26 @@
     }
 
     [Fact]
+    public void ShouldRenameItem()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        var home = db.Database.GetItem("/sitecore/content/home");
+
+        // act
+        using (new EditContext(home))
+        {
+          home.Name = "new home";
+        }
+
+        // assert
+        db.Database.GetItem("/sitecore/content/new home").Should().NotBeNull();
+        db.Database.GetItem("/sitecore/content/home").Should().BeNull();
+      }
+    }
+
+    [Fact]
     public void ShouldSetSitecoreContentParentIdByDefault()
     {
       // arrange
@@ -311,7 +332,7 @@
     [Fact]
     public void ShouldCreateItemWithUnversionedSharedFieldsByDefault()
     {
-      // arrange
+      // arrange & act
       using (var db = new Db { new DbItem("home") { { "Title", "Hello!" } } })
       {
         db.Database.GetItem("/sitecore/content/home", Language.Parse("en"))["Title"].Should().Be("Hello!");
@@ -322,11 +343,43 @@
     [Fact]
     public void ShouldCreateItemInSpecificLanguage()
     {
-      // arrange
+      // arrange & act
       using (var db = new Db { new DbItem("home") { new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } } } })
       {
         db.Database.GetItem("/sitecore/content/home", Language.Parse("en"))["Title"].Should().Be("Hello!");
         db.Database.GetItem("/sitecore/content/home", Language.Parse("da"))["Title"].Should().Be("Hej!");
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateItemOfVersionOne()
+    {
+      // arrange & act
+      using (var db = new Db { new DbItem("home") })
+      {
+        var item = db.Database.GetItem("/sitecore/content/home");
+
+        // assert
+        item.Version.Should().Be(Version.First);
+        item.Versions.Count.Should().Be(1);
+        item.Versions[Version.First].Should().NotBeNull();
+      }
+    }
+
+    // TODO:[Med] Temporarty test. Checks the Versions do not fail if AddVersion after call. Do not add a new version so far.
+    [Fact]
+    public void ShouldNotFailWhenAddingVersion()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        var item = db.Database.GetItem("/sitecore/content/home");
+
+        // act
+        var result = item.Versions.AddVersion();
+
+        // assert
+        result.Versions.Count.Should().Be(1);
       }
     }
 

@@ -4,7 +4,6 @@
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
-  using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.DataProviders;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Reflection;
@@ -18,7 +17,7 @@
 
     public FakeDataProviderTest()
     {
-      var database = new FakeDatabase("master");
+      var database = Database.GetDatabase("master");
 
       this.dataStorage = Substitute.For<DataStorage>();
 

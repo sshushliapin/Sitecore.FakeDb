@@ -71,7 +71,6 @@
     <Compile Include="Data\Engines\DataCommands\ResolvePathCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\SetBlobStreamCommand.cs" />
     <Compile Include="Data\Engines\ItemCreator.cs" />
-    <Compile Include="Data\FakeDatabase.cs" />
     <Compile Include="Data\DataProviders\FakeDataProvider.cs">
       <SubType>Code</SubType>
     </Compile>

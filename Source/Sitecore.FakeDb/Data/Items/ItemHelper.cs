@@ -9,12 +9,12 @@
   {
     public static Item CreateInstance()
     {
-      return CreateInstance(new FakeDatabase("master"));
+      return CreateInstance(Database.GetDatabase("master"));
     }
 
     public static Item CreateInstance(ID itemId)
     {
-      return CreateInstance(itemId, new FakeDatabase("master"));
+      return CreateInstance(itemId, Database.GetDatabase("master"));
     }
 
     public static Item CreateInstance(Database database)

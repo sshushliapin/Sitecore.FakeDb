@@ -5,7 +5,6 @@
   using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
@@ -13,7 +12,7 @@
   // TODO: Get rid of the copy-paste.
   public class ItemCreatorTest
   {
-    private readonly FakeDatabase database;
+    private readonly Database database;
 
     private readonly DataStorage dataStorage;
 
@@ -27,7 +26,7 @@
 
     public ItemCreatorTest()
     {
-      this.database = Substitute.For<FakeDatabase>("master");
+      this.database = Database.GetDatabase("master");
       this.dataStorage = Substitute.For<DataStorage>();
 
       this.destination = ItemHelper.CreateInstance();

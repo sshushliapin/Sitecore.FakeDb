@@ -35,7 +35,7 @@
 
     public DataStorageTest()
     {
-      this.database = new FakeDatabase("master");
+      this.database = Database.GetDatabase("master");
       this.dataStorage = new DataStorage();
       this.dataStorage.SetDatabase(this.database);
     }
