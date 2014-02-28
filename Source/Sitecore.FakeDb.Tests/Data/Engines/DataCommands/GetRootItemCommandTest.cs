@@ -4,6 +4,7 @@
   using NSubstitute;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
+  using Sitecore.Data.Managers;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
@@ -32,7 +33,7 @@
       dataStorage.GetSitecoreItem(ItemIDs.RootID, rootItem.Language).Returns(rootItem);
 
       var command = new OpenGetRootItemCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
-      command.Initialize(Language.Invariant, Version.Latest);
+      command.Initialize(LanguageManager.DefaultLanguage, Version.Latest);
 
       // act
       var result = command.DoExecute();

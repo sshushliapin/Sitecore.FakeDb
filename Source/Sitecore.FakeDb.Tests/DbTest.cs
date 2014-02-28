@@ -362,6 +362,19 @@
     }
 
     [Fact]
+    public void ShouldSetDefaultLanguage()
+    {
+      // arrange & act
+      using (var db = new Db { new DbItem("home") })
+      {
+        var item = db.Database.GetItem("/sitecore/content/home");
+
+        // assert
+        item.Language.Should().Be(Language.Parse("en"));
+      }
+    }
+
+    [Fact]
     public void ShouldCreateItemOfVersionOne()
     {
       // arrange & act
@@ -376,7 +389,7 @@
       }
     }
 
-    // TODO:[Med] Temporarty test. Checks the Versions do not fail if AddVersion after call. Do not add a new version so far.
+    // TODO:[Med] Implement version management.
     [Fact]
     public void ShouldNotFailWhenAddingVersion()
     {

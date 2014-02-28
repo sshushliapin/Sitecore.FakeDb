@@ -2,6 +2,7 @@
 {
   using Sitecore.Data;
   using Sitecore.Data.Items;
+  using Sitecore.Data.Managers;
   using Sitecore.Diagnostics;
   using Sitecore.Globalization;
 
@@ -35,7 +36,7 @@
       Assert.ArgumentNotNull(fields, "fields");
       Assert.ArgumentNotNull(database, "database");
 
-      return new Item(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), Language.Invariant, Version.First, fields), database);
+      return new Item(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), LanguageManager.DefaultLanguage, Version.First, fields), database);
     }
   }
 }

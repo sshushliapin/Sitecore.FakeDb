@@ -1,6 +1,7 @@
 0.6.2
-* [FIX] Removed FakeDatabase class
+* [FIX] Removed inheritance from Sitecore Database class
 * [FIX] Fixed item path updating after rename
+* [FIX] Default item language is set to 'en'
 
 0.6.1
 * [FIX] Fixed namespace conflict in DbItem constructors

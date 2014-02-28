@@ -50,7 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\DatabaseExtensions.cs" />
     <Compile Include="Security\AccessControl\DbItemAccess.cs" />
     <Compile Include="Configuration\FakeClientDataStore.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommand.cs" />
