@@ -1,3 +1,6 @@
+0.6.3
+* [FIX] Fixed creating and configuring of items in a specific language
+
 0.6.2
 * [FIX] Removed inheritance from Sitecore Database class
 * [FIX] Fixed item path updating after rename

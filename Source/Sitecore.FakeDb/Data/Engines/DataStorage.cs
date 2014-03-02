@@ -94,7 +94,7 @@ namespace Sitecore.FakeDb.Data.Engines
         }
       }
 
-      var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.Database);
+      var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.Database, language);
 
       return item;
     }

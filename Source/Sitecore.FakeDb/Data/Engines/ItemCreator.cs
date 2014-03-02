@@ -3,6 +3,7 @@
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Items;
+  using Sitecore.Globalization;
 
   // TODO: To think aboud better name.
   public class ItemCreator
@@ -21,13 +22,15 @@
 
     public virtual Item Create(string itemName, ID itemId, ID templateId, Database database, Item destination)
     {
+      var language = Language.Current;
+
       if (this.DataStorage.GetFakeItem(itemId) != null)
       {
-        return this.DataStorage.GetSitecoreItem(itemId, destination.Language);
+        return this.DataStorage.GetSitecoreItem(itemId, language);
       }
 
       var fieldList = this.DataStorage.GetFieldList(templateId);
-      var item = ItemHelper.CreateInstance(itemName, itemId, templateId, fieldList, database);
+      var item = ItemHelper.CreateInstance(itemName, itemId, templateId, fieldList, database, language);
 
       var parentItem = this.DataStorage.GetFakeItem(destination.ID);
       var fullPath = parentItem.FullPath + "/" + itemName;

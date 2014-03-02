@@ -4,8 +4,10 @@
   using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
+  using Sitecore.Data.Managers;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
+  using System;
   using Xunit;
   using Xunit.Extensions;
   using SaveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.SaveItemCommand;
@@ -41,7 +43,7 @@
 
       var fieldId = ID.NewID;
       var fields = new FieldList { { fieldId, "updated title" } };
-      var updatedItem = ItemHelper.CreateInstance("updated item", itemId, ID.NewID, fields, database);
+      var updatedItem = ItemHelper.CreateInstance("updated item", itemId, ID.NewID, fields, database, LanguageManager.DefaultLanguage);
 
       this.command.Initialize(updatedItem);
 

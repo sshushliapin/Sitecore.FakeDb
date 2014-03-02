@@ -375,6 +375,20 @@
     }
 
     [Fact]
+    public void ShouldCreateItemInCustomLanguage()
+    {
+      // arrange & act
+      using (var db = new Db { new DbItem("home") { Fields = { new DbField("Title") { { "da", "Hej!" } } } } })
+      {
+        var item = db.Database.GetItem("/sitecore/content/home", Language.Parse("da"));
+
+        // assert
+        item["Title"].Should().Be("Hej!");
+        item.Language.Should().Be(Language.Parse("da"));
+      }
+    }
+
+    [Fact]
     public void ShouldCreateItemOfVersionOne()
     {
       // arrange & act
