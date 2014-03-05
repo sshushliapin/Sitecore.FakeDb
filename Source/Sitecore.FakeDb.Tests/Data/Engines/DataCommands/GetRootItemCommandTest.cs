@@ -8,7 +8,6 @@
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
-  using Sitecore.Globalization;
   using Xunit;
   using Version = Sitecore.Data.Version;
 

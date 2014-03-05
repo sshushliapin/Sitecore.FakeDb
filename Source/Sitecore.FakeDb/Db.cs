@@ -3,14 +3,16 @@ namespace Sitecore.FakeDb
   using System;
   using System.Collections;
   using System.Linq;
-  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.FakeDb.Data.Engines.DataCommands;
+  using Sitecore.FakeDb.Pipelines.InitFakeDb;
   using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Globalization;
+  using Sitecore.Pipelines;
   using Sitecore.Security.AccessControl;
 
   public class Db : IDisposable, IEnumerable
@@ -28,9 +30,25 @@ namespace Sitecore.FakeDb
     {
       this.database = Database.GetDatabase(databaseName);
 
-      this.DataStorage = (DataStorage)Factory.CreateObject("dataStorage", true);
+      this.DataStorage = new DataStorage();
+
+      var args = new InitDbArgs(this.database, this.DataStorage);
+      CorePipeline.Run("initFakeDb", args);
+
+
+      this.database.Engines.DataEngine.Commands.AddFromTemplatePrototype = new AddFromTemplateCommand(this.DataStorage);
+      this.database.Engines.DataEngine.Commands.CreateItemPrototype = new CreateItemCommand(this.DataStorage);
+      this.database.Engines.DataEngine.Commands.DeletePrototype = new DeleteItemCommand(this.DataStorage);
+      this.database.Engines.DataEngine.Commands.GetChildrenPrototype = new GetChildrenCommand(this.DataStorage);
+      this.database.Engines.DataEngine.Commands.GetItemPrototype = new GetItemCommand(this.DataStorage);
+      this.database.Engines.DataEngine.Commands.GetParentPrototype = new GetParentCommand(this.DataStorage);
+      this.database.Engines.DataEngine.Commands.GetRootItemPrototype = new GetRootItemCommand(this.DataStorage);
+      this.database.Engines.DataEngine.Commands.HasChildrenPrototype = new HasChildrenCommand(this.DataStorage);
+      this.database.Engines.DataEngine.Commands.ResolvePathPrototype = new ResolvePathCommand(this.DataStorage);
+      this.database.Engines.DataEngine.Commands.SaveItemPrototype = new SaveItemCommand(this.DataStorage);
+
       this.DataStorage.SetDatabase(this.database);
-      
+
       // TODO:[High] Should not be here
       ((FakeAuthorizationProvider)AuthorizationManager.Provider).DataStorage = this.DataStorage;
     }
@@ -107,7 +125,6 @@ namespace Sitecore.FakeDb
     public void Dispose()
     {
       this.DataStorage = null;
-      Factory.Reset();
     }
 
     protected virtual void CreateTemplate(DbItem item)

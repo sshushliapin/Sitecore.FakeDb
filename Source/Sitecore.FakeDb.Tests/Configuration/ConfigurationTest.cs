@@ -4,7 +4,6 @@
   using FluentAssertions;
   using Sitecore.Configuration;
   using Sitecore.Data;
-  using Sitecore.FakeDb.Data.DataProviders;
   using Sitecore.FakeDb.Data.Engines;
   using Xunit;
   using Xunit.Extensions;
@@ -15,19 +14,6 @@
     public void ShouldGetDataStorage()
     {
       Factory.CreateObject("dataStorage", true).Should().BeOfType<DataStorage>();
-    }
-
-    [Fact]
-    public void ShouldGetDataStorageAsSingleton()
-    {
-      Factory.CreateObject("dataStorage", true).Should().BeSameAs(Factory.CreateObject("dataStorage", true));
-    }
-
-    [Fact]
-    public void ShouldSetDataStorageIntoProvider()
-    {
-      var provider = (FakeDataProvider)Factory.CreateObject("dataProviders/main", true);
-      provider.DataStorage.Should().NotBeNull();
     }
 
     [Theory]

@@ -7,7 +7,8 @@
   using Sitecore.Data.Managers;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
-  using System;
+  using Sitecore.FakeDb.Pipelines.InitFakeDb;
+  using Sitecore.Pipelines;
   using Xunit;
   using Xunit.Extensions;
   using SaveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.SaveItemCommand;
@@ -46,6 +47,9 @@
       var updatedItem = ItemHelper.CreateInstance("updated item", itemId, ID.NewID, fields, database, LanguageManager.DefaultLanguage);
 
       this.command.Initialize(updatedItem);
+
+      // TODO: Cleanup
+      CorePipeline.Run("initFakeDb", new InitDbArgs(this.database, this.dataStorage));
 
       // act
       this.command.DoExecute();

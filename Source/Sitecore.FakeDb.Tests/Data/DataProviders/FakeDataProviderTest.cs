@@ -82,6 +82,26 @@
       result.GetField("Title").Should().NotBeNull();
     }
 
+    [Fact]
+    public void ShouldBeIRequireDataStorage()
+    {
+      // assert
+      this.dataProvider.Should().BeAssignableTo<IRequireDataStorage>();
+    }
+
+    [Fact]
+    public void ShouldSetDataStorage()
+    {
+      // arrange
+      var ds = Substitute.For<DataStorage>();
+
+      // act
+      this.dataProvider.SetDataStorage(ds);
+
+      // assert
+      this.dataProvider.DataStorage.Should().Be(ds);
+    }
+
     private DbTemplate CreateTestTemplateInDataStorage()
     {
       var templateId = ID.NewID;

@@ -2,7 +2,6 @@
 {
   using System;
   using FluentAssertions;
-  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Exceptions;
@@ -24,7 +23,6 @@
       {
         // assert
         db.DataStorage.Should().NotBeNull();
-        db.DataStorage.Should().BeSameAs(Factory.CreateObject("dataStorage", true));
       }
     }
 
@@ -90,6 +88,25 @@
     }
 
     [Fact]
+    public void ShouldReadFieldValueByIdAndName()
+    {
+      // arrange
+      var fieldId = ID.NewID;
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField("Title") { ID = fieldId, Value = "Hello!" } }
+                        })
+      {
+        // act
+        var item = db.GetItem("/sitecore/content/home");
+
+        // assert
+        item[fieldId].Should().Be("Hello!");
+        item["Title"].Should().Be("Hello!");
+      }
+    }
+
+    [Fact]
     public void ShouldCreateSimpleItem()
     {
       // arrange
@@ -113,9 +130,9 @@
     public void ShouldCleanupItemsAfterDispose()
     {
       // act
-      using (new Db { new DbItem("myitem", this.itemId) })
+      using (var db = new Db { new DbItem("myitem", this.itemId) })
       {
-        Database.GetDatabase("master").GetItem(this.itemId).Should().NotBeNull();
+        db.Database.GetItem(this.itemId).Should().NotBeNull();
       }
 
       // assert
