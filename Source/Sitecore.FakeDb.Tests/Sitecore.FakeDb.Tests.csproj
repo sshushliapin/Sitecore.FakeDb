@@ -97,6 +97,7 @@
     <Compile Include="DbTest.cs" />
     <Compile Include="DbItemTest.cs" />
     <Compile Include="GettingStarted.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommandsTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataProvidersTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbArgsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

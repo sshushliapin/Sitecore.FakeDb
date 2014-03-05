@@ -4,14 +4,13 @@
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
 
-  public class AddFromTemplateCommand : Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand
+  public class AddFromTemplateCommand : Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand, IRequireDataStorage
   {
-    private readonly DataStorage dataStorage;
+    private DataStorage dataStorage;
 
     private ItemCreator itemCreator;
 
     public AddFromTemplateCommand()
-      : this((DataStorage)Factory.CreateObject("dataStorage", true))
     {
     }
 
@@ -41,6 +40,13 @@
     protected override Item DoExecute()
     {
       return this.ItemCreator.Create(this.ItemName, this.NewId, this.TemplateId, this.Database, this.Destination);
+    }
+
+    public void SetDataStorage(DataStorage dataStorage)
+    {
+      Assert.IsNotNull(dataStorage, "dataStorage");
+
+      this.dataStorage = dataStorage;
     }
   }
 }

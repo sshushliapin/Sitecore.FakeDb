@@ -4,12 +4,11 @@
   using Sitecore.Data.Fields;
   using Sitecore.Diagnostics;
 
-  public class SaveItemCommand : Sitecore.Data.Engines.DataCommands.SaveItemCommand
+  public class SaveItemCommand : Sitecore.Data.Engines.DataCommands.SaveItemCommand, IRequireDataStorage
   {
-    private readonly DataStorage dataStorage;
+    private DataStorage dataStorage;
 
     public SaveItemCommand()
-      : this((DataStorage)Factory.CreateObject("dataStorage", true))
     {
     }
 
@@ -71,6 +70,13 @@
           fakeItem.Fields.Add(new DbField(field.Name) { ID = field.ID, Value = field.Value });
         }
       }
+    }
+
+    public void SetDataStorage(DataStorage dataStorage)
+    {
+      Assert.IsNotNull(dataStorage, "dataStorage");
+
+      this.dataStorage = dataStorage;
     }
   }
 }

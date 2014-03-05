@@ -6,12 +6,11 @@
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
-  public class ResolvePathCommand : Sitecore.Data.Engines.DataCommands.ResolvePathCommand
+  public class ResolvePathCommand : Sitecore.Data.Engines.DataCommands.ResolvePathCommand, IRequireDataStorage
   {
-    private readonly DataStorage dataStorage;
+    private DataStorage dataStorage;
 
     public ResolvePathCommand()
-      : this((DataStorage)Factory.CreateObject("dataStorage", true))
     {
     }
 
@@ -37,6 +36,13 @@
       var kvp = this.DataStorage.FakeItems.SingleOrDefault(fi => string.Compare(fi.Value.FullPath, ItemPath, StringComparison.OrdinalIgnoreCase) == 0);
 
       return kvp.Key;
+    }
+
+    public void SetDataStorage(DataStorage dataStorage)
+    {
+      Assert.IsNotNull(dataStorage, "dataStorage");
+
+      this.dataStorage = dataStorage;
     }
   }
 }

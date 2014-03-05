@@ -5,12 +5,11 @@
   using Sitecore.Configuration;
   using Sitecore.Diagnostics;
 
-  public class GetChildrenCommand : Sitecore.Data.Engines.DataCommands.GetChildrenCommand
+  public class GetChildrenCommand : Sitecore.Data.Engines.DataCommands.GetChildrenCommand, IRequireDataStorage
   {
-    private readonly DataStorage dataStorage;
+    private DataStorage dataStorage;
 
     public GetChildrenCommand()
-      : this((DataStorage)Factory.CreateObject("dataStorage", true))
     {
     }
 
@@ -39,6 +38,13 @@
       itemList.AddRange(item.Children.Select(child => DataStorage.GetSitecoreItem(child.ID, this.Item.Language)));
 
       return itemList;
+    }
+
+    public void SetDataStorage(DataStorage dataStorage)
+    {
+      Assert.IsNotNull(dataStorage, "dataStorage");
+
+      this.dataStorage = dataStorage;
     }
   }
 }

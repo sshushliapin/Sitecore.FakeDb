@@ -4,12 +4,11 @@
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
 
-  public class GetRootItemCommand : Sitecore.Data.Engines.DataCommands.GetRootItemCommand
+  public class GetRootItemCommand : Sitecore.Data.Engines.DataCommands.GetRootItemCommand, IRequireDataStorage
   {
-    private readonly DataStorage dataStorage;
+    private DataStorage dataStorage;
 
     public GetRootItemCommand()
-      : this((DataStorage)Factory.CreateObject("dataStorage", true))
     {
     }
 
@@ -33,6 +32,13 @@
     protected override Item DoExecute()
     {
       return this.DataStorage.GetSitecoreItem(ItemIDs.RootID, this.Language);
+    }
+
+    public void SetDataStorage(DataStorage dataStorage)
+    {
+      Assert.IsNotNull(dataStorage, "dataStorage");
+
+      this.dataStorage = dataStorage;
     }
   }
 }

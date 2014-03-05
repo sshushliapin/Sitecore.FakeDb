@@ -5,12 +5,11 @@
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
-  public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand
+  public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand, IRequireDataStorage
   {
-    private readonly DataStorage dataStorage;
+    private DataStorage dataStorage;
 
     public DeleteItemCommand()
-      : this((DataStorage)Factory.CreateObject("dataStorage", true))
     {
     }
 
@@ -50,6 +49,13 @@
       }
 
       return fakeItems.Remove(itemId);
+    }
+
+    public void SetDataStorage(DataStorage dataStorage)
+    {
+      Assert.IsNotNull(dataStorage, "dataStorage");
+
+      this.dataStorage = dataStorage;
     }
   }
 }

@@ -15,7 +15,7 @@
   public class InitDataProvidersTest
   {
     [Fact]
-    public void ShouldSetDataSourceForIRequireDataSourceProviders()
+    public void ShouldSetDataStorageForIRequireDataStorageProviders()
     {
       // arrange
       var database = Database.GetDatabase("master");
@@ -35,7 +35,7 @@
     }
 
     [Fact]
-    public void ShouldNotSetDataSourceIfNoIRequireDataSourceProviderFound()
+    public void ShouldNotSetDataStorageIfNoIRequireDataStorageProviderFound()
     {
       // arrange
       var database = Database.GetDatabase("master");

@@ -3,12 +3,11 @@
   using Sitecore.Configuration;
   using Sitecore.Diagnostics;
 
-  public class HasChildrenCommand : Sitecore.Data.Engines.DataCommands.HasChildrenCommand
+  public class HasChildrenCommand : Sitecore.Data.Engines.DataCommands.HasChildrenCommand, IRequireDataStorage
   {
-    private readonly DataStorage dataStorage;
+    private DataStorage dataStorage;
 
     public HasChildrenCommand()
-      : this((DataStorage)Factory.CreateObject("dataStorage", true))
     {
     }
 
@@ -34,6 +33,13 @@
       var fakeItem = this.DataStorage.GetFakeItem(Item.ID);
 
       return fakeItem.Children.Count > 0;
+    }
+
+    public void SetDataStorage(DataStorage dataStorage)
+    {
+      Assert.IsNotNull(dataStorage, "dataStorage");
+
+      this.dataStorage = dataStorage;
     }
   }
 }
