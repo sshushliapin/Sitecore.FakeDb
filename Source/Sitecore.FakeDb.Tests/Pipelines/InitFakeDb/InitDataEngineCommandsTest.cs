@@ -12,11 +12,20 @@
 
   public class InitDataEngineCommandsTest
   {
+    private readonly Database database;
+
+    private readonly DataStorage dataStorage;
+
+    public InitDataEngineCommandsTest()
+    {
+      this.database = Database.GetDatabase("master");
+      this.dataStorage = Substitute.For<DataStorage>(database);
+    }
+
     [Fact]
     public void ShouldSetDataStorageForIRequireDataStorageCommands()
     {
       // arrange
-      var database = Database.GetDatabase("master");
       var commands = database.Engines.DataEngine.Commands;
 
       commands.AddFromTemplatePrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand, IDataEngineCommand>();
@@ -29,8 +38,6 @@
       commands.HasChildrenPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.HasChildrenCommand, IDataEngineCommand>();
       commands.ResolvePathPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.ResolvePathCommand, IDataEngineCommand>();
       commands.SaveItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.SaveItemCommand, IDataEngineCommand>();
-
-      var dataStorage = Substitute.For<DataStorage>();
 
       var args = new InitDbArgs(database, dataStorage);
       var processor = new InitDataEngineCommands();
@@ -55,7 +62,6 @@
     public void ShouldNotSetDataStorageIfNoIRequireDataStorageCommandFound()
     {
       // arrange
-      var database = Database.GetDatabase("master");
       var commands = database.Engines.DataEngine.Commands;
 
       commands.AddFromTemplatePrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand>();
@@ -69,7 +75,7 @@
       commands.ResolvePathPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.ResolvePathCommand>();
       commands.SaveItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.SaveItemCommand>();
 
-      var args = new InitDbArgs(database, Substitute.For<DataStorage>());
+      var args = new InitDbArgs(database, dataStorage);
       var processor = new InitDataEngineCommands();
 
       // act

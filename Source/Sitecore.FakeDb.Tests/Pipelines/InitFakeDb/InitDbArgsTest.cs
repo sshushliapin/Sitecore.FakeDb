@@ -14,7 +14,7 @@
     {
       // arrange
       var database = Database.GetDatabase("master");
-      var dataStorage = Substitute.For<DataStorage>();
+      var dataStorage = Substitute.For<DataStorage>(database);
 
       // act
       var args = new InitDbArgs(database, dataStorage);

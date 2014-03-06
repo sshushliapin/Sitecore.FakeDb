@@ -28,7 +28,7 @@
     public ItemCreatorTest()
     {
       this.database = Database.GetDatabase("master");
-      this.dataStorage = Substitute.For<DataStorage>();
+      this.dataStorage = Substitute.For<DataStorage>(this.database);
 
       this.destination = ItemHelper.CreateInstance(this.database);
 

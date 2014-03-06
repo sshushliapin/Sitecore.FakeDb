@@ -36,8 +36,7 @@
     public DataStorageTest()
     {
       this.database = Database.GetDatabase("master");
-      this.dataStorage = new DataStorage();
-      this.dataStorage.SetDatabase(this.database);
+      this.dataStorage = new DataStorage(this.database);
     }
 
     [Theory]

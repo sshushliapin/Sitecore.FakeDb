@@ -18,8 +18,7 @@
     public FakeDataProviderTest()
     {
       var database = Database.GetDatabase("master");
-
-      this.dataStorage = Substitute.For<DataStorage>();
+      this.dataStorage = Substitute.For<DataStorage>(database);
 
       this.dataProvider = new FakeDataProvider(this.dataStorage);
       ReflectionUtil.CallMethod(database, "AddDataProvider", new object[] { this.dataProvider });
@@ -93,7 +92,7 @@
     public void ShouldSetDataStorage()
     {
       // arrange
-      var ds = Substitute.For<DataStorage>();
+      var ds = Substitute.For<DataStorage>(Database.GetDatabase("master"));
 
       // act
       this.dataProvider.SetDataStorage(ds);

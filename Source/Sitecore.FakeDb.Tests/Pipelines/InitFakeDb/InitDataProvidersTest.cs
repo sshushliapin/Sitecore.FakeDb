@@ -21,7 +21,7 @@
       var provider = Substitute.For<DataProvider, IRequireDataStorage>();
       typeof(Database).GetField("_dataProviders", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(database, new DataProviderCollection { provider });
 
-      var dataStorage = Substitute.For<DataStorage>();
+      var dataStorage = Substitute.For<DataStorage>(database);
 
       var args = new InitDbArgs(database, dataStorage);
       var processor = new InitDataProviders();
@@ -41,7 +41,9 @@
       var provider = Substitute.For<DataProvider>();
       typeof(Database).GetField("_dataProviders", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(database, new DataProviderCollection { provider });
 
-      var args = new InitDbArgs(database, Substitute.For<DataStorage>());
+      var dataStorage = Substitute.For<DataStorage>(database);
+
+      var args = new InitDbArgs(database, dataStorage);
       var processor = new InitDataProviders();
 
       // act

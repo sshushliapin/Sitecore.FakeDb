@@ -25,16 +25,22 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public const string BranchItemName = "Branch";
 
-    public DataStorage()
+    private Database database;
+
+    public DataStorage(Database database)
     {
+      this.database = database;
+
       this.FakeItems = new Dictionary<ID, DbItem>();
       this.FakeTemplates = new Dictionary<ID, DbTemplate>();
 
       this.Reset();
     }
 
-    // TODO:[Mid] Should be removed.
-    public Database Database { get; private set; }
+    public Database Database
+    {
+      get { return this.database; }
+    }
 
     /// <summary>
     /// Gets the fake items.
@@ -94,14 +100,14 @@ namespace Sitecore.FakeDb.Data.Engines
         }
       }
 
-      var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.Database, language);
+      var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language);
 
       return item;
     }
 
     public void SetDatabase(Database db)
     {
-      this.Database = db;
+      this.database = db;
       this.Reset();
     }
 

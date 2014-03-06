@@ -18,7 +18,7 @@
     protected CommandTestBase()
     {
       this.database = Database.GetDatabase("master");
-      this.dataStorage = Substitute.For<DataStorage>();
+      this.dataStorage = Substitute.For<DataStorage>(this.database);
 
       this.innerCommand = Substitute.For<DataEngineCommand>(this.dataStorage);
       this.innerCommand.DataStorage.Returns(this.dataStorage);

@@ -26,13 +26,10 @@ namespace Sitecore.FakeDb
     public Db(string databaseName)
     {
       this.database = Database.GetDatabase(databaseName);
-
-      this.DataStorage = new DataStorage();
+      this.DataStorage = new DataStorage(this.database);
 
       var args = new InitDbArgs(this.database, this.DataStorage);
       CorePipeline.Run("initFakeDb", args);
-
-      this.DataStorage.SetDatabase(this.database);
     }
 
     public Database Database

@@ -60,7 +60,7 @@
       var item = new DbItem("propertyName");
       ReflectionUtil.SetProperty(item.Access, propertyName, false);
 
-      var dataStorage = Substitute.For<DataStorage>();
+      var dataStorage = Substitute.For<DataStorage>(this.database);
       dataStorage.GetFakeItem(itemId).Returns(item);
 
       this.provider.SetDataStorage(dataStorage);
