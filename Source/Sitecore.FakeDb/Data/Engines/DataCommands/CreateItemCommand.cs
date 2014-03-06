@@ -4,49 +4,31 @@
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
 
-  public class CreateItemCommand : Sitecore.Data.Engines.DataCommands.CreateItemCommand, IRequireDataStorage
+  public class CreateItemCommand : Sitecore.Data.Engines.DataCommands.CreateItemCommand, IDataEngineCommand
   {
-    private DataStorage dataStorage;
-
     private ItemCreator itemCreator;
 
-    public CreateItemCommand()
-    {
-    }
+    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
 
-    public CreateItemCommand(DataStorage dataStorage)
+    public virtual void Initialize(DataEngineCommand command)
     {
-      Assert.ArgumentNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
-    }
-
-    public virtual DataStorage DataStorage
-    {
-      get { return this.dataStorage; }
+      this.innerCommand = command;
     }
 
     public ItemCreator ItemCreator
     {
-      get { return this.itemCreator ?? (this.itemCreator = new ItemCreator(this.DataStorage)); }
+      get { return this.itemCreator ?? (this.itemCreator = new ItemCreator(this.innerCommand.DataStorage)); }
       set { this.itemCreator = value; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.CreateItemCommand CreateInstance()
     {
-      return new CreateItemCommand(this.DataStorage);
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.CreateItemCommand, CreateItemCommand>();
     }
 
     protected override Item DoExecute()
     {
       return this.ItemCreator.Create(this.ItemName, this.ItemId, this.TemplateId, this.Database, this.Destination);
-    }
-
-    public void SetDataStorage(DataStorage dataStorage)
-    {
-      Assert.IsNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
     }
   }
 }

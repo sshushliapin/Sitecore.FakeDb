@@ -1,52 +1,33 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using Sitecore.Configuration;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
 
-  public class AddFromTemplateCommand : Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand, IRequireDataStorage
+  public class AddFromTemplateCommand : Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand, IDataEngineCommand
   {
-    private DataStorage dataStorage;
-
     private ItemCreator itemCreator;
 
-    public AddFromTemplateCommand()
-    {
-    }
+    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
 
-    public AddFromTemplateCommand(DataStorage dataStorage)
+    public virtual void Initialize(DataEngineCommand command)
     {
-      Assert.ArgumentNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
-    }
-
-    public virtual DataStorage DataStorage
-    {
-      get { return this.dataStorage; }
+      this.innerCommand = command;
     }
 
     public ItemCreator ItemCreator
     {
-      get { return this.itemCreator ?? (this.itemCreator = new ItemCreator(this.DataStorage)); }
+      get { return this.itemCreator ?? (this.itemCreator = new ItemCreator(this.innerCommand.DataStorage)); }
       set { this.itemCreator = value; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand CreateInstance()
     {
-      return new AddFromTemplateCommand(this.DataStorage);
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand, AddFromTemplateCommand>();
     }
 
     protected override Item DoExecute()
     {
       return this.ItemCreator.Create(this.ItemName, this.NewId, this.TemplateId, this.Database, this.Destination);
-    }
-
-    public void SetDataStorage(DataStorage dataStorage)
-    {
-      Assert.IsNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
     }
   }
 }

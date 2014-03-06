@@ -5,34 +5,23 @@
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
-  public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand, IRequireDataStorage
+  public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand, IDataEngineCommand
   {
-    private DataStorage dataStorage;
+    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
 
-    public DeleteItemCommand()
+    public virtual void Initialize(DataEngineCommand command)
     {
-    }
-
-    public DeleteItemCommand(DataStorage dataStorage)
-    {
-      Assert.ArgumentNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
-    }
-
-    public virtual DataStorage DataStorage
-    {
-      get { return this.dataStorage; }
+      this.innerCommand = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.DeleteItemCommand CreateInstance()
     {
-      return new DeleteItemCommand(this.DataStorage);
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.DeleteItemCommand, DeleteItemCommand>();
     }
 
     protected override bool DoExecute()
     {
-      return this.RemoveRecursive(this.DataStorage.FakeItems, Item.ID);
+      return this.RemoveRecursive(this.innerCommand.DataStorage.FakeItems, Item.ID);
     }
 
     private bool RemoveRecursive(IDictionary<ID, DbItem> fakeItems, ID itemId)
@@ -49,13 +38,6 @@
       }
 
       return fakeItems.Remove(itemId);
-    }
-
-    public void SetDataStorage(DataStorage dataStorage)
-    {
-      Assert.IsNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
     }
   }
 }

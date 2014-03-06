@@ -1,6 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data.Engines;
@@ -14,14 +15,19 @@
 
     public DeleteItemCommandTest()
     {
-      this.command = new OpenDeleteItemCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
+      this.command = new OpenDeleteItemCommand { Engine = new DataEngine(this.database) };
+      this.command.Initialize(this.innerCommand);
     }
 
     [Fact]
     public void ShouldCreateInstance()
     {
+      // arrange
+      var createdCommand = Substitute.For<DeleteItemCommand>();
+      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.DeleteItemCommand, DeleteItemCommand>().Returns(createdCommand);
+
       // act & assert
-      this.command.CreateInstance().Should().BeOfType<DeleteItemCommand>();
+      this.command.CreateInstance().Should().Be(createdCommand);
     }
 
     [Fact]
@@ -85,11 +91,6 @@
 
     private class OpenDeleteItemCommand : DeleteItemCommand
     {
-      public OpenDeleteItemCommand(DataStorage dataStorage)
-        : base(dataStorage)
-      {
-      }
-
       public new Sitecore.Data.Engines.DataCommands.DeleteItemCommand CreateInstance()
       {
         return base.CreateInstance();

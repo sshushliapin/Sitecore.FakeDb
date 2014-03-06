@@ -1,45 +1,26 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using Sitecore.Configuration;
-  using Sitecore.Diagnostics;
 
-  public class HasChildrenCommand : Sitecore.Data.Engines.DataCommands.HasChildrenCommand, IRequireDataStorage
+  public class HasChildrenCommand : Sitecore.Data.Engines.DataCommands.HasChildrenCommand, IDataEngineCommand
   {
-    private DataStorage dataStorage;
+    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
 
-    public HasChildrenCommand()
+    public virtual void Initialize(DataEngineCommand command)
     {
-    }
-
-    public HasChildrenCommand(DataStorage dataStorage)
-    {
-      Assert.ArgumentNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
-    }
-
-    public virtual DataStorage DataStorage
-    {
-      get { return this.dataStorage; }
+      this.innerCommand = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.HasChildrenCommand CreateInstance()
     {
-      return new HasChildrenCommand(this.DataStorage);
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.HasChildrenCommand, HasChildrenCommand>();
     }
 
     protected override bool DoExecute()
     {
-      var fakeItem = this.DataStorage.GetFakeItem(Item.ID);
+      var fakeItem = this.innerCommand.DataStorage.GetFakeItem(Item.ID);
 
       return fakeItem.Children.Count > 0;
-    }
-
-    public void SetDataStorage(DataStorage dataStorage)
-    {
-      Assert.IsNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
     }
   }
 }

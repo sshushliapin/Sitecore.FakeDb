@@ -15,10 +15,14 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var command = new OpenHasChildrenCommand(this.dataStorage);
+      var createdCommand = Substitute.For<HasChildrenCommand>();
+      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.HasChildrenCommand, HasChildrenCommand>().Returns(createdCommand);
+
+      var command = new OpenHasChildrenCommand();
+      command.Initialize(this.innerCommand);
 
       // act & assert
-      command.CreateInstance().Should().BeOfType<HasChildrenCommand>();
+      command.CreateInstance().Should().Be(createdCommand);
     }
 
     [Fact]
@@ -32,8 +36,9 @@
       this.dataStorage.GetSitecoreItem(itemId, item.Language).Returns(item);
       this.dataStorage.GetFakeItem(itemId).Returns(fakeItemWithChildren);
 
-      var command = new OpenHasChildrenCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
+      var command = new OpenHasChildrenCommand { Engine = new DataEngine(this.database) };
       command.Initialize(item);
+      command.Initialize(this.innerCommand);
 
       // act
       var result = command.DoExecute();
@@ -53,8 +58,9 @@
       this.dataStorage.GetSitecoreItem(itemId, sitecoreItem.Language).Returns(sitecoreItem);
       this.dataStorage.GetFakeItem(itemId).Returns(fakeItemWithoutChildren);
 
-      var command = new OpenHasChildrenCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
+      var command = new OpenHasChildrenCommand { Engine = new DataEngine(this.database) };
       command.Initialize(sitecoreItem);
+      command.Initialize(this.innerCommand);
 
       // act
       var result = command.DoExecute();
@@ -65,11 +71,6 @@
 
     private class OpenHasChildrenCommand : HasChildrenCommand
     {
-      public OpenHasChildrenCommand(DataStorage dataStorage)
-        : base(dataStorage)
-      {
-      }
-
       public new Sitecore.Data.Engines.DataCommands.HasChildrenCommand CreateInstance()
       {
         return base.CreateInstance();

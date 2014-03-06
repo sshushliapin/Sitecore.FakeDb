@@ -15,10 +15,14 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var command = new OpenGetChildrenCommand(this.dataStorage);
+      var createdCommand = Substitute.For<GetChildrenCommand>();
+      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetChildrenCommand, GetChildrenCommand>().Returns(createdCommand);
+
+      var command = new OpenGetChildrenCommand();
+      command.Initialize(this.innerCommand);
 
       // act & assert
-      command.CreateInstance().Should().BeOfType<GetChildrenCommand>();
+      command.CreateInstance().Should().Be(createdCommand);
     }
 
     [Fact]
@@ -37,8 +41,9 @@
       this.dataStorage.GetSitecoreItem(dbchild1.ID, item.Language).Returns(child1);
       this.dataStorage.GetSitecoreItem(dbchild2.ID, item.Language).Returns(child2);
 
-      var command = new OpenGetChildrenCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
+      var command = new OpenGetChildrenCommand { Engine = new DataEngine(this.database) };
       command.Initialize(item);
+      command.Initialize(this.innerCommand);
 
       // act
       var children = command.DoExecute();
@@ -50,11 +55,6 @@
 
     private class OpenGetChildrenCommand : GetChildrenCommand
     {
-      public OpenGetChildrenCommand(DataStorage dataStorage)
-        : base(dataStorage)
-      {
-      }
-
       public new Sitecore.Data.Engines.DataCommands.GetChildrenCommand CreateInstance()
       {
         return base.CreateInstance();

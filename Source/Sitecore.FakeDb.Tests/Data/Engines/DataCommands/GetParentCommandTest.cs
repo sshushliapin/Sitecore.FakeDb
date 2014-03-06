@@ -16,14 +16,19 @@
 
     public GetParentCommandTest()
     {
-      this.command = new OpenGetParentCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
+      this.command = new OpenGetParentCommand { Engine = new DataEngine(this.database) };
+      this.command.Initialize(this.innerCommand);
     }
 
     [Fact]
     public void ShouldCreateInstance()
     {
+      // arrange
+      var createdCommand = Substitute.For<GetParentCommand>();
+      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetParentCommand, GetParentCommand>().Returns(createdCommand);
+
       // act & assert
-      this.command.CreateInstance().Should().BeOfType<GetParentCommand>();
+      this.command.CreateInstance().Should().Be(createdCommand);
     }
 
     [Fact]
@@ -85,11 +90,6 @@
 
     private class OpenGetParentCommand : GetParentCommand
     {
-      public OpenGetParentCommand(DataStorage dataStorage)
-        : base(dataStorage)
-      {
-      }
-
       public new Sitecore.Data.Engines.DataCommands.GetParentCommand CreateInstance()
       {
         return base.CreateInstance();

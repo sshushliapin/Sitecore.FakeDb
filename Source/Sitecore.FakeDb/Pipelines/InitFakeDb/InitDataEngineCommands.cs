@@ -1,22 +1,33 @@
 ﻿namespace Sitecore.FakeDb.Pipelines.InitFakeDb
 {
+  using Sitecore.FakeDb.Data.Engines.DataCommands;
+
   public class InitDataEngineCommands : InitDbProcessor
   {
     public override void Process(InitDbArgs args)
     {
       var commands = args.Database.Engines.DataEngine.Commands;
-      var dataStorage = args.DataStorage;
+      var innerCommand = new DataEngineCommand(args.DataStorage);
 
-      this.SetDataStorage(commands.AddFromTemplatePrototype, dataStorage);
-      this.SetDataStorage(commands.CreateItemPrototype, dataStorage);
-      this.SetDataStorage(commands.DeletePrototype, dataStorage);
-      this.SetDataStorage(commands.GetChildrenPrototype, dataStorage);
-      this.SetDataStorage(commands.GetItemPrototype, dataStorage);
-      this.SetDataStorage(commands.GetParentPrototype, dataStorage);
-      this.SetDataStorage(commands.GetRootItemPrototype, dataStorage);
-      this.SetDataStorage(commands.HasChildrenPrototype, dataStorage);
-      this.SetDataStorage(commands.ResolvePathPrototype, dataStorage);
-      this.SetDataStorage(commands.SaveItemPrototype, dataStorage);
+      this.InitializeCommand(commands.AddFromTemplatePrototype, innerCommand);
+      this.InitializeCommand(commands.CreateItemPrototype, innerCommand);
+      this.InitializeCommand(commands.DeletePrototype, innerCommand);
+      this.InitializeCommand(commands.GetChildrenPrototype, innerCommand);
+      this.InitializeCommand(commands.GetItemPrototype, innerCommand);
+      this.InitializeCommand(commands.GetParentPrototype, innerCommand);
+      this.InitializeCommand(commands.GetRootItemPrototype, innerCommand);
+      this.InitializeCommand(commands.HasChildrenPrototype, innerCommand);
+      this.InitializeCommand(commands.ResolvePathPrototype, innerCommand);
+      this.InitializeCommand(commands.SaveItemPrototype, innerCommand);
+    }
+
+    protected virtual void InitializeCommand(object command, DataEngineCommand innerCommand)
+    {
+      var cmd = command as IDataEngineCommand;
+      if (cmd != null)
+      {
+        cmd.Initialize(innerCommand);
+      }
     }
   }
 }

@@ -17,10 +17,14 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var command = new OpenGetRootItemCommand(this.dataStorage);
+      var createdCommand = Substitute.For<GetRootItemCommand>();
+      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetRootItemCommand, GetRootItemCommand>().Returns(createdCommand);
+
+      var command = new OpenGetRootItemCommand();
+      command.Initialize(this.innerCommand);
 
       // act & assert
-      command.CreateInstance().Should().BeOfType<GetRootItemCommand>();
+      command.CreateInstance().Should().Be(createdCommand);
     }
 
     [Fact]
@@ -31,8 +35,9 @@
 
       dataStorage.GetSitecoreItem(ItemIDs.RootID, rootItem.Language).Returns(rootItem);
 
-      var command = new OpenGetRootItemCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
+      var command = new OpenGetRootItemCommand { Engine = new DataEngine(this.database) };
       command.Initialize(LanguageManager.DefaultLanguage, Version.Latest);
+      command.Initialize(this.innerCommand);
 
       // act
       var result = command.DoExecute();
@@ -43,11 +48,6 @@
 
     private class OpenGetRootItemCommand : GetRootItemCommand
     {
-      public OpenGetRootItemCommand(DataStorage dataStorage)
-        : base(dataStorage)
-      {
-      }
-
       public new Sitecore.Data.Engines.DataCommands.GetRootItemCommand CreateInstance()
       {
         return base.CreateInstance();

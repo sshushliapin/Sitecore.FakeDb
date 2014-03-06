@@ -11,7 +11,7 @@ namespace Sitecore.FakeDb
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
   using Sitecore.Globalization;
   using Sitecore.Pipelines;
-  
+
   public class Db : IDisposable, IEnumerable
   {
     private static readonly ID DefaultItemRoot = ItemIDs.ContentRoot;

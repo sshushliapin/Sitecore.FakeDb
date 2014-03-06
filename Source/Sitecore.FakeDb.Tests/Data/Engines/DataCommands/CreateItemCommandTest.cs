@@ -16,17 +16,22 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var command = new OpenCreateItemCommand(this.dataStorage);
+      var createdCommand = Substitute.For<CreateItemCommand>();
+      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.CreateItemCommand, CreateItemCommand>().Returns(createdCommand);
+
+      var command = new OpenCreateItemCommand();
+      command.Initialize(this.innerCommand);
 
       // act & assert
-      command.CreateInstance().Should().BeOfType<CreateItemCommand>();
+      command.CreateInstance().Should().Be(createdCommand);
     }
 
     [Fact]
     public void ShouldCreateDefaultCreator()
     {
       // arrange
-      var command = new CreateItemCommand(this.dataStorage);
+      var command = new CreateItemCommand();
+      command.Initialize(this.innerCommand);
 
       // act & assert
       command.ItemCreator.Should().NotBeNull();
@@ -46,8 +51,9 @@
       var itemCreator = Substitute.For<ItemCreator>(this.dataStorage);
       itemCreator.Create("home", itemId, templateId, database, destination).Returns(item);
 
-      var command = new OpenCreateItemCommand(this.dataStorage) { Engine = new DataEngine(this.database), ItemCreator = itemCreator };
+      var command = new OpenCreateItemCommand { Engine = new DataEngine(this.database), ItemCreator = itemCreator };
       command.Initialize(itemId, "home", templateId, destination);
+      command.Initialize(this.innerCommand);
 
       // act
       var result = command.DoExecute();
@@ -58,11 +64,6 @@
 
     private class OpenCreateItemCommand : CreateItemCommand
     {
-      public OpenCreateItemCommand(DataStorage dataStorage)
-        : base(dataStorage)
-      {
-      }
-
       public new Sitecore.Data.Engines.DataCommands.CreateItemCommand CreateInstance()
       {
         return base.CreateInstance();

@@ -4,41 +4,23 @@
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
 
-  public class GetRootItemCommand : Sitecore.Data.Engines.DataCommands.GetRootItemCommand, IRequireDataStorage
+  public class GetRootItemCommand : Sitecore.Data.Engines.DataCommands.GetRootItemCommand, IDataEngineCommand
   {
-    private DataStorage dataStorage;
+    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
 
-    public GetRootItemCommand()
+    public virtual void Initialize(DataEngineCommand command)
     {
-    }
-
-    public GetRootItemCommand(DataStorage dataStorage)
-    {
-      Assert.ArgumentNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
-    }
-
-    public virtual DataStorage DataStorage
-    {
-      get { return this.dataStorage; }
+      this.innerCommand = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.GetRootItemCommand CreateInstance()
     {
-      return new GetRootItemCommand(this.DataStorage);
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetRootItemCommand, GetRootItemCommand>();
     }
 
     protected override Item DoExecute()
     {
-      return this.DataStorage.GetSitecoreItem(ItemIDs.RootID, this.Language);
-    }
-
-    public void SetDataStorage(DataStorage dataStorage)
-    {
-      Assert.IsNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
+      return this.innerCommand.DataStorage.GetSitecoreItem(ItemIDs.RootID, this.Language);
     }
   }
 }

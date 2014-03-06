@@ -19,17 +19,19 @@
 
     public SaveItemCommandTest()
     {
-      this.command = new OpenSaveItemCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
+      this.command = new OpenSaveItemCommand { Engine = new DataEngine(this.database) };
+      this.command.Initialize(this.innerCommand);
     }
 
     [Fact]
     public void ShouldCreateInstance()
     {
-      // act
-      var instance = this.command.CreateInstance();
+      // arsange
+      var createdCommand = Substitute.For<SaveItemCommand>();
+      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.SaveItemCommand, SaveItemCommand>().Returns(createdCommand);
 
-      // assert
-      instance.Should().BeOfType<SaveItemCommand>();
+      // act & assert
+      this.command.CreateInstance().Should().Be(createdCommand);
     }
 
     [Fact]
@@ -84,11 +86,6 @@
 
     private class OpenSaveItemCommand : SaveItemCommand
     {
-      public OpenSaveItemCommand(DataStorage dataStorage)
-        : base(dataStorage)
-      {
-      }
-
       public new Sitecore.Data.Engines.DataCommands.SaveItemCommand CreateInstance()
       {
         return base.CreateInstance();

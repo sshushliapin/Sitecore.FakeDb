@@ -4,34 +4,23 @@
   using Sitecore.Data.Fields;
   using Sitecore.Diagnostics;
 
-  public class SaveItemCommand : Sitecore.Data.Engines.DataCommands.SaveItemCommand, IRequireDataStorage
+  public class SaveItemCommand : Sitecore.Data.Engines.DataCommands.SaveItemCommand, IDataEngineCommand
   {
-    private DataStorage dataStorage;
+    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
 
-    public SaveItemCommand()
+    public virtual void Initialize(DataEngineCommand command)
     {
-    }
-
-    public SaveItemCommand(DataStorage dataStorage)
-    {
-      Assert.ArgumentNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
-    }
-
-    public virtual DataStorage DataStorage
-    {
-      get { return this.dataStorage; }
+      this.innerCommand = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.SaveItemCommand CreateInstance()
     {
-      return new SaveItemCommand(this.DataStorage);
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.SaveItemCommand, SaveItemCommand>();
     }
 
     protected override bool DoExecute()
     {
-      var fakeItem = this.DataStorage.GetFakeItem(Item.ID);
+      var fakeItem = this.innerCommand.DataStorage.GetFakeItem(Item.ID);
 
       this.UpdateBasicData(fakeItem);
       this.UpdateFields(fakeItem);
@@ -70,13 +59,6 @@
           fakeItem.Fields.Add(new DbField(field.Name) { ID = field.ID, Value = field.Value });
         }
       }
-    }
-
-    public void SetDataStorage(DataStorage dataStorage)
-    {
-      Assert.IsNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage = dataStorage;
     }
   }
 }

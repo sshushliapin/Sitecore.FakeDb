@@ -1,6 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data.Engines;
@@ -14,14 +15,19 @@
 
     public ResolvePathCommandTest()
     {
-      this.command = new OpenResolvePathCommand(this.dataStorage) { Engine = new DataEngine(this.database) };
+      this.command = new OpenResolvePathCommand { Engine = new DataEngine(this.database) };
+      this.command.Initialize(this.innerCommand);
     }
 
     [Fact]
     public void ShouldCreateInstance()
     {
+      // arrange
+      var createdCommand = Substitute.For<ResolvePathCommand>();
+      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.ResolvePathCommand, ResolvePathCommand>().Returns(createdCommand);
+
       // act & assert
-      this.command.CreateInstance().Should().BeOfType<ResolvePathCommand>();
+      this.command.CreateInstance().Should().Be(createdCommand);
     }
 
     [Theory]
@@ -59,11 +65,6 @@
 
     private class OpenResolvePathCommand : ResolvePathCommand
     {
-      public OpenResolvePathCommand(DataStorage dataStorage)
-        : base(dataStorage)
-      {
-      }
-
       public new Sitecore.Data.Engines.DataCommands.ResolvePathCommand CreateInstance()
       {
         return base.CreateInstance();
