@@ -9,7 +9,6 @@
   using Sitecore.Data.DataProviders;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
-  using Sitecore.Reflection;
   using Xunit;
 
   public class InitDataProvidersTest
@@ -19,8 +18,8 @@
     {
       // arrange
       var database = Database.GetDatabase("master");
-      var dataProvider = Substitute.For<DataProvider, IRequireDataStorage>();
-      typeof(Database).GetField("_dataProviders", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(database, new DataProviderCollection { dataProvider });
+      var provider = Substitute.For<DataProvider, IRequireDataStorage>();
+      typeof(Database).GetField("_dataProviders", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(database, new DataProviderCollection { provider });
 
       var dataStorage = Substitute.For<DataStorage>();
 
@@ -31,7 +30,7 @@
       processor.Process(args);
 
       // assert
-      ((IRequireDataStorage)dataProvider).Received().SetDataStorage(dataStorage);
+      ((IRequireDataStorage)provider).Received().SetDataStorage(dataStorage);
     }
 
     [Fact]
@@ -39,8 +38,8 @@
     {
       // arrange
       var database = Database.GetDatabase("master");
-      var dataProvider = Substitute.For<DataProvider>();
-      typeof(Database).GetField("_dataProviders", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(database, new DataProviderCollection { dataProvider });
+      var provider = Substitute.For<DataProvider>();
+      typeof(Database).GetField("_dataProviders", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(database, new DataProviderCollection { provider });
 
       var args = new InitDbArgs(database, Substitute.For<DataStorage>());
       var processor = new InitDataProviders();

@@ -2,14 +2,14 @@
 {
   using System;
   using Sitecore.Data;
+  using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Security.AccessControl;
   using Sitecore.Security.Accounts;
 
-  public class FakeAuthorizationProvider : AuthorizationProvider
+  public class FakeAuthorizationProvider : AuthorizationProvider, IRequireDataStorage
   {
-    // TODO: Should be eliminated.
-    public DataStorage DataStorage { get; set; }
+    public DataStorage DataStorage { get; private set; }
 
     public override AccessRuleCollection GetAccessRules(ISecurable entity)
     {
@@ -19,6 +19,13 @@
     public override void SetAccessRules(ISecurable entity, AccessRuleCollection rules)
     {
       throw new NotImplementedException();
+    }
+
+    public void SetDataStorage(DataStorage dataStorage)
+    {
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
+
+      this.DataStorage = dataStorage;
     }
 
     protected override AccessResult GetAccessCore(ISecurable entity, Account account, AccessRight accessRight)

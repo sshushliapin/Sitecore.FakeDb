@@ -1,5 +1,4 @@
-﻿using Sitecore.FakeDb.Data.Engines;
-namespace Sitecore.FakeDb.Pipelines.InitFakeDb
+﻿namespace Sitecore.FakeDb.Pipelines.InitFakeDb
 {
   public class InitDataEngineCommands : InitDbProcessor
   {
@@ -18,15 +17,6 @@ namespace Sitecore.FakeDb.Pipelines.InitFakeDb
       this.SetDataStorage(commands.HasChildrenPrototype, dataStorage);
       this.SetDataStorage(commands.ResolvePathPrototype, dataStorage);
       this.SetDataStorage(commands.SaveItemPrototype, dataStorage);
-    }
-
-    protected virtual void SetDataStorage(object obj, DataStorage dataStorage)
-    {
-      var rds = obj as IRequireDataStorage;
-      if (rds != null)
-      {
-        rds.SetDataStorage(dataStorage);
-      }
     }
   }
 }

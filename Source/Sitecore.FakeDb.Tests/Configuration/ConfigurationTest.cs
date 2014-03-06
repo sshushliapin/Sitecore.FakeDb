@@ -4,18 +4,11 @@
   using FluentAssertions;
   using Sitecore.Configuration;
   using Sitecore.Data;
-  using Sitecore.FakeDb.Data.Engines;
   using Xunit;
   using Xunit.Extensions;
 
   public class ConfigurationTest
   {
-    [Fact]
-    public void ShouldGetDataStorage()
-    {
-      Factory.CreateObject("dataStorage", true).Should().BeOfType<DataStorage>();
-    }
-
     [Theory]
     [InlineData("AddFromTemplatePrototype", typeof(FakeDb.Data.Engines.DataCommands.AddFromTemplateCommand))]
     [InlineData("AddVersionPrototype", typeof(FakeDb.Data.Engines.DataCommands.AddVersionCommand))]

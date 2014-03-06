@@ -1,12 +1,12 @@
 ﻿namespace Sitecore.FakeDb.Tests.Pipelines.InitFakeDb
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
-  using System;
   using Xunit;
 
   public class InitDataEngineCommandsTest

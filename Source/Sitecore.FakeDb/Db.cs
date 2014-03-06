@@ -8,13 +8,10 @@ namespace Sitecore.FakeDb
   using Sitecore.Data.Managers;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Engines;
-  using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
-  using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Globalization;
   using Sitecore.Pipelines;
-  using Sitecore.Security.AccessControl;
-
+  
   public class Db : IDisposable, IEnumerable
   {
     private static readonly ID DefaultItemRoot = ItemIDs.ContentRoot;
@@ -36,9 +33,6 @@ namespace Sitecore.FakeDb
       CorePipeline.Run("initFakeDb", args);
 
       this.DataStorage.SetDatabase(this.database);
-
-      // TODO:[High] Should not be here
-      ((FakeAuthorizationProvider)AuthorizationManager.Provider).DataStorage = this.DataStorage;
     }
 
     public Database Database

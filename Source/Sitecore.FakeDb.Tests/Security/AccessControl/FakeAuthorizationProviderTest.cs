@@ -63,7 +63,7 @@
       var dataStorage = Substitute.For<DataStorage>();
       dataStorage.GetFakeItem(itemId).Returns(item);
 
-      this.provider.DataStorage = dataStorage;
+      this.provider.SetDataStorage(dataStorage);
 
       // act
       var accessResult = this.provider.GetAccess(entity, User.Current, AccessRight.FromName(accessRightName));
