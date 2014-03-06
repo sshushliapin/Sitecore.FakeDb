@@ -245,6 +245,7 @@
 
         // assert
         db.Database.GetItem("/sitecore/content/new home").Should().NotBeNull();
+        db.Database.GetItem("/sitecore/content/new home").Name.Should().Be("new home");
         db.Database.GetItem("/sitecore/content/home").Should().BeNull();
       }
     }
@@ -478,6 +479,25 @@
 
         // assert
         action.ShouldThrow<AccessDeniedException>();
+      }
+    }
+
+    [Fact]
+    public void ShouldEditItem()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") { { "Title", "Hello!" } } })
+      {
+        var item = db.Database.GetItem("/sitecore/content/home");
+
+        // act
+        using (new EditContext(item))
+        {
+          item["Title"] = "Welcome!";
+        }
+
+        // assert
+        item["Title"].Should().Be("Welcome!");
       }
     }
 
