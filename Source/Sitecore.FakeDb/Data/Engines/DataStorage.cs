@@ -34,7 +34,8 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems = new Dictionary<ID, DbItem>();
       this.FakeTemplates = new Dictionary<ID, DbTemplate>();
 
-      this.Reset();
+      this.FillDefaultFakeTemplates();
+      this.FillDefaultFakeItems();
     }
 
     public Database Database
@@ -103,21 +104,6 @@ namespace Sitecore.FakeDb.Data.Engines
       var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language);
 
       return item;
-    }
-
-    public void SetDatabase(Database db)
-    {
-      this.database = db;
-      this.Reset();
-    }
-
-    public void Reset()
-    {
-      this.FakeTemplates.Clear();
-      this.FakeItems.Clear();
-
-      this.FillDefaultFakeTemplates();
-      this.FillDefaultFakeItems();
     }
 
     protected virtual void FillDefaultFakeTemplates()

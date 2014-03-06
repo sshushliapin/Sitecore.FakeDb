@@ -57,43 +57,10 @@
       this.dataStorage.FakeItems[ID.Parse(itemId)].FullPath.Should().Be(fullPath);
     }
 
-
     [Fact]
     public void ShouldCreateDefaultFakeTemplate()
     {
       this.dataStorage.FakeTemplates[TemplateIDs.Template].Should().BeEquivalentTo(new DbTemplate("Template", TemplateIDs.Template));
-    }
-
-    [Fact]
-    public void ShouldResetItemsToDefault()
-    {
-      // arrange
-      var itemId = ID.NewID;
-
-      this.dataStorage.FakeItems.Add(itemId, new DbItem("new item"));
-
-      // act
-      this.dataStorage.Reset();
-
-      // assert
-      this.dataStorage.FakeItems.ContainsKey(itemId).Should().BeFalse();
-      this.dataStorage.FakeItems.ContainsKey(ItemIDs.RootID).Should().BeTrue();
-      this.dataStorage.FakeItems.ContainsKey(ItemIDs.ContentRoot).Should().BeTrue();
-      this.dataStorage.FakeItems.ContainsKey(ItemIDs.TemplateRoot).Should().BeTrue();
-    }
-
-    [Fact]
-    public void ShouldResetTemplates()
-    {
-      // arrange
-      this.dataStorage.FakeTemplates.Add(ID.NewID, new DbTemplate("some template", ID.NewID));
-
-      // act
-      this.dataStorage.Reset();
-
-      // assert
-      // TODO:[Minor] Define 'default' templates.
-      this.dataStorage.FakeTemplates.Single().Key.Should().Be(TemplateIDs.Template);
     }
 
     [Fact]
