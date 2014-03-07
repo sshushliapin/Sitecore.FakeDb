@@ -3,10 +3,10 @@
   using System;
   using Sitecore.Configuration;
 
-  public class FakeClientDataStore : ClientDataStore
+  public class ClientDataStoreStub : ClientDataStore
   {
-    public FakeClientDataStore()
-      : base(new TimeSpan())
+    public ClientDataStoreStub()
+      : base(new TimeSpan(), false)
     {
     }
 

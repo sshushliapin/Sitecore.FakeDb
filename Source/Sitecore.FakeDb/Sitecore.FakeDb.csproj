@@ -60,7 +60,7 @@
     <Compile Include="Pipelines\InitFakeDb\InitDbArgs.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbProcessor.cs" />
     <Compile Include="Security\AccessControl\DbItemAccess.cs" />
-    <Compile Include="Configuration\FakeClientDataStore.cs" />
+    <Compile Include="Configuration\ClientDataStoreStub.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\AddVersionCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\BlobStreamExistsCommand.cs" />
