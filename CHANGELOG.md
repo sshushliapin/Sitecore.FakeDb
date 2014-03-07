@@ -1,3 +1,6 @@
+0.6.4
+* [FIX] Fixed concurrency issues caused by a single database instance shared across tests
+
 0.6.3
 * [FIX] Fixed creating and configuring of items in a specific language
 
