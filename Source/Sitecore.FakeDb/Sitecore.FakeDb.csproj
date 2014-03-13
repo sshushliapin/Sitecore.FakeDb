@@ -50,9 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Data\Engines\DataCommands\IDataEngineCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\NotInitializedDataEngineCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\DataEngineCommand.cs" />
+    <Compile Include="Configuration\DbConfiguration.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommands.cs" />
     <Compile Include="IRequireDataStorage.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitAuthorizationProvider.cs" />

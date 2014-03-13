@@ -2,11 +2,13 @@ namespace Sitecore.FakeDb
 {
   using System;
   using System.Collections;
+  using System.Configuration;
   using System.Linq;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.Diagnostics;
+  using Sitecore.FakeDb.Configuration;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
   using Sitecore.Globalization;
@@ -30,6 +32,8 @@ namespace Sitecore.FakeDb
 
       var args = new InitDbArgs(this.database, this.DataStorage);
       CorePipeline.Run("initFakeDb", args);
+      
+      this.Configuration = new DbConfiguration();
     }
 
     public Database Database
@@ -38,6 +42,8 @@ namespace Sitecore.FakeDb
     }
 
     protected internal DataStorage DataStorage { get; set; }
+
+    public DbConfiguration Configuration { get; private set; }
 
     public IEnumerator GetEnumerator()
     {
@@ -104,6 +110,7 @@ namespace Sitecore.FakeDb
     public void Dispose()
     {
       this.DataStorage = null;
+      ConfigurationManager.RefreshSection("sitecore");
     }
 
     protected virtual void CreateTemplate(DbItem item)

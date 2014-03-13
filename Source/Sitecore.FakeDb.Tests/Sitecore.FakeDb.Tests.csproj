@@ -74,6 +74,8 @@
     <Compile Include="Analytics\TrackerTest.cs" />
     <Compile Include="Configuration\ClientDataStoreStubTest.cs" />
     <Compile Include="Configuration\ConfigurationTest.cs" />
+    <Compile Include="Configuration\DbConfigurationTest.cs" />
+    <Compile Include="Configuration\SettingsTest.cs" />
     <Compile Include="ContentSearch\ContentSearchConfigurationTest.cs" />
     <Compile Include="Data\DataProviders\FakeDataProviderTest.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommandTest.cs" />

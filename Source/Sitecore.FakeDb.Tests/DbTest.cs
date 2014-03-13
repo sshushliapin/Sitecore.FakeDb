@@ -2,6 +2,7 @@
 {
   using System;
   using FluentAssertions;
+  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Exceptions;
@@ -476,6 +477,20 @@
 
       // act & assert
       db.Database.Name.Should().Be(name);
+    }
+
+    [Fact]
+    public void ShouldSetAndGetCustomSettings()
+    {
+      // arrange
+      using (var db = new Db())
+      {
+        // act
+        db.Configuration.Settings["my setting"] = "my new value";
+
+        // assert
+        Settings.GetSetting("my setting").Should().Be("my new value");
+      }
     }
 
     [Fact]
