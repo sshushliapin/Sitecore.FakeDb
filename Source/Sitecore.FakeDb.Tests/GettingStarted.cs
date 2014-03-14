@@ -111,6 +111,20 @@
 
     #endregion
 
+    #region Configuration
+
+    [Fact]
+    public void HowDoIConfigureSettings()
+    {
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+      {
+        db.Configuration.Settings["MySetting"] = "1234";
+        Sitecore.Configuration.Settings.GetSetting("MySetting").Should().Be("1234");
+      }
+    }
+
+    #endregion
+
     #region Miscellaneous
 
     [Fact]

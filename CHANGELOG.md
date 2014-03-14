@@ -1,3 +1,6 @@
+0.7.0
+* [NEW] Added possibility to configure settings in memory
+
 0.6.4
 * [FIX] Fixed concurrency issues caused by a single database instance shared across tests
 

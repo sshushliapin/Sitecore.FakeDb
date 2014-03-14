@@ -127,6 +127,24 @@ The next example mocks the authentication provider and substitutes it so that au
       }
     }
 
+## Configuration
+### How do I configure settings
+
+In some cases you may prefer to use a setting instead of a dependency injected in your code via constructor or property. 
+The code below instantiates new Db context and sets "MySetting" setting value to "1234". Please note that the setting is 
+not defined explicitly in the App.config file, but nevertheless it is accessible using Sitecore.Configuration.Settings 
+and can be used in unit tests:
+
+    [Fact]
+    public void HowDoIConfigureSettings()
+    {
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+      {
+        db.Configuration.Settings["MySetting"] = "1234";
+        Sitecore.Configuration.Settings.GetSetting("MySetting").Should().Be("1234");
+      }
+    }
+
 ## Miscellaneous    
 ### How do I mock the content search logic
 The example below creates and configure a content search index mock so that it returns Home item:
