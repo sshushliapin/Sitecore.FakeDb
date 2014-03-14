@@ -12,6 +12,11 @@
       this.section = section;
     }
 
+    protected internal XmlDocument ConfigSection
+    {
+      get { return this.section; }
+    }
+
     public virtual string this[string name]
     {
       get
@@ -45,8 +50,8 @@
       var doc = this.section;
       var setting = doc.CreateElement("setting");
 
-      AddSettingAttribute("name", name, doc, setting);
-      AddSettingAttribute("value", value, doc, setting);
+      this.AddSettingAttribute("name", name, doc, setting);
+      this.AddSettingAttribute("value", value, doc, setting);
 
       return setting;
     }

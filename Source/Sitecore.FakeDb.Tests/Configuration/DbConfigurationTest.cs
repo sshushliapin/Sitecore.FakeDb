@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Configuration
 {
+  using System.Xml;
   using FluentAssertions;
   using Sitecore.FakeDb.Configuration;
   using Xunit;
@@ -7,13 +8,16 @@
   public class DbConfigurationTest
   {
     [Fact]
-    public void ShouldSetSettings()
+    public void ShouldPassConfigSectionToSettings()
     {
       // arrange
-      var configuration = new DbConfiguration();
+      var config = new XmlDocument();
+
+      // act
+      var configuration = new DbConfiguration(config);
 
       // assert
-      configuration.Settings.Should().BeOfType<Settings>();
+      configuration.Settings.ConfigSection.Should().BeEquivalentTo(config);
     }
   }
 }

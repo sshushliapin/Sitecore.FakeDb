@@ -2,8 +2,8 @@ namespace Sitecore.FakeDb
 {
   using System;
   using System.Collections;
-  using System.Configuration;
   using System.Linq;
+  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
@@ -20,6 +20,10 @@ namespace Sitecore.FakeDb
 
     private readonly Database database;
 
+    private readonly DataStorage dataStorage;
+
+    private readonly DbConfiguration configuration;
+
     public Db()
       : this("master")
     {
@@ -28,12 +32,11 @@ namespace Sitecore.FakeDb
     public Db(string databaseName)
     {
       this.database = Database.GetDatabase(databaseName);
-      this.DataStorage = new DataStorage(this.database);
+      this.dataStorage = new DataStorage(this.database);
+      this.configuration = new DbConfiguration(Factory.GetConfiguration());
 
-      var args = new InitDbArgs(this.database, this.DataStorage);
+      var args = new InitDbArgs(this.database, this.dataStorage);
       CorePipeline.Run("initFakeDb", args);
-      
-      this.Configuration = new DbConfiguration();
     }
 
     public Database Database
@@ -41,9 +44,15 @@ namespace Sitecore.FakeDb
       get { return this.database; }
     }
 
-    protected internal DataStorage DataStorage { get; set; }
+    public DbConfiguration Configuration
+    {
+      get { return this.configuration; }
+    }
 
-    public DbConfiguration Configuration { get; private set; }
+    protected internal DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
+    }
 
     public IEnumerator GetEnumerator()
     {
@@ -109,8 +118,7 @@ namespace Sitecore.FakeDb
     /// </summary>
     public void Dispose()
     {
-      this.DataStorage = null;
-      ConfigurationManager.RefreshSection("sitecore");
+      Factory.Reset();
     }
 
     protected virtual void CreateTemplate(DbItem item)

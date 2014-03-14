@@ -1,18 +1,14 @@
 ﻿namespace Sitecore.FakeDb.Configuration
 {
-  using System.Configuration;
-  using Sitecore.Diagnostics;
-  using Sitecore.Configuration;
-  using System;
+  using System.Xml;
 
   public class DbConfiguration
   {
     private readonly Settings settings;
 
-    public DbConfiguration()
+    public DbConfiguration(XmlDocument config)
     {
-      var section = Factory.GetConfiguration();
-      this.settings = new Settings(section);
+      this.settings = new Settings(config);
     }
 
     public Settings Settings

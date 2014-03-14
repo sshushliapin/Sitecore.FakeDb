@@ -453,19 +453,6 @@
       }
     }
 
-    [Fact]
-    public void ShouldResetDataStorageOnDispose()
-    {
-      // arrange
-      var db = new Db();
-
-      // act
-      db.Dispose();
-
-      // assert
-      db.DataStorage.Should().BeNull();
-    }
-
     [Theory]
     [InlineData("master")]
     [InlineData("web")]
@@ -491,6 +478,20 @@
         // assert
         Settings.GetSetting("my setting").Should().Be("my new value");
       }
+    }
+
+    [Fact]
+    public void ShouldCleanUpSettingsAfterDispose()
+    {
+      // arrange
+      using (var db = new Db())
+      {
+        // act
+        db.Configuration.Settings["my setting"] = "my new value";
+      }
+
+      // assert
+      Settings.GetSetting("my setting").Should().BeEmpty();
     }
 
     [Fact]
@@ -620,6 +621,17 @@
 
         // assert
         action.ShouldThrow<ArgumentException>().WithMessage("A tamplete with the same id has already been added.*");
+      }
+    }
+
+    [Fact]
+    public void ShouldInitializeDbConfigurationUsingFactoryConfiguration()
+    {
+      // arrange
+      using (var db = new Db())
+      {
+        // act & assert
+        db.Configuration.Settings.ConfigSection.Should().BeEquivalentTo(Factory.GetConfiguration());
       }
     }
   }
