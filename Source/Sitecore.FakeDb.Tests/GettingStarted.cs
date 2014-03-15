@@ -2,7 +2,6 @@
 {
   using System;
   using System.Linq;
-  using FluentAssertions;
   using NSubstitute;
   using Xunit;
 
@@ -19,7 +18,7 @@
         })
       {
         Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
-        homeItem["Title"].Should().Be("Welcome!");
+        Assert.Equal("Welcome!", homeItem["Title"]);
       }
     }
 
@@ -36,8 +35,8 @@
         })
       {
         Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/Articles");
-        articles["Getting Started"].Should().NotBeNull();
-        articles["Troubleshooting"].Should().NotBeNull();
+        Assert.NotNull(articles["Getting Started"]);
+        Assert.NotNull(articles["Troubleshooting"]);
       }
     }
 
@@ -53,10 +52,10 @@
         })
       {
         Sitecore.Data.Items.Item homeEn = db.GetItem("/sitecore/content/home", "en");
-        homeEn["Title"].Should().Be("Hello!");
+        Assert.Equal("Hello!", homeEn["Title"]);
 
         Sitecore.Data.Items.Item homeDa = db.GetItem("/sitecore/content/home", "da");
-        homeDa["Title"].Should().Be("Hej!");
+        Assert.Equal("Hej!", homeDa["Title"]);
       }
     }
 
@@ -72,8 +71,8 @@
         })
       {
         Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/apple");
-        item.TemplateID.Should().Be(templateId);
-        item.Fields["Name"].Should().NotBeNull();
+        Assert.Equal(templateId, item.TemplateID);
+        Assert.NotNull(item.Fields["Name"]);
       }
     }
 
@@ -90,7 +89,9 @@
         })
       {
         Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/home");
-        item.Should().BeNull();
+
+        // item is null because read is denied
+        Assert.Null(item);
       }
     }
 
@@ -105,7 +106,8 @@
       using (new Sitecore.Common.Switcher<Sitecore.Security.Authentication.AuthenticationProvider>(provider))
       {
         // use authentication manager in your code
-        Sitecore.Security.Authentication.AuthenticationManager.Login("John", false).Should().BeTrue();
+        bool isLoggedIn = Sitecore.Security.Authentication.AuthenticationManager.Login("John", false);
+        Assert.True(isLoggedIn);
       }
     }
 
@@ -118,8 +120,12 @@
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
       {
+        // set the setting value in unit test using db instance
         db.Configuration.Settings["MySetting"] = "1234";
-        Sitecore.Configuration.Settings.GetSetting("MySetting").Should().Be("1234");
+
+        // get the setting value in your code using regular Sitecore API
+        var value = Sitecore.Configuration.Settings.GetSetting("MySetting");
+        Assert.Equal("1234", value);
       }
     }
 
@@ -143,7 +149,7 @@
 
           Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Single().GetItem();
 
-          result.Paths.FullPath.Should().Be("/sitecore/content/home");
+          Assert.Equal("/sitecore/content/home", result.Paths.FullPath);
         }
       }
       finally
@@ -155,11 +161,15 @@
     [Fact]
     public void HowDoIMockTrackerVisitor()
     {
-      var visitor = Substitute.For<Sitecore.Analytics.Data.DataAccess.Visitor>(Guid.NewGuid());
+      // create a visitor mock
+      var visitorMock = Substitute.For<Sitecore.Analytics.Data.DataAccess.Visitor>(Guid.NewGuid());
 
-      using (new Sitecore.Common.Switcher<Sitecore.Analytics.Data.DataAccess.Visitor>(visitor))
+      // inject the visitor mock into Analytics Tracker
+      using (new Sitecore.Common.Switcher<Sitecore.Analytics.Data.DataAccess.Visitor>(visitorMock))
       {
-        Sitecore.Analytics.Tracker.Visitor.Should().Be(visitor);
+        // the mocked visitor instance is now available via Analytics.Tracker.Visitor property
+        var currentVisitor = Sitecore.Analytics.Tracker.Visitor;
+        Assert.Equal(visitorMock, currentVisitor);
       }
     }
 

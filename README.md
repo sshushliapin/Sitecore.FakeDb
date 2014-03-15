@@ -1,19 +1,29 @@
 Sitecore FakeDb
 ===============
 
-A unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory. Designed to minimize efforts for the test content initialization keeping focus on the minimal test data rather than comprehensive content tree representation.
+A unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory. 
+Designed to minimize efforts for the test content initialization keeping focus on the minimal test data rather 
+than comprehensive content tree representation.
 
-### How do I install Sitecore FakeDb
+## Installation
 
-The package is available on NuGet. To install the package, run the following command in the Package Manager Console:
+Sitecore FakeDb is available on NuGet.
+To install the framework:
 
-      Install-Package Sitecore.FakeDb
-      
-When the package installation is done, go to the App.config file of the project you have the package installed and set path to the license.xml file in LicenseFile setting.
+1. Create a new Class Library project.
+2. Add references to Sitecore.Kernel and Sitecore.Nexus assemblies.
+3. Run the following command in the NuGet Package Manager Console:
 
+      `Install-Package Sitecore.FakeDb`
+4. Open App.config file added by the package and update path to the license.xml file using LicenseFile setting if necessary. By default the license file path is set to the root folder of the project:
+
+      `<setting name="LicenseFile" value="..\..\license.xml" />`
+
+## How do I...
 ### How do I create a simple item
 
-The code below creates a fake in-memory database with a single item Home that contains field Title with value 'Welcome!' ([xUnit](http://xunit.codeplex.com/) and [FluentAssertions](https://github.com/dennisdoomen/FluentAssertions) are used):
+The code below creates a fake in-memory database with a single item Home that contains field Title with value 'Welcome!' 
+([xUnit](http://xunit.codeplex.com/) unit testing framework is used):
 
     [Fact]
     public void HowDoICreateASimpleItem()
@@ -24,7 +34,7 @@ The code below creates a fake in-memory database with a single item Home that co
         })
       {
         Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
-        homeItem["Title"].Should().Be("Welcome!");
+        Assert.Equal("Welcome!", homeItem["Title"]);
       }
     }
 
@@ -45,8 +55,8 @@ This code creates a root item Articles and two child items Getting Started and T
         })
       {
         Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/Articles");
-        articles["Getting Started"].Should().NotBeNull();
-        articles["Troubleshooting"].Should().NotBeNull();
+        Assert.NotNull(articles["Getting Started"]);
+        Assert.NotNull(articles["Troubleshooting"]);
       }
     }
     
@@ -66,14 +76,17 @@ The next example demonstrates how to configure field values for different langua
         })
       {
         Sitecore.Data.Items.Item homeEn = db.GetItem("/sitecore/content/home", "en");
-        homeEn["Title"].Should().Be("Hello!");
+        Assert.Equal("Hello!", homeEn["Title"]);
 
         Sitecore.Data.Items.Item homeDa = db.GetItem("/sitecore/content/home", "da");
-        homeDa["Title"].Should().Be("Hej!");
+        Assert.Equal("Hej!", homeDa["Title"]);
       }
     }
 
 ### How do I create an item of specific template
+
+In some cases you may want to create an item template first and only then add items based on this template.
+It can be acheived using the next sample:
 
     [Fact]
     public void HowDoICreateAnItemOfSpecificTemplate()
@@ -87,13 +100,15 @@ The next example demonstrates how to configure field values for different langua
         })
       {
         Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/apple");
-        item.TemplateID.Should().Be(templateId);
-        item.Fields["Name"].Should().NotBeNull();
+        Assert.Equal(templateId, item.TemplateID);
+        Assert.NotNull(item.Fields["Name"]);
       }
     }
 
 ## Security
 ### How do I configure item access
+
+The code below denies item read, so that GetItem() method returns null: 
 
     [Fact]
     public void HowDoIConfigureItemAccess()
@@ -104,7 +119,9 @@ The next example demonstrates how to configure field values for different langua
         })
       {
         Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/home");
-        item.Should().BeNull();
+
+        // item is null because read is denied
+        Assert.Null(item);
       }
     }
 
@@ -123,7 +140,8 @@ The next example mocks the authentication provider and substitutes it so that au
       using (new Sitecore.Common.Switcher<Sitecore.Security.Authentication.AuthenticationProvider>(provider))
       {
         // use authentication manager in your code
-        Sitecore.Security.Authentication.AuthenticationManager.Login("John", false).Should().BeTrue();
+        bool isLoggedIn = Sitecore.Security.Authentication.AuthenticationManager.Login("John", false);
+        Assert.True(isLoggedIn);
       }
     }
 
@@ -140,13 +158,18 @@ and can be used in unit tests:
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
       {
+        // set the setting value in unit test using db instance
         db.Configuration.Settings["MySetting"] = "1234";
-        Sitecore.Configuration.Settings.GetSetting("MySetting").Should().Be("1234");
+
+        // get the setting value in your code using regular Sitecore API
+        var value = Sitecore.Configuration.Settings.GetSetting("MySetting");
+        Assert.Equal("1234", value);
       }
     }
 
 ## Miscellaneous    
 ### How do I mock the content search logic
+
 The example below creates and configure a content search index mock so that it returns Home item:
 
     [Fact]
@@ -165,7 +188,7 @@ The example below creates and configure a content search index mock so that it r
 
           Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Single().GetItem();
 
-          result.Paths.FullPath.Should().Be("/sitecore/content/home");
+          Assert.Equal("/sitecore/content/home", result.Paths.FullPath);
         }
       }
       finally
@@ -179,10 +202,14 @@ The example below creates and configure a content search index mock so that it r
     [Fact]
     public void HowDoIMockTrackerVisitor()
     {
-      var visitor = Substitute.For<Sitecore.Analytics.Data.DataAccess.Visitor>(Guid.NewGuid());
+      // create a visitor mock
+      var visitorMock = Substitute.For<Sitecore.Analytics.Data.DataAccess.Visitor>(Guid.NewGuid());
 
-      using (new Sitecore.Common.Switcher<Sitecore.Analytics.Data.DataAccess.Visitor>(visitor))
+      // inject the visitor mock into Analytics Tracker
+      using (new Sitecore.Common.Switcher<Sitecore.Analytics.Data.DataAccess.Visitor>(visitorMock))
       {
-        Sitecore.Analytics.Tracker.Visitor.Should().Be(visitor);
+        // the mocked visitor instance is now available via Analytics.Tracker.Visitor property
+        var currentVisitor = Sitecore.Analytics.Tracker.Visitor;
+        Assert.Equal(visitorMock, currentVisitor);
       }
     }

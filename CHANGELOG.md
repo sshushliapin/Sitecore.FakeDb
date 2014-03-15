@@ -1,3 +1,8 @@
+0.7.1
+* [FIX] Updated installation instructions
+* [FIX] Updated Getting Started code samples
+* [FIX] Changed default license.xml file path. Now it is set to the root of a test project
+
 0.7.0
 * [NEW] Added possibility to configure settings in memory
 
