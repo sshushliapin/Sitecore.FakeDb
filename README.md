@@ -15,11 +15,12 @@ To install the framework:
 3. Run the following command in the NuGet Package Manager Console:
 
       `Install-Package Sitecore.FakeDb`
+
 4. Open App.config file added by the package and update path to the license.xml file using LicenseFile setting if necessary. By default the license file path is set to the root folder of the project:
 
-``` xml
-<setting name="LicenseFile" value="..\..\license.xml" />
-```
+      ``` xml
+      <setting name="LicenseFile" value="..\..\license.xml" />
+      ```
 
 ## How do I...
 ### How do I create a simple item
@@ -120,41 +121,44 @@ public void HowDoICreateAnItemOfSpecificTemplate()
 
 The code below denies item read, so that GetItem() method returns null: 
 
-
-    [Fact]
-    public void HowDoIConfigureItemAccess()
+``` csharp
+[Fact]
+public void HowDoIConfigureItemAccess()
+{
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
     {
-      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-        {
-          new Sitecore.FakeDb.DbItem("home") { Access = { CanRead = false } }
-        })
-      {
-        Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/home");
+      new Sitecore.FakeDb.DbItem("home") { Access = { CanRead = false } }
+    })
+  {
+    Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/home");
 
-        // item is null because read is denied
-        Assert.Null(item);
-      }
-    }
+    // item is null because read is denied
+    Assert.Null(item);
+  }
+}
+```
 
 ### How do I mock the authentication provider
 
 The next example mocks the authentication provider and substitutes it so that authentication manager calls the mocked provider. [NSubstitute](http://nsubstitute.github.io/) mocking framework is used:
 
-    [Fact]
-    public void HowDoIMockAuthenticationProvider()
-    {
-      // create mock and configure behaviour of the authentication provider
-      var provider = Substitute.For<Sitecore.Security.Authentication.AuthenticationProvider>();
-      provider.Login("John", false).Returns(true);
+``` csharp
+[Fact]
+public void HowDoIMockAuthenticationProvider()
+{
+  // create mock and configure behaviour of the authentication provider
+  var provider = Substitute.For<Sitecore.Security.Authentication.AuthenticationProvider>();
+  provider.Login("John", false).Returns(true);
 
-      // substitute authentication provider with mock
-      using (new Sitecore.Common.Switcher<Sitecore.Security.Authentication.AuthenticationProvider>(provider))
-      {
-        // use authentication manager in your code
-        bool isLoggedIn = Sitecore.Security.Authentication.AuthenticationManager.Login("John", false);
-        Assert.True(isLoggedIn);
-      }
-    }
+  // substitute authentication provider with mock
+  using (new Sitecore.Common.Switcher<Sitecore.Security.Authentication.AuthenticationProvider>(provider))
+  {
+    // use authentication manager in your code
+    bool isLoggedIn = Sitecore.Security.Authentication.AuthenticationManager.Login("John", false);
+    Assert.True(isLoggedIn);
+  }
+}
+```
 
 ## Configuration
 ### How do I configure settings
@@ -164,63 +168,69 @@ The code below instantiates new Db context and sets "MySetting" setting value to
 not defined explicitly in the App.config file, but nevertheless it is accessible using Sitecore.Configuration.Settings 
 and can be used in unit tests:
 
-    [Fact]
-    public void HowDoIConfigureSettings()
-    {
-      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
-      {
-        // set the setting value in unit test using db instance
-        db.Configuration.Settings["MySetting"] = "1234";
+``` csharp
+[Fact]
+public void HowDoIConfigureSettings()
+{
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+  {
+    // set the setting value in unit test using db instance
+    db.Configuration.Settings["MySetting"] = "1234";
 
-        // get the setting value in your code using regular Sitecore API
-        var value = Sitecore.Configuration.Settings.GetSetting("MySetting");
-        Assert.Equal("1234", value);
-      }
-    }
+    // get the setting value in your code using regular Sitecore API
+    var value = Sitecore.Configuration.Settings.GetSetting("MySetting");
+    Assert.Equal("1234", value);
+  }
+}
+```
 
 ## Miscellaneous    
 ### How do I mock the content search logic
 
 The example below creates and configure a content search index mock so that it returns Home item:
 
-    [Fact]
-    public void HowDoIMockContentSearchLogic()
+``` csharp
+[Fact]
+public void HowDoIMockContentSearchLogic()
+{
+  try
+  {
+    var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
+    Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Add("my_index", index);
+
+    using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db { new Sitecore.FakeDb.DbItem("home") })
     {
-      try
-      {
-        var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
-        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Add("my_index", index);
+      var searchResultItem = Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
+      searchResultItem.GetItem().Returns(db.GetItem("/sitecore/content/home"));
+      index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Returns((new[] { searchResultItem }).AsQueryable());
 
-        using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db { new Sitecore.FakeDb.DbItem("home") })
-        {
-          var searchResultItem = Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
-          searchResultItem.GetItem().Returns(db.GetItem("/sitecore/content/home"));
-          index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Returns((new[] { searchResultItem }).AsQueryable());
+      Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Single().GetItem();
 
-          Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Single().GetItem();
-
-          Assert.Equal("/sitecore/content/home", result.Paths.FullPath);
-        }
-      }
-      finally
-      {
-        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Remove("my_index");
-      }
+      Assert.Equal("/sitecore/content/home", result.Paths.FullPath);
     }
+  }
+  finally
+  {
+    Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Remove("my_index");
+  }
+}
+```
     
 ### How do I mock the Sitecore.Analytics.Tracker.Visitor
 
-    [Fact]
-    public void HowDoIMockTrackerVisitor()
-    {
-      // create a visitor mock
-      var visitorMock = Substitute.For<Sitecore.Analytics.Data.DataAccess.Visitor>(Guid.NewGuid());
+``` csharp
+[Fact]
+public void HowDoIMockTrackerVisitor()
+{
+  // create a visitor mock
+  var visitorMock = Substitute.For<Sitecore.Analytics.Data.DataAccess.Visitor>(Guid.NewGuid());
 
-      // inject the visitor mock into Analytics Tracker
-      using (new Sitecore.Common.Switcher<Sitecore.Analytics.Data.DataAccess.Visitor>(visitorMock))
-      {
-        // the mocked visitor instance is now available via Analytics.Tracker.Visitor property
-        var currentVisitor = Sitecore.Analytics.Tracker.Visitor;
-        Assert.Equal(visitorMock, currentVisitor);
-      }
-    }
+  // inject the visitor mock into Analytics Tracker
+  using (new Sitecore.Common.Switcher<Sitecore.Analytics.Data.DataAccess.Visitor>(visitorMock))
+  {
+    // the mocked visitor instance is now available via Analytics.Tracker.Visitor property
+    var currentVisitor = Sitecore.Analytics.Tracker.Visitor;
+    Assert.Equal(visitorMock, currentVisitor);
+  }
+}
+```
