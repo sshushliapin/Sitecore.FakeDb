@@ -17,7 +17,9 @@ To install the framework:
       `Install-Package Sitecore.FakeDb`
 4. Open App.config file added by the package and update path to the license.xml file using LicenseFile setting if necessary. By default the license file path is set to the root folder of the project:
 
-      `<setting name="LicenseFile" value="..\..\license.xml" />`
+``` xml
+<setting name="LicenseFile" value="..\..\license.xml" />
+```
 
 ## How do I...
 ### How do I create a simple item
@@ -25,90 +27,99 @@ To install the framework:
 The code below creates a fake in-memory database with a single item Home that contains field Title with value 'Welcome!' 
 ([xUnit](http://xunit.codeplex.com/) unit testing framework is used):
 
-    [Fact]
-    public void HowDoICreateASimpleItem()
+``` csharp
+[Fact]
+public void HowDoICreateASimpleItem()
+{
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
     {
-      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-        {
-          new Sitecore.FakeDb.DbItem("Home") { { "Title", "Welcome!" } }
-        })
-      {
-        Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
-        Assert.Equal("Welcome!", homeItem["Title"]);
-      }
-    }
+      new Sitecore.FakeDb.DbItem("Home") { { "Title", "Welcome!" } }
+    })
+  {
+    Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
+    Assert.Equal("Welcome!", homeItem["Title"]);
+  }
+}
+```
 
 ### How do I create an item hierarchy
 
 This code creates a root item Articles and two child items Getting Started and Troubleshooting:
 
-    [Fact]
-    public void HowDoICreateAnItemHierarchy()
+``` csharp
+[Fact]
+public void HowDoICreateAnItemHierarchy()
+{
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
     {
-      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+      new Sitecore.FakeDb.DbItem("Articles")
         {
-          new Sitecore.FakeDb.DbItem("Articles")
-            {
-              new Sitecore.FakeDb.DbItem("Getting Started"),
-              new Sitecore.FakeDb.DbItem("Troubleshooting")
-            }
-        })
-      {
-        Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/Articles");
-        Assert.NotNull(articles["Getting Started"]);
-        Assert.NotNull(articles["Troubleshooting"]);
-      }
-    }
-    
+          new Sitecore.FakeDb.DbItem("Getting Started"),
+          new Sitecore.FakeDb.DbItem("Troubleshooting")
+        }
+    })
+  {
+    Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/Articles");
+    Assert.NotNull(articles["Getting Started"]);
+    Assert.NotNull(articles["Troubleshooting"]);
+  }
+}
+```    
+ 
 ### How do I create a multilingual item
 
 The next example demonstrates how to configure field values for different languages:
 
-    [Fact]
-    public void HowDoICreateAMultilingualItem()
+``` csharp
+[Fact]
+public void HowDoICreateAMultilingualItem()
+{
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
     {
-      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+      new Sitecore.FakeDb.DbItem("home")
         {
-          new Sitecore.FakeDb.DbItem("home")
-            {
-              new Sitecore.FakeDb.DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } }
-            }
-        })
-      {
-        Sitecore.Data.Items.Item homeEn = db.GetItem("/sitecore/content/home", "en");
-        Assert.Equal("Hello!", homeEn["Title"]);
+          new Sitecore.FakeDb.DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } }
+        }
+    })
+  {
+    Sitecore.Data.Items.Item homeEn = db.GetItem("/sitecore/content/home", "en");
+    Assert.Equal("Hello!", homeEn["Title"]);
 
-        Sitecore.Data.Items.Item homeDa = db.GetItem("/sitecore/content/home", "da");
-        Assert.Equal("Hej!", homeDa["Title"]);
-      }
-    }
+    Sitecore.Data.Items.Item homeDa = db.GetItem("/sitecore/content/home", "da");
+    Assert.Equal("Hej!", homeDa["Title"]);
+  }
+}
+```
 
 ### How do I create an item of specific template
 
 In some cases you may want to create an item template first and only then add items based on this template.
 It can be acheived using the next sample:
 
-    [Fact]
-    public void HowDoICreateAnItemOfSpecificTemplate()
-    {
-      Sitecore.Data.ID templateId = Sitecore.Data.ID.NewID;
+``` csharp
+[Fact]
+public void HowDoICreateAnItemOfSpecificTemplate()
+{
+  Sitecore.Data.ID templateId = Sitecore.Data.ID.NewID;
 
-      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-        {
-          new Sitecore.FakeDb.DbTemplate("products", templateId) { "Name" },
-          new Sitecore.FakeDb.DbItem("Apple") { TemplateID = templateId }
-        })
-      {
-        Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/apple");
-        Assert.Equal(templateId, item.TemplateID);
-        Assert.NotNull(item.Fields["Name"]);
-      }
-    }
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+    {
+      new Sitecore.FakeDb.DbTemplate("products", templateId) { "Name" },
+      new Sitecore.FakeDb.DbItem("Apple") { TemplateID = templateId }
+    })
+  {
+    Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/apple");
+    Assert.Equal(templateId, item.TemplateID);
+    Assert.NotNull(item.Fields["Name"]);
+  }
+}
+```
 
 ## Security
 ### How do I configure item access
 
 The code below denies item read, so that GetItem() method returns null: 
+
 
     [Fact]
     public void HowDoIConfigureItemAccess()
