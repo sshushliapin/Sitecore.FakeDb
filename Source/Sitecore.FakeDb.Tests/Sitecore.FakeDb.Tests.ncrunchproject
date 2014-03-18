@@ -19,5 +19,5 @@
   <UseCPUArchitecture>AutoDetect</UseCPUArchitecture>
   <MSTestThreadApartmentState>STA</MSTestThreadApartmentState>
   <BuildProcessArchitecture>x86</BuildProcessArchitecture>
-  <AdditionalFilesToInclude>..\packages\Sitecore\license.xml</AdditionalFilesToInclude>
+  <AdditionalFilesToInclude>license.xml</AdditionalFilesToInclude>
 </ProjectConfiguration>
