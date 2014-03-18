@@ -14,16 +14,14 @@
     public void ShouldRegisterPipelineExpectedToBeCalled()
     {
       // arrange
-      var config = new XmlDocument();
-      config.LoadXml("<sitecore></sitecore>");
-
+      var config = CreateSimpleConfig();
       var watcher = new PipelineWatcher(config);
 
       // act
-      watcher.Expects("myproduct.mypipeline");
+      watcher.Expects("mypipeline");
 
       // assert
-      config.SelectSingleNode("/sitecore/pipelines/myproduct.mypipeline").Should().NotBeNull();
+      config.SelectSingleNode("/sitecore/pipelines/mypipeline").Should().NotBeNull();
     }
 
     [Fact]
@@ -31,17 +29,15 @@
     {
       // arrange
       var config = Factory.GetConfiguration();
-      config.LoadXml("<sitecore></sitecore>");
-
       var watcher = new PipelineWatcher(config);
 
       // act
-      watcher.Expects("myproduct.mypipeline");
+      watcher.Expects("mypipeline");
 
       // assert
-      var processor = (PipelineRunMarker)Factory.CreateObject("/sitecore/pipelines/myproduct.mypipeline/processor", true);
+      var processor = (PipelineWatcherProcessor)Factory.CreateObject("/sitecore/pipelines/mypipeline/processor", true);
       processor.Should().NotBeNull();
-      processor.PipelineName.Should().Be("myproduct.mypipeline");
+      processor.PipelineName.Should().Be("mypipeline");
     }
 
     [Fact]
@@ -50,10 +46,10 @@
       // arrange
       var config = Factory.GetConfiguration();
       var watcher = new PipelineWatcher(config);
-      watcher.Expects("myproduct.mypipeline");
+      watcher.Expects("mypipeline");
 
       // act
-      CorePipeline.Run("myproduct.mypipeline", new PipelineArgs());
+      CorePipeline.Run("mypipeline", new PipelineArgs());
 
       // assert
       watcher.EnsureExpectations();
@@ -65,18 +61,55 @@
       // arrange
       var config = Factory.GetConfiguration();
       var watcher = new PipelineWatcher(config);
-      watcher.Expects("myproduct.mypipeline");
+      watcher.Expects("mypipeline");
 
       // act
       Action action = watcher.EnsureExpectations;
 
       // assert
-      action.ShouldThrow<InvalidOperationException>().WithMessage("Expected to receive a pipeline call matching (pipelineName == \"myproduct.mypipeline\"). Actually received no matching calls.");
+      action.ShouldThrow<InvalidOperationException>().WithMessage("Expected to receive a pipeline call matching (pipelineName == \"mypipeline\"). Actually received no matching calls.");
+    }
+
+    [Fact]
+    public void ShouldSubscribeAndUnsubscribeFromPipelineRunEvent()
+    {
+      // arrange
+      var config = CreateSimpleConfig();
+      var watcher = new ThrowablePipelineWatcher();
+
+      var processor = new PipelineWatcherProcessor("pipeline");
+
+      // act
+      watcher.Dispose();
+
+      // assert
+      Assert.DoesNotThrow(() => processor.Process(new PipelineArgs()));
     }
 
     public void Dispose()
     {
       Factory.Reset();
+    }
+
+    private static XmlDocument CreateSimpleConfig()
+    {
+      var config = new XmlDocument();
+      config.LoadXml("<sitecore />");
+
+      return config;
+    }
+
+    private class ThrowablePipelineWatcher : PipelineWatcher
+    {
+      public ThrowablePipelineWatcher()
+        : base(CreateSimpleConfig())
+      {
+      }
+
+      protected override void OnPipelineRun(PipelineRunEventArgs e)
+      {
+        throw new NotSupportedException();
+      }
     }
   }
 }

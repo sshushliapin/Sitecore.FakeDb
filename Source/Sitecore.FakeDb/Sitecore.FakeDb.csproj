@@ -61,7 +61,8 @@
     <Compile Include="Pipelines\InitFakeDb\InitDataProviders.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbArgs.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbProcessor.cs" />
-    <Compile Include="Pipelines\PipelineRunMarker.cs" />
+    <Compile Include="Pipelines\PipelineRunEventArgs.cs" />
+    <Compile Include="Pipelines\PipelineWatcherProcessor.cs" />
     <Compile Include="Pipelines\PipelineWatcher.cs" />
     <Compile Include="Security\AccessControl\DbItemAccess.cs" />
     <Compile Include="Configuration\ClientDataStoreStub.cs" />

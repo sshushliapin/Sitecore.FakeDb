@@ -3,16 +3,20 @@ namespace Sitecore.FakeDb.Pipelines
   using System.Xml;
   using Sitecore.StringExtensions;
   using Sitecore.Xml;
+  using System;
 
-  public class PipelineWatcher
+  public class PipelineWatcher : IDisposable
   {
     private readonly XmlDocument config;
 
     private string pipelineName;
 
+    private string calledPipeline;
+
     public PipelineWatcher(XmlDocument config)
     {
       this.config = config;
+      PipelineWatcherProcessor.PipelineRun += PipelineRun;
     }
 
     public XmlDocument ConfigSection
@@ -29,7 +33,7 @@ namespace Sitecore.FakeDb.Pipelines
       var path = "/sitecore/pipelines/" + pipelineName + "/processor";
       var processorNode = XmlUtil.EnsurePath(path, this.config);
 
-      var type = typeof(PipelineRunMarker);
+      var type = typeof(PipelineWatcherProcessor);
       var value = type + ", " + type.Assembly.GetName().Name;
       XmlUtil.AddAttribute("type", value, processorNode);
 
@@ -39,15 +43,23 @@ namespace Sitecore.FakeDb.Pipelines
 
     public virtual void EnsureExpectations()
     {
-      var path = "/sitecore/pipelines/" + this.pipelineName;
-
-      var marker = this.config.SelectSingleNode(path);
-      Diagnostics.Assert.IsNotNull(marker, "marker");
-
-      var isRun = XmlUtil.GetAttribute("isRun", marker, "false");
-
       const string MessageFormat = "Expected to receive a pipeline call matching (pipelineName == \"{0}\"). Actually received no matching calls.";
-      Diagnostics.Assert.IsTrue(MainUtil.GetBool(isRun, false), MessageFormat, this.pipelineName);
+      Diagnostics.Assert.IsTrue(this.pipelineName == this.calledPipeline, MessageFormat, this.pipelineName);
+    }
+
+    protected virtual void OnPipelineRun(PipelineRunEventArgs e)
+    {
+      this.calledPipeline = e.PipelineName;
+    }
+
+    private void PipelineRun(object sender, PipelineRunEventArgs e)
+    {
+      this.OnPipelineRun(e);
+    }
+
+    public virtual void Dispose()
+    {
+      PipelineWatcherProcessor.PipelineRun -= this.PipelineRun;
     }
   }
 }

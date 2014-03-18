@@ -11,6 +11,9 @@
   using Xunit;
   using Xunit.Extensions;
   using Version = Sitecore.Data.Version;
+  using NSubstitute;
+  using Sitecore.FakeDb.Pipelines;
+  using System.Xml;
 
   public class DbTest
   {
@@ -644,6 +647,20 @@
         // act & assert
         db.PipelineWatcher.ConfigSection.Should().BeEquivalentTo(Factory.GetConfiguration());
       }
+    }
+
+    [Fact]
+    public void ShoudDisposePipelineWatcher()
+    {
+      // arrange
+      var watcher = Substitute.For<PipelineWatcher, IDisposable>(new XmlDocument());
+      var db = new Db(watcher);
+
+      // act
+      db.Dispose();
+
+      // assert
+      watcher.Received().Dispose();
     }
   }
 }
