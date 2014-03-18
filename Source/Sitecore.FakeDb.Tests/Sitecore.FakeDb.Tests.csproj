@@ -101,6 +101,8 @@
     <Compile Include="DbTest.cs" />
     <Compile Include="DbItemTest.cs" />
     <Compile Include="GettingStarted.cs" />
+    <Compile Include="Pipelines\PipelineRunMarkerTests.cs" />
+    <Compile Include="Pipelines\PipelineWatcherTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommandsTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataProvidersTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbArgsTest.cs" />

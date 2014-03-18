@@ -634,5 +634,16 @@
         db.Configuration.Settings.ConfigSection.Should().BeEquivalentTo(Factory.GetConfiguration());
       }
     }
+
+    [Fact]
+    public void ShouldInitializePipelineWatcherUsingFactoryConfiguration()
+    {
+      // arrange
+      using (var db = new Db())
+      {
+        // act & assert
+        db.PipelineWatcher.ConfigSection.Should().BeEquivalentTo(Factory.GetConfiguration());
+      }
+    }
   }
 }

@@ -10,6 +10,7 @@ namespace Sitecore.FakeDb
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Configuration;
   using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.FakeDb.Pipelines;
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
   using Sitecore.Globalization;
   using Sitecore.Pipelines;
@@ -24,6 +25,8 @@ namespace Sitecore.FakeDb
 
     private readonly DbConfiguration configuration;
 
+    private readonly PipelineWatcher pipelineWatcher;
+
     public Db()
       : this("master")
     {
@@ -33,7 +36,10 @@ namespace Sitecore.FakeDb
     {
       this.database = Database.GetDatabase(databaseName);
       this.dataStorage = new DataStorage(this.database);
-      this.configuration = new DbConfiguration(Factory.GetConfiguration());
+
+      var config = Factory.GetConfiguration();
+      this.configuration = new DbConfiguration(config);
+      this.pipelineWatcher = new PipelineWatcher(config);
 
       var args = new InitDbArgs(this.database, this.dataStorage);
       CorePipeline.Run("initFakeDb", args);
@@ -52,6 +58,11 @@ namespace Sitecore.FakeDb
     protected internal DataStorage DataStorage
     {
       get { return this.dataStorage; }
+    }
+
+    public PipelineWatcher PipelineWatcher
+    {
+      get { return this.pipelineWatcher; }
     }
 
     public IEnumerator GetEnumerator()
