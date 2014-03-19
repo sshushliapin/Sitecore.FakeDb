@@ -172,8 +172,10 @@ public void HowDoIEnsureThePipelineIsCalled()
 {
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
   {
-    // configure a pipeline watcher to expect the "createProduct" pipeline call with product name passed to the arguments custom data
-    db.PipelineWatcher.Expects("createProduct", a => (string)a.CustomData["ProductName"] == "MyProduct");
+    // configure a pipeline watcher to expect the "createProduct" pipeline call with
+    // product name passed to the arguments custom data
+    db.PipelineWatcher
+      .Expects("createProduct", a => a.CustomData["ProductName"].Equals("MyProduct"));
 
     // create a repository and call the create product method
     var repository = new ProductRepository();
@@ -215,7 +217,8 @@ public void HowDoIConfigureThePipelineBehaviour()
     // to CustomData["Product"] property only when the CustomData["ProductId"] is "1"
     string productId = "1";
 
-    // configure a pipeline watcher to expect a pipeline call
+    // configure a pipeline watcher to expect a pipeline call where the args custom data contains
+    // ProductId. Once the args received the pipeline result is set into Product custom data property
     db.PipelineWatcher
       .WhenCall("findProductById")
       .WithArgs(a => a.CustomData["ProductId"].Equals(productId))
