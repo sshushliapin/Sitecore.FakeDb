@@ -1,3 +1,6 @@
+0.8.0
+* [NEW] Added possibility to configure and call pipelines
+
 0.7.1
 * [FIX] Updated installation instructions
 * [FIX] Updated Getting Started code samples

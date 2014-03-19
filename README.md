@@ -160,6 +160,90 @@ public void HowDoIMockAuthenticationProvider()
 }
 ```
 
+## Pipelines
+### How do I ensure the pipeline is called.
+Imagine you have a product repository. The repository should be able to get a product by id.
+The implementation of the repository is 'thin' and does nothing than calling a corresponding pipeline with proper arguments.
+The next example shows how to unit test the pipeline call (please note that the pipeline is not defined in the tests assembly config file):
+
+``` csharp
+[Fact]
+public void HowDoIEnsureThePipelineIsCalled()
+{
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+  {
+    // configure a pipeline watcher to expect the "createProduct" pipeline call with product name passed to the arguments custom data
+    db.PipelineWatcher.Expects("createProduct", a => (string)a.CustomData["ProductName"] == "MyProduct");
+
+    // create a repository and call the create product method
+    var repository = new ProductRepository();
+    repository.CreateProduct("MyProduct");
+
+    // assert the expected pipeline is called and the product name is passed
+    db.PipelineWatcher.EnsureExpectations();
+  }
+}
+
+private partial class ProductRepository
+{
+  public void CreateProduct(string name)
+  {
+    var args = new Sitecore.Pipelines.PipelineArgs();
+    args.CustomData["ProductName"] = name;
+
+    Sitecore.Pipelines.CorePipeline.Run("createProduct", args);
+  }
+}
+```
+
+### How do I configure the pipeline behaviour.
+The code sample above checks that the pipeline is called with proper arguments. 
+The next scenario would be to validate the pipeline call results. 
+In the code below we configure pipeline proressor behaviour to return an expected product only
+if the product id id set to "1".
+
+``` csharp
+[Fact]
+public void HowDoIConfigureThePipelineBehaviour()
+{
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+  {
+    // create a product to get from the repository
+    object expectedProduct = new object();
+
+    // configure processing of the pipeline arguments. Will set the 'expectedProduct' instance 
+    // to CustomData["Product"] property only when the CustomData["ProductId"] is "1"
+    string productId = "1";
+
+    // configure a pipeline watcher to expect a pipeline call
+    db.PipelineWatcher
+      .WhenCall("findProductById")
+      .WithArgs(a => a.CustomData["ProductId"].Equals(productId))
+      .Then(a => a.CustomData["Product"] = expectedProduct);
+
+    // create a repository and call get product method
+    ProductRepository repository = new ProductRepository();
+    var actualProduct = repository.GetProductById(productId);
+
+    // assert the received product is the same as the expected one
+    Assert.Equal(expectedProduct, actualProduct);
+  }
+}
+
+private partial class ProductRepository
+{
+  public object GetProductById(string id)
+  {
+    var args = new Sitecore.Pipelines.PipelineArgs();
+    args.CustomData["ProductId"] = id;
+
+    Sitecore.Pipelines.CorePipeline.Run("findProductById", args);
+
+    return args.CustomData["Product"];
+  }
+}
+```
+
 ## Configuration
 ### How do I configure settings
 
