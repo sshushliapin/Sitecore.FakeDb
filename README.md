@@ -161,7 +161,7 @@ public void HowDoIMockAuthenticationProvider()
 ```
 
 ## Pipelines
-### How do I ensure the pipeline is called.
+### How do I ensure the pipeline is called
 Imagine you have a product repository. The repository should be able to get a product by id.
 The implementation of the repository is 'thin' and does nothing than calling a corresponding pipeline with proper arguments.
 The next example shows how to unit test the pipeline call (please note that the pipeline is not defined in the tests assembly config file):
@@ -196,7 +196,7 @@ private partial class ProductRepository
 }
 ```
 
-### How do I configure the pipeline behaviour.
+### How do I configure the pipeline behaviour
 The code sample above checks that the pipeline is called with proper arguments. 
 The next scenario would be to validate the pipeline call results. 
 In the code below we configure pipeline proressor behaviour to return an expected product only
