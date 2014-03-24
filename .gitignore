@@ -157,3 +157,6 @@ $RECYCLE.BIN/
 
 # License
 license.xml
+
+#DLLs from the Lib/
+Lib/*.dll
