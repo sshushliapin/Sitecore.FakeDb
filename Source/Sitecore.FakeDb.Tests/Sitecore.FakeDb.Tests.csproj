@@ -94,6 +94,7 @@
     <Compile Include="Data\DataStorageTest.cs" />
     <Compile Include="Data\Engines\ItemCreatorTest.cs" />
     <Compile Include="Data\Items\ItemHelperTest.cs" />
+    <Compile Include="Data\Items\ItemWrapperTest.cs" />
     <Compile Include="DbFieldCollectionTest.cs" />
     <Compile Include="DbFieldTest.cs" />
     <Compile Include="DbTemplateTest.cs" />

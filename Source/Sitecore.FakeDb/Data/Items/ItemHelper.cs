@@ -41,7 +41,7 @@
       Assert.ArgumentNotNull(fields, "fields");
       Assert.ArgumentNotNull(database, "database");
 
-      return new Item(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), language, Version.First, fields), database);
+      return new ItemWrapper(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), language, Version.First, fields), database);
     }
   }
 }

@@ -11,7 +11,7 @@ namespace Sitecore.FakeDb.Security.Web
         public override SettingsPropertyValueCollection GetPropertyValues(SettingsContext context,
             SettingsPropertyCollection collection)
         {
-            throw new NotImplementedException();
+            return new SettingsPropertyValueCollection();
         }
 
         public override void SetPropertyValues(SettingsContext context, SettingsPropertyValueCollection collection)

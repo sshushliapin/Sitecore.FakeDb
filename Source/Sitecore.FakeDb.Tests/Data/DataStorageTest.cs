@@ -71,7 +71,7 @@
       this.dataStorage.GetFakeItem(ItemIDs.ContentRoot).Should().BeOfType<DbItem>();
 
       this.dataStorage.GetSitecoreItem(ItemIDs.ContentRoot, Language.Current).Should().NotBeNull();
-      this.dataStorage.GetSitecoreItem(ItemIDs.ContentRoot, Language.Current).Should().BeOfType<Item>();
+      this.dataStorage.GetSitecoreItem(ItemIDs.ContentRoot, Language.Current).Should().BeAssignableTo<Item>();
     }
 
     [Fact]
