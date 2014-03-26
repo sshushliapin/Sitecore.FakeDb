@@ -33,12 +33,15 @@
   <ItemGroup>
     <Reference Include="Lucene.Net">
       <HintPath>..\..\Lib\Lucene.Net.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\..\Lib\Sitecore.Kernel.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="sitecore.nexus">
       <HintPath>..\..\Lib\sitecore.nexus.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

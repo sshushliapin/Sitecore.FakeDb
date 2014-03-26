@@ -1,19 +1,19 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
   using System;
+  using System.Xml;
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Exceptions;
+  using Sitecore.FakeDb.Pipelines;
   using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Globalization;
   using Xunit;
   using Xunit.Extensions;
   using Version = Sitecore.Data.Version;
-  using NSubstitute;
-  using Sitecore.FakeDb.Pipelines;
-  using System.Xml;
 
   public class DbTest
   {
@@ -83,7 +83,7 @@
       // act
       using (var db = new Db
                         {
-                          new DbTemplate("products", templateId) { "Name" }, 
+                          new DbTemplate("products", templateId) { "Name" },
                           new DbItem("Apple") { TemplateID = templateId }
                         })
       {
@@ -138,13 +138,13 @@
     {
       // arrange & act
       using (var db = new Db
-               {
-                 new DbItem("parent")
-                   {
-                     Fields = new DbFieldCollection { { "Title", "Welcome to parent item!" } }, 
-                     Children = new[] { new DbItem("child") { { "Title", "Welcome to child item!" } } }
-                   }
-               })
+                        {
+                          new DbItem("parent")
+                            {
+                              Fields = new DbFieldCollection { { "Title", "Welcome to parent item!" } }, 
+                              Children = new[] { new DbItem("child") { { "Title", "Welcome to child item!" } } }
+                            }
+                        })
       {
         // assert
         var parent = db.GetItem("/sitecore/content/parent");
@@ -372,7 +372,7 @@
       // arrange & act
       using (var db = new Db
                         {
-                          new DbItem("article 1") { { "Title", "A1" } }, 
+                          new DbItem("article 1") { { "Title", "A1" } },
                           new DbItem("article 2", ID.NewID, ID.NewID) { { "Title", "A2" } }
                         })
       {
@@ -390,7 +390,7 @@
       // arrange & act
       using (var db = new Db
                         {
-                          new DbItem("some item") { { "some field", "some value" } }, 
+                          new DbItem("some item") { { "some field", "some value" } },
                           new DbItem("another item") { { "another field", "another value" } }
                         })
       {
@@ -661,6 +661,22 @@
 
       // assert
       watcher.Received().Dispose();
+    }
+
+    [Fact]
+    public void ShouldBeEqualsButNotSame()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        // act
+        var item1 = db.GetItem("/sitecore/content/Home");
+        var item2 = db.GetItem("/sitecore/content/Home");
+
+        // assert
+        item1.Should().Be(item2);
+        item1.Should().NotBeSameAs(item2);
+      }
     }
   }
 }
