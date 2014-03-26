@@ -32,17 +32,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Lucene.Net">
-      <HintPath>..\packages\Sitecore\Lucene.Net.dll</HintPath>
+      <HintPath>..\..\Lib\Lucene.Net.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Kernel">
-      <HintPath>..\packages\Sitecore\Sitecore.Kernel.dll</HintPath>
+      <HintPath>..\..\Lib\Sitecore.Kernel.dll</HintPath>
     </Reference>
     <Reference Include="sitecore.nexus">
-      <HintPath>..\packages\Sitecore\sitecore.nexus.dll</HintPath>
+      <HintPath>..\..\Lib\sitecore.nexus.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +57,7 @@
     <Compile Include="Data\Engines\DataCommands\NotInitializedDataEngineCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\DataEngineCommand.cs" />
     <Compile Include="Configuration\DbConfiguration.cs" />
+    <Compile Include="Data\Items\ItemWrapper.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommands.cs" />
     <Compile Include="IRequireDataStorage.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitAuthorizationProvider.cs" />
@@ -102,7 +105,11 @@
     <Compile Include="DbTemplate.cs" />
     <Compile Include="Security\AccessControl\FakeAuthorizationProvider.cs" />
     <Compile Include="Security\AccessControl\SwitchingAuthorizationProvider.cs" />
+    <Compile Include="Security\Web\FakeMembershipProvider.cs" />
+    <Compile Include="Security\Web\FakeProfileProvider.cs" />
+    <Compile Include="Security\Web\FakeRoleProvider.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

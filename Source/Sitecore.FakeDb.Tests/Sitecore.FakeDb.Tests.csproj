@@ -40,20 +40,19 @@
       <HintPath>..\packages\AutoFixture.3.16.5\lib\net40\Ploeh.AutoFixture.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Analytics">
-      <HintPath>..\packages\Sitecore\Sitecore.Analytics.dll</HintPath>
+      <HintPath>..\..\Lib\Sitecore.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.ContentSearch">
-      <HintPath>..\packages\Sitecore\Sitecore.ContentSearch.dll</HintPath>
+      <HintPath>..\..\Lib\Sitecore.ContentSearch.dll</HintPath>
     </Reference>
-    <Reference Include="Sitecore.ContentSearch.Linq, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Sitecore\Sitecore.ContentSearch.Linq.dll</HintPath>
+    <Reference Include="Sitecore.ContentSearch.Linq">
+      <HintPath>..\..\Lib\Sitecore.ContentSearch.Linq.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Kernel">
-      <HintPath>..\packages\Sitecore\Sitecore.Kernel.dll</HintPath>
+      <HintPath>..\..\Lib\Sitecore.Kernel.dll</HintPath>
     </Reference>
     <Reference Include="sitecore.nexus">
-      <HintPath>..\packages\Sitecore\sitecore.nexus.dll</HintPath>
+      <HintPath>..\..\Lib\sitecore.nexus.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -95,6 +94,7 @@
     <Compile Include="Data\DataStorageTest.cs" />
     <Compile Include="Data\Engines\ItemCreatorTest.cs" />
     <Compile Include="Data\Items\ItemHelperTest.cs" />
+    <Compile Include="Data\Items\ItemWrapperTest.cs" />
     <Compile Include="DbFieldCollectionTest.cs" />
     <Compile Include="DbFieldTest.cs" />
     <Compile Include="DbTemplateTest.cs" />
