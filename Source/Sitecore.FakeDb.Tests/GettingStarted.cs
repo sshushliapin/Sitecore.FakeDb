@@ -76,6 +76,38 @@
       }
     }
 
+    [Fact]
+    public void HowDoICreateATemplateWithStandardValues()
+    {
+      Sitecore.Data.ID templateId = Sitecore.Data.ID.NewID;
+      Sitecore.Data.ID stdValuesItemId = Sitecore.Data.ID.NewID;
+      Sitecore.Data.ID itemId = Sitecore.Data.ID.NewID;
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db()
+        {
+          new Sitecore.FakeDb.DbTemplate("Product", templateId)
+          {
+            "Name", 
+            new Sitecore.FakeDb.DbItem(Sitecore.Constants.StandardValuesItemName, stdValuesItemId, templateId)
+            {
+              { "Name", "$name" }
+            }
+          },
+          new Sitecore.FakeDb.DbItem("Product One", itemId, templateId)
+        })
+      {
+        Sitecore.Data.Templates.Template template = Sitecore.Data.Managers.TemplateManager.GetTemplate(templateId, db.Database);
+        Assert.Equal(template.ID, templateId);
+        Assert.Equal(template.StandardValueHolderId, stdValuesItemId);
+
+        Sitecore.Data.Items.Item item = db.GetItem(itemId);
+        Sitecore.Data.Items.TemplateItem templateItem  = item.Template;
+        Assert.Equal(templateItem.ID, templateId);
+        Assert.NotNull(templateItem.StandardValues);
+        Assert.Equal(templateItem.StandardValues.ID, stdValuesItemId);
+      }
+    }
+
     #endregion
 
     #region Security

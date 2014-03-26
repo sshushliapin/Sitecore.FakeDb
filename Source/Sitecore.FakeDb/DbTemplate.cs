@@ -1,41 +1,72 @@
-﻿namespace Sitecore.FakeDb
+﻿using System;
+using System.Collections;
+using System.Linq;
+using Sitecore.Data;
+using Sitecore.Diagnostics;
+using Sitecore.FakeDb.Data.Engines;
+
+namespace Sitecore.FakeDb
 {
-  using System.Collections;
-  using Sitecore.Data;
-
-  public class DbTemplate : IEnumerable
+  public class DbTemplate : DbItem
   {
-    public string Name { get; private set; }
 
-    public ID ID { get; set; }
-
-    public DbFieldCollection Fields { get; set; }
-
-    public DbTemplate()
-      : this(null)
+    public DbTemplate() : this("Noname")
     {
     }
 
-    public DbTemplate(string name)
+    public DbTemplate(string name) : this(name, ID.NewID)
     {
-      this.Name = name;
-      this.Fields = new DbFieldCollection();
     }
 
-    public DbTemplate(string name, ID id)
-      : this(name)
+    public DbTemplate(string name, ID id) : this(name, id, new ID[] {})
     {
-      this.ID = id;
+    }
+
+    public DbTemplate(string name, ID id, ID[] baseTemplates) : base(name, id, TemplateIDs.Template)
+    {
+      StandardFields.Add(new DbField(DataStorage.StandardValuesFieldName)
+      {
+        ID = FieldIDs.StandardValues
+      });
+      StandardFields.Add(new DbField(DataStorage.BaseTemplateFieldName)
+      {
+        ID = FieldIDs.BaseTemplate,
+        Value = string.Join("|", (baseTemplates ?? new ID[] {}).AsEnumerable())
+      });
+    }
+
+    public override void Add(string fieldName, string fieldValue)
+    {
+      throw new InvalidOperationException("Template Item does not support adding fields with values");
+    }
+
+    public override void Add(DbItem child)
+    {
+      base.Add(child);
+
+      if (IsStandardValuesItem(child))
+      {
+        StandardFields[FieldIDs.StandardValues].Value = child.ID.ToString();
+      }
+    }
+
+    // Sitecore.Data.Managers.TemplateProvider.IsStandardValuesHolder()
+    public bool IsStandardValuesItem(DbItem child)
+    {
+      Assert.ArgumentNotNull(child, "Child");
+
+      return child.TemplateID == ID &&
+             string.Equals(child.Name, "__Standard Values", StringComparison.InvariantCultureIgnoreCase);
     }
 
     public void Add(string fieldName)
     {
-      this.Fields.Add(fieldName);
+      Fields.Add(fieldName);
     }
 
     public IEnumerator GetEnumerator()
     {
-      return this.Fields.GetEnumerator();
+      return Fields.GetEnumerator();
     }
   }
 }
