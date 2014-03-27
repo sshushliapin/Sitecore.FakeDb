@@ -18,7 +18,7 @@
 
     protected override Item DoExecute()
     {
-      return this.innerCommand.DataStorage.GetSitecoreItem(this.ItemId, this.Language);
+      return this.innerCommand.DataStorage.GetSitecoreItem(this.ItemId, this.Language, this.Version);
     }
   }
 }

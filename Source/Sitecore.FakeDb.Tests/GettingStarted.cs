@@ -108,6 +108,25 @@
       }
     }
 
+    [Fact]
+    public void HowDoICreateAVersionedItem()
+    {
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home")
+            {
+              new Sitecore.FakeDb.DbField("Title") { { "en", 1, "Hello!" }, { "en", 2, "Welcome!" } }
+            }
+        })
+      {
+        Sitecore.Data.Items.Item homeV1 = db.GetItem("/sitecore/content/home", "en", 1);
+        Assert.Equal("Hello!", homeV1["Title"]);
+
+        Sitecore.Data.Items.Item homeV2 = db.GetItem("/sitecore/content/home", "en", 2);
+        Assert.Equal("Welcome!", homeV2["Title"]);
+      }
+    }
+
     #endregion
 
     #region Security

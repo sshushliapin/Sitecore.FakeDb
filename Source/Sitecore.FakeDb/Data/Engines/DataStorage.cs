@@ -90,6 +90,11 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public virtual Item GetSitecoreItem(ID itemId, Language language)
     {
+      return this.GetSitecoreItem(itemId, language, Version.First);
+    }
+
+    public virtual Item GetSitecoreItem(ID itemId, Language language, Version version)
+    {
       if (!this.FakeItems.ContainsKey(itemId))
       {
         return null;
@@ -98,18 +103,21 @@ namespace Sitecore.FakeDb.Data.Engines
       var fakeItem = this.FakeItems[itemId];
 
       var fields = new FieldList();
+
+      var itemVersion = version == Version.Latest ? Version.First : version;
+
       if (this.FakeTemplates.ContainsKey(fakeItem.TemplateID))
       {
         fields = this.GetFieldList(fakeItem.TemplateID);
 
         foreach (var field in fakeItem.Fields)
         {
-          var value = field.LocalizableValues.ContainsKey(language.Name) ? field.LocalizableValues[language.Name] : field.Value;
+          var value = field.GetValue(language.Name, version.Number);
           fields.Add(field.ID, value);
         }
       }
 
-      var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language);
+      var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);
 
       return item;
     }

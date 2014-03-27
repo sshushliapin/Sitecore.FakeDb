@@ -117,7 +117,7 @@ public void HowDoICreateAnItemOfSpecificTemplate()
 ```
 ### How do I create a template with Standard Values
 
-Standard Values is technically a direct child item of a template item that is created based on this template and by convention is namd *__Standard Values*:
+Standard Values is technically a direct child item of a template item that is created based on this template and by convention is named *__Standard Values*:
 
 ``` csharp
 [Fact]
@@ -149,6 +149,29 @@ public void HowDoICreateATemplateWithStandardValues()
     Assert.Equal(templateItem.ID, templateId);
     Assert.NotNull(templateItem.StandardValues);
     Assert.Equal(templateItem.StandardValues.ID, stdValuesItemId);
+  }
+}
+```
+
+### How do I create a versioned item
+
+``` csharp
+[Fact]
+public void HowDoICreateAVersionedItem()
+{
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+    {
+      new Sitecore.FakeDb.DbItem("home")
+        {
+          new Sitecore.FakeDb.DbField("Title") { { "en", 1, "Hello!" }, { "en", 2, "Welcome!" } }
+        }
+    })
+  {
+    Sitecore.Data.Items.Item homeV1 = db.GetItem("/sitecore/content/home", "en", 1);
+    Assert.Equal("Hello!", homeV1["Title"]);
+
+    Sitecore.Data.Items.Item homeV2 = db.GetItem("/sitecore/content/home", "en", 2);
+    Assert.Equal("Welcome!", homeV2["Title"]);
   }
 }
 ```

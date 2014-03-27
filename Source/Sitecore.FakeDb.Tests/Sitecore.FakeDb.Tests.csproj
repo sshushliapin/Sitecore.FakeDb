@@ -83,6 +83,7 @@
     <Compile Include="Data\Engines\DataCommands\DeleteItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\CreateItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetChildrenCommandTest.cs" />
+    <Compile Include="Data\Engines\DataCommands\AddVersionCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetVersionsCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\HasChildrenCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetItemCommandTest.cs" />

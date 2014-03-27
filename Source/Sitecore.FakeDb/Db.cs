@@ -111,6 +111,13 @@ namespace Sitecore.FakeDb
       return this.Database.GetItem(id, Language.Parse(language));
     }
 
+    public Item GetItem(ID id, string language, int version)
+    {
+      Assert.ArgumentNotNullOrEmpty(language, "language");
+
+      return this.Database.GetItem(id, Language.Parse(language), Sitecore.Data.Version.Parse(version));
+    }
+
     public Item GetItem(string path)
     {
       Assert.ArgumentNotNullOrEmpty(path, "path");
@@ -120,9 +127,18 @@ namespace Sitecore.FakeDb
 
     public Item GetItem(string path, string language)
     {
+      Assert.ArgumentNotNullOrEmpty(path, "path");
       Assert.ArgumentNotNullOrEmpty(language, "language");
 
       return this.Database.GetItem(path, Language.Parse(language));
+    }
+
+    public Item GetItem(string path, string language, int version)
+    {
+      Assert.ArgumentNotNullOrEmpty(path, "path");
+      Assert.ArgumentNotNullOrEmpty(language, "language");
+
+      return this.Database.GetItem(path, Language.Parse(language), Sitecore.Data.Version.Parse(version));
     }
 
     /// <summary>

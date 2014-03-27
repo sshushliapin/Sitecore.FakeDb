@@ -10,12 +10,14 @@
       var innerCommand = new DataEngineCommand(args.DataStorage);
 
       this.InitializeCommand(commands.AddFromTemplatePrototype, innerCommand);
+      this.InitializeCommand(commands.AddVersionPrototype, innerCommand);
       this.InitializeCommand(commands.CreateItemPrototype, innerCommand);
       this.InitializeCommand(commands.DeletePrototype, innerCommand);
       this.InitializeCommand(commands.GetChildrenPrototype, innerCommand);
       this.InitializeCommand(commands.GetItemPrototype, innerCommand);
       this.InitializeCommand(commands.GetParentPrototype, innerCommand);
       this.InitializeCommand(commands.GetRootItemPrototype, innerCommand);
+      this.InitializeCommand(commands.GetVersionsPrototype, innerCommand);
       this.InitializeCommand(commands.HasChildrenPrototype, innerCommand);
       this.InitializeCommand(commands.ResolvePathPrototype, innerCommand);
       this.InitializeCommand(commands.SaveItemPrototype, innerCommand);

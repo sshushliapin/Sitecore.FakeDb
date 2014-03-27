@@ -32,10 +32,10 @@
       var itemId = ID.NewID;
       var item = ItemHelper.CreateInstance(this.database);
 
-      this.dataStorage.GetSitecoreItem(itemId, item.Language).Returns(item);
+      this.dataStorage.GetSitecoreItem(itemId, item.Language, item.Version).Returns(item);
 
       var command = new OpenGetItemCommand { Engine = new DataEngine(this.database) };
-      command.Initialize(itemId, item.Language, Version.Latest);
+      command.Initialize(itemId, item.Language, item.Version);
       command.Initialize(this.innerCommand);
 
       // act

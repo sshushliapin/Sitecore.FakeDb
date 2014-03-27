@@ -30,18 +30,25 @@
 
     public static Item CreateInstance(string itemName, ID itemId, ID templateId, FieldList fields, Database database)
     {
-      return CreateInstance(itemName, itemId, ID.NewID, new FieldList(), database, Language.Current);
+      return CreateInstance(itemName, itemId, templateId, fields, database, Language.Current);
     }
 
     public static Item CreateInstance(string itemName, ID itemId, ID templateId, FieldList fields, Database database, Language language)
+    {
+      return CreateInstance(itemName, itemId, templateId, fields, database, language, Version.First);
+    }
+
+    public static Item CreateInstance(string itemName, ID itemId, ID templateId, FieldList fields, Database database, Language language, Version version)
     {
       Assert.ArgumentNotNullOrEmpty(itemName, "itemName");
       Assert.ArgumentNotNull(itemId, "itemId");
       Assert.ArgumentNotNull(templateId, "templateId");
       Assert.ArgumentNotNull(fields, "fields");
       Assert.ArgumentNotNull(database, "database");
+      Assert.ArgumentNotNull(language, "language");
+      Assert.ArgumentNotNull(version, "version");
 
-      return new ItemWrapper(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), language, Version.First, fields), database);
+      return new ItemWrapper(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), language, version, fields), database);
     }
   }
 }

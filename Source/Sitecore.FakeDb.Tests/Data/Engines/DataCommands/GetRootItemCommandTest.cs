@@ -5,7 +5,6 @@
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;

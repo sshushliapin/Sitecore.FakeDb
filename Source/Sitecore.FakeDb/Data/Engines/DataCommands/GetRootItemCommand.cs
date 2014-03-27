@@ -1,8 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using Sitecore.Configuration;
   using Sitecore.Data.Items;
-  using Sitecore.Diagnostics;
 
   public class GetRootItemCommand : Sitecore.Data.Engines.DataCommands.GetRootItemCommand, IDataEngineCommand
   {

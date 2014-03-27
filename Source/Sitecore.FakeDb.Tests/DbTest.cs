@@ -335,6 +335,18 @@
     }
 
     [Fact]
+    public void ShouldGetItemByIdLanguageAndVersion()
+    {
+      // arrange
+      var id = ID.NewID;
+      using (var db = new Db { new DbItem("my item", id) })
+      {
+        // act & assert
+        db.GetItem(id, "en", 1).Should().NotBeNull();
+      }
+    }
+
+    [Fact]
     public void ShouldGetItemByPath()
     {
       // arrange
@@ -728,6 +740,80 @@
         // assert
         item1.Should().Be(item2);
         item1.Should().NotBeSameAs(item2);
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateVersionedItem()
+    {
+      using (var db = new Db 
+                        {
+                          new DbItem("home")
+                            {
+                              Fields =
+                                {
+                                  new DbField("Title") 
+                                    {
+                                      { "en", 1, "title version 1" },
+                                      { "en", 2, "title version 2" }
+                                    }
+                                 }
+                             }
+                        })
+      {
+        var item1 = db.Database.GetItem("/sitecore/content/home", Language.Parse("en"), Version.Parse(1));
+        item1["Title"].Should().Be("title version 1");
+        item1.Version.Number.Should().Be(1);
+
+        var item2 = db.Database.GetItem("/sitecore/content/home", Language.Parse("en"), Version.Parse(2));
+        item2["Title"].Should().Be("title version 2");
+        item2.Version.Number.Should().Be(2);
+      }
+    }
+
+    [Fact]
+    public void ShouldGetItemVersionsCount()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home") 
+                            {
+                              Fields =
+                                {
+                                  new DbField("Title") { { "en", 1, "v1" }, { "en", 2, "v2" } } 
+                                }
+                            }
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // act & assert
+        item.Versions.Count.Should().Be(2);
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateItemVersion()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") { { "Title", "hello" } } })
+      {
+        var item1 = db.GetItem("/sitecore/content/home");
+
+        // act
+        var item2 = item1.Versions.AddVersion();
+        using (new EditContext(item2))
+        {
+          item2["Title"] = "Hi there!";
+        }
+
+        // assert
+        item1["Title"].Should().Be("hello");
+        item2["Title"].Should().Be("Hi there!");
+
+        db.GetItem("/sitecore/content/home", "en", 1)["Title"].Should().Be("hello");
+        db.GetItem("/sitecore/content/home", "en", 2)["Title"].Should().Be("Hi there!");
       }
     }
   }

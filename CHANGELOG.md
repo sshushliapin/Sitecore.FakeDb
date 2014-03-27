@@ -1,3 +1,8 @@
+0.9.0
+* [NEW] Implemented versioned item initialization. Implemented version adding
+* [NEW] Added Standard Values support (thanks to [Pavel Veller](https://github.com/pveller))
+* [NEW] Implemented fakes for System.Web.*Provider (thanks to [Pavel Veller](https://github.com/pveller))
+
 0.8.0
 * [NEW] Added possibility to configure and call pipelines
 
