@@ -1,4 +1,5 @@
 using Sitecore.Diagnostics;
+using Sitecore.FakeDb.Data.Engines;
 
 namespace Sitecore.FakeDb
 {
@@ -31,8 +32,17 @@ namespace Sitecore.FakeDb
       this.Fields = new DbFieldCollection();
       this.StandardFields = new DbFieldCollection();
       this.Children = new Collection<DbItem>();
+
+      this.StandardFields.Add(new DbField(DataStorage.StandardValuesFieldName)
+      {
+        ID = FieldIDs.StandardValues
+      });
+      this.StandardFields.Add(new DbField(DataStorage.LayoutDetailsFieldName)
+      {
+        ID = FieldIDs.LayoutField
+      });
     }
-    
+
     public string Name { get; set; }
 
     public ID ID { get; private set; }

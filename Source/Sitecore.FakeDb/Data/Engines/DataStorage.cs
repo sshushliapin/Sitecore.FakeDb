@@ -31,6 +31,8 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public const string BaseTemplateFieldName = "__Base template";
 
+    public const string LayoutDetailsFieldName = "__Renderings";
+
     private Database database;
 
     public DataStorage(Database database)
