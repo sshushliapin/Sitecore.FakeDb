@@ -101,7 +101,7 @@
         Assert.Equal(template.StandardValueHolderId, stdValuesItemId);
 
         Sitecore.Data.Items.Item item = db.GetItem(itemId);
-        Sitecore.Data.Items.TemplateItem templateItem  = item.Template;
+        Sitecore.Data.Items.TemplateItem templateItem = item.Template;
         Assert.Equal(templateItem.ID, templateId);
         Assert.NotNull(templateItem.StandardValues);
         Assert.Equal(templateItem.StandardValues.ID, stdValuesItemId);
@@ -265,6 +265,19 @@
         // get the setting value in your code using regular Sitecore API
         var value = Sitecore.Configuration.Settings.GetSetting("MySetting");
         Assert.Equal("1234", value);
+      }
+    }
+
+    [Fact]
+    public void HowDoIGetItemFromSitecoreDatabase()
+    {
+      using (new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("Home")
+        })
+      {
+        Sitecore.Data.Database database = Sitecore.Configuration.Factory.GetDatabase("master");
+        Assert.NotNull(database.GetItem("/sitecore/content/home"));
       }
     }
 

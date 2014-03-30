@@ -331,6 +331,32 @@ public void HowDoIConfigureSettings()
 }
 ```
 
+### Database lifetime configuration
+By default Sitecore set `singleInstance="true"` for all databases so that each of the three default databases behaves as singletones. 
+This approach has list of pros and cons; it is important to be avare about potential issues that may appear.
+
+Single instance allows one to resolve a database in any place of code using Sitecore Factory. 
+The same content is available no matter how many times the database has been resolved. 
+The next code creates item Home using simplified FakeDb API and then reads the item from database resolved from Factory:
+
+``` csharp
+[Fact]
+public void HowDoIGetItemFromSitecoreDatabase()
+{
+  using (new Sitecore.FakeDb.Db
+    {
+      new Sitecore.FakeDb.DbItem("Home")
+    })
+  {
+    Sitecore.Data.Database database = Sitecore.Configuration.Factory.GetDatabase("master");
+    Assert.NotNull(database.GetItem("/sitecore/content/home"));
+  }
+}
+```
+It is important to remember that single instance objects may break unit tests isolation allowing data from one test appear in another one. In order to minimize this negative impact Db context must always be disposed properly.
+
+Sitecore FakeDb can deal with both single or transcient lifetime modes allowing developers to choose between usability or isolation.
+
 ## Miscellaneous    
 ### How do I mock the content search logic
 
