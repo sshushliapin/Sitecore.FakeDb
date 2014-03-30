@@ -1,3 +1,5 @@
+using Sitecore.Data.Templates;
+
 namespace Sitecore.FakeDb.Data.Engines
 {
   using System.Collections.Generic;
@@ -24,6 +26,12 @@ namespace Sitecore.FakeDb.Data.Engines
     public const string TemplateFieldItemName = "Template field";
 
     public const string BranchItemName = "Branch";
+
+    public const string StandardValuesFieldName = "__Standard values";
+
+    public const string BaseTemplateFieldName = "__Base template";
+
+    public const string LayoutDetailsFieldName = "__Renderings";
 
     private Database database;
 

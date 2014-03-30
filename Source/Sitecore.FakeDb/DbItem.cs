@@ -1,3 +1,6 @@
+using Sitecore.Diagnostics;
+using Sitecore.FakeDb.Data.Engines;
+
 namespace Sitecore.FakeDb
 {
   using System.Collections;
@@ -27,7 +30,17 @@ namespace Sitecore.FakeDb
       this.TemplateID = templateId;
       this.Access = new DbItemAccess();
       this.Fields = new DbFieldCollection();
+      this.StandardFields = new DbFieldCollection();
       this.Children = new Collection<DbItem>();
+
+      this.StandardFields.Add(new DbField(DataStorage.StandardValuesFieldName)
+      {
+        ID = FieldIDs.StandardValues
+      });
+      this.StandardFields.Add(new DbField(DataStorage.LayoutDetailsFieldName)
+      {
+        ID = FieldIDs.LayoutField
+      });
     }
 
     public string Name { get; set; }
@@ -38,6 +51,8 @@ namespace Sitecore.FakeDb
 
     public DbFieldCollection Fields { get; set; }
 
+    public DbFieldCollection StandardFields { get; private set; }
+
     public ID ParentID { get; set; }
 
     public string FullPath { get; set; }
@@ -46,18 +61,22 @@ namespace Sitecore.FakeDb
 
     public DbItemAccess Access { get; set; }
 
-    public void Add(string fieldName, string fieldValue)
+    public virtual void Add(string fieldName, string fieldValue)
     {
       this.Fields.Add(fieldName, fieldValue);
     }
 
-    public void Add(DbField field)
+    public virtual void Add(DbField field)
     {
+      Assert.ArgumentNotNull(field, "Field");
+      
       this.Fields.Add(field);
     }
 
-    public void Add(DbItem child)
+    public virtual void Add(DbItem child)
     {
+      Assert.ArgumentNotNull(child, "Child");
+      
       this.Children.Add(child);
     }
 

@@ -52,6 +52,9 @@
           section.AddField(field.Name, field.ID);
         }
 
+        builder.SetBaseIDs(ft.StandardFields[FieldIDs.BaseTemplate].Value);
+        builder.SetStandardValueHolderId(ft.StandardFields[FieldIDs.StandardValues].Value);
+
         templates.Add(builder.Template);
       }
 

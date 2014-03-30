@@ -121,6 +121,47 @@
     }
 
     [Fact]
+    public void ShouldCreateTemplateAndTemplateItem()
+    {
+      //arrange
+      var id = ID.NewID;
+
+      //act
+      using (var db = new Db {new DbTemplate("products", id)})
+      {
+        db.Database.GetTemplate(id).Should().NotBeNull();
+        db.Database.GetItem(id).Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldFindTemplateItemByPath()
+    {
+      //arrange and act
+      using (var db = new Db {new DbTemplate("home")})
+      {
+        // assert
+        db.GetItem("/sitecore/templates/home").Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldHaveTemplateParentPointToTemplatesRoot()
+    {
+      // arrange and act
+      using (var db = new Db {new DbTemplate("home")})
+      {
+        var tempalte = db.Database.GetTemplate("home");
+        var item = db.GetItem("/sitecore/templates/home");
+
+        // assert
+        item.ParentID.Should().BeSameAs(ItemIDs.TemplateRoot);
+        item.Parent.Should().NotBeNull();
+        item.Parent.ID.Should().BeSameAs(ItemIDs.TemplateRoot);
+      }
+    }
+
+    [Fact]
     public void ShouldCreateItemWithFields()
     {
       // act
@@ -247,7 +288,7 @@
     public void ShouldGenerateTemplateIdIfNotSet()
     {
       // arrange
-      var template = new DbTemplate { ID = null };
+      var template = new DbTemplate();
 
       // act
       using (new Db { template })
@@ -255,6 +296,17 @@
         // assert
         template.ID.Should().NotBeNull();
         template.ID.Should().NotBe(ID.Null);
+      }
+    }
+
+    [Fact]
+    public void ShouldGiveTemplateANameIfNotSet()
+    {
+      var template = new DbTemplate();
+
+      using (new Db {template})
+      {
+        template.Name.Should().NotBeNullOrEmpty();
       }
     }
 
@@ -623,7 +675,7 @@
         Action action = () => db.Add(new DbTemplate("products", id));
 
         // assert
-        action.ShouldThrow<ArgumentException>().WithMessage("A tamplete with the same id has already been added.*");
+        action.ShouldThrow<ArgumentException>().WithMessage("A template with the same id has already been added.*");
       }
     }
 
