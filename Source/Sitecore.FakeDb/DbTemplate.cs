@@ -18,16 +18,16 @@ namespace Sitecore.FakeDb
     {
     }
 
-    public DbTemplate(string name, ID id) : this(name, id, new ID[] {})
+    public DbTemplate(string name, ID id)
+      : this(name, id, null)
     {
     }
 
     public DbTemplate(string name, ID id, ID[] baseTemplates) : base(name, id, TemplateIDs.Template)
     {
-      //ToDo: [__Base template] is not technically a "standard field". Will revisit once we imlement auto-creating fields on the items from the templates
       this.Fields.Add(new DbField(FieldIDs.BaseTemplate)
       {
-        Value = string.Join("|", (baseTemplates ?? new ID[] { }).AsEnumerable())
+        Value = string.Join("|", (baseTemplates ?? new ID[] { TemplateIDs.StandardTemplate }).AsEnumerable())
       });
     }
 
@@ -42,7 +42,12 @@ namespace Sitecore.FakeDb
 
       if (IsStandardValuesItem(child))
       {
-        Fields[FieldIDs.StandardValues].Value = child.ID.ToString();
+        Fields.Add(new DbField(FieldIDs.StandardValues) {Value = child.ID.ToString()});
+
+        // a fake template was created for the __Standard Values node as it had to be resolved prior to the owning template existence
+        child.TemplateID = this.ID;
+
+        // ToDo: How do we remove the not needed __Standard Values template from the FakeDb? Maybe have our own ThreadLocal "context" with the FabeDb instance?
       }
     }
 

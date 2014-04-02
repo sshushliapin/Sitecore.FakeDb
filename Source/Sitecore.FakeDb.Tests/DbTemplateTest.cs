@@ -17,7 +17,7 @@ namespace Sitecore.FakeDb.Tests
       var template = new DbTemplate();
 
       // act & assert
-      template.Fields.Should().HaveCount(3); // three standard fields
+      template.Fields.Should().HaveCount(1); // __Base template
     }
 
     [Fact]
@@ -27,7 +27,7 @@ namespace Sitecore.FakeDb.Tests
       var template = new DbTemplate("t", ID.NewID);
 
       // act & assert
-      template.Fields.Should().HaveCount(3); // three standard fields
+      template.Fields.Should().HaveCount(1); // __Base template
     }
 
     // TODO:[High] The test below states that we cannot get fake item fields by id.
@@ -41,9 +41,7 @@ namespace Sitecore.FakeDb.Tests
       template.Fields.Select(f => f.Name).ShouldBeEquivalentTo(new[]
       {
         "Title", "Description", 
-        DataStorage.BaseTemplateFieldName, 
-        DataStorage.LayoutDetailsFieldName, 
-        DataStorage.StandardValuesFieldName
+        DataStorage.BaseTemplateFieldName
       });
     }
 
@@ -56,17 +54,14 @@ namespace Sitecore.FakeDb.Tests
     }
 
     [Fact]
-    public void ShouldHaveStandardFieldsInitialized()
+    public void ShouldHaveBaseTemplateSetToStandardTemplate()
     {
       //arrange
       var template = new DbTemplate();
 
       //assert
-      template.Fields[FieldIDs.StandardValues].Should().NotBeNull();
-      template.Fields[FieldIDs.StandardValues].Value.Should().BeEmpty();
-
       template.Fields[FieldIDs.BaseTemplate].Should().NotBeNull();
-      template.Fields[FieldIDs.BaseTemplate].Value.Should().BeEmpty();
+      template.Fields[FieldIDs.BaseTemplate].Value.Should().BeEquivalentTo(TemplateIDs.StandardTemplate.ToString());
     }
 
     [Fact]

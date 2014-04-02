@@ -21,7 +21,7 @@ namespace Sitecore.FakeDb
     }
 
     public DbItem(string name, ID id)
-      : this(name, id, ID.Null)
+      : this(name, id, Sitecore.Data.ID.Null)
     {
     }
 
@@ -32,10 +32,6 @@ namespace Sitecore.FakeDb
       this.TemplateID = templateId;
       this.Access = new DbItemAccess();
       this.Children = new Collection<DbItem>();
-
-      // ToDo: standard fields should be coming from the standard template that every item should inherit from unless specified otherwise
-      this.Fields.Add(new DbField(FieldIDs.StandardValues));
-      this.Fields.Add(new DbField(FieldIDs.LayoutField));
     }
 
     public string Name { get; set; }

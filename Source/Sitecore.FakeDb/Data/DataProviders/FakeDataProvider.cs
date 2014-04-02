@@ -53,7 +53,12 @@
         }
 
         builder.SetBaseIDs(ft.Fields[FieldIDs.BaseTemplate].Value);
-        builder.SetStandardValueHolderId(ft.Fields[FieldIDs.StandardValues].Value);
+
+        var standardValues = ft.Fields[FieldIDs.StandardValues];
+        if (standardValues != null)
+        {
+          builder.SetStandardValueHolderId(standardValues.Value);  
+        }
 
         templates.Add(builder.Template);
       }

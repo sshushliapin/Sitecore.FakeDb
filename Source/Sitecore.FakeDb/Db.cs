@@ -152,8 +152,7 @@ namespace Sitecore.FakeDb
 
     protected virtual void CreateTemplate(DbItem item)
     {
-      var isResolved = this.ResolveTemplate(item);
-      if (isResolved)
+      if (this.ResolveTemplate(item))
       {
         return;
       }

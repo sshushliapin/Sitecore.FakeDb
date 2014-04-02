@@ -1,4 +1,7 @@
+using System.Linq;
+using Lucene.Net.Documents;
 using Sitecore.Data.Templates;
+using Sitecore.Shell.Framework.Commands.Favorites;
 
 namespace Sitecore.FakeDb.Data.Engines
 {
@@ -27,6 +30,12 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public const string BranchItemName = "Branch";
 
+    public const string StandardTemplateName = "Standard template";
+
+    public static ID LayoutSectionTemplateId = new ID("{4D30906D-0B49-4FA7-969D-BF90157357EA}");
+
+    public static ID AdvancedSectionTemplateId = new ID("{646F4B34-708C-41C2-9F4B-2661849777F3}");
+
     public const string StandardValuesFieldName = "__Standard values";
 
     public const string BaseTemplateFieldName = "__Base template";
@@ -42,7 +51,6 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems = new Dictionary<ID, DbItem>();
       this.FakeTemplates = new Dictionary<ID, DbTemplate>();
 
-      this.FillDefaultFakeTemplates();
       this.FillDefaultFakeItems();
     }
 
@@ -74,18 +82,56 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public virtual FieldList GetFieldList(ID templateId)
     {
+      return GetFieldList(templateId, false);
+    }
+
+    public virtual FieldList GetFieldList(ID templateId, bool forItemData)
+    {
       Assert.ArgumentCondition(!ID.IsNullOrEmpty(templateId), "templateId", "Value cannot be null.");
 
       var template = this.GetFakeTemplate(templateId);
       Assert.IsNotNull(template, "Template '{0}' not found.", templateId);
 
-      var fields = new FieldList();
-      foreach (var field in template.Fields)
+      var fieldList = new FieldList();
+      if (forItemData)
       {
-        fields.Add(field.ID, string.Empty);
+        foreach (var field in template.Fields)
+        {
+          // ItemData should only have fields that the item itself "carries". The other ones have to be null for Standard Values logic to kick in properly
+          // ToDo: we should instead walk those standard template sections and not hardcode
+          if (field.ID == FieldIDs.BaseTemplate || field.ID == FieldIDs.LayoutField)
+          {
+            continue;
+          }
+
+          fieldList.Add(field.ID, string.Empty);
+        }
+      }
+      else
+      {
+        GetFieldListRecursively(template, fieldList);  
       }
 
-      return fields;
+      return fieldList;
+    }
+
+    private void GetFieldListRecursively(DbTemplate template, FieldList list)
+    {
+      var baseTemplates = template.Fields[FieldIDs.BaseTemplate].Value;
+      if (!string.IsNullOrEmpty(baseTemplates)) {
+        foreach (var baseTemplateId in baseTemplates.Split('|').Select(t => new ID(t)))
+        {
+          var baseTemplate = GetFakeTemplate(baseTemplateId);
+          GetFieldListRecursively(baseTemplate, list);
+        }
+      }
+
+      foreach (var field in template.Fields)
+      {
+        if (field.ID == FieldIDs.BaseTemplate) continue;
+
+        list.Add(field.ID, string.Empty);
+      }
     }
 
     public virtual Item GetSitecoreItem(ID itemId, Language language)
@@ -107,7 +153,7 @@ namespace Sitecore.FakeDb.Data.Engines
       var fields = new FieldList();
       if (this.FakeTemplates.ContainsKey(fakeItem.TemplateID))
       {
-        fields = this.GetFieldList(fakeItem.TemplateID);
+        fields = this.GetFieldList(fakeItem.TemplateID, true);
       }
 
       foreach (var field in fakeItem.Fields)
@@ -121,9 +167,10 @@ namespace Sitecore.FakeDb.Data.Engines
       return item;
     }
 
-    protected virtual void FillDefaultFakeTemplates()
+    protected virtual void FillDefaultFakeTemplate(DbTemplate template)
     {
-      this.FakeTemplates.Add(TemplateIDs.Template, new DbTemplate(TemplateItemName, TemplateIDs.Template));
+      this.FakeItems.Add(template.ID, template);
+      this.FakeTemplates.Add(template.ID, template);
     }
 
     protected virtual void FillDefaultFakeItems()
@@ -132,11 +179,37 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems.Add(ItemIDs.ContentRoot, new DbItem(ContentItemName, ItemIDs.ContentRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/content" });
       this.FakeItems.Add(ItemIDs.TemplateRoot, new DbItem(TemplatesItemName, ItemIDs.TemplateRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/templates" });
 
-      // TODO: Move 'Template' item to proper directory to correspond Sitecore structure.
-      this.FakeItems.Add(TemplateIDs.Template, new DbItem(TemplateItemName, TemplateIDs.Template, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template" });
-      this.FakeItems.Add(TemplateIDs.TemplateSection, new DbItem(TemplateSectionItemName, TemplateIDs.TemplateSection, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
-      this.FakeItems.Add(TemplateIDs.TemplateField, new DbItem(TemplateFieldItemName, TemplateIDs.TemplateField, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
-      this.FakeItems.Add(TemplateIDs.BranchTemplate, new DbItem(BranchItemName, TemplateIDs.BranchTemplate, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
+      //ToDo: it would be more appropriate to create these templates in the /sitecore/templates/System/...
+
+      FillDefaultFakeTemplate(new DbTemplate(TemplateItemName, TemplateIDs.Template, new ID[] { }) { ParentID = ItemIDs.TemplateRoot,  FullPath = "/sitecore/templates/template" });
+      FillDefaultFakeTemplate(new DbTemplate(TemplateSectionItemName, TemplateIDs.TemplateSection, new ID[] { }) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
+      FillDefaultFakeTemplate(new DbTemplate(TemplateFieldItemName, TemplateIDs.TemplateField, new ID[] { }) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
+      FillDefaultFakeTemplate(new DbTemplate(BranchItemName, TemplateIDs.BranchTemplate, new ID[] { }) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
+      FillDefaultFakeTemplate(new DbTemplate("Layout", LayoutSectionTemplateId, new ID[] { })
+      {
+        ParentID = ItemIDs.TemplateRoot,
+        FullPath = "/sitecore/templates/layout",
+        Fields =
+        {
+          new DbField(FieldIDs.LayoutField)          
+        }
+      });
+      FillDefaultFakeTemplate(new DbTemplate("Advanced", AdvancedSectionTemplateId, new ID[] { })
+      {
+        ParentID = ItemIDs.TemplateRoot,
+        FullPath = "/sitecore/templates/advanced",
+        Fields =
+        {
+          new DbField(FieldIDs.StandardValues)
+        }
+      });
+
+      FillDefaultFakeTemplate(new DbTemplate(StandardTemplateName, TemplateIDs.StandardTemplate, new ID[] { LayoutSectionTemplateId, AdvancedSectionTemplateId })
+      {
+        ParentID = ItemIDs.TemplateRoot, 
+        FullPath = "/sitecore/templates/Standard template"
+      });
     }
+
   }
 }

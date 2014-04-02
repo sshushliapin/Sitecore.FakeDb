@@ -1,4 +1,6 @@
-﻿namespace Sitecore.FakeDb.Tests.Data
+﻿using Sitecore.Shell.Applications.ContentEditor.Gutters;
+
+namespace Sitecore.FakeDb.Tests.Data
 {
   using System;
   using System.Linq;
@@ -90,15 +92,16 @@
       var field1 = new DbField("Title");
       var field2 = new DbField("Title");
 
-      var template = new DbTemplate("", templateId) { Fields = { field1, field2 } };
+      var template = new DbTemplate("", templateId, new ID[] {}) { Fields = { field1, field2 } };
 
+      this.dataStorage.FakeItems.Add(templateId, template);
       this.dataStorage.FakeTemplates.Add(templateId, template);
 
       // act
       var fieldList = this.dataStorage.GetFieldList(template.ID);
 
       // assert
-      fieldList.Count.Should().Be(5); // 2 + standard fields
+      fieldList.Count.Should().Be(2);
       fieldList[field1.ID].Should().BeEmpty();
       fieldList[field2.ID].Should().BeEmpty();
     }

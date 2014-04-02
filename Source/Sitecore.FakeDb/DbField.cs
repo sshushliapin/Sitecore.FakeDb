@@ -50,7 +50,7 @@ namespace Sitecore.FakeDb
 
     public string Name { get; private set; }
 
-    public ID ID { get; set; }
+    public ID ID { get; internal set; }
 
     public string Value
     {

@@ -26,7 +26,7 @@
 
       // assert
       item.Children.Should().BeEmpty();
-      item.Fields.Should().HaveCount(2); // the two supported stanard fields
+      item.Fields.Should().BeEmpty();
       item.FullPath.Should().BeNull();
       item.ParentID.Should().BeNull();
     }
