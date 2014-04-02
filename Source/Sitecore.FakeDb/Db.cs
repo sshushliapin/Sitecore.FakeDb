@@ -94,8 +94,8 @@ namespace Sitecore.FakeDb
       Assert.ArgumentNotNull(template, "template");
       Assert.IsNotNull(template.ID, "template ID");
       Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A template with the same id has already been added.");
-      
-      this.Add((DbItem) template);
+
+      this.Add((DbItem)template);
       this.DataStorage.FakeTemplates.Add(template.ID, template);
     }
 
@@ -185,7 +185,7 @@ namespace Sitecore.FakeDb
       }
 
       var lastItem = this.DataStorage.FakeItems.Values.LastOrDefault();
-      if (lastItem == null || IsTemplate(lastItem))
+      if (lastItem == null || this.IsTemplate(lastItem))
       {
         return false;
       }
@@ -201,7 +201,7 @@ namespace Sitecore.FakeDb
       item.TemplateID = lastItem.TemplateID;
       for (var i = 0; i < item.Fields.Count(); i++)
       {
-        item.Fields.ElementAt(i).ID = lastItem.Fields.ElementAt(0).ID;
+        item.Fields.ElementAt(i).ID = lastItem.Fields.ElementAt(i).ID;
       }
 
       return true;
@@ -211,7 +211,7 @@ namespace Sitecore.FakeDb
     {
       if (ID.IsNullOrEmpty(item.ParentID))
       {
-        item.ParentID = IsTemplate(item) ? DefaultTemplateRoot : DefaultItemRoot;
+        item.ParentID = this.IsTemplate(item) ? DefaultTemplateRoot : DefaultItemRoot;
       }
 
       var root = this.Database.GetItem(item.ParentID);
@@ -221,7 +221,7 @@ namespace Sitecore.FakeDb
     // Sitecore.Data.Engines.TemplateEngine.IsTemplate
     protected virtual bool IsTemplate(DbItem item)
     {
-      Assert.ArgumentNotNull(item, "Item");
+      Assert.ArgumentNotNull(item, "item");
 
       return item.TemplateID == TemplateIDs.Template;
     }
@@ -257,7 +257,7 @@ namespace Sitecore.FakeDb
         item.FullPath = Constants.ContentPath + "/" + item.Name;
         return;
       }
-      
+
       if (item.ParentID == DefaultTemplateRoot)
       {
         // ToDo: move the templates path into constants

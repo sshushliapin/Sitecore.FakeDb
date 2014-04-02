@@ -4,6 +4,7 @@
   using System.Collections.Generic;
   using System.Linq;
   using Sitecore.Data;
+  using Sitecore.Diagnostics;
 
   public class DbFieldCollection : IEnumerable<DbField>
   {
@@ -31,6 +32,8 @@
 
     public void Add(string fieldName, string fieldValue)
     {
+      Assert.ArgumentNotNullOrEmpty(fieldName, "fieldName");
+
       var field = new DbField(fieldName) { Value = fieldValue };
 
       this.Add(field);
@@ -38,9 +41,16 @@
 
     public void Add(DbField field)
     {
+      Assert.ArgumentNotNull(field, "field");
+
       if (ID.IsNullOrEmpty(field.ID))
       {
         field.ID = ID.NewID;
+      }
+
+      if (this.fields.ContainsKey(field.ID))
+      {
+        return;
       }
 
       this.fields.Add(field.ID, field);
