@@ -76,11 +76,11 @@ namespace Sitecore.FakeDb.Data.Engines
     {
       Assert.ArgumentCondition(!ID.IsNullOrEmpty(templateId), "templateId", "Value cannot be null.");
 
-      var templates = this.GetFakeTemplate(templateId);
-      Assert.IsNotNull(templates, "Template '{0}' not found.", templateId);
+      var template = this.GetFakeTemplate(templateId);
+      Assert.IsNotNull(template, "Template '{0}' not found.", templateId);
 
       var fields = new FieldList();
-      foreach (var field in this.FakeTemplates[templateId].Fields)
+      foreach (var field in template.Fields)
       {
         fields.Add(field.ID, string.Empty);
       }
@@ -102,19 +102,18 @@ namespace Sitecore.FakeDb.Data.Engines
 
       var fakeItem = this.FakeItems[itemId];
 
-      var fields = new FieldList();
-
       var itemVersion = version == Version.Latest ? Version.First : version;
 
+      var fields = new FieldList();
       if (this.FakeTemplates.ContainsKey(fakeItem.TemplateID))
       {
         fields = this.GetFieldList(fakeItem.TemplateID);
+      }
 
-        foreach (var field in fakeItem.Fields)
-        {
-          var value = field.GetValue(language.Name, version.Number);
-          fields.Add(field.ID, value);
-        }
+      foreach (var field in fakeItem.Fields)
+      {
+        var value = field.GetValue(language.Name, version.Number);
+        fields.Add(field.ID, value);
       }
 
       var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);

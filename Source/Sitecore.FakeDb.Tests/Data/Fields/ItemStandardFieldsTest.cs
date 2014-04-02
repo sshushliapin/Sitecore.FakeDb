@@ -26,23 +26,23 @@ namespace Sitecore.FakeDb.Tests.Data.Fields
     public void ShouldHaveLayoutField()
     {
       // assert
-      item.StandardFields[FieldIDs.LayoutField].Should().NotBeNull();
-      template.StandardFields[FieldIDs.LayoutField].Should().NotBeNull();
+      item.Fields[FieldIDs.LayoutField].Should().NotBeNull();
+      template.Fields[FieldIDs.LayoutField].Should().NotBeNull();
 
     }
 
     [Fact]
     public void ShouldHaveStandardValuesField()
     {
-      item.StandardFields[FieldIDs.StandardValues].Should().NotBeNull();
-      template.StandardFields[FieldIDs.StandardValues].Should().NotBeNull();
+      item.Fields[FieldIDs.StandardValues].Should().NotBeNull();
+      template.Fields[FieldIDs.StandardValues].Should().NotBeNull();
     }
 
     [Fact]
     public void TemplateAndNotItemShouldHaveBaseTemplatesField()
     {
-      item.StandardFields[FieldIDs.BaseTemplate].Should().BeNull();
-      template.StandardFields[FieldIDs.BaseTemplate].Should().NotBeNull();
+      item.Fields[FieldIDs.BaseTemplate].Should().BeNull();
+      template.Fields[FieldIDs.BaseTemplate].Should().NotBeNull();
     }
   }
 }

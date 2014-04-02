@@ -98,7 +98,7 @@
       var fieldList = this.dataStorage.GetFieldList(template.ID);
 
       // assert
-      fieldList.Count.Should().Be(2);
+      fieldList.Count.Should().Be(5); // 2 + standard fields
       fieldList[field1.ID].Should().BeEmpty();
       fieldList[field2.ID].Should().BeEmpty();
     }

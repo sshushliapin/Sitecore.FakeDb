@@ -25,9 +25,8 @@ namespace Sitecore.FakeDb
     public DbTemplate(string name, ID id, ID[] baseTemplates) : base(name, id, TemplateIDs.Template)
     {
       //ToDo: [__Base template] is not technically a "standard field". Will revisit once we imlement auto-creating fields on the items from the templates
-      this.StandardFields.Add(new DbField(DataStorage.BaseTemplateFieldName)
+      this.Fields.Add(new DbField(FieldIDs.BaseTemplate)
       {
-        ID = FieldIDs.BaseTemplate,
         Value = string.Join("|", (baseTemplates ?? new ID[] { }).AsEnumerable())
       });
     }
@@ -43,7 +42,7 @@ namespace Sitecore.FakeDb
 
       if (IsStandardValuesItem(child))
       {
-        StandardFields[FieldIDs.StandardValues].Value = child.ID.ToString();
+        Fields[FieldIDs.StandardValues].Value = child.ID.ToString();
       }
     }
 

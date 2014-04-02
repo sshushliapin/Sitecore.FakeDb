@@ -1,4 +1,6 @@
-﻿namespace Sitecore.FakeDb
+﻿using System.Data.Odbc;
+
+namespace Sitecore.FakeDb
 {
   using System.Collections;
   using System.Collections.Generic;
@@ -50,10 +52,12 @@
 
       if (this.fields.ContainsKey(field.ID))
       {
-        return;
+        this.fields[field.ID] = field;
       }
-
-      this.fields.Add(field.ID, field);
+      else
+      {
+        this.fields.Add(field.ID, field);
+      }
     }
 
     public IEnumerator<DbField> GetEnumerator()

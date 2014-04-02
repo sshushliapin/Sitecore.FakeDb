@@ -31,7 +31,8 @@
     {
       // arrange
       var itemId = ID.NewID;
-      var dbitem = new DbItem("item") { Fields = { new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } } } };
+      var fieldId = ID.NewID;
+      var dbitem = new DbItem("item") { Fields = { new DbField(fieldId, "Title") { { "en", "Hello!" }, { "da", "Hej!" } } } };
       this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
 
       var item = ItemHelper.CreateInstance(itemId, this.database);
@@ -44,10 +45,10 @@
       command.DoExecute();
 
       // assert
-      dbitem.Fields.Single().Values["en"][1].Should().Be("Hello!");
-      dbitem.Fields.Single().Values["en"][2].Should().Be("Hello!");
-      dbitem.Fields.Single().Values["da"][1].Should().Be("Hej!");
-      dbitem.Fields.Single().Values["da"].ContainsKey(2).Should().BeFalse();
+      dbitem.Fields[fieldId].Values["en"][1].Should().Be("Hello!");
+      dbitem.Fields[fieldId].Values["en"][2].Should().Be("Hello!");
+      dbitem.Fields[fieldId].Values["da"][1].Should().Be("Hej!");
+      dbitem.Fields[fieldId].Values["da"].ContainsKey(2).Should().BeFalse();
     }
 
     [Fact]
