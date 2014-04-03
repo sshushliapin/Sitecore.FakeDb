@@ -152,8 +152,7 @@ namespace Sitecore.FakeDb
 
     protected virtual void CreateTemplate(DbItem item)
     {
-      var isResolved = this.ResolveTemplate(item);
-      if (isResolved)
+      if (this.ResolveTemplate(item))
       {
         return;
       }
@@ -190,6 +189,7 @@ namespace Sitecore.FakeDb
         return false;
       }
 
+      //ToDo: I believe the order of the Values in a normal (not sorted) Dictionary is implementation dependent (~ random)
       var lastItemTemplateKeys = string.Concat(lastItem.Fields.InnerFields.Values.Select(f => f.Name));
       var itemTemplateKeys = string.Concat(item.Fields.InnerFields.Values.Select(f => f.Name));
 

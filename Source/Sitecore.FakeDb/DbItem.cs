@@ -13,13 +13,15 @@ namespace Sitecore.FakeDb
   [DebuggerDisplay("Name = {Name}, FullPath = {FullPath}")]
   public class DbItem : IEnumerable
   {
+    private readonly DbFieldCollection _fields = new DbFieldCollection();
+
     public DbItem(string name)
       : this(name, ID.NewID)
     {
     }
 
     public DbItem(string name, ID id)
-      : this(name, id, ID.Null)
+      : this(name, id, Sitecore.Data.ID.Null)
     {
     }
 
@@ -29,18 +31,7 @@ namespace Sitecore.FakeDb
       this.ID = id;
       this.TemplateID = templateId;
       this.Access = new DbItemAccess();
-      this.Fields = new DbFieldCollection();
-      this.StandardFields = new DbFieldCollection();
       this.Children = new Collection<DbItem>();
-
-      this.StandardFields.Add(new DbField(DataStorage.StandardValuesFieldName)
-      {
-        ID = FieldIDs.StandardValues
-      });
-      this.StandardFields.Add(new DbField(DataStorage.LayoutDetailsFieldName)
-      {
-        ID = FieldIDs.LayoutField
-      });
     }
 
     public string Name { get; set; }
@@ -49,9 +40,19 @@ namespace Sitecore.FakeDb
 
     public ID TemplateID { get; set; }
 
-    public DbFieldCollection Fields { get; set; }
+    public DbFieldCollection Fields
+    {
+      get { return _fields; }
+      set
+      {
+        Assert.ArgumentNotNull(value, "value");
 
-    public DbFieldCollection StandardFields { get; private set; }
+        foreach (var field in value)
+        {
+          this._fields.Add(field);
+        }
+      }
+    }
 
     public ID ParentID { get; set; }
 

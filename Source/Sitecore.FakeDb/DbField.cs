@@ -1,4 +1,7 @@
-﻿namespace Sitecore.FakeDb
+﻿using Sitecore.FakeDb.Data.Engines;
+using Sitecore.Shell.Framework.Commands;
+
+namespace Sitecore.FakeDb
 {
   using System;
   using System.Collections;
@@ -12,17 +15,42 @@
   [DebuggerDisplay("ID = {ID}, Name = {Name}, Value = {Value}")]
   public class DbField : IEnumerable
   {
-    private readonly IDictionary<string, IDictionary<int, string>> values;
+    private readonly IDictionary<string, IDictionary<int, string>> values = 
+      new Dictionary<string, IDictionary<int, string>>();
+
+    public static readonly IDictionary<ID, string> StandardFieldIdsToNameLookup = new Dictionary<ID, string>
+    {
+      { FieldIDs.LayoutField, DataStorage.LayoutDetailsFieldName },
+      { FieldIDs.BaseTemplate, DataStorage.BaseTemplateFieldName },
+      { FieldIDs.StandardValues, DataStorage.StandardValuesFieldName }
+    };
 
     public DbField(string name)
     {
+      this.ID = ID.NewID;
       this.Name = name;
-      this.values = new Dictionary<string, IDictionary<int, string>>();
+    }
+
+    public DbField(ID id)
+    {
+      this.ID = id;
+      if (StandardFieldIdsToNameLookup.ContainsKey(id))
+      {
+        this.Name = StandardFieldIdsToNameLookup[id];
+      }
+    }
+
+    public DbField(ID id, string name) : this(id)
+    {
+      if (this.Name == null)
+      {
+        this.Name = name;
+      }
     }
 
     public string Name { get; private set; }
 
-    public ID ID { get; set; }
+    public ID ID { get; internal set; }
 
     public string Value
     {

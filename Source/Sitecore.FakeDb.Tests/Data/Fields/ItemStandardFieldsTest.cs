@@ -15,34 +15,60 @@ namespace Sitecore.FakeDb.Tests.Data.Fields
     private DbItem item;
     private DbTemplate template;
 
-    public ItemStandardFieldsTest()
-    {
-      // arrange
-      item = new DbItem("item");
-      template = new DbTemplate("template");
-    }
 
     [Fact]
     public void ShouldHaveLayoutField()
     {
-      // assert
-      item.StandardFields[FieldIDs.LayoutField].Should().NotBeNull();
-      template.StandardFields[FieldIDs.LayoutField].Should().NotBeNull();
+      using (var db = new Db
+      {
+        new DbItem("item1"),
+        new DbTemplate("template1")
+      })
+      {
+        var item = db.GetItem("/sitecore/content/item1");
+        var template = db.GetItem("/sitecore/templates/template1");
 
+        // assert
+        item.Fields[FieldIDs.LayoutField].Should().NotBeNull();
+        template.Fields[FieldIDs.LayoutField].Should().NotBeNull();
+      }
     }
 
     [Fact]
     public void ShouldHaveStandardValuesField()
     {
-      item.StandardFields[FieldIDs.StandardValues].Should().NotBeNull();
-      template.StandardFields[FieldIDs.StandardValues].Should().NotBeNull();
+      using (var db = new Db
+      {
+        new DbTemplate("template1")
+      })
+      {
+        var item = db.GetItem("/sitecore/content/item1");
+        var template = db.GetItem("/sitecore/templates/template1");
+
+        // assert
+        template.Fields[FieldIDs.StandardValues].Should().NotBeNull();
+      }
+      
     }
 
     [Fact]
     public void TemplateAndNotItemShouldHaveBaseTemplatesField()
     {
-      item.StandardFields[FieldIDs.BaseTemplate].Should().BeNull();
-      template.StandardFields[FieldIDs.BaseTemplate].Should().NotBeNull();
+      using (var db = new Db
+      {
+        new DbItem("item1"),
+        new DbTemplate("template1")
+      })
+      {
+        var item = db.GetItem("/sitecore/content/item1");
+        var template = db.GetItem("/sitecore/templates/template1");
+
+        template.Fields[FieldIDs.BaseTemplate].Should().NotBeNull();
+        template.Fields[FieldIDs.BaseTemplate].Value.Should().BeEquivalentTo(TemplateIDs.StandardTemplate.ToString());
+
+        // __Base tempalte is a field on the DbTemplate so it will "show through" but it should have no value in it
+        item.Fields[FieldIDs.BaseTemplate].Value.Should().BeEmpty();
+      }
     }
   }
 }

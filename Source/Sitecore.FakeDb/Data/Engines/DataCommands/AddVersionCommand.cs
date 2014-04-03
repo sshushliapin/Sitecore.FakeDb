@@ -26,10 +26,18 @@
 
       foreach (var field in dbitem.Fields)
       {
-        var langValues = field.Values[language];
-        var value = langValues.Last().Value;
+        if (field.Values.ContainsKey(language))
+        {
+          var langValues = field.Values[language];
+          var value = langValues.Last().Value;
 
-        langValues.Add(version.Number, value);
+          langValues.Add(version.Number, value);
+        }
+        else
+        {
+          // field was created without an initial value so it has no languages and no versioned values in these fields
+          // just leave it "blank" in the new version
+        }
       }
 
       return this.innerCommand.DataStorage.GetSitecoreItem(this.Item.ID, this.Item.Language, version);

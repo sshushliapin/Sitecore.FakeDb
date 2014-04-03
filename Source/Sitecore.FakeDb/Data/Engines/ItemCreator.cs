@@ -29,7 +29,8 @@
         return this.DataStorage.GetSitecoreItem(itemId, language);
       }
 
-      var fieldList = this.DataStorage.GetFieldList(templateId);
+      // only get fields from the item itself for the ItemData
+      var fieldList = this.DataStorage.GetFieldList(templateId, true);
       var item = ItemHelper.CreateInstance(itemName, itemId, templateId, fieldList, database, language);
 
       var parentItem = this.DataStorage.GetFakeItem(destination.ID);

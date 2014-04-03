@@ -1,4 +1,6 @@
-﻿namespace Sitecore.FakeDb.Tests
+﻿using Sitecore.FakeDb.Data.Engines;
+
+namespace Sitecore.FakeDb.Tests
 {
   using System;
   using System.Linq;
@@ -15,7 +17,7 @@
       var template = new DbTemplate();
 
       // act & assert
-      template.Fields.Should().BeEmpty();
+      template.Fields.Should().HaveCount(1); // __Base template
     }
 
     [Fact]
@@ -25,7 +27,7 @@
       var template = new DbTemplate("t", ID.NewID);
 
       // act & assert
-      template.Fields.Should().BeEmpty();
+      template.Fields.Should().HaveCount(1); // __Base template
     }
 
     // TODO:[High] The test below states that we cannot get fake item fields by id.
@@ -36,7 +38,11 @@
       var template = new DbTemplate { "Title", "Description" };
 
       // assert
-      template.Fields.Select(f => f.Name).ShouldBeEquivalentTo(new[] { "Title", "Description" });
+      template.Fields.Select(f => f.Name).ShouldBeEquivalentTo(new[]
+      {
+        "Title", "Description", 
+        DataStorage.BaseTemplateFieldName
+      });
     }
 
     [Fact]
@@ -48,17 +54,14 @@
     }
 
     [Fact]
-    public void ShouldHaveStandardFieldsInitialized()
+    public void ShouldHaveBaseTemplateSetToStandardTemplate()
     {
       //arrange
       var template = new DbTemplate();
 
       //assert
-      template.StandardFields[FieldIDs.StandardValues].Should().NotBeNull();
-      template.StandardFields[FieldIDs.StandardValues].Value.Should().BeEmpty();
-
-      template.StandardFields[FieldIDs.BaseTemplate].Should().NotBeNull();
-      template.StandardFields[FieldIDs.BaseTemplate].Value.Should().BeEmpty();
+      template.Fields[FieldIDs.BaseTemplate].Should().NotBeNull();
+      template.Fields[FieldIDs.BaseTemplate].Value.Should().BeEquivalentTo(TemplateIDs.StandardTemplate.ToString());
     }
 
     [Fact]
@@ -72,7 +75,7 @@
       var template = new DbTemplate("Template", ID.NewID, baseTemplates);
 
       //assert
-      template.StandardFields[FieldIDs.BaseTemplate].Value.Should().BeEquivalentTo(baseTemplatesRawValue);
+      template.Fields[FieldIDs.BaseTemplate].Value.Should().BeEquivalentTo(baseTemplatesRawValue);
     }
 
     [Fact]
@@ -87,8 +90,8 @@
       };
 
       //assert
-      template.StandardFields[FieldIDs.StandardValues].Value.Should().NotBeNullOrEmpty();
-      template.StandardFields[FieldIDs.StandardValues].Value.Should().BeEquivalentTo(standardValuesItemId.ToString());
+      template.Fields[FieldIDs.StandardValues].Value.Should().NotBeNullOrEmpty();
+      template.Fields[FieldIDs.StandardValues].Value.Should().BeEquivalentTo(standardValuesItemId.ToString());
     }
 
     [Fact]
