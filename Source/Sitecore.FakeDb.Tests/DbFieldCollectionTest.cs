@@ -33,16 +33,6 @@
     }
 
     [Fact]
-    public void ShouldReturnNullWhenFieldNotPresent()
-    {
-      // arrange
-      var collection = new DbFieldCollection();
-
-      //act & assert
-      collection[FieldIDs.LayoutField].Should().BeNull();
-    }
-
-    [Fact]
     public void ShouldSetFieldById()
     {
       // arrange

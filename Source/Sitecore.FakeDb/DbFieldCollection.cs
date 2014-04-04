@@ -18,10 +18,7 @@
 
     public DbField this[ID id]
     {
-      // ToDo: Sitecore Item.Fields[ID] always returns a field instance and then defaults to returning string.Empty for .Value.
-      // Only [string name] and [int index] indexers return null when not found. Should we unify?
-
-      get { return this.fields.Values.SingleOrDefault(f => f.ID == id); }
+      get { return this.fields.Values.Single(f => f.ID == id); }
       set { this.fields[value.ID] = value; }
     }
 

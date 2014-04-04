@@ -82,27 +82,6 @@
     }
 
     [Fact]
-    public void ShouldGetTemplateStandardFieldsMarkers()
-    {
-      // arrange
-      var templateId = ID.NewID;
-      var standardValuesItemId = ID.NewID;
-      var baseTemplateIDs = new ID[] {ID.NewID, ID.NewID};
-
-      var template = new DbTemplate(templateId.ToString(), templateId, baseTemplateIDs);
-      template.Add(new DbItem(Constants.StandardValuesItemName, standardValuesItemId, templateId));
-
-      this.dataStorage.FakeTemplates.Add(template.ID, template);
-
-      // act
-      var result = this.dataProvider.GetTemplates(null).First();
-
-      //assert
-      result.BaseIDs.Should().BeEquivalentTo(baseTemplateIDs);
-      result.StandardValueHolderId.ShouldBeEquivalentTo(standardValuesItemId);
-    }
-
-    [Fact]
     public void ShouldBeIRequireDataStorage()
     {
       // assert
