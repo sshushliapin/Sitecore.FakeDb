@@ -7,6 +7,7 @@
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
+  using Sitecore.Data.Managers;
   using Sitecore.Exceptions;
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.FakeDb.Security.AccessControl;
@@ -617,6 +618,9 @@
     [Fact]
     public void ShouldThrowExceptionIfNoDbInstanceInitialized()
     {
+      // arrange
+      Factory.Reset();
+
       // act
       Action action = () => Database.GetDatabase("master").GetItem("/sitecore/content");
 
@@ -780,6 +784,26 @@
         db.GetItem("/sitecore/content/item1")["field2"].Should().Be("item1-field2-value");
         db.GetItem("/sitecore/content/item2")["field1"].Should().Be("item2-field1-value");
         db.GetItem("/sitecore/content/item2")["field2"].Should().Be("item2-field2-value");
+      }
+    }
+
+    [Theory]
+    [InlineData("$name", "Home")]
+    [InlineData("static-text", "static-text")]
+    public void ShouldCreateTemplateWithStandardValues(string standardValue, string expectedValue)
+    {
+      // arrange
+      var templateId = ID.NewID;
+
+      using (var db = new Db { new DbTemplate("sample", templateId) { { "Title", standardValue } } })
+      {
+        var root = db.GetItem(ItemIDs.ContentRoot);
+
+        // act
+        var item = ItemManager.CreateItem("Home", root, templateId);
+
+        // assert
+        item["Title"].Should().Be(expectedValue);
       }
     }
   }

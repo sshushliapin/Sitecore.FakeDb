@@ -4,6 +4,7 @@
   using FluentAssertions;
   using Sitecore.Configuration;
   using Sitecore.Data;
+  using Sitecore.FakeDb.Data;
   using Xunit;
   using Xunit.Extensions;
 
@@ -50,6 +51,13 @@
     public void CacheShouldBeDisabled()
     {
       Settings.Caching.Enabled.Should().BeFalse();
+    }
+
+    [Fact]
+    public void ShouldGetFakeStandardValuesProvider()
+    {
+      // act & assert
+      StandardValuesManager.Provider.Should().BeOfType<FakeStandardValuesProvider>();
     }
   }
 }

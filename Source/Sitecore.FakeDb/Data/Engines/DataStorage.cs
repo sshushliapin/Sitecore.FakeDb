@@ -6,6 +6,7 @@ namespace Sitecore.FakeDb.Data.Engines
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
+  using Version = Sitecore.Data.Version;
 
   public class DataStorage
   {
@@ -66,15 +67,32 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public virtual FieldList GetFieldList(ID templateId)
     {
+      return GetFieldList(templateId, null);
+    }
+
+    public virtual FieldList GetFieldList(ID templateId, string itemName)
+    {
       Assert.ArgumentCondition(!ID.IsNullOrEmpty(templateId), "templateId", "Value cannot be null.");
 
       var templates = this.GetFakeTemplate(templateId);
       Assert.IsNotNull(templates, "Template '{0}' not found.", templateId);
 
+      var template = this.FakeTemplates[templateId];
       var fields = new FieldList();
       foreach (var field in this.FakeTemplates[templateId].Fields)
       {
-        fields.Add(field.ID, string.Empty);
+        var value = string.Empty;
+
+        if (!string.IsNullOrEmpty(itemName) && template.StandardValues.InnerFields.ContainsKey(field.ID))
+        {
+          value = template.StandardValues[field.ID].Value;
+          if (value == "$name")
+          {
+            value = itemName;
+          }
+        }
+
+        fields.Add(field.ID, value);
       }
 
       return fields;
@@ -93,14 +111,12 @@ namespace Sitecore.FakeDb.Data.Engines
       }
 
       var fakeItem = this.FakeItems[itemId];
-
       var fields = new FieldList();
-
       var itemVersion = version == Version.Latest ? Version.First : version;
 
       if (this.FakeTemplates.ContainsKey(fakeItem.TemplateID))
       {
-        fields = this.GetFieldList(fakeItem.TemplateID);
+        fields = this.GetFieldList(fakeItem.TemplateID, fakeItem.Name);
 
         foreach (var field in fakeItem.Fields)
         {

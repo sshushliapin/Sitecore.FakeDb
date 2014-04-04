@@ -18,6 +18,16 @@
     }
 
     [Fact]
+    public void ShouldCreateEmptyStandardValuesCollection()
+    {
+      // arrange & act
+      var template = new DbTemplate();
+
+      // assert
+      template.StandardValues.Should().BeEmpty();
+    }
+
+    [Fact]
     public void ShouldCreateEmptyFieldsCollectionWhenSetNameAndId()
     {
       // arrange
@@ -28,6 +38,7 @@
     }
 
     // TODO:[High] The test below states that we cannot get fake item fields by id.
+
     [Fact]
     public void ShouldCreateTemplateFieldsUsingNamesAsLowercaseKeys()
     {
@@ -36,6 +47,18 @@
 
       // assert
       template.Fields.Select(f => f.Name).ShouldBeEquivalentTo(new[] { "Title", "Description" });
+    }
+
+    [Fact]
+    public void ShouldSetStandardValues()
+    {
+      // arrange & act
+      var template = new DbTemplate { { "Title", "$name" } };
+
+      // assert
+      var id = template.Fields.Single().ID;
+      template.Fields[id].Value.Should().Be(string.Empty);
+      template.StandardValues[id].Value.Should().Be("$name");
     }
   }
 }

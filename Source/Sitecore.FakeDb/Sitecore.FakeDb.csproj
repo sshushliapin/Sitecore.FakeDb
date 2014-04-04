@@ -60,7 +60,9 @@
     <Compile Include="Data\Engines\DataCommands\NotInitializedDataEngineCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\DataEngineCommand.cs" />
     <Compile Include="Configuration\DbConfiguration.cs" />
+    <Compile Include="Data\FakeStandardValuesProvider.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitStandardValuesProvider.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommands.cs" />
     <Compile Include="IRequireDataStorage.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitAuthorizationProvider.cs" />

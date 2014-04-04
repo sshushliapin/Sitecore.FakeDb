@@ -95,6 +95,22 @@
       }
     }
 
+    [Fact]
+    public void HowDoICreateATemplateWithStandardValues()
+    {
+      var templateId = Sitecore.Data.ID.NewID;
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbTemplate("sample", templateId) { { "Title", "$name"} }
+        })
+      {
+        var root = db.GetItem(Sitecore.ItemIDs.ContentRoot);
+        var item = Sitecore.Data.Managers.ItemManager.CreateItem("Home", root, templateId);
+        Assert.Equal("Home", item["Title"]);
+      }
+    }
+
     #endregion
 
     #region Security
