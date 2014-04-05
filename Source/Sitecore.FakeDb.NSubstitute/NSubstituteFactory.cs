@@ -12,7 +12,7 @@
     {
       Assert.ArgumentNotNullOrEmpty(typeName, "typeName");
 
-      var type = Type.GetType(typeName);
+      var type = Type.GetType(typeName, true);
       var obj = Substitute.For(new[] { type }, new object[] { });
 
       var provider = obj as ProviderBase;

@@ -1,3 +1,7 @@
+0.9.1
+* [FIX] Fixed database initialization exception appeared when adding two items with two similar set of multiple fields
+* [FIX] Simplified standard values implementation
+
 0.9.0
 * [NEW] Implemented versioned item initialization. Implemented version adding
 * [NEW] Added Standard Values support (thanks to [Pavel Veller](https://github.com/pveller))

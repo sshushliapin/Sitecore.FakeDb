@@ -29,7 +29,7 @@
         return this.DataStorage.GetSitecoreItem(itemId, language);
       }
 
-      var fieldList = this.DataStorage.GetFieldList(templateId);
+      var fieldList = this.DataStorage.GetFieldList(templateId, itemName);
       var item = ItemHelper.CreateInstance(itemName, itemId, templateId, fieldList, database, language);
 
       var parentItem = this.DataStorage.GetFakeItem(destination.ID);

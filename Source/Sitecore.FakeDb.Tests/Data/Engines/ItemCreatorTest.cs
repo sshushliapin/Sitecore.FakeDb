@@ -33,7 +33,7 @@
       this.destination = ItemHelper.CreateInstance(this.database);
 
       this.dataStorage.GetFakeItem(this.destination.ID).Returns(new DbItem("destination"));
-      this.dataStorage.GetFieldList(this.templateId).Returns(new FieldList());
+      this.dataStorage.GetFieldList(this.templateId, Arg.Any<string>()).Returns(new FieldList());
 
       this.itemCreator = new ItemCreator(this.dataStorage);
     }

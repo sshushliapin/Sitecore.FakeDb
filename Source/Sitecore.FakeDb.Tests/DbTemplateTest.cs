@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
-  using System;
   using System.Linq;
   using FluentAssertions;
   using Sitecore.Data;
@@ -19,6 +18,16 @@
     }
 
     [Fact]
+    public void ShouldCreateEmptyStandardValuesCollection()
+    {
+      // arrange & act
+      var template = new DbTemplate();
+
+      // assert
+      template.StandardValues.Should().BeEmpty();
+    }
+
+    [Fact]
     public void ShouldCreateEmptyFieldsCollectionWhenSetNameAndId()
     {
       // arrange
@@ -29,6 +38,7 @@
     }
 
     // TODO:[High] The test below states that we cannot get fake item fields by id.
+
     [Fact]
     public void ShouldCreateTemplateFieldsUsingNamesAsLowercaseKeys()
     {
@@ -40,85 +50,15 @@
     }
 
     [Fact]
-    public void ShouldBeAssignableToItem()
+    public void ShouldSetStandardValues()
     {
-      var template = new DbTemplate();
-
-      template.Should().BeAssignableTo<DbItem>();
-    }
-
-    [Fact]
-    public void ShouldHaveStandardFieldsInitialized()
-    {
-      //arrange
-      var template = new DbTemplate();
-
-      //assert
-      template.StandardFields[FieldIDs.StandardValues].Should().NotBeNull();
-      template.StandardFields[FieldIDs.StandardValues].Value.Should().BeEmpty();
-
-      template.StandardFields[FieldIDs.BaseTemplate].Should().NotBeNull();
-      template.StandardFields[FieldIDs.BaseTemplate].Value.Should().BeEmpty();
-    }
-
-    [Fact]
-    public void ShouldHaveBaseTemplatePopulated()
-    {
-      //arrange
-      var baseTemplates = new ID[] { ID.NewID, ID.NewID };
-      var baseTemplatesRawValue = string.Join("|", baseTemplates.AsEnumerable());
-
-      // act
-      var template = new DbTemplate("Template", ID.NewID, baseTemplates);
-
-      //assert
-      template.StandardFields[FieldIDs.BaseTemplate].Value.Should().BeEquivalentTo(baseTemplatesRawValue);
-    }
-
-    [Fact]
-    public void ShouldCreateStandardValuesIfChildNodeAdded()
-    {
-      //arrange
-      var templateId = ID.NewID;
-      var standardValuesItemId = ID.NewID;
-      var template = new DbTemplate("Name", templateId)
-      {
-        new DbItem(Constants.StandardValuesItemName, standardValuesItemId, templateId)
-      };
-
-      //assert
-      template.StandardFields[FieldIDs.StandardValues].Value.Should().NotBeNullOrEmpty();
-      template.StandardFields[FieldIDs.StandardValues].Value.Should().BeEquivalentTo(standardValuesItemId.ToString());
-    }
-
-    [Fact]
-    public void ShouldProperlyDetectStandardValuesItem()
-    {
-      //arrange
-      var templateId = ID.NewID;
-      var template = new DbTemplate("Name", templateId);
-      var notStandardValues = new DbItem("Item");
-      var notThisTemplateStandardValues = new DbItem(Constants.StandardValuesItemName);
-      var thisTemplateStandardValues = new DbItem(Constants.StandardValuesItemName, ID.NewID, templateId);
+      // arrange & act
+      var template = new DbTemplate { { "Title", "$name" } };
 
       // assert
-      template.IsStandardValuesItem(notStandardValues).Should().BeFalse();
-      template.IsStandardValuesItem(notThisTemplateStandardValues).Should().BeFalse();
-      template.IsStandardValuesItem(thisTemplateStandardValues).Should().BeTrue();
+      var id = template.Fields.Single().ID;
+      template.Fields[id].Value.Should().Be(string.Empty);
+      template.StandardValues[id].Value.Should().Be("$name");
     }
-
-    [Fact]
-    public void ShouldNotAllowToAddFieldsWithValues()
-    {
-      //arrange
-      var template = new DbTemplate();
-
-      //act
-      Action action = () => template.Add("Key", " Value");
-
-      //assert
-      action.ShouldThrow<InvalidOperationException>();
-    }
-
   }
 }

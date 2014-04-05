@@ -7,6 +7,7 @@
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
+  using Sitecore.Data.Managers;
   using Sitecore.Exceptions;
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.FakeDb.Security.AccessControl;
@@ -24,10 +25,10 @@
     {
       // act
       using (var db = new Db
-                        {
-                          new DbItem("item1") { { "Title", "Welcome from item 1!" } }, 
-                          new DbItem("item2") { { "Title", "Welcome from item 2!" } }
-                        })
+                   {
+                     new DbItem("item1") { { "Title", "Welcome from item 1!" } },
+                     new DbItem("item2") { { "Title", "Welcome from item 2!" } }
+                   })
       {
         var item1 = db.Database.GetItem("/sitecore/content/item1");
         var item2 = db.Database.GetItem("/sitecore/content/item2");
@@ -82,10 +83,10 @@
 
       // act
       using (var db = new Db
-                        {
-                          new DbTemplate("products", templateId) { "Name" },
-                          new DbItem("Apple") { TemplateID = templateId }
-                        })
+                   {
+                     new DbTemplate("products", templateId) { "Name" },
+                     new DbItem("Apple") { TemplateID = templateId }
+                   })
       {
         // assert
         var item = db.Database.GetItem("/sitecore/content/apple");
@@ -121,47 +122,6 @@
     }
 
     [Fact]
-    public void ShouldCreateTemplateAndTemplateItem()
-    {
-      //arrange
-      var id = ID.NewID;
-
-      //act
-      using (var db = new Db {new DbTemplate("products", id)})
-      {
-        db.Database.GetTemplate(id).Should().NotBeNull();
-        db.Database.GetItem(id).Should().NotBeNull();
-      }
-    }
-
-    [Fact]
-    public void ShouldFindTemplateItemByPath()
-    {
-      //arrange and act
-      using (var db = new Db {new DbTemplate("home")})
-      {
-        // assert
-        db.GetItem("/sitecore/templates/home").Should().NotBeNull();
-      }
-    }
-
-    [Fact]
-    public void ShouldHaveTemplateParentPointToTemplatesRoot()
-    {
-      // arrange and act
-      using (var db = new Db {new DbTemplate("home")})
-      {
-        var tempalte = db.Database.GetTemplate("home");
-        var item = db.GetItem("/sitecore/templates/home");
-
-        // assert
-        item.ParentID.Should().BeSameAs(ItemIDs.TemplateRoot);
-        item.Parent.Should().NotBeNull();
-        item.Parent.ID.Should().BeSameAs(ItemIDs.TemplateRoot);
-      }
-    }
-
-    [Fact]
     public void ShouldCreateItemWithFields()
     {
       // act
@@ -179,13 +139,13 @@
     {
       // arrange & act
       using (var db = new Db
-                        {
-                          new DbItem("parent")
-                            {
-                              Fields = new DbFieldCollection { { "Title", "Welcome to parent item!" } }, 
-                              Children = new[] { new DbItem("child") { { "Title", "Welcome to child item!" } } }
-                            }
-                        })
+                   {
+                     new DbItem("parent")
+                       {
+                         Fields = new DbFieldCollection { { "Title", "Welcome to parent item!" } },
+                         Children = new[] { new DbItem("child") { { "Title", "Welcome to child item!" } } }
+                       }
+                   })
       {
         // assert
         var parent = db.GetItem("/sitecore/content/parent");
@@ -288,7 +248,7 @@
     public void ShouldGenerateTemplateIdIfNotSet()
     {
       // arrange
-      var template = new DbTemplate();
+      var template = new DbTemplate { ID = null };
 
       // act
       using (new Db { template })
@@ -296,17 +256,6 @@
         // assert
         template.ID.Should().NotBeNull();
         template.ID.Should().NotBe(ID.Null);
-      }
-    }
-
-    [Fact]
-    public void ShouldGiveTemplateANameIfNotSet()
-    {
-      var template = new DbTemplate();
-
-      using (new Db {template})
-      {
-        template.Name.Should().NotBeNullOrEmpty();
       }
     }
 
@@ -435,10 +384,10 @@
     {
       // arrange & act
       using (var db = new Db
-                        {
-                          new DbItem("article 1") { { "Title", "A1" } },
-                          new DbItem("article 2", ID.NewID, ID.NewID) { { "Title", "A2" } }
-                        })
+                   {
+                     new DbItem("article 1") { { "Title", "A1" } },
+                     new DbItem("article 2", ID.NewID, ID.NewID) { { "Title", "A2" } }
+                   })
       {
         var template1 = db.GetItem("/sitecore/content/article 1").TemplateID;
         var template2 = db.GetItem("/sitecore/content/article 2").TemplateID;
@@ -453,10 +402,10 @@
     {
       // arrange & act
       using (var db = new Db
-                        {
-                          new DbItem("some item") { { "some field", "some value" } },
-                          new DbItem("another item") { { "another field", "another value" } }
-                        })
+                   {
+                     new DbItem("some item") { { "some field", "some value" } },
+                     new DbItem("another item") { { "another field", "another value" } }
+                   })
       {
         var template1 = db.GetItem("/sitecore/content/some item").TemplateID;
         var template2 = db.GetItem("/sitecore/content/another item").TemplateID;
@@ -654,7 +603,7 @@
       // arrange & act
       using (var db = new Db
                         {
-                          new DbItem("article 1") { { "Title", "A1" } }, 
+                          new DbItem("article 1") { { "Title", "A1" } },
                           new DbItem("article 2") { { "Title", "A2" } }
                         })
       {
@@ -669,6 +618,9 @@
     [Fact]
     public void ShouldThrowExceptionIfNoDbInstanceInitialized()
     {
+      // arrange
+      Factory.Reset();
+
       // act
       Action action = () => Database.GetDatabase("master").GetItem("/sitecore/content");
 
@@ -687,7 +639,7 @@
         Action action = () => db.Add(new DbTemplate("products", id));
 
         // assert
-        action.ShouldThrow<ArgumentException>().WithMessage("A template with the same id has already been added.*");
+        action.ShouldThrow<ArgumentException>().WithMessage("A tamplete with the same id has already been added.*");
       }
     }
 
@@ -746,20 +698,20 @@
     [Fact]
     public void ShouldCreateVersionedItem()
     {
-      using (var db = new Db 
-                        {
-                          new DbItem("home")
-                            {
-                              Fields =
-                                {
-                                  new DbField("Title") 
-                                    {
-                                      { "en", 1, "title version 1" },
-                                      { "en", 2, "title version 2" }
-                                    }
-                                 }
-                             }
-                        })
+      using (var db = new Db
+                   {
+                     new DbItem("home")
+                       {
+                         Fields =
+                           {
+                             new DbField("Title")
+                               {
+                                 { "en", 1, "title version 1" },
+                                 { "en", 2, "title version 2" }
+                               }
+                           }
+                       }
+                   })
       {
         var item1 = db.Database.GetItem("/sitecore/content/home", Language.Parse("en"), Version.Parse(1));
         item1["Title"].Should().Be("title version 1");
@@ -776,15 +728,15 @@
     {
       // arrange
       using (var db = new Db
-                        {
-                          new DbItem("home") 
-                            {
-                              Fields =
-                                {
-                                  new DbField("Title") { { "en", 1, "v1" }, { "en", 2, "v2" } } 
-                                }
-                            }
-                        })
+                   {
+                     new DbItem("home")
+                       {
+                         Fields =
+                           {
+                             new DbField("Title") { { "en", 1, "v1" }, { "en", 2, "v2" } }
+                           }
+                       }
+                   })
       {
         var item = db.GetItem("/sitecore/content/home");
 
@@ -814,6 +766,44 @@
 
         db.GetItem("/sitecore/content/home", "en", 1)["Title"].Should().Be("hello");
         db.GetItem("/sitecore/content/home", "en", 2)["Title"].Should().Be("Hi there!");
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateAndFulfilCompositeFieldsStructure()
+    {
+      // arrange
+      using (var db = new Db())
+      {
+        // act
+        db.Add(new DbItem("item1") { { "field1", "item1-field1-value" }, { "field2", "item1-field2-value" } });
+        db.Add(new DbItem("item2") { { "field1", "item2-field1-value" }, { "field2", "item2-field2-value" } });
+
+        // assert
+        db.GetItem("/sitecore/content/item1")["field1"].Should().Be("item1-field1-value");
+        db.GetItem("/sitecore/content/item1")["field2"].Should().Be("item1-field2-value");
+        db.GetItem("/sitecore/content/item2")["field1"].Should().Be("item2-field1-value");
+        db.GetItem("/sitecore/content/item2")["field2"].Should().Be("item2-field2-value");
+      }
+    }
+
+    [Theory]
+    [InlineData("$name", "Home")]
+    [InlineData("static-text", "static-text")]
+    public void ShouldCreateTemplateWithStandardValues(string standardValue, string expectedValue)
+    {
+      // arrange
+      var templateId = ID.NewID;
+
+      using (var db = new Db { new DbTemplate("sample", templateId) { { "Title", standardValue } } })
+      {
+        var root = db.GetItem(ItemIDs.ContentRoot);
+
+        // act
+        var item = ItemManager.CreateItem("Home", root, templateId);
+
+        // assert
+        item["Title"].Should().Be(expectedValue);
       }
     }
   }

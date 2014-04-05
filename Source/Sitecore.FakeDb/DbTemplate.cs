@@ -1,69 +1,56 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using Sitecore.Data;
-using Sitecore.Diagnostics;
-using Sitecore.FakeDb.Data.Engines;
-
-namespace Sitecore.FakeDb
+﻿namespace Sitecore.FakeDb
 {
-  public class DbTemplate : DbItem
+  using System.Collections;
+  using Sitecore.Data;
+
+  public class DbTemplate : IEnumerable
   {
+    public string Name { get; private set; }
 
-    public DbTemplate() : this("Noname")
+    public ID ID { get; set; }
+
+    // TODO: Hide setter
+    public DbFieldCollection Fields { get; set; }
+
+    internal DbFieldCollection StandardValues { get; private set; }
+
+    public DbTemplate()
+      : this(null)
     {
     }
 
-    public DbTemplate(string name) : this(name, ID.NewID)
+    public DbTemplate(string name)
     {
+      this.Name = name;
+      this.Fields = new DbFieldCollection();
+      this.StandardValues = new DbFieldCollection();
     }
 
-    public DbTemplate(string name, ID id) : this(name, id, new ID[] {})
+    public DbTemplate(string name, ID id)
+      : this(name)
     {
-    }
-
-    public DbTemplate(string name, ID id, ID[] baseTemplates) : base(name, id, TemplateIDs.Template)
-    {
-      //ToDo: [__Base template] is not technically a "standard field". Will revisit once we imlement auto-creating fields on the items from the templates
-      this.StandardFields.Add(new DbField(DataStorage.BaseTemplateFieldName)
-      {
-        ID = FieldIDs.BaseTemplate,
-        Value = string.Join("|", (baseTemplates ?? new ID[] { }).AsEnumerable())
-      });
-    }
-
-    public override void Add(string fieldName, string fieldValue)
-    {
-      throw new InvalidOperationException("Template Item does not support adding fields with values");
-    }
-
-    public override void Add(DbItem child)
-    {
-      base.Add(child);
-
-      if (IsStandardValuesItem(child))
-      {
-        StandardFields[FieldIDs.StandardValues].Value = child.ID.ToString();
-      }
-    }
-
-    // Sitecore.Data.Managers.TemplateProvider.IsStandardValuesHolder()
-    public bool IsStandardValuesItem(DbItem child)
-    {
-      Assert.ArgumentNotNull(child, "Child");
-
-      return child.TemplateID == ID &&
-             string.Equals(child.Name, "__Standard Values", StringComparison.InvariantCultureIgnoreCase);
+      this.ID = id;
     }
 
     public void Add(string fieldName)
     {
-      Fields.Add(fieldName);
+      this.Fields.Add(fieldName);
+    }
+
+    public void Add(string fieldName, string standardValue)
+    {
+      var id = ID.NewID;
+
+      var field = new DbField(fieldName) { ID = id };
+      this.Fields.Add(field);
+
+      var standardValueField = new DbField(fieldName) { ID = id, Value = standardValue };
+      this.StandardValues.Add(standardValueField);
     }
 
     public IEnumerator GetEnumerator()
     {
-      return Fields.GetEnumerator();
+      return this.Fields.GetEnumerator();
     }
   }
 }

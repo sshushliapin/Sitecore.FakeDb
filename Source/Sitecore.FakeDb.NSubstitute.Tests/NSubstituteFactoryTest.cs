@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.NSubstitute.Tests
 {
+  using System;
   using System.Configuration.Provider;
   using FluentAssertions;
   using Sitecore.Security.AccessControl;
@@ -18,10 +19,10 @@
     public void ShouldCreateSubstituteForType()
     {
       // arrange
-      var type = "Sitecore.Security.AccessControl.AuthorizationProvider, Sitecore.Kernel";
+      const string Type = "Sitecore.Security.AccessControl.AuthorizationProvider, Sitecore.Kernel";
 
       // act
-      var obj = this.factory.GetObject(type);
+      var obj = this.factory.GetObject(Type);
 
       // assert
       obj.Should().BeAssignableTo<AuthorizationProvider>();
@@ -31,13 +32,26 @@
     public void ShouldSetProviderNameIfTypeIsProvider()
     {
       // arrange
-      var providerType = "System.Configuration.Provider.ProviderBase, System.Configuration";
+      const string Type = "System.Configuration.Provider.ProviderBase, System.Configuration";
 
       // act
-      var providerMock = (ProviderBase)this.factory.GetObject(providerType);
+      var providerMock = (ProviderBase)this.factory.GetObject(Type);
 
       // assert
       providerMock.Name.Should().Be("ProviderBase");
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionIfNoTypeFound()
+    {
+      // arrange
+      const string Type = "wrong-type-name";
+
+      // act
+      Action action = () => this.factory.GetObject(Type);
+
+      // assert
+      action.ShouldThrow<TypeLoadException>();
     }
   }
 }

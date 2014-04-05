@@ -90,7 +90,7 @@
       var field1 = new DbField("Title");
       var field2 = new DbField("Title");
 
-      var template = new DbTemplate("", templateId) { Fields = { field1, field2 } };
+      var template = new DbTemplate() { ID = templateId, Fields = { field1, field2 } };
 
       this.dataStorage.FakeTemplates.Add(templateId, template);
 

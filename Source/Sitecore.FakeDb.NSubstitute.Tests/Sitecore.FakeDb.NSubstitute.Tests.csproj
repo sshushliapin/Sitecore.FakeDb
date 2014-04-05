@@ -36,6 +36,9 @@
     <Reference Include="NSubstitute">
       <HintPath>..\packages\NSubstitute.1.7.2.0\lib\NET45\NSubstitute.dll</HintPath>
     </Reference>
+    <Reference Include="Sitecore.Buckets">
+      <HintPath>..\..\Lib\Sitecore.Buckets.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\..\Lib\Sitecore.Kernel.dll</HintPath>
       <Private>False</Private>
@@ -55,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\ConfigurationTest.cs" />
+    <Compile Include="MockedProvidersTest.cs" />
     <Compile Include="NSubstituteFactoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -68,6 +72,10 @@
     <ProjectReference Include="..\Sitecore.FakeDb.NSubstitute\Sitecore.FakeDb.NSubstitute.csproj">
       <Project>{A18A0482-9918-4AB7-9991-E2909E98D1C3}</Project>
       <Name>Sitecore.FakeDb.NSubstitute</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sitecore.FakeDb\Sitecore.FakeDb.csproj">
+      <Project>{B1B3C599-9284-4653-9F22-FD0F726984BB}</Project>
+      <Name>Sitecore.FakeDb</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
