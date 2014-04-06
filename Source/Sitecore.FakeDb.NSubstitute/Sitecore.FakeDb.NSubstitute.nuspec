@@ -11,9 +11,11 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <tags>Sitecore, unit testing</tags>
+    <dependencies>
+      <dependency id="Sitecore.FakeDb" version="$version$" />
+    </dependencies>
   </metadata>
   <files>
-    <file src="..\Sitecore.FakeDb.Tests\App.config.transform" target="content" />
-    <file src="..\..\Release\Readme.txt" target="" />
+    <file src="..\Sitecore.FakeDb.NSubstitute.Tests\App.config.transform" target="content" />
   </files>
 </package>

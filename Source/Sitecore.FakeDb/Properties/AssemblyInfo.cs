@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Sitecore.FakeDb")]
-[assembly: AssemblyDescription("A friendly unit testing framework for Sitecore.")]
+[assembly: AssemblyDescription("A unit testing framework for Sitecore.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Sergey Shushlyapin")]
 [assembly: AssemblyProduct("Sitecore.FakeDb")]
