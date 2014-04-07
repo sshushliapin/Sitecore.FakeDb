@@ -70,6 +70,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Sitecore.FakeDb\Properties\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Analytics\TrackerTest.cs" />
     <Compile Include="Configuration\ClientDataStoreStubTest.cs" />
     <Compile Include="Configuration\ConfigurationTest.cs" />

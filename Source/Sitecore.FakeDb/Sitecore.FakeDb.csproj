@@ -72,6 +72,7 @@
     <Compile Include="Pipelines\PipelineRunEventArgs.cs" />
     <Compile Include="Pipelines\PipelineWatcherProcessor.cs" />
     <Compile Include="Pipelines\PipelineWatcher.cs" />
+    <Compile Include="Properties\AssemblyVersionInfo.cs" />
     <Compile Include="Security\AccessControl\DbItemAccess.cs" />
     <Compile Include="Configuration\ClientDataStoreStub.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommand.cs" />

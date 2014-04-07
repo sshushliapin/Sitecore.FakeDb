@@ -13,7 +13,7 @@
     <tags>Sitecore, unit testing</tags>
   </metadata>
   <files>
-    <file src="..\Sitecore.FakeDb.Tests\App.config.transform" target="content" />
+    <file src="..\Sitecore.FakeDb.Tests\App.config" target="content" />
     <file src="..\..\Release\Readme.txt" target="" />
   </files>
 </package>
