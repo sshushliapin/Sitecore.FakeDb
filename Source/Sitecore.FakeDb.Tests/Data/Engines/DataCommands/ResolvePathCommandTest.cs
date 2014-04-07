@@ -4,7 +4,6 @@
   using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Xunit;
   using Xunit.Extensions;
@@ -61,6 +60,22 @@
 
       // assert
       id.Should().BeNull();
+    }
+
+    [Fact]
+    public void ShouldReturnIdIfPathIsId()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var path = itemId.ToString();
+
+      this.command.Initialize(path);
+
+      // act
+      var resultId = this.command.DoExecute();
+
+      // assert
+      resultId.Should().Be(itemId);
     }
 
     private class OpenResolvePathCommand : ResolvePathCommand

@@ -1,3 +1,6 @@
+0.10.0
+* [FIX] db.GetItem() can return an item by id passed as a string value
+
 0.9.1
 * [FIX] Fixed database initialization exception appeared when adding two items with two similar set of multiple fields
 * [FIX] Simplified standard values implementation

@@ -2,9 +2,7 @@
 {
   using System;
   using System.Linq;
-  using Sitecore.Configuration;
   using Sitecore.Data;
-  using Sitecore.Diagnostics;
 
   public class ResolvePathCommand : Sitecore.Data.Engines.DataCommands.ResolvePathCommand, IDataEngineCommand
   {
@@ -22,7 +20,12 @@
 
     protected override ID DoExecute()
     {
-      var kvp = this.innerCommand.DataStorage.FakeItems.SingleOrDefault(fi => string.Compare(fi.Value.FullPath, ItemPath, StringComparison.OrdinalIgnoreCase) == 0);
+      if (ID.IsID(this.ItemPath))
+      {
+        return new ID(this.ItemPath);
+      }
+
+      var kvp = this.innerCommand.DataStorage.FakeItems.SingleOrDefault(fi => string.Compare(fi.Value.FullPath, this.ItemPath, StringComparison.OrdinalIgnoreCase) == 0);
 
       return kvp.Key;
     }
