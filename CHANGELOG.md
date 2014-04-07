@@ -1,4 +1,5 @@
 0.10.0
+* [NEW] Introduced NSubstitute-based mocks for authentication, authorization and bucket providers
 * [FIX] db.GetItem() can return an item by id passed as a string value
 
 0.9.1

@@ -61,7 +61,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Configuration\ConfigurationTest.cs" />
-    <Compile Include="MockedProvidersTest.cs" />
+    <Compile Include="GettingStarted.cs" />
     <Compile Include="NSubstituteFactoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
