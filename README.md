@@ -321,7 +321,7 @@ Sitecore FakeDb can deal with both single or transcient lifetime modes allowing 
 ## Mocks
 Mocking is one of the fundamental things about unit testing. Mock objects allows to simulate an abstraction behaviour keeping unit tests fast and isolated.
 
-FakeDb simplifies mocking of Sitecore components. There is a NuGet package 'Sitecore.FakeDb.NSubstitute' that allows to mock Authentication, Authorization and Bucket providers 
+FakeDb simplifies mocking of Sitecore components. There is a NuGet package 'Sitecore.FakeDb.NSubstitute' that allows to mock Authentication and Bucket providers 
 using [NSubstitute](http://nsubstitute.github.io/) isolation framework.
 
 Run the following command in the NuGet Package Manager Console:
@@ -343,25 +343,6 @@ public void HowDoIMockAuthenticationProvider()
 
   // the authentication manager is called with some unexpected parameters. It returns 'false'
   Assert.False(Sitecore.Security.Authentication.AuthenticationManager.Login("Robber", true));
-}
-
-[Fact]
-public void HowDoIMockAuthorizationProvider()
-{
-  // arrange
-  var expectedEntity = Substitute.For<Sitecore.Security.AccessControl.ISecurable>();
-  var account = Substitute.For<Sitecore.Security.Accounts.Account>("John", Sitecore.Security.Accounts.AccountType.User);
-  var accessRights = Substitute.For<Sitecore.Security.AccessControl.AccessRight>("item:read");
-  var result = Substitute.For<Sitecore.Security.AccessControl.AccessResult>
-    (
-      Sitecore.Security.AccessControl.AccessPermission.Allow,
-      new Sitecore.Security.AccessControl.AccessExplanation("OK")
-    );
-
-  Sitecore.Security.AccessControl.AuthorizationManager.Provider.GetAccess(expectedEntity, account, accessRights).Returns(result);
-
-  // act & assert
-  Sitecore.Security.AccessControl.AuthorizationManager.GetAccess(expectedEntity, account, accessRights).Should().BeSameAs(result);
 }
 
 [Fact]

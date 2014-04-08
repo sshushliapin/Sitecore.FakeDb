@@ -63,6 +63,7 @@
     <Compile Include="Configuration\ConfigurationTest.cs" />
     <Compile Include="GettingStarted.cs" />
     <Compile Include="NSubstituteFactoryTest.cs" />
+    <Compile Include="Pipelines\InitAuthenticationProviderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

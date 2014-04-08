@@ -25,19 +25,18 @@
     }
 
     [Fact]
-    public void ShouldCreateAuthorizationProviderMock()
-    {
-      // act & assert
-      AuthorizationManager.Provider.Should().BeAssignableTo<AuthorizationProvider>();
-      AuthorizationManager.Provider.GetType().FullName.Should().Be("Castle.Proxies.AuthorizationProviderProxy");
-    }
-
-    [Fact]
     public void ShouldCreateBucketProvider()
     {
       // act & assert
       BucketManager.Provider.Should().BeAssignableTo<BucketProvider>();
       BucketManager.Provider.GetType().FullName.Should().Be("Castle.Proxies.BucketProviderProxy");
+    }
+
+    [Fact]
+    public void ShouldRegisterInitFakeDbProcessor()
+    {
+      // arrange
+      Assert.DoesNotThrow(() => Factory.CreateObject("pipelines/initFakeDb/processor[@type='Sitecore.FakeDb.NSubstitute.Pipelines.InitFakeDb.InitAuthenticationProvider, Sitecore.FakeDb.NSubstitute']", true));
     }
   }
 }

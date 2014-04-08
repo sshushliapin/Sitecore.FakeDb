@@ -50,6 +50,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="NSubstituteFactory.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitAuthenticationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

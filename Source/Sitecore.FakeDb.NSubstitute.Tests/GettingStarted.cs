@@ -1,6 +1,5 @@
 ﻿namespace Examples
 {
-  using FluentAssertions;
   using global::NSubstitute;
   using Xunit;
 
@@ -18,25 +17,6 @@
 
       // the authentication manager is called with some unexpected parameters. It returns 'false'
       Assert.False(Sitecore.Security.Authentication.AuthenticationManager.Login("Robber", true));
-    }
-
-    [Fact]
-    public void HowDoIMockAuthorizationProvider()
-    {
-      // arrange
-      var expectedEntity = Substitute.For<Sitecore.Security.AccessControl.ISecurable>();
-      var account = Substitute.For<Sitecore.Security.Accounts.Account>("John", Sitecore.Security.Accounts.AccountType.User);
-      var accessRights = Substitute.For<Sitecore.Security.AccessControl.AccessRight>("item:read");
-      var result = Substitute.For<Sitecore.Security.AccessControl.AccessResult>
-        (
-          Sitecore.Security.AccessControl.AccessPermission.Allow,
-          new Sitecore.Security.AccessControl.AccessExplanation("OK")
-        );
-
-      Sitecore.Security.AccessControl.AuthorizationManager.Provider.GetAccess(expectedEntity, account, accessRights).Returns(result);
-
-      // act & assert
-      Sitecore.Security.AccessControl.AuthorizationManager.GetAccess(expectedEntity, account, accessRights).Should().BeSameAs(result);
     }
 
     [Fact]
