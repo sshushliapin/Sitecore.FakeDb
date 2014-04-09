@@ -78,12 +78,11 @@ namespace Sitecore.FakeDb.Data.Engines
     {
       Assert.ArgumentCondition(!ID.IsNullOrEmpty(templateId), "templateId", "Value cannot be null.");
 
-      var templates = this.GetFakeTemplate(templateId);
-      Assert.IsNotNull(templates, "Template '{0}' not found.", templateId);
+      var template = this.GetFakeTemplate(templateId);
+      Assert.IsNotNull(template, "Template '{0}' not found.", templateId);
 
-      var template = this.FakeTemplates[templateId];
       var fields = new FieldList();
-      foreach (var field in this.FakeTemplates[templateId].Fields)
+      foreach (var field in template.Fields)
       {
         var value = string.Empty;
 

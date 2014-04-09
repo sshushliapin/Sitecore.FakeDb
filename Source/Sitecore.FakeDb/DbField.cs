@@ -16,6 +16,8 @@
 
     public DbField(string name)
     {
+      Assert.ArgumentNotNullOrEmpty(name, "name");
+
       this.Name = name;
       this.values = new Dictionary<string, IDictionary<int, string>>();
     }

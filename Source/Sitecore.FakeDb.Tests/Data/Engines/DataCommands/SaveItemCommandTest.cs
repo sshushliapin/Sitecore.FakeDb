@@ -1,14 +1,13 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
-  using Sitecore.Data.Managers;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
-  using Sitecore.FakeDb.Pipelines.InitFakeDb;
-  using Sitecore.Pipelines;
+  using Sitecore.Globalization;
+  using Sitecore.StringExtensions;
   using Xunit;
   using Xunit.Extensions;
   using SaveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.SaveItemCommand;
@@ -39,19 +38,16 @@
     {
       // arrange
       var itemId = ID.NewID;
+      var fieldId = ID.NewID;
 
-      var originalItem = new DbItem("original item");
+      var originalItem = new DbItem("original item", itemId) { new DbField("Title") { ID = fieldId, Value = "original title" } };
       this.dataStorage.GetFakeItem(itemId).Returns(originalItem);
       this.dataStorage.FakeItems.Add(itemId, originalItem);
 
-      var fieldId = ID.NewID;
       var fields = new FieldList { { fieldId, "updated title" } };
-      var updatedItem = ItemHelper.CreateInstance("updated item", itemId, ID.NewID, fields, database, LanguageManager.DefaultLanguage);
+      var updatedItem = ItemHelper.CreateInstance("updated item", itemId, ID.NewID, fields, database, Language.Current);
 
       this.command.Initialize(updatedItem);
-
-      // TODO: Cleanup
-      CorePipeline.Run("initFakeDb", new InitDbArgs(this.database, this.dataStorage));
 
       // act
       this.command.DoExecute();
@@ -59,6 +55,28 @@
       // assert
       dataStorage.FakeItems[itemId].Name.Should().Be("updated item");
       dataStorage.FakeItems[itemId].Fields[fieldId].Value.Should().Be("updated title");
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionIfNoFieldFoundInOriginalItem()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var fieldId = ID.NewID;
+
+      var originalItem = new DbItem("original item", itemId) { new DbField("Title") };
+      this.dataStorage.GetFakeItem(itemId).Returns(originalItem);
+
+      var fields = new FieldList { { fieldId, "updated title" } };
+      var updatedItem = ItemHelper.CreateInstance("updated item", itemId, ID.NewID, fields, database, Language.Current);
+
+      this.command.Initialize(updatedItem);
+
+      // act
+      Action action = () => this.command.DoExecute();
+
+      // assert
+      action.ShouldThrow<InvalidOperationException>().WithMessage("Item field not found. Item: 'updated item', '{0}'; field: '{1}'.".FormatWith(itemId, fieldId));
     }
 
     [Theory]

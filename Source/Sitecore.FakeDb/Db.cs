@@ -181,7 +181,7 @@ namespace Sitecore.FakeDb
         fields.Add(templatefield);
       }
 
-      var template = new DbTemplate(item.Name, item.TemplateID) { Fields = fields };
+      var template = new DbTemplate(item.Name, item.TemplateID, fields);
 
       this.Add(template);
     }

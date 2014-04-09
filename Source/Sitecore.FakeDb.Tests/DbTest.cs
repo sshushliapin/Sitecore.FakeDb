@@ -142,8 +142,8 @@
                    {
                      new DbItem("parent")
                        {
-                         Fields = new DbFieldCollection { { "Title", "Welcome to parent item!" } },
-                         Children = new[] { new DbItem("child") { { "Title", "Welcome to child item!" } } }
+                         Fields = { { "Title", "Welcome to parent item!" } },
+                         Children = { new DbItem("child") { { "Title", "Welcome to child item!" } } }
                        }
                    })
       {

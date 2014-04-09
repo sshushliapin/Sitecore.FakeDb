@@ -7,7 +7,7 @@ namespace Sitecore.FakeDb
   using Sitecore.Data;
   using Sitecore.FakeDb.Security.AccessControl;
 
-  [DebuggerDisplay("Name = {Name}, FullPath = {FullPath}")]
+  [DebuggerDisplay("{Name,nq}, id: {ID.ToString(),nq}", Name = "{Name}")]
   public class DbItem : IEnumerable
   {
     public DbItem(string name)
@@ -36,13 +36,13 @@ namespace Sitecore.FakeDb
 
     public ID TemplateID { get; set; }
 
-    public DbFieldCollection Fields { get; set; }
+    public DbFieldCollection Fields { get; private set; }
 
     public ID ParentID { get; set; }
 
     public string FullPath { get; set; }
 
-    public ICollection<DbItem> Children { get; set; }
+    public ICollection<DbItem> Children { get; private set; }
 
     public DbItemAccess Access { get; set; }
 

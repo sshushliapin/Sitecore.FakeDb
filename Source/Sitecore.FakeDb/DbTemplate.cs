@@ -9,8 +9,7 @@
 
     public ID ID { get; set; }
 
-    // TODO: Hide setter
-    public DbFieldCollection Fields { get; set; }
+    public DbFieldCollection Fields { get; private set; }
 
     internal DbFieldCollection StandardValues { get; private set; }
 
@@ -20,16 +19,22 @@
     }
 
     public DbTemplate(string name)
+      : this(name, ID.Null)
     {
-      this.Name = name;
-      this.Fields = new DbFieldCollection();
-      this.StandardValues = new DbFieldCollection();
     }
 
     public DbTemplate(string name, ID id)
-      : this(name)
+      : this(name, id, new DbFieldCollection())
     {
+    }
+
+    public DbTemplate(string name, ID id, DbFieldCollection fields)
+    {
+      this.Name = name;
       this.ID = id;
+
+      this.Fields = fields;
+      this.StandardValues = new DbFieldCollection();
     }
 
     public void Add(string fieldName)

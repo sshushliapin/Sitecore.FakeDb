@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using Sitecore.Configuration;
   using Sitecore.Data.Fields;
   using Sitecore.Diagnostics;
 
@@ -50,14 +49,8 @@
     {
       foreach (Field field in this.Item.Fields)
       {
-        if (fakeItem.Fields.InnerFields.ContainsKey(field.ID))
-        {
-          fakeItem.Fields[field.ID].Value = field.Value;
-        }
-        else
-        {
-          fakeItem.Fields.Add(new DbField(field.Name) { ID = field.ID, Value = field.Value });
-        }
+        Assert.IsTrue(fakeItem.Fields.InnerFields.ContainsKey(field.ID), "Item field not found. Item: '{0}', '{1}'; field: '{2}'.", Item.Name, Item.ID, field.ID);
+        fakeItem.Fields[field.ID].Value = field.Value;
       }
     }
   }
