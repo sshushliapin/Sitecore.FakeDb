@@ -26,7 +26,9 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public const string BranchItemName = "Branch";
 
-    private Database database;
+    public const string FolderItemName = "Template";
+
+    private readonly Database database;
 
     public DataStorage(Database database)
     {
@@ -133,6 +135,7 @@ namespace Sitecore.FakeDb.Data.Engines
     protected virtual void FillDefaultFakeTemplates()
     {
       this.FakeTemplates.Add(TemplateIDs.Template, new DbTemplate(TemplateItemName, TemplateIDs.Template));
+      this.FakeTemplates.Add(TemplateIDs.Folder, new DbTemplate(FolderItemName, TemplateIDs.Folder));
     }
 
     protected virtual void FillDefaultFakeItems()

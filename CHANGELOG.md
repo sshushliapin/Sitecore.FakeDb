@@ -1,3 +1,7 @@
+0.10.1
+* [FIX] Clean up received calls for provider mocks
+* [NEW] Added Folder template
+
 0.10.0
 * [NEW] Introduced NSubstitute-based mocks for authentication, authorization and bucket providers
 * [FIX] db.GetItem() can return an item by id passed as a string value

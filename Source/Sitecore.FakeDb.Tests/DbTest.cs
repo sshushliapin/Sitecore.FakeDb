@@ -806,5 +806,16 @@
         item["Title"].Should().Be(expectedValue);
       }
     }
+
+    [Fact]
+    public void ShouldCreateItemOfFolderTemplate()
+    {
+      // arrange & act
+      using (var db = new Db { new DbItem("Sample") { TemplateID = TemplateIDs.Folder } })
+      {
+        // assert
+        db.GetItem("/sitecore/content/sample").TemplateID.Should().Be(TemplateIDs.Folder);
+      }
+    }
   }
 }

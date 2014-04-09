@@ -1,11 +1,9 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data
 {
   using System;
-  using System.Linq;
   using FluentAssertions;
   using Sitecore.Data;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Globalization;
   using Xunit;
@@ -13,8 +11,6 @@
 
   public class DataStorageTest
   {
-    private readonly Database database;
-
     private readonly DataStorage dataStorage;
 
     private const string ItemIdsRootId = "{11111111-1111-1111-1111-111111111111}";
@@ -35,8 +31,7 @@
 
     public DataStorageTest()
     {
-      this.database = Database.GetDatabase("master");
-      this.dataStorage = new DataStorage(this.database);
+      this.dataStorage = new DataStorage(Database.GetDatabase("master"));
     }
 
     [Theory]
@@ -61,6 +56,7 @@
     public void ShouldCreateDefaultFakeTemplate()
     {
       this.dataStorage.FakeTemplates[TemplateIDs.Template].Should().BeEquivalentTo(new DbTemplate("Template", TemplateIDs.Template));
+      this.dataStorage.FakeTemplates[TemplateIDs.Folder].Should().BeEquivalentTo(new DbTemplate("Folder", TemplateIDs.Folder));
     }
 
     [Fact]
