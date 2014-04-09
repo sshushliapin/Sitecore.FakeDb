@@ -150,6 +150,8 @@ namespace Sitecore.FakeDb
     /// </summary>
     public void Dispose()
     {
+      CorePipeline.Run("releaseFakeDb", new PipelineArgs());
+
       this.pipelineWatcher.Dispose();
       Factory.Reset();
     }
@@ -202,7 +204,7 @@ namespace Sitecore.FakeDb
         item.TemplateID = lastItem.TemplateID;
         for (var i = 0; i < item.Fields.Count(); i++)
         {
-        item.Fields.ElementAt(i).ID = lastItem.Fields.ElementAt(i).ID;
+          item.Fields.ElementAt(i).ID = lastItem.Fields.ElementAt(i).ID;
         }
       }
 
