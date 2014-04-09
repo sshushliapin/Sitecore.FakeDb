@@ -817,5 +817,19 @@
         db.GetItem("/sitecore/content/sample").TemplateID.Should().Be(TemplateIDs.Folder);
       }
     }
+
+    [Fact]
+    public void ShouldCreateSampleTemplateIfTemplateIdIsSetButTemplateIsMissing()
+    {
+      // arrange
+      var templateId = ID.NewID;
+
+      // act
+      using (var db = new Db { new DbItem("home", ID.NewID, templateId) })
+      {
+        // assert
+        db.GetItem("/sitecore/content/home").TemplateID.Should().Be(templateId);
+      }
+    }
   }
 }

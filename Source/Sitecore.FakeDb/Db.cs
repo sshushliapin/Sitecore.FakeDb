@@ -169,7 +169,10 @@ namespace Sitecore.FakeDb
         return;
       }
 
-      item.TemplateID = ID.NewID;
+      if (item.TemplateID == ID.Null)
+      {
+        item.TemplateID = ID.NewID;
+      }
 
       var fields = new DbFieldCollection();
       foreach (var itemField in item.Fields)

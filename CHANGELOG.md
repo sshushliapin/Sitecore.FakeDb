@@ -1,3 +1,6 @@
+0.10.2
+* [FIX] Fixed template id setting via DbItem constructor
+
 0.10.1
 * [FIX] Clean up received calls for provider mocks
 * [NEW] Added Folder template
