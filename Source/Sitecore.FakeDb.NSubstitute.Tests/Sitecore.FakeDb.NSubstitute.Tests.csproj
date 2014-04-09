@@ -55,6 +55,9 @@
     <Reference Include="xunit">
       <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
     </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\packages\xunit.extensions.1.9.2\lib\net20\xunit.extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Sitecore.FakeDb\Properties\AssemblyVersionInfo.cs">
@@ -63,7 +66,8 @@
     <Compile Include="Configuration\ConfigurationTest.cs" />
     <Compile Include="GettingStarted.cs" />
     <Compile Include="NSubstituteFactoryTest.cs" />
-    <Compile Include="Pipelines\InitAuthenticationProviderTest.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitProviderTest.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ReleaseProviderMockTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

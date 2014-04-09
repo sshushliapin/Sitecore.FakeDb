@@ -33,6 +33,9 @@
     <Reference Include="NSubstitute">
       <HintPath>..\packages\NSubstitute.1.7.2.0\lib\NET45\NSubstitute.dll</HintPath>
     </Reference>
+    <Reference Include="Sitecore.Buckets">
+      <HintPath>..\..\Lib\Sitecore.Buckets.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\..\Lib\Sitecore.Kernel.dll</HintPath>
     </Reference>
@@ -50,7 +53,8 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="NSubstituteFactory.cs" />
-    <Compile Include="Pipelines\InitFakeDb\InitAuthenticationProvider.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitProviderMock.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ReleaseProviderMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
