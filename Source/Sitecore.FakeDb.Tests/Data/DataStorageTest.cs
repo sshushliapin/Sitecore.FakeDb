@@ -29,15 +29,19 @@
 
     private const string RootParentId = "{00000000-0000-0000-0000-000000000000}";
 
+    private const string TemplateIdSitecore = "{C6576836-910C-4A3D-BA03-C277DBD3B827}";
+
+    public const string TemplateIdMainSection = "{E3E2D58C-DF95-4230-ADC9-279924CECE84}";
+
     public DataStorageTest()
     {
       this.dataStorage = new DataStorage(Database.GetDatabase("master"));
     }
 
     [Theory]
-    [InlineData(ItemIdsRootId, "sitecore", "{C6576836-910C-4A3D-BA03-C277DBD3B827}", RootParentId, "/sitecore")]
-    [InlineData(ItemIdsContentRoot, "content", "{E3E2D58C-DF95-4230-ADC9-279924CECE84}", ItemIdsRootId, "/sitecore/content")]
-    [InlineData(ItemIdsTemplateRoot, "templates", "{E3E2D58C-DF95-4230-ADC9-279924CECE84}", ItemIdsRootId, "/sitecore/templates")]
+    [InlineData(ItemIdsRootId, "sitecore", TemplateIdSitecore, RootParentId, "/sitecore")]
+    [InlineData(ItemIdsContentRoot, "content", TemplateIdMainSection, ItemIdsRootId, "/sitecore/content")]
+    [InlineData(ItemIdsTemplateRoot, "templates", TemplateIdMainSection, ItemIdsRootId, "/sitecore/templates")]
     [InlineData(TemplateIdsTemplate, "Template", TemplateIdsTemplate, ItemIdsTemplateRoot, "/sitecore/templates/template")]
     [InlineData(ItemIdsTemplateSection, "Template section", TemplateIdsTemplate, ItemIdsTemplateRoot, "/sitecore/templates/template section")]
     [InlineData(ItemIdsTemplateField, "Template field", TemplateIdsTemplate, ItemIdsTemplateRoot, "/sitecore/templates/template field")]
@@ -55,6 +59,9 @@
     [Fact]
     public void ShouldCreateDefaultFakeTemplate()
     {
+      this.dataStorage.FakeTemplates[new TemplateID(new ID(TemplateIdSitecore))].Should().BeEquivalentTo(new DbTemplate("Main Section", new TemplateID(new ID(TemplateIdSitecore))));
+      this.dataStorage.FakeTemplates[new TemplateID(new ID(TemplateIdMainSection))].Should().BeEquivalentTo(new DbTemplate("Main Section", new TemplateID(new ID(TemplateIdMainSection))));
+
       this.dataStorage.FakeTemplates[TemplateIDs.Template].Should().BeEquivalentTo(new DbTemplate("Template", TemplateIDs.Template));
       this.dataStorage.FakeTemplates[TemplateIDs.Folder].Should().BeEquivalentTo(new DbTemplate("Folder", TemplateIDs.Folder));
     }

@@ -12,6 +12,8 @@ namespace Sitecore.FakeDb.Data.Engines
   {
     private static readonly ID RootTemplateId = new ID("{C6576836-910C-4A3D-BA03-C277DBD3B827}");
 
+    private static readonly ID TemplateIdSitecore = new ID("{C6576836-910C-4A3D-BA03-C277DBD3B827}");
+
     private const string SitecoreItemName = "sitecore";
 
     private const string ContentItemName = "content";
@@ -113,18 +115,13 @@ namespace Sitecore.FakeDb.Data.Engines
       }
 
       var fakeItem = this.FakeItems[itemId];
-      var fields = new FieldList();
       var itemVersion = version == Version.Latest ? Version.First : version;
 
-      if (this.FakeTemplates.ContainsKey(fakeItem.TemplateID))
+      var fields = this.GetFieldList(fakeItem.TemplateID, fakeItem.Name);
+      foreach (var field in fakeItem.Fields)
       {
-        fields = this.GetFieldList(fakeItem.TemplateID, fakeItem.Name);
-
-        foreach (var field in fakeItem.Fields)
-        {
-          var value = field.GetValue(language.Name, version.Number);
-          fields.Add(field.ID, value);
-        }
+        var value = field.GetValue(language.Name, version.Number);
+        fields.Add(field.ID, value);
       }
 
       var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);
@@ -134,6 +131,9 @@ namespace Sitecore.FakeDb.Data.Engines
 
     protected virtual void FillDefaultFakeTemplates()
     {
+      this.FakeTemplates.Add(TemplateIdSitecore, new DbTemplate("Sitecore", new TemplateID(TemplateIdSitecore)));
+      this.FakeTemplates.Add(TemplateIDs.MainSection, new DbTemplate("Main Section", TemplateIDs.MainSection));
+
       this.FakeTemplates.Add(TemplateIDs.Template, new DbTemplate(TemplateItemName, TemplateIDs.Template));
       this.FakeTemplates.Add(TemplateIDs.Folder, new DbTemplate(FolderItemName, TemplateIDs.Folder));
     }
