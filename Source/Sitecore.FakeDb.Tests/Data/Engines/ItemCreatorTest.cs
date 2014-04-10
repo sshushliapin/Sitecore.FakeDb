@@ -90,6 +90,23 @@
       item1.Should().Be(item2);
     }
 
+    [Fact]
+    public void ShouldAddTemplateFieldsIntoDataStorage()
+    {
+      // arrange  
+      var fieldId = ID.NewID;
+      var fieldList = new FieldList { { fieldId, string.Empty } };
+
+      this.dataStorage.GetFieldList(templateId).Returns(fieldList);
+      this.dataStorage.GetFakeTemplate(templateId).Returns(new DbTemplate("sample", templateId) { Fields = { new DbField("Title") { ID = fieldId } } });
+
+      // act
+      this.itemCreator.Create("home", this.itemId, this.templateId, this.database, this.destination);
+
+      // assert
+      this.dataStorage.FakeItems[this.itemId].Fields.InnerFields.ContainsKey(fieldId).Should().BeTrue();
+    }
+
     public void Dispose()
     {
       Factory.Reset();

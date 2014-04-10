@@ -93,7 +93,7 @@
       var field1 = new DbField("Title");
       var field2 = new DbField("Title");
 
-      var template = new DbTemplate() { ID = templateId, Fields = { field1, field2 } };
+      var template = new DbTemplate { ID = templateId, Fields = { field1, field2 } };
 
       this.dataStorage.FakeTemplates.Add(templateId, template);
 
@@ -117,6 +117,64 @@
 
       // assert
       a.ShouldThrow<InvalidOperationException>().WithMessage("Template \'{C4520D42-33CA-48C7-972D-6CEE1BC4B9A6}\' not found.");
+    }
+
+    [Fact]
+    public void ShouldGetSitecoreItemFieldIdsFromTemplateAndValuesFromItems()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var templateId = ID.NewID;
+      var fieldId = ID.NewID;
+
+      this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title") { ID = fieldId } } });
+      this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId) { Fields = { new DbField("Title") { ID = fieldId, Value = "Welcome!" } } });
+
+      // act
+      var item = this.dataStorage.GetSitecoreItem(itemId, Language.Current);
+
+      // assert
+      item[fieldId].Should().Be("Welcome!");
+    }
+
+    [Fact]
+    public void ShouldGetSitecoreItemWithEmptyFieldIfNoItemFieldFound()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var templateId = ID.NewID;
+      var fieldId = ID.NewID;
+
+      this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title") { ID = fieldId } } });
+      this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId));
+
+      // act
+      var item = this.dataStorage.GetSitecoreItem(itemId, Language.Current);
+
+      // assert
+      item[fieldId].Should().BeEmpty();
+    }
+
+    [Fact]
+    public void ShouldGetSitecoreItemFieldIdFromStandardValuesIfNoItemValueFound()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var templateId = ID.NewID;
+      var fieldId = ID.NewID;
+
+      this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId)
+                                                       {
+                                                         Fields = { new DbField("Title") { ID = fieldId } },
+                                                         StandardValues = { new DbField("Title") { ID = fieldId, Value = "$name" } }
+                                                       });
+      this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId));
+
+      // act
+      var item = this.dataStorage.GetSitecoreItem(itemId, Language.Current);
+
+      // assert
+      item[fieldId].Should().Be("Sample");
     }
   }
 }

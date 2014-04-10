@@ -80,10 +80,10 @@ namespace Sitecore.FakeDb
       Assert.ArgumentNotNull(item, "item");
 
       this.CreateTemplate(item);
-      this.CreateItem(item);
-      this.CreateItemFields(item);
-      this.CreateChildren(item);
+      this.SetParent(item);
       this.SetFullPath(item);
+      this.CreateItem(item);
+      this.CreateChildren(item);
       this.SetAccess(item);
     }
 
@@ -194,58 +194,40 @@ namespace Sitecore.FakeDb
       }
 
       var lastItem = this.DataStorage.FakeItems.Values.LastOrDefault();
-      if (lastItem != null)
+      if (lastItem == null)
       {
-        var lastItemTemplateKeys = string.Concat(lastItem.Fields.InnerFields.Values.Select(f => f.Name));
-        var itemTemplateKeys = string.Concat(item.Fields.InnerFields.Values.Select(f => f.Name));
+        return true;
+      }
 
-        if (lastItemTemplateKeys != itemTemplateKeys)
-        {
-          return false;
-        }
+      var lastItemTemplateKeys = string.Concat(lastItem.Fields.InnerFields.Values.Select(f => f.Name));
+      var itemTemplateKeys = string.Concat(item.Fields.InnerFields.Values.Select(f => f.Name));
 
-        item.TemplateID = lastItem.TemplateID;
-        for (var i = 0; i < item.Fields.Count(); i++)
-        {
-          item.Fields.ElementAt(i).ID = lastItem.Fields.ElementAt(i).ID;
-        }
+      if (lastItemTemplateKeys != itemTemplateKeys)
+      {
+        return false;
+      }
+
+      item.TemplateID = lastItem.TemplateID;
+
+      // TODO:[High] review and redesign.
+      foreach (var field in lastItem.Fields)
+      {
+        var oldField = item.Fields.InnerFields.Values.Single(v => v.Name == field.Name);
+        item.Fields.InnerFields.Remove(oldField.ID);
+
+        var renewedField = oldField;
+        renewedField.ID = field.ID;
+        item.Fields.InnerFields.Add(field.ID, renewedField);
       }
 
       return true;
     }
 
-    protected virtual void CreateItem(DbItem item)
+    protected virtual void SetParent(DbItem item)
     {
       if (ID.IsNullOrEmpty(item.ParentID))
       {
         item.ParentID = DefaultItemRoot;
-      }
-
-      var root = this.Database.GetItem(item.ParentID);
-      ItemManager.CreateItem(item.Name, root, item.TemplateID, item.ID);
-    }
-
-    protected virtual void CreateItemFields(DbItem item)
-    {
-      if (!item.Fields.Any())
-      {
-        return;
-      }
-
-      var dbitem = this.DataStorage.FakeItems[item.ID];
-      foreach (var field in item.Fields)
-      {
-        dbitem.Fields.Add(field);
-      }
-    }
-
-    protected virtual void CreateChildren(DbItem item)
-    {
-      foreach (var child in item.Children)
-      {
-        child.ParentID = item.ID;
-        child.FullPath = item.FullPath + "/" + child.Name;
-        this.Add(child);
       }
     }
 
@@ -259,6 +241,21 @@ namespace Sitecore.FakeDb
 
       var parent = this.DataStorage.GetFakeItem(item.ParentID);
       item.FullPath = parent.FullPath + "/" + item.Name;
+    }
+
+    protected virtual void CreateItem(DbItem item)
+    {
+      this.DataStorage.FakeItems.Add(item.ID, item);
+    }
+
+    protected virtual void CreateChildren(DbItem item)
+    {
+      foreach (var child in item.Children)
+      {
+        child.ParentID = item.ID;
+        child.FullPath = item.FullPath + "/" + child.Name;
+        this.Add(child);
+      }
     }
 
     protected virtual void SetAccess(DbItem item)

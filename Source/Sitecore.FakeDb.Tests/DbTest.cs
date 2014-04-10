@@ -831,5 +831,27 @@
         db.GetItem("/sitecore/content/home").TemplateID.Should().Be(templateId);
       }
     }
+
+    [Fact]
+    public void ShouldCreateItemUsingItemManager()
+    {
+      // arrange
+      var templateId = ID.NewID;
+
+      using (var db = new Db { new DbTemplate("Sample", templateId) { "Title" } })
+      {
+        var root = db.Database.GetItem("/sitecore/content");
+
+        // act
+        var item = ItemManager.CreateItem("Home", root, templateId, this.itemId);
+        using (new EditContext(item))
+        {
+          item["Title"] = "Welcome!";
+        }
+
+        // assert
+        item["Title"].Should().Be("Welcome!");
+      }
+    }
   }
 }

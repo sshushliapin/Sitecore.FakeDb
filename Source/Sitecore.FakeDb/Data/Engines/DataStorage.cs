@@ -84,18 +84,7 @@ namespace Sitecore.FakeDb.Data.Engines
       var fields = new FieldList();
       foreach (var field in template.Fields)
       {
-        var value = string.Empty;
-
-        if (!string.IsNullOrEmpty(itemName) && template.StandardValues.InnerFields.ContainsKey(field.ID))
-        {
-          value = template.StandardValues[field.ID].Value;
-          if (value == "$name")
-          {
-            value = itemName;
-          }
-        }
-
-        fields.Add(field.ID, value);
+        fields.Add(field.ID, string.Empty);
       }
 
       return fields;
@@ -114,13 +103,32 @@ namespace Sitecore.FakeDb.Data.Engines
       }
 
       var fakeItem = this.FakeItems[itemId];
+      var fakeTemplate = this.GetFakeTemplate(fakeItem.TemplateID);
       var itemVersion = version == Version.Latest ? Version.First : version;
 
       var fields = this.GetFieldList(fakeItem.TemplateID, fakeItem.Name);
-      foreach (var field in fakeItem.Fields)
+      foreach (var templateField in fakeTemplate.Fields)
       {
-        var value = field.GetValue(language.Name, version.Number);
-        fields.Add(field.ID, value);
+        var fieldId = templateField.ID;
+        var value = string.Empty;
+
+        if (fakeItem.Fields.InnerFields.ContainsKey(fieldId))
+        {
+          var itemField = fakeItem.Fields[fieldId];
+
+          value = itemField.GetValue(language.Name, version.Number);
+        }
+
+        if (string.IsNullOrEmpty(value) && fakeTemplate.StandardValues.InnerFields.ContainsKey(fieldId))
+        {
+          value = fakeTemplate.StandardValues[fieldId].Value;
+          if (value == "$name")
+          {
+            value = fakeItem.Name;
+          }
+        }
+
+        fields.Add(fieldId, value);
       }
 
       var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);

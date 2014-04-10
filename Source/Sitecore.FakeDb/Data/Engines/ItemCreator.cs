@@ -34,7 +34,17 @@
 
       var parentItem = this.DataStorage.GetFakeItem(destination.ID);
       var fullPath = parentItem.FullPath + "/" + itemName;
+
       var dbitem = new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath };
+
+      if (this.dataStorage.GetFakeTemplate(templateId) != null)
+      {
+        foreach (var field in this.dataStorage.GetFakeTemplate(templateId).Fields)
+        {
+          // TODO: Introduce field clonning.
+          dbitem.Fields.Add(new DbField(field.Name) { ID = field.ID });
+        }
+      }
 
       this.DataStorage.FakeItems.Add(itemId, dbitem);
       this.DataStorage.GetFakeItem(destination.ID).Children.Add(dbitem);
