@@ -853,5 +853,16 @@
         item["Title"].Should().Be("Welcome!");
       }
     }
+
+    [Fact]
+    public void ShouldGetChildrenOfContentsRoot()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("Home") })
+      {
+        // act & assert
+        db.GetItem("/sitecore/content").Children.Count.Should().Be(1);
+      }
+    }
   }
 }

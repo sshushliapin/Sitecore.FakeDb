@@ -1,5 +1,7 @@
 0.10.2
 * [FIX] Fixed template id setting via DbItem constructor
+* [FIX] Fixed field name loosing in some scenarios
+* [FIX] Fixed getting children of the content root item
 
 0.10.1
 * [FIX] Clean up received calls for provider mocks

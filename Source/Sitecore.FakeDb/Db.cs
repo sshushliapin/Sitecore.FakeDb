@@ -81,6 +81,7 @@ namespace Sitecore.FakeDb
 
       this.CreateTemplate(item);
       this.SetParent(item);
+      this.EnsureIsChild(item);
       this.SetFullPath(item);
       this.CreateItem(item);
       this.CreateChildren(item);
@@ -228,6 +229,14 @@ namespace Sitecore.FakeDb
       if (ID.IsNullOrEmpty(item.ParentID))
       {
         item.ParentID = DefaultItemRoot;
+      }
+    }
+
+    protected virtual void EnsureIsChild(DbItem item)
+    {
+      if (!this.DataStorage.GetFakeItem(item.ParentID).Children.Contains(item))
+      {
+        this.DataStorage.GetFakeItem(item.ParentID).Children.Add(item);
       }
     }
 
