@@ -83,15 +83,35 @@
 
       // act
       using (var db = new Db
-                   {
-                     new DbTemplate("products", templateId) { "Name" },
-                     new DbItem("Apple") { TemplateID = templateId }
-                   })
+                        {
+                          new DbTemplate("Sample", templateId) { "Title" },
+                          new DbItem("Home", this.itemId, templateId)
+                        })
       {
         // assert
-        var item = db.Database.GetItem("/sitecore/content/apple");
+        var item = db.Database.GetItem(itemId);
+        item.Fields["Title"].Should().NotBeNull();
         item.TemplateID.Should().Be(templateId);
-        item.Fields["Name"].Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateItemOfPredefinedTemplatePredefinedFields()
+    {
+      // arrange
+      var templateId = ID.NewID;
+
+      // act
+      using (var db = new Db
+                        {
+                          new DbTemplate("Sample", templateId) { "Title" },
+                          new DbItem("Home", itemId, templateId) { { "Title", "Welcome!" } }
+                        })
+      {
+        // assert
+        var item = db.GetItem(itemId);
+        item.Fields["Title"].Value.Should().Be("Welcome!");
+        item.TemplateID.Should().Be(templateId);
       }
     }
 
@@ -389,11 +409,14 @@
                      new DbItem("article 2", ID.NewID, ID.NewID) { { "Title", "A2" } }
                    })
       {
-        var template1 = db.GetItem("/sitecore/content/article 1").TemplateID;
-        var template2 = db.GetItem("/sitecore/content/article 2").TemplateID;
+        var item1 = db.GetItem("/sitecore/content/article 1");
+        var item2 = db.GetItem("/sitecore/content/article 2");
 
         // assert
-        template1.Should().NotBe(template2);
+        item1.TemplateID.Should().NotBe(item2.TemplateID);
+
+        item1["Title"].Should().Be("A1");
+        item2["Title"].Should().Be("A2");
       }
     }
 

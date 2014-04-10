@@ -6,7 +6,6 @@ namespace Sitecore.FakeDb
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
-  using Sitecore.Data.Managers;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Configuration;
   using Sitecore.FakeDb.Data.Engines;
@@ -189,18 +188,32 @@ namespace Sitecore.FakeDb
 
     protected virtual bool ResolveTemplate(DbItem item)
     {
+      if (this.dataStorage.FakeTemplates.ContainsKey(item.TemplateID))
+      {
+        var template = this.dataStorage.FakeTemplates[item.TemplateID];
+        MapFields(template.Fields, item);
+
+        return true;
+      }
+
       if (!ID.IsNullOrEmpty(item.TemplateID))
       {
         return false;
       }
 
-      var lastItem = this.DataStorage.FakeItems.Values.LastOrDefault();
-      if (lastItem == null)
+      var sourceItem = this.DataStorage.FakeItems.Values.LastOrDefault();
+      if (sourceItem == null)
       {
-        return true;
+        return false;
       }
 
-      var lastItemTemplateKeys = string.Concat(lastItem.Fields.InnerFields.Values.Select(f => f.Name));
+      if (sourceItem.TemplateID == TemplateIDs.Template)
+      {
+        return false;
+      }
+
+
+      var lastItemTemplateKeys = string.Concat(sourceItem.Fields.InnerFields.Values.Select(f => f.Name));
       var itemTemplateKeys = string.Concat(item.Fields.InnerFields.Values.Select(f => f.Name));
 
       if (lastItemTemplateKeys != itemTemplateKeys)
@@ -208,20 +221,30 @@ namespace Sitecore.FakeDb
         return false;
       }
 
-      item.TemplateID = lastItem.TemplateID;
+      item.TemplateID = sourceItem.TemplateID;
 
       // TODO:[High] review and redesign.
-      foreach (var field in lastItem.Fields)
+      MapFields(sourceItem.Fields, item);
+
+      return true;
+    }
+
+    private static void MapFields(DbFieldCollection source, DbItem target)
+    {
+      foreach (var field in source)
       {
-        var oldField = item.Fields.InnerFields.Values.Single(v => v.Name == field.Name);
-        item.Fields.InnerFields.Remove(oldField.ID);
+        var oldField = target.Fields.InnerFields.Values.SingleOrDefault(v => v.Name == field.Name);
+        if (oldField == null)
+        {
+          continue;
+        }
+
+        target.Fields.InnerFields.Remove(oldField.ID);
 
         var renewedField = oldField;
         renewedField.ID = field.ID;
-        item.Fields.InnerFields.Add(field.ID, renewedField);
+        target.Fields.InnerFields.Add(field.ID, renewedField);
       }
-
-      return true;
     }
 
     protected virtual void SetParent(DbItem item)
