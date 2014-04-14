@@ -25,7 +25,7 @@
     {
       // arrange
       var id = ID.NewID;
-      var field = new DbField("Title") { ID = id };
+      var field = new DbField("Title", id);
       var collection = new DbFieldCollection { field };
 
       // act & assert
@@ -37,8 +37,8 @@
     {
       // arrange
       var id = ID.NewID;
-      var originalField = new DbField("Title") { ID = id };
-      var newField = new DbField("Title") { ID = id };
+      var originalField = new DbField("Title", id);
+      var newField = new DbField("Title", id);
 
       var collection = new DbFieldCollection { originalField };
 

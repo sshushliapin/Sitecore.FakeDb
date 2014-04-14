@@ -46,10 +46,10 @@
     {
       var id = ID.NewID;
 
-      var field = new DbField(fieldName) { ID = id };
+      var field = new DbField(fieldName, id);
       this.Fields.Add(field);
 
-      var standardValueField = new DbField(fieldName) { ID = id, Value = standardValue };
+      var standardValueField = new DbField(fieldName, id) { Value = standardValue };
       this.StandardValues.Add(standardValueField);
     }
 

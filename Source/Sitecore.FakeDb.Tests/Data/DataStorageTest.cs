@@ -127,8 +127,8 @@
       var templateId = ID.NewID;
       var fieldId = ID.NewID;
 
-      this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title") { ID = fieldId } } });
-      this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId) { Fields = { new DbField("Title") { ID = fieldId, Value = "Welcome!" } } });
+      this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title", fieldId) } });
+      this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId) { Fields = { new DbField("Title", fieldId) { Value = "Welcome!" } } });
 
       // act
       var item = this.dataStorage.GetSitecoreItem(itemId, Language.Current);
@@ -145,7 +145,7 @@
       var templateId = ID.NewID;
       var fieldId = ID.NewID;
 
-      this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title") { ID = fieldId } } });
+      this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title", fieldId) } });
       this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId));
 
       // act
@@ -165,8 +165,8 @@
 
       this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId)
                                                        {
-                                                         Fields = { new DbField("Title") { ID = fieldId } },
-                                                         StandardValues = { new DbField("Title") { ID = fieldId, Value = "$name" } }
+                                                         Fields = { new DbField("Title", fieldId) },
+                                                         StandardValues = { new DbField("Title", fieldId) { Value = "$name" } }
                                                        });
       this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId));
 

@@ -15,16 +15,22 @@
     private readonly IDictionary<string, IDictionary<int, string>> values;
 
     public DbField(string name)
+      : this(name, ID.NewID)
+    {
+    }
+
+    public DbField(string name, ID id)
     {
       Assert.ArgumentNotNullOrEmpty(name, "name");
 
       this.Name = name;
+      this.ID = id;
       this.values = new Dictionary<string, IDictionary<int, string>>();
     }
 
-    public string Name { get; private set; }
+    public string Name { get; set; }
 
-    public ID ID { get; set; }
+    public ID ID { get; internal set; }
 
     public string Value
     {

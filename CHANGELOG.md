@@ -1,3 +1,6 @@
+0.10.4
+* [FIX] Hidden setter for DbField.ID property
+
 0.10.3
 * [FIX] Fixed field name loosing in some scenarios
 * [FIX] Fixed getting children of the content root item

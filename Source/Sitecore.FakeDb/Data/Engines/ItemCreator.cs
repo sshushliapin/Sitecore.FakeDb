@@ -42,7 +42,7 @@
         foreach (var field in this.dataStorage.GetFakeTemplate(templateId).Fields)
         {
           // TODO: Introduce field clonning.
-          dbitem.Fields.Add(new DbField(field.Name) { ID = field.ID });
+          dbitem.Fields.Add(new DbField(field.Name, field.ID));
         }
       }
 

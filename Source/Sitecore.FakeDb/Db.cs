@@ -177,7 +177,7 @@ namespace Sitecore.FakeDb
       var fields = new DbFieldCollection();
       foreach (var itemField in item.Fields)
       {
-        var templatefield = new DbField(itemField.Name) { ID = itemField.ID };
+        var templatefield = new DbField(itemField.Name, itemField.ID);
         fields.Add(templatefield);
       }
 

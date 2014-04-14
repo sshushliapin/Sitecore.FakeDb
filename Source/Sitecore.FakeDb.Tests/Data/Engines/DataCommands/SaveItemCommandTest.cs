@@ -40,7 +40,7 @@
       var itemId = ID.NewID;
       var fieldId = ID.NewID;
 
-      var originalItem = new DbItem("original item", itemId) { new DbField("Title") { ID = fieldId, Value = "original title" } };
+      var originalItem = new DbItem("original item", itemId) { new DbField("Title", fieldId) { Value = "original title" } };
       this.dataStorage.GetFakeItem(itemId).Returns(originalItem);
       this.dataStorage.FakeItems.Add(itemId, originalItem);
 

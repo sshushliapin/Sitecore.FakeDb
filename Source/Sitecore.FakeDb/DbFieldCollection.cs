@@ -40,11 +40,6 @@
     {
       Assert.ArgumentNotNull(field, "field");
 
-      if (ID.IsNullOrEmpty(field.ID))
-      {
-        field.ID = ID.NewID;
-      }
-
       if (this.fields.ContainsKey(field.ID))
       {
         return;
