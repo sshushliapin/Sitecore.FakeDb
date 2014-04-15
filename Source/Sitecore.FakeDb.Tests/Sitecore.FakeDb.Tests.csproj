@@ -74,6 +74,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Analytics\TrackerTest.cs" />
+    <Compile Include="DbConcurrencyTest.cs" />
     <Compile Include="Configuration\ClientDataStoreStubTest.cs" />
     <Compile Include="Configuration\ConfigurationTest.cs" />
     <Compile Include="Configuration\DbConfigurationTest.cs" />
