@@ -45,6 +45,7 @@ namespace Sitecore.FakeDb
     }
 
     internal Db(PipelineWatcher pipelineWatcher)
+      : this()
     {
       this.pipelineWatcher = pipelineWatcher;
     }
@@ -153,6 +154,8 @@ namespace Sitecore.FakeDb
       CorePipeline.Run("releaseFakeDb", new PipelineArgs());
 
       this.pipelineWatcher.Dispose();
+      this.database.Engines.TemplateEngine.Reset();
+
       Factory.Reset();
     }
 

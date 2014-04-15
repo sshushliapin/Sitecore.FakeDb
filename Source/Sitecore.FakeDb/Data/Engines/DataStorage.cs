@@ -102,6 +102,9 @@ namespace Sitecore.FakeDb.Data.Engines
         return null;
       }
 
+      // TODO:[High] Avoid the templates resetting. Required to avoid sharing templates between unit tests.
+      this.Database.Engines.TemplateEngine.Reset();
+
       var fakeItem = this.FakeItems[itemId];
       var fakeTemplate = this.GetFakeTemplate(fakeItem.TemplateID);
       var itemVersion = version == Version.Latest ? Version.First : version;

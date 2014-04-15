@@ -1,6 +1,7 @@
 0.10.4
 * [FIX] Hidden setter for DbField.ID property
 * [FIX] Fixed Folder template name
+* [FIX] Added temporary fix which resets global templates that might be shared across unit tests
 
 0.10.3
 * [FIX] Fixed field name loosing in some scenarios
