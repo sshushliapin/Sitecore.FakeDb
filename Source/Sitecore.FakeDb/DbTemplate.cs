@@ -61,7 +61,7 @@
     {
       this.Fields.Add(field);
 
-      var standardValueField = new DbField(fieldName, id) { Value = standardValue };
+      var standardValueField = new DbField(field.Name, field.ID) { Value = standardValue };
       this.StandardValues.Add(standardValueField);
     }
 
