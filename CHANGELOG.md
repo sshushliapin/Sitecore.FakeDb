@@ -1,5 +1,6 @@
 0.10.4
 * [FIX] Hidden setter for DbField.ID property
+* [FIX] Fixed Folder template name
 
 0.10.3
 * [FIX] Fixed field name loosing in some scenarios

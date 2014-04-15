@@ -28,7 +28,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public const string BranchItemName = "Branch";
 
-    public const string FolderItemName = "Template";
+    public const string FolderItemName = "Folder";
 
     private readonly Database database;
 
