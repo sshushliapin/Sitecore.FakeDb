@@ -45,11 +45,23 @@
     public void Add(string fieldName, string standardValue)
     {
       var id = ID.NewID;
-
       var field = new DbField(fieldName, id);
+
+      this.Add(field, standardValue);
+    }
+
+    public void Add(ID id, string standardValue)
+    {
+      var field = new DbField(id);
+
+      this.Add(field, standardValue);
+    }
+
+    protected void Add(DbField field, string standardValue)
+    {
       this.Fields.Add(field);
 
-      var standardValueField = new DbField(fieldName, id) { Value = standardValue };
+      var standardValueField = new DbField(field.Name, field.ID) { Value = standardValue };
       this.StandardValues.Add(standardValueField);
     }
 

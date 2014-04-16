@@ -12,7 +12,23 @@
   [DebuggerDisplay("ID = {ID}, Name = {Name}, Value = {Value}")]
   public class DbField : IEnumerable
   {
-    private readonly IDictionary<string, IDictionary<int, string>> values;
+    public static readonly IDictionary<ID, string> FieldIdToNameMapping = new Dictionary<ID, string>
+    {
+      { FieldIDs.LayoutField, "__Renderings" },
+      { FieldIDs.BaseTemplate, "__Base template" }
+    };
+
+    private readonly IDictionary<string, IDictionary<int, string>> values = new Dictionary<string, IDictionary<int, string>>();
+
+    public DbField(ID id)
+    {
+      this.ID = id;
+
+      if (FieldIdToNameMapping.ContainsKey(id))
+      {
+        this.Name = FieldIdToNameMapping[id];
+      }
+    }
 
     public DbField(string name)
       : this(name, ID.NewID)
@@ -25,7 +41,6 @@
 
       this.Name = name;
       this.ID = id;
-      this.values = new Dictionary<string, IDictionary<int, string>>();
     }
 
     public string Name { get; set; }

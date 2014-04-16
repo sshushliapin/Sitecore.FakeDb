@@ -11,9 +11,12 @@
   {
     private readonly DbField field;
 
+    private readonly DbField layoutField;
+
     public DbFieldTest()
     {
       this.field = new DbField("Title");
+      this.layoutField = new DbField(FieldIDs.LayoutField);
     }
 
     [Fact]
@@ -21,6 +24,7 @@
     {
       // act & assert
       this.field.Name.Should().Be("Title");
+      this.layoutField.Name.Should().Be("__Renderings");
     }
 
     [Fact]
