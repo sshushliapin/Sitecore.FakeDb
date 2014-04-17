@@ -47,8 +47,16 @@
 
     protected virtual void UpdateFields(DbItem fakeItem)
     {
+      var template = this.innerCommand.DataStorage.GetFakeTemplate(fakeItem.TemplateID);
+      Assert.IsNotNull(template, "Item template not found. Item: '{0}', '{1}'; template: '{2}'.", Item.Name, Item.ID, Item.TemplateID);
+
       foreach (Field field in this.Item.Fields)
       {
+        if (!fakeItem.Fields.InnerFields.ContainsKey(field.ID) && template.Fields.InnerFields.ContainsKey(field.ID))
+        {
+          fakeItem.Fields.Add(new DbField(field.ID));
+        }
+
         Assert.IsTrue(fakeItem.Fields.InnerFields.ContainsKey(field.ID), "Item field not found. Item: '{0}', '{1}'; field: '{2}'.", Item.Name, Item.ID, field.ID);
         fakeItem.Fields[field.ID].Value = field.Value;
       }

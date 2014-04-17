@@ -7,7 +7,7 @@
   {
     public string Name { get; private set; }
 
-    public ID ID { get; set; }
+    public ID ID { get; internal set; }
 
     public DbFieldCollection Fields { get; private set; }
 
@@ -39,7 +39,7 @@
 
     public void Add(string fieldName)
     {
-      this.Fields.Add(fieldName);
+      this.Add(fieldName, string.Empty);
     }
 
     public void Add(string fieldName, string standardValue)
@@ -50,9 +50,15 @@
       this.Add(field, standardValue);
     }
 
+    public void Add(ID id)
+    {
+      this.Add(id, string.Empty);
+    }
+
     public void Add(ID id, string standardValue)
     {
-      var field = new DbField(id);
+      var fieldName = id.ToShortID().ToString();
+      var field = new DbField(fieldName, id);
 
       this.Add(field, standardValue);
     }

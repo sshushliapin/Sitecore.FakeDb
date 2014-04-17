@@ -60,5 +60,19 @@
       template.Fields[id].Value.Should().Be(string.Empty);
       template.StandardValues[id].Value.Should().Be("$name");
     }
+
+    [Fact]
+    public void ShouldAddFieldById()
+    {
+      // arrange
+      var fieldId = ID.NewID;
+
+      // act
+      var template = new DbTemplate { fieldId };
+
+      // assert
+      template.Fields[fieldId].Should().NotBeNull();
+      template.Fields[fieldId].Name.Should().Be(fieldId.ToShortID().ToString());
+    }
   }
 }

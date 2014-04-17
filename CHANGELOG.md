@@ -1,3 +1,7 @@
+0.11.0
+* [NEW] Added the ability to work with fields by ID. Resolve names automatically for certain standard fields. Add a test showing how standard values work on the layout fields (layout deltas). Thanks to [Pavel Veller](https://github.com/pveller)
+* [FIX] Fixed creating and editing items of predefined templates
+
 0.10.4
 * [FIX] Hidden setter for DbField.ID property
 * [FIX] Fixed Folder template name

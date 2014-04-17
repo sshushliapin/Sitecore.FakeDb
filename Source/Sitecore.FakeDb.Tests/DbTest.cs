@@ -20,6 +20,8 @@
   {
     private readonly ID itemId = ID.NewID;
 
+    private readonly ID templateId = ID.NewID;
+
     [Fact]
     public void ShouldCreateCoupleOfItemsWithFields()
     {
@@ -78,9 +80,6 @@
     [Fact]
     public void ShouldCreateItemOfPredefinedTemplate()
     {
-      // arrange
-      var templateId = ID.NewID;
-
       // act
       using (var db = new Db
                         {
@@ -98,9 +97,6 @@
     [Fact]
     public void ShouldCreateItemOfPredefinedTemplatePredefinedFields()
     {
-      // arrange
-      var templateId = ID.NewID;
-
       // act
       using (var db = new Db
                         {
@@ -112,6 +108,26 @@
         var item = db.GetItem(itemId);
         item.Fields["Title"].Value.Should().Be("Welcome!");
         item.TemplateID.Should().Be(templateId);
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateAndEditItemOfPredefinedTemplate()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbTemplate("Sample", this.templateId) { "Title" },
+                          new DbItem("Home", this.itemId, this.templateId)
+                        })
+      {
+        var item = db.GetItem(this.itemId);
+
+        // act
+        using (new EditContext(item))
+        {
+          item.Fields["Title"].Value = "Welcome!";
+        }
       }
     }
 
@@ -844,9 +860,6 @@
     [Fact]
     public void ShouldCreateSampleTemplateIfTemplateIdIsSetButTemplateIsMissing()
     {
-      // arrange
-      var templateId = ID.NewID;
-
       // act
       using (var db = new Db { new DbItem("home", ID.NewID, templateId) })
       {
@@ -859,14 +872,12 @@
     public void ShouldCreateItemUsingItemManager()
     {
       // arrange
-      var templateId = ID.NewID;
-
-      using (var db = new Db { new DbTemplate("Sample", templateId) { "Title" } })
+      using (var db = new Db { new DbTemplate("Sample", this.templateId) { "Title" } })
       {
         var root = db.Database.GetItem("/sitecore/content");
 
         // act
-        var item = ItemManager.CreateItem("Home", root, templateId, this.itemId);
+        var item = ItemManager.CreateItem("Home", root, this.templateId, this.itemId);
         using (new EditContext(item))
         {
           item["Title"] = "Welcome!";
