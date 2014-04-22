@@ -11,6 +11,8 @@
 
     public DbFieldCollection Fields { get; private set; }
 
+    public ID[] BaseIDs { get; set; }
+
     internal DbFieldCollection StandardValues { get; private set; }
 
     public DbTemplate()
