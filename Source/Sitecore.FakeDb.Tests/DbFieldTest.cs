@@ -15,7 +15,7 @@
 
     public DbFieldTest()
     {
-      this.field = new DbField("Title");
+      this.field = new DbField("Title") { Type = "Single-Line Text" };
       this.layoutField = new DbField(FieldIDs.LayoutField);
     }
 
@@ -25,6 +25,13 @@
       // act & assert
       this.field.Name.Should().Be("Title");
       this.layoutField.Name.Should().Be("__Renderings");
+    }
+
+    [Fact]
+    public void ShouldSetType()
+    {
+      // act & assert
+      this.field.Type.Should().Be("Single-Line Text");
     }
 
     [Fact]

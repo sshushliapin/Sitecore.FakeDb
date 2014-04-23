@@ -18,7 +18,13 @@
     {
       var templateId = field.Item.TemplateID;
       var template = storage.GetFakeTemplate(templateId);
-      Assert.IsNotNull(template, "template");
+
+      if (template == null)
+      {
+        // This will be the case for things like TemplateFieldItem.Type. 
+        // We don't have those templates and it's safe to just return an empty string
+        return string.Empty;
+      }
 
       if (!template.StandardValues.InnerFields.ContainsKey(field.ID))
       {

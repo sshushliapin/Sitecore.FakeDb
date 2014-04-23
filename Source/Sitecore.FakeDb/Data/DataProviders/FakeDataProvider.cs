@@ -50,7 +50,7 @@
 
         foreach (var field in ft.Fields)
         {
-          section.AddField(field.Name, field.ID);
+          section.AddField(field.Name, field.ID).SetType(field.Type);
         }
 
         builder.SetBaseIDs(string.Join("|", ft.BaseIDs ?? new ID[] { } as IEnumerable<ID>));
