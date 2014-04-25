@@ -45,6 +45,8 @@
 
     public string Name { get; set; }
 
+    public string Type { get; set; }
+
     public ID ID { get; internal set; }
 
     public string Value

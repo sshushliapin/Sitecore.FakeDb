@@ -111,6 +111,33 @@
       }
     }
 
+    [Fact]
+    public void HowDoICreateATemplateHierarchy()
+    {
+      var baseTemplateIdOne = Sitecore.Data.ID.NewID;
+      var baseTemplateIdTwo = Sitecore.Data.ID.NewID;
+      var templateId = Sitecore.Data.ID.NewID;
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+      {
+        new Sitecore.FakeDb.DbTemplate("base one", baseTemplateIdOne),
+        new Sitecore.FakeDb.DbTemplate("base two", baseTemplateIdTwo),
+        new Sitecore.FakeDb.DbTemplate("Main", templateId)
+        {
+          BaseIDs = new Sitecore.Data.ID[] {baseTemplateIdOne, baseTemplateIdTwo}
+        }
+      })
+      {
+        var template = Sitecore.Data.Managers.TemplateManager.GetTemplate(templateId, db.Database);
+
+        Assert.Contains(baseTemplateIdOne, template.BaseIDs);
+        Assert.Contains(baseTemplateIdTwo, template.BaseIDs);
+
+        Assert.True(template.InheritsFrom(baseTemplateIdOne));
+        Assert.True(template.InheritsFrom(baseTemplateIdTwo));
+      }
+    }
+
     #endregion
 
     #region Security

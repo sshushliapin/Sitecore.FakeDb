@@ -82,6 +82,20 @@
     }
 
     [Fact]
+    public void ShouldGetTemplateFieldType()
+    {
+      // arrange
+      var template = this.CreateTestTemplateInDataStorage();
+      template.Fields.Add(new DbField("Link") { Type = "General Link" });
+
+      var result = this.dataProvider.GetTemplates(null).First();
+
+      // act & assert
+      result.GetField("Link").Type.Should().Be("General Link");
+      result.GetField("Link").TypeKey.Should().Be("general link");
+    }
+
+    [Fact]
     public void ShouldBeIRequireDataStorage()
     {
       // assert

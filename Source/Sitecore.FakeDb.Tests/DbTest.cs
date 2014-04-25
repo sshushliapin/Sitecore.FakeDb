@@ -898,5 +898,56 @@
         db.GetItem("/sitecore/content").Children.Count.Should().Be(1);
       }
     }
+
+    [Fact]
+    public void ShouldCreateTemplateIfNoTemplateProvided()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        // act
+        var item = db.GetItem("/sitecore/content/home");
+
+        // assert
+        item.TemplateID.Should().NotBeNull();
+        item.Template.Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateTemplateFieldsFromItemFieldsIfNoTemplateProvided()
+    {
+      // arrange
+      using (var db = new Db
+      {
+        new DbItem("home") { new DbField("Link") { Type = "General Link"} }
+      })
+      {
+        // act
+        var item = db.GetItem("/sitecore/content/home");
+        var field = item.Template.GetField("Link");
+
+        // assert
+        field.Should().NotBeNull();
+        field.Type.Should().Be("General Link");
+      }
+    }
+
+    [Fact]
+    public void ShouldPropagateFieldTypesFromTemplateToItem()
+    {
+      // arrange
+      using (var db = new Db
+      {
+        new DbItem("home") { new DbField("Link") { Type = "General Link"} }
+      })
+      {
+        // act
+        var item = db.GetItem("/sitecore/content/home");
+       
+        // assert
+        item.Fields["Link"].Type.Should().Be("General Link");
+      }
+    }
   }
 }

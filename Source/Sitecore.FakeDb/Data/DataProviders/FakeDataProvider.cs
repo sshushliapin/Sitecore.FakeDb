@@ -2,6 +2,7 @@
 {
   using System.Linq;
   using Sitecore.Collections;
+  using System.Collections.Generic;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
   using Sitecore.Data.Templates;
@@ -44,13 +45,15 @@
 
       foreach (var ft in this.DataStorage.FakeTemplates.Values)
       {
-        var builder = new Template.Builder(ft.Name, ft.ID, new TemplateCollection());
+        var builder = new Template.Builder(ft.Name, ft.ID, templates);
         var section = builder.AddSection("Data", ID.NewID);
 
         foreach (var field in ft.Fields)
         {
-          section.AddField(field.Name, field.ID);
+          section.AddField(field.Name, field.ID).SetType(field.Type);
         }
+
+        builder.SetBaseIDs(string.Join("|", ft.BaseIDs ?? new ID[] { } as IEnumerable<ID>));
 
         templates.Add(builder.Template);
       }
