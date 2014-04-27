@@ -19,6 +19,8 @@
 
     private const string ItemIdsTemplateRoot = "{3C1715FE-6A13-4FCF-845F-DE308BA9741D}";
 
+    private const string ItemIdsSystemRoot = "{13D6D6C6-C50B-4BBD-B331-2B04F1A58F21}";
+
     private const string TemplateIdsTemplate = "{AB86861A-6030-46C5-B394-E8F99E8B87DB}";
 
     private const string ItemIdsTemplateSection = "{E269FBB5-3750-427A-9149-7AA950B49301}";
@@ -42,6 +44,7 @@
     [InlineData(ItemIdsRootId, "sitecore", TemplateIdSitecore, RootParentId, "/sitecore")]
     [InlineData(ItemIdsContentRoot, "content", TemplateIdMainSection, ItemIdsRootId, "/sitecore/content")]
     [InlineData(ItemIdsTemplateRoot, "templates", TemplateIdMainSection, ItemIdsRootId, "/sitecore/templates")]
+    [InlineData(ItemIdsSystemRoot, "system", TemplateIdMainSection, ItemIdsRootId, "/sitecore/system")]
     [InlineData(TemplateIdsTemplate, "Template", TemplateIdsTemplate, ItemIdsTemplateRoot, "/sitecore/templates/template")]
     [InlineData(ItemIdsTemplateSection, "Template section", TemplateIdsTemplate, ItemIdsTemplateRoot, "/sitecore/templates/template section")]
     [InlineData(ItemIdsTemplateField, "Template field", TemplateIdsTemplate, ItemIdsTemplateRoot, "/sitecore/templates/template field")]
