@@ -7,6 +7,7 @@
   using Sitecore.Data.DataProviders;
   using Sitecore.Data.Templates;
   using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.Globalization;
   using CallContext = Sitecore.Data.DataProviders.CallContext;
 
   public class FakeDataProvider : DataProvider, IRequireDataStorage
@@ -59,6 +60,11 @@
       }
 
       return templates;
+    }
+
+    public override LanguageCollection GetLanguages(CallContext context)
+    {
+      return new LanguageCollection { Language.Parse("en") };
     }
   }
 }

@@ -4,6 +4,7 @@
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
+  using Sitecore.Data.DataProviders;
   using Sitecore.FakeDb.Data.DataProviders;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Reflection;
@@ -113,6 +114,20 @@
 
       // assert
       this.dataProvider.DataStorage.Should().Be(ds);
+    }
+
+    [Fact]
+    private void ShouldSupportGetLanguagesAndReturnOne()
+    {
+      // arrange
+      var db = this.dataStorage.Database;
+
+      // act
+      var langs = this.dataProvider.GetLanguages(new CallContext(db.DataManager, db.GetDataProviders().Count()));
+
+      // assert
+      langs.Should().HaveCount(1);
+      langs.First().Name.Should().Be("en");
     }
 
     private DbTemplate CreateTestTemplateInDataStorage()
