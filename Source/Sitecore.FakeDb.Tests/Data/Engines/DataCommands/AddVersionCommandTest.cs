@@ -73,6 +73,27 @@
       result.Should().BeSameAs(itemWithNewVersion);
     }
 
+    [Fact]
+    public void ShouldAddVersionIfNoVersionExistsInSpecificLanguage()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var dbitem = new DbItem("item") { Fields = { new DbField("Title") } };
+      this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
+
+      var item = ItemHelper.CreateInstance(itemId, this.database);
+
+      var command = new OpenAddVersionCommand();
+      command.Initialize(item);
+      command.Initialize(this.innerCommand);
+
+      // act
+      command.DoExecute();
+
+      // assert
+      dbitem.Fields.Single().Values["en"][2].Should().BeEmpty();
+    }
+
     private class OpenAddVersionCommand : AddVersionCommand
     {
       public new Sitecore.Data.Engines.DataCommands.AddVersionCommand CreateInstance()

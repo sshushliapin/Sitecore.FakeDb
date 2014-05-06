@@ -1,6 +1,12 @@
 0.11.0
 * [NEW] Added the ability to work with fields by ID. Resolve names automatically for certain standard fields. Add a test showing how standard values work on the layout fields (layout deltas). Thanks to [Pavel Veller](https://github.com/pveller)
+* [NEW] Added support for GetLanguages() to FakeDataProvider and make it return only one "en" language. Thanks to [Pavel Veller](https://github.com/pveller)
+* [NEW] Added '/sitecore/media library' and '/sitecore/system' items as part of initial DataStorage setup. Thanks to [Pavel Veller](https://github.com/pveller)
+* [NEW] Added support for field types. Thanks to [Pavel Veller](https://github.com/pveller)
+* [NEW] Added basic support for templates hierarchies. No fields propagation, just BaseIDs and Template.InheritsFrom(). Thanks to [Pavel Veller](https://github.com/pveller)
+* [NEW] Implemented RemoveVersionCommand
 * [FIX] Fixed creating and editing items of predefined templates
+* [FIX] Fixed adding first item version
 
 0.10.4
 * [FIX] Hidden setter for DbField.ID property

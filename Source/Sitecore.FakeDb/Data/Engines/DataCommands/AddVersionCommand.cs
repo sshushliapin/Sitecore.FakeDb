@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System.Collections.Generic;
   using System.Linq;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -26,8 +27,21 @@
 
       foreach (var field in dbitem.Fields)
       {
-        var langValues = field.Values[language];
-        var value = langValues.Last().Value;
+        IDictionary<int, string> langValues;
+        string value;
+
+        if (!field.Values.ContainsKey(language))
+        {
+          langValues = new Dictionary<int, string>();
+          value = string.Empty;
+
+          field.Values.Add(language, langValues);
+        }
+        else
+        {
+          langValues = field.Values[language];
+          value = langValues.Last().Value;
+        }
 
         langValues.Add(version.Number, value);
       }

@@ -400,22 +400,6 @@
     }
 
     [Fact]
-    public void ShouldNotFailWhenAddingVersion()
-    {
-      // arrange
-      using (var db = new Db { new DbItem("home") })
-      {
-        var item = db.Database.GetItem("/sitecore/content/home");
-
-        // act
-        var result = item.Versions.AddVersion();
-
-        // assert
-        result.Versions.Count.Should().Be(1);
-      }
-    }
-
-    [Fact]
     public void ShouldNotShareTemplateForItemsIfTemplatesSetExplicitly()
     {
       // arrange & act
