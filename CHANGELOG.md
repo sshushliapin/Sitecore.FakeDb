@@ -1,3 +1,6 @@
+0.11.1
+* [FIX] Fixed monitroing of multiple pipeline calls
+
 0.11.0
 * [NEW] Added the ability to work with fields by ID. Resolve names automatically for certain standard fields. Add a test showing how standard values work on the layout fields (layout deltas). Thanks to [Pavel Veller](https://github.com/pveller)
 * [NEW] Added support for GetLanguages() to FakeDataProvider and make it return only one "en" language. Thanks to [Pavel Veller](https://github.com/pveller)

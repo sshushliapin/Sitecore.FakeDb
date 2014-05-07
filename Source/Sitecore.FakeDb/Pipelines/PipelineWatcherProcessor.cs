@@ -1,9 +1,6 @@
 namespace Sitecore.FakeDb.Pipelines
 {
-  using System.Xml;
-  using Sitecore.Configuration;
   using Sitecore.Pipelines;
-  using Sitecore.Xml;
   using System;
 
   public class PipelineWatcherProcessor

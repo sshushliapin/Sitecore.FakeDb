@@ -1,6 +1,7 @@
 namespace Sitecore.FakeDb.Pipelines
 {
   using System;
+  using System.Collections.Generic;
   using System.Xml;
   using Sitecore.Diagnostics;
   using Sitecore.Pipelines;
@@ -11,19 +12,17 @@ namespace Sitecore.FakeDb.Pipelines
   {
     private readonly XmlDocument config;
 
-    private string expectedName;
+    private readonly IDictionary<string, PipelineArgs> expectedCalls = new Dictionary<string, PipelineArgs>();
 
-    private string calledPipeline;
+    private readonly IDictionary<string, PipelineArgs> actualCalls = new Dictionary<string, PipelineArgs>();
 
-    private PipelineArgs expectedArgs;
+    private readonly IDictionary<string, Func<PipelineArgs, bool>> checkThisArgs = new Dictionary<string, Func<PipelineArgs, bool>>();
 
-    private PipelineArgs calledArgs;
+    private readonly IDictionary<string, Func<PipelineArgs, bool>> filterThisArgs = new Dictionary<string, Func<PipelineArgs, bool>>();
 
-    private Func<PipelineArgs, bool> checkThisArgs;
+    private IDictionary<string, Action<PipelineArgs>> processThisArgs = new Dictionary<string, Action<PipelineArgs>>();
 
-    private Func<PipelineArgs, bool> filterThisArgs;
-
-    private Action<PipelineArgs> processThisArgs;
+    private string lastUsedPipelineName;
 
     public PipelineWatcher(XmlDocument config)
     {
@@ -46,7 +45,7 @@ namespace Sitecore.FakeDb.Pipelines
 
     public virtual void Expects(string pipelineName, Func<PipelineArgs, bool> checkThisArgs)
     {
-      this.checkThisArgs = checkThisArgs;
+      this.checkThisArgs.Add(pipelineName, checkThisArgs);
       this.Expects(pipelineName);
     }
 
@@ -59,23 +58,22 @@ namespace Sitecore.FakeDb.Pipelines
 
     public virtual PipelineWatcher WithArgs(Func<PipelineArgs, bool> filterThisArgs)
     {
-      this.filterThisArgs = filterThisArgs;
+      this.filterThisArgs.Add(this.lastUsedPipelineName, filterThisArgs);
 
       return this;
     }
 
     public virtual void Then(Action<PipelineArgs> processThisArgs)
     {
-      this.processThisArgs = processThisArgs;
+      this.processThisArgs.Add(this.lastUsedPipelineName, processThisArgs);
     }
 
     public virtual void Expects(string pipelineName, PipelineArgs pipelineArgs)
     {
       Assert.ArgumentNotNullOrEmpty(pipelineName, "pipelineName");
 
-      this.expectedName = pipelineName;
-      this.expectedArgs = pipelineArgs;
-
+      this.expectedCalls.Add(pipelineName, pipelineArgs);
+      this.lastUsedPipelineName = pipelineName;
 
       var path = "/sitecore/pipelines/" + pipelineName + "/processor";
       var processorNode = XmlUtil.EnsurePath(path, this.config);
@@ -91,27 +89,42 @@ namespace Sitecore.FakeDb.Pipelines
     public virtual void EnsureExpectations()
     {
       const string MessageFormat = "Expected to receive a pipeline call matching ({0}). Actually received no matching calls.";
-      Assert.IsTrue(this.expectedName == this.calledPipeline, MessageFormat, "pipelineName == \"" + this.expectedName + "\"");
 
-      if (this.expectedArgs != null)
+      foreach (var expectedCall in this.expectedCalls)
       {
-        Assert.IsTrue(this.expectedArgs == this.calledArgs, MessageFormat, "pipelineArgs");
-      }
+        var expectedName = expectedCall.Key;
+        Assert.IsTrue(this.actualCalls.ContainsKey(expectedName), MessageFormat, "pipelineName == \"" + expectedName + "\"");
 
-      if (this.checkThisArgs != null)
-      {
-        Assert.IsTrue(this.checkThisArgs(this.calledArgs), MessageFormat, "pipelineArgs");
+        var expectedArgs = expectedCall.Value;
+        if (expectedArgs != null)
+        {
+          Assert.IsTrue(expectedArgs == this.actualCalls[expectedName], MessageFormat, "pipelineArgs");
+        }
+
+        if (this.checkThisArgs.ContainsKey(expectedName))
+        {
+          Assert.IsTrue(this.checkThisArgs[expectedName](this.actualCalls[expectedName]), MessageFormat, "pipelineArgs");
+        }
       }
     }
 
     protected virtual void OnPipelineRun(PipelineRunEventArgs e)
     {
-      this.calledPipeline = e.PipelineName;
-      this.calledArgs = e.PipelineArgs;
+      var pipelineName = e.PipelineName;
 
-      if (this.filterThisArgs != null && this.processThisArgs != null && this.filterThisArgs(this.calledArgs))
+      // TODO:[High] Sometimes actualCalls might contain the key. Concurrency issue.
+      if (actualCalls.ContainsKey(pipelineName))
       {
-        this.processThisArgs(this.calledArgs);
+        this.actualCalls[pipelineName] = e.PipelineArgs;
+      }
+      else
+      {
+        this.actualCalls.Add(pipelineName, e.PipelineArgs);
+      }
+
+      if (this.filterThisArgs != null && this.processThisArgs.ContainsKey(pipelineName) && this.filterThisArgs[pipelineName](e.PipelineArgs))
+      {
+        this.processThisArgs[pipelineName](e.PipelineArgs);
       }
     }
 
@@ -120,9 +133,18 @@ namespace Sitecore.FakeDb.Pipelines
       this.OnPipelineRun(e);
     }
 
-    public virtual void Dispose()
+    public void Dispose()
     {
-      PipelineWatcherProcessor.PipelineRun -= this.PipelineRun;
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        PipelineWatcherProcessor.PipelineRun -= this.PipelineRun;
+      }
     }
   }
 }

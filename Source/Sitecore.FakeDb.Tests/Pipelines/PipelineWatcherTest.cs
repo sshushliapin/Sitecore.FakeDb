@@ -7,10 +7,11 @@
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.Pipelines;
   using Xunit;
+  using Xunit.Extensions;
 
   public class PipelineWatcherTest : IDisposable
   {
-    private PipelineWatcher watcher;
+    private readonly PipelineWatcher watcher;
 
     public PipelineWatcherTest()
     {
@@ -98,6 +99,24 @@
       action.ShouldThrow<InvalidOperationException>().WithMessage("Expected to receive a pipeline call matching (pipelineName == \"mypipeline\"). Actually received no matching calls.");
     }
 
+    [Theory]
+    [InlineData("pipeline1", "Expected to receive a pipeline call matching (pipelineName == \"pipeline2\"). Actually received no matching calls.")]
+    [InlineData("pipeline2", "Expected to receive a pipeline call matching (pipelineName == \"pipeline1\"). Actually received no matching calls.")]
+    public void ShouldThrowExceptionIfOnePipelineFromExpectedListIsNotCalled(string pipelineName, string message)
+    {
+      // arrange
+      this.watcher.Expects("pipeline1");
+      this.watcher.Expects("pipeline2");
+
+      CorePipeline.Run(pipelineName, new PipelineArgs());
+
+      // act
+      Action action = this.watcher.EnsureExpectations;
+
+      // assert
+      action.ShouldThrow<InvalidOperationException>().WithMessage(message);
+    }
+
     [Fact]
     public void ShouldThrowExceptionIfNoExpectedPipelineCallWithArgsReceived()
     {
@@ -182,6 +201,35 @@
 
       // assert
       args.CustomData["Value"].Should().NotBe("1");
+    }
+
+    [Fact]
+    public void ShouldCallAndCheclListOfPipelinesWithArgs()
+    {
+      // arrange
+      var args1 = new PipelineArgs();
+      args1.CustomData["key1"] = "value1";
+
+      var args2 = new PipelineArgs();
+      args2.CustomData["key2"] = "value2";
+
+      this.watcher
+        .WhenCall("pipeline1")
+        .WithArgs(a => a.CustomData.ContainsKey("key1"))
+        .Then(a => a.CustomData["key1"] = "new value1");
+
+      this.watcher
+        .WhenCall("pipeline2")
+        .WithArgs(a => a.CustomData.ContainsKey("key2"))
+        .Then(a => a.CustomData["key2"] = "new value2");
+
+      // act
+      CorePipeline.Run("pipeline1", args1);
+      CorePipeline.Run("pipeline2", args2);
+
+      // assert
+      args1.CustomData["key1"].Should().Be("new value1");
+      args2.CustomData["key2"].Should().Be("new value2");
     }
 
     public void Dispose()

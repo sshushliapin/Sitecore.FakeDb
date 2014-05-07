@@ -7,7 +7,7 @@
 
   public class PipelineWatcherProcessorTests
   {
-    private PipelineArgs pipelineArgs = new PipelineArgs();
+    private readonly PipelineArgs pipelineArgs = new PipelineArgs();
 
     [Fact]
     public void ShouldRaisePipelineRunEventIfSubscribed()
