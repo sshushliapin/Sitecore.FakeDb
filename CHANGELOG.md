@@ -1,3 +1,6 @@
+0.11.2
+* [FIX] Db disposing actions have been moved to "releaseFakeDb" pipeline
+
 0.11.1
 * [FIX] Fixed monitroing of multiple pipeline calls
 

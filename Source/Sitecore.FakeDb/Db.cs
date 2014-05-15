@@ -2,6 +2,7 @@ namespace Sitecore.FakeDb
 {
   using System;
   using System.Collections;
+  using System.Collections.Generic;
   using System.Linq;
   using Sitecore.Configuration;
   using Sitecore.Data;
@@ -25,6 +26,8 @@ namespace Sitecore.FakeDb
     private readonly DbConfiguration configuration;
 
     private readonly PipelineWatcher pipelineWatcher;
+
+    private bool disposed;
 
     public Db()
       : this("master")
@@ -151,12 +154,25 @@ namespace Sitecore.FakeDb
     /// </summary>
     public void Dispose()
     {
-      CorePipeline.Run("releaseFakeDb", new PipelineArgs());
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
 
-      this.pipelineWatcher.Dispose();
-      this.database.Engines.TemplateEngine.Reset();
+    protected virtual void Dispose(bool disposing)
+    {
+      if (this.disposed)
+      {
+        return;
+      }
 
-      Factory.Reset();
+      if (!disposing)
+      {
+        return;
+      }
+
+      CorePipeline.Run("releaseFakeDb", new DbArgs(this));
+
+      this.disposed = true;
     }
 
     protected virtual void CreateTemplate(DbItem item)
@@ -232,7 +248,7 @@ namespace Sitecore.FakeDb
       return true;
     }
 
-    private static void MapFields(DbFieldCollection source, DbItem target)
+    private static void MapFields(IEnumerable<DbField> source, DbItem target)
     {
       foreach (var field in source)
       {

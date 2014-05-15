@@ -24,6 +24,8 @@ namespace Sitecore.FakeDb.Pipelines
 
     private string lastUsedPipelineName;
 
+    private bool disposed;
+
     public PipelineWatcher(XmlDocument config)
     {
       Assert.ArgumentNotNull(config, "config");
@@ -141,10 +143,18 @@ namespace Sitecore.FakeDb.Pipelines
 
     protected virtual void Dispose(bool disposing)
     {
-      if (disposing)
+      if (this.disposed)
       {
-        PipelineWatcherProcessor.PipelineRun -= this.PipelineRun;
+        return;
       }
+
+      if (!disposing)
+      {
+        return;
+      }
+
+      PipelineWatcherProcessor.PipelineRun -= this.PipelineRun;
+      this.disposed = true;
     }
   }
 }

@@ -114,6 +114,7 @@
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommandsTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataProvidersTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbArgsTest.cs" />
+    <Compile Include="Pipelines\ReleaseDb\ReleasePipelineWatcherTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityModel\FakeDomainProviderTest.cs" />
     <Compile Include="Security\AccessControl\AuthorizationManagerTest.cs" />

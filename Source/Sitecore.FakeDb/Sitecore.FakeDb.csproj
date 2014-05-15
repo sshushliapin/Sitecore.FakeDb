@@ -62,6 +62,7 @@
     <Compile Include="Configuration\DbConfiguration.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />
+    <Compile Include="Pipelines\DbArgs.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitStandardValuesProvider.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommands.cs" />
     <Compile Include="IRequireDataStorage.cs" />
@@ -72,6 +73,9 @@
     <Compile Include="Pipelines\PipelineRunEventArgs.cs" />
     <Compile Include="Pipelines\PipelineWatcherProcessor.cs" />
     <Compile Include="Pipelines\PipelineWatcher.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ReleasePipelineWatcher.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ResetFactory.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ResetTemplateEngine.cs" />
     <Compile Include="Properties\AssemblyVersionInfo.cs" />
     <Compile Include="Security\AccessControl\DbItemAccess.cs" />
     <Compile Include="Configuration\ClientDataStoreStub.cs" />

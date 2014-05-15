@@ -689,20 +689,6 @@
     }
 
     [Fact]
-    public void ShoudDisposePipelineWatcher()
-    {
-      // arrange
-      var watcher = Substitute.For<PipelineWatcher, IDisposable>(new XmlDocument());
-      var db = new Db(watcher);
-
-      // act
-      db.Dispose();
-
-      // assert
-      watcher.Received().Dispose();
-    }
-
-    [Fact]
     public void ShouldBeEqualsButNotSame()
     {
       // arrange
@@ -928,7 +914,7 @@
       {
         // act
         var item = db.GetItem("/sitecore/content/home");
-       
+
         // assert
         item.Fields["Link"].Type.Should().Be("General Link");
       }

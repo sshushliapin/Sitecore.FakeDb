@@ -1,0 +1,10 @@
+﻿namespace Sitecore.FakeDb.Pipelines.ReleaseFakeDb
+{
+  public class ResetTemplateEngine
+  {
+    public void Process(DbArgs args)
+    {
+      args.Db.Database.Engines.TemplateEngine.Reset();
+    }
+  }
+}
