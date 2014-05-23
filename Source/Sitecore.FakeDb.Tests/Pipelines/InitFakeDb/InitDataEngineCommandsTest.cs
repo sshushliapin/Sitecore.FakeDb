@@ -4,7 +4,6 @@
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
-  using Sitecore.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
@@ -36,6 +35,7 @@
       commands.GetParentPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.GetParentCommand, IDataEngineCommand>();
       commands.GetRootItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.GetRootItemCommand, IDataEngineCommand>();
       commands.HasChildrenPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.HasChildrenCommand, IDataEngineCommand>();
+      commands.MoveItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.MoveItemCommand, IDataEngineCommand>();
       commands.ResolvePathPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.ResolvePathCommand, IDataEngineCommand>();
       commands.SaveItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.SaveItemCommand, IDataEngineCommand>();
 
@@ -54,6 +54,7 @@
       ((IDataEngineCommand)commands.GetParentPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
       ((IDataEngineCommand)commands.GetRootItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
       ((IDataEngineCommand)commands.HasChildrenPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
+      ((IDataEngineCommand)commands.MoveItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
       ((IDataEngineCommand)commands.ResolvePathPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
       ((IDataEngineCommand)commands.SaveItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
     }
@@ -72,6 +73,7 @@
       commands.GetParentPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.GetParentCommand>();
       commands.GetRootItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.GetRootItemCommand>();
       commands.HasChildrenPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.HasChildrenCommand>();
+      commands.MoveItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.MoveItemCommand>();
       commands.ResolvePathPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.ResolvePathCommand>();
       commands.SaveItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.SaveItemCommand>();
 

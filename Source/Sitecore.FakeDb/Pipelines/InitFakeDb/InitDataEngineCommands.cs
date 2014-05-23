@@ -19,6 +19,7 @@
       this.InitializeCommand(commands.GetRootItemPrototype, innerCommand);
       this.InitializeCommand(commands.GetVersionsPrototype, innerCommand);
       this.InitializeCommand(commands.HasChildrenPrototype, innerCommand);
+      this.InitializeCommand(commands.MoveItemPrototype, innerCommand);
       this.InitializeCommand(commands.ResolvePathPrototype, innerCommand);
       this.InitializeCommand(commands.SaveItemPrototype, innerCommand);
     }

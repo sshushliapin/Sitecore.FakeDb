@@ -1,15 +1,12 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
   using System;
-  using System.Xml;
   using FluentAssertions;
-  using NSubstitute;
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.Exceptions;
-  using Sitecore.FakeDb.Pipelines;
   using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Globalization;
   using Xunit;
@@ -802,8 +799,6 @@
     public void ShouldCreateTemplateWithStandardValues(string standardValue, string expectedValue)
     {
       // arrange
-      var templateId = ID.NewID;
-
       using (var db = new Db { new DbTemplate("sample", templateId) { { "Title", standardValue } } })
       {
         var root = db.GetItem(ItemIDs.ContentRoot);
@@ -888,10 +883,7 @@
     public void ShouldCreateTemplateFieldsFromItemFieldsIfNoTemplateProvided()
     {
       // arrange
-      using (var db = new Db
-      {
-        new DbItem("home") { new DbField("Link") { Type = "General Link"} }
-      })
+      using (var db = new Db { new DbItem("home") { new DbField("Link") { Type = "General Link" } } })
       {
         // act
         var item = db.GetItem("/sitecore/content/home");
@@ -907,16 +899,37 @@
     public void ShouldPropagateFieldTypesFromTemplateToItem()
     {
       // arrange
-      using (var db = new Db
-      {
-        new DbItem("home") { new DbField("Link") { Type = "General Link"} }
-      })
+      using (var db = new Db { new DbItem("home") { new DbField("Link") { Type = "General Link" } } })
       {
         // act
         var item = db.GetItem("/sitecore/content/home");
 
         // assert
         item.Fields["Link"].Type.Should().Be("General Link");
+      }
+    }
+
+    [Fact]
+    public void ShouldMoveItem()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("old root") { new DbItem("item") },
+                          new DbItem("new root")
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/old root/item");
+        var newRoot = db.GetItem("/sitecore/content/new root");
+
+        // act
+        item.MoveTo(newRoot);
+
+        // assert
+        db.GetItem("/sitecore/content/new root/item").Should().NotBeNull();
+        db.GetItem("/sitecore/content/new root").Children["item"].Should().NotBeNull();
+        db.GetItem("/sitecore/content/old root/item").Should().BeNull();
+        db.GetItem("/sitecore/content/old root").Children["item"].Should().BeNull();
       }
     }
   }
