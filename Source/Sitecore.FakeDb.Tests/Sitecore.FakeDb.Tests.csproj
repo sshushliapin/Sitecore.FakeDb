@@ -74,6 +74,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="Analytics\TrackerTest.cs" />
+    <Compile Include="Data\Engines\DataCommands\CopyItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\MoveItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\RemoveVersionCommandTest.cs" />
     <Compile Include="DbConcurrencyTest.cs" />

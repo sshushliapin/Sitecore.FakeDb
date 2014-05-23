@@ -28,6 +28,7 @@
       var commands = database.Engines.DataEngine.Commands;
 
       commands.AddFromTemplatePrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand, IDataEngineCommand>();
+      commands.CopyItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.CopyItemCommand, IDataEngineCommand>();
       commands.CreateItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.CreateItemCommand, IDataEngineCommand>();
       commands.DeletePrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.DeleteItemCommand, IDataEngineCommand>();
       commands.GetChildrenPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.GetChildrenCommand, IDataEngineCommand>();
@@ -47,6 +48,7 @@
 
       // assert
       ((IDataEngineCommand)commands.AddFromTemplatePrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
+      ((IDataEngineCommand)commands.CopyItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
       ((IDataEngineCommand)commands.CreateItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
       ((IDataEngineCommand)commands.DeletePrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
       ((IDataEngineCommand)commands.GetChildrenPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
@@ -66,6 +68,7 @@
       var commands = database.Engines.DataEngine.Commands;
 
       commands.AddFromTemplatePrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand>();
+      commands.CopyItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.CopyItemCommand>();
       commands.CreateItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.CreateItemCommand>();
       commands.DeletePrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.DeleteItemCommand>();
       commands.GetChildrenPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.GetChildrenCommand>();

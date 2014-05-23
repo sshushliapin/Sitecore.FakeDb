@@ -932,5 +932,35 @@
         db.GetItem("/sitecore/content/old root").Children["item"].Should().BeNull();
       }
     }
+
+    [Fact]
+    public void ShouldCopyItem()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("old root")
+                            {
+                              new DbItem("item") { { "Title", "Welcome!" } }
+                            },
+                          new DbItem("new root")
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/old root/item");
+        var newRoot = db.GetItem("/sitecore/content/new root");
+
+        // act
+        var copy = item.CopyTo(newRoot, "new item");
+
+        // assert
+        db.GetItem("/sitecore/content/new root/new item").Should().NotBeNull();
+        db.GetItem("/sitecore/content/new root").Children["new item"].Should().NotBeNull();
+        db.GetItem("/sitecore/content/old root/item").Should().NotBeNull();
+        db.GetItem("/sitecore/content/old root").Children["item"].Should().NotBeNull();
+
+        // TODO: Implement field copying.
+        // copy["Title"].Should().Be("Welcome!");
+      }
+    }
   }
 }

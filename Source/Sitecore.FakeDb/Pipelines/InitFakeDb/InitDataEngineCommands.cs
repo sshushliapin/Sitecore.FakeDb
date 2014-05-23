@@ -11,6 +11,7 @@
 
       this.InitializeCommand(commands.AddFromTemplatePrototype, innerCommand);
       this.InitializeCommand(commands.AddVersionPrototype, innerCommand);
+      this.InitializeCommand(commands.CopyItemPrototype, innerCommand);
       this.InitializeCommand(commands.CreateItemPrototype, innerCommand);
       this.InitializeCommand(commands.DeletePrototype, innerCommand);
       this.InitializeCommand(commands.GetChildrenPrototype, innerCommand);
