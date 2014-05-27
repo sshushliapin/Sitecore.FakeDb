@@ -115,6 +115,9 @@
     <Compile Include="DbTest.cs" />
     <Compile Include="DbItemTest.cs" />
     <Compile Include="GettingStarted.cs" />
+    <Compile Include="GlobalsTest.cs" />
+    <Compile Include="Links\FakeLinkDatabaseTest.cs" />
+    <Compile Include="Links\SwitchingLinkDatabaseTest.cs" />
     <Compile Include="Pipelines\PipelineWatcherProcessorTests.cs" />
     <Compile Include="Pipelines\PipelineWatcherTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommandsTest.cs" />

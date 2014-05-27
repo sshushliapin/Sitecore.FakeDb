@@ -62,6 +62,8 @@
     <Compile Include="Configuration\DbConfiguration.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />
+    <Compile Include="Links\FakeLinkDatabase.cs" />
+    <Compile Include="Links\SwitchingLinkDatabase.cs" />
     <Compile Include="Pipelines\DbArgs.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitStandardValuesProvider.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommands.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Security\Web\FakeMembershipProvider.cs" />
     <Compile Include="Security\Web\FakeProfileProvider.cs" />
     <Compile Include="Security\Web\FakeRoleProvider.cs" />
+    <Compile Include="Tasks\FakeTaskDatabase.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
