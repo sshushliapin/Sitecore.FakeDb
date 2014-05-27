@@ -1,6 +1,8 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System.Linq;
   using Sitecore.Data.Items;
+  using Sitecore.Diagnostics;
 
   public class CopyItemCommand : Sitecore.Data.Engines.DataCommands.CopyItemCommand, IDataEngineCommand
   {
@@ -26,7 +28,33 @@
 
     protected override Item DoExecute()
     {
-      return ItemCreator.Create(this.CopyName, this.CopyId, this.Source.TemplateID, this.Database, this.Destination);
+      ItemCreator.Create(this.CopyName, this.CopyId, this.Source.TemplateID, this.Database, this.Destination);
+
+      var fakeItem = this.innerCommand.DataStorage.GetFakeItem(this.Source.ID);
+      var fakeCopy = this.innerCommand.DataStorage.GetFakeItem(this.CopyId);
+
+      this.CopyFields(fakeItem, fakeCopy);
+
+      var copy = this.innerCommand.DataStorage.GetSitecoreItem(this.CopyId, this.Source.Language);
+
+      return copy;
+    }
+
+    protected virtual void CopyFields(DbItem source, DbItem copy)
+    {
+      Assert.ArgumentNotNull(source, "source");
+      Assert.ArgumentNotNull(copy, "copy");
+
+      foreach (var field in source.Fields)
+      {
+        foreach (var fieldValue in field.Values)
+        {
+          var language = fieldValue.Key;
+          var versions = fieldValue.Value.ToDictionary(v => v.Key, v => v.Value);
+
+          copy.Fields[field.ID].Values.Add(language, versions);
+        }
+      }
     }
   }
 }

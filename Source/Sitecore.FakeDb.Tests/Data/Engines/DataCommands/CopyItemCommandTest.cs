@@ -7,6 +7,7 @@
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
+  using Sitecore.Globalization;
   using Xunit;
   using CopyItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.CopyItemCommand;
 
@@ -57,8 +58,11 @@
       var copy = ItemHelper.CreateInstance(this.database);
       var destination = ItemHelper.CreateInstance(this.database);
 
+      this.dataStorage.GetFakeItem(itemId).Returns(new DbItem("home"));
+      this.dataStorage.GetFakeItem(copyId).Returns(new DbItem("copy"));
+      this.dataStorage.GetSitecoreItem(copyId, Language.Current).Returns(copy);
+
       this.command.ItemCreator = Substitute.For<ItemCreator>(this.dataStorage);
-      this.command.ItemCreator.Create("copy of home", this.copyId, templateId, database, destination).Returns(copy);
 
       this.command.Initialize(item, destination, "copy of home", this.copyId, false);
 

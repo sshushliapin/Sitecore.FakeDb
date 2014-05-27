@@ -958,8 +958,68 @@
         db.GetItem("/sitecore/content/old root/item").Should().NotBeNull();
         db.GetItem("/sitecore/content/old root").Children["item"].Should().NotBeNull();
 
-        // TODO: Implement field copying.
-        // copy["Title"].Should().Be("Welcome!");
+        copy["Title"].Should().Be("Welcome!");
+      }
+    }
+
+    [Fact]
+    public void ShouldCopyItemInAllLanguagesAndVersions()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("old root")
+                                 {
+                                   new DbItem("item")
+                                     {
+                                       new DbField("Title")
+                                         {
+                                           { "en", 1, "Hi!" },
+                                           { "en", 2, "Welcome!" }, 
+                                           { "da", 1, "Velkommen!" }
+                                         },
+                                     }
+                                 }, new DbItem("new root") })
+      {
+        var item = db.GetItem("/sitecore/content/old root/item");
+        var newRoot = db.GetItem("/sitecore/content/new root");
+
+        // act
+        var copy = item.CopyTo(newRoot, "new item");
+
+        // assert
+        db.GetItem(copy.ID, "en", 1)["Title"].Should().Be("Hi!");
+        db.GetItem(copy.ID, "en", 2)["Title"].Should().Be("Welcome!");
+        db.GetItem(copy.ID, "da", 1)["Title"].Should().Be("Velkommen!");
+      }
+    }
+
+    [Fact]
+    public void ShouldNotUpdateOriginalItemOnEditing()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("old root")
+                                 {
+                                   new DbItem("item")
+                                     {
+                                       new DbField("Title")
+                                         {
+                                           { "en", 1, "Hi!" },
+                                         },
+                                     }
+                                 }, new DbItem("new root") })
+      {
+        var item = db.GetItem("/sitecore/content/old root/item");
+        var newRoot = db.GetItem("/sitecore/content/new root");
+        var copy = item.CopyTo(newRoot, "new item");
+
+        // act
+        using (new EditContext(copy))
+        {
+          copy["Title"] = "Welcome!";
+        }
+
+        // assert
+        db.GetItem(copy.ID)["Title"].Should().Be("Welcome!");
+        db.GetItem(item.ID)["Title"].Should().Be("Hi!");
       }
     }
   }
