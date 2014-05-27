@@ -32,13 +32,13 @@
     public void ShouldSetProviderNameIfTypeIsProvider()
     {
       // arrange
-      const string Type = "System.Configuration.Provider.ProviderBase, System.Configuration";
+      const string Type = "Sitecore.Security.AccessControl.AuthorizationProvider, Sitecore.Kernel";
 
       // act
       var providerMock = (ProviderBase)this.factory.GetObject(Type);
 
       // assert
-      providerMock.Name.Should().Be("ProviderBase");
+      providerMock.Name.Should().Be("AuthorizationProvider");
     }
 
     [Fact]
