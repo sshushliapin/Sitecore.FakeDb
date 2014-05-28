@@ -362,6 +362,35 @@
     }
 
     [Fact]
+    public void ShouldGetItemByUri()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home", this.itemId)
+                            {
+                              new DbField("Title")
+                                {
+                                  { "en", 1, "Welcome!" }, 
+                                  { "da", 1, "Hello!" },
+                                  { "da", 2, "Velkommen!" }
+                                }
+                            }
+                        })
+      {
+        // act & assert
+        var uriEn1 = new ItemUri(this.itemId, Language.Parse("en"), Version.Parse(1), db.Database);
+        Database.GetItem(uriEn1)["Title"].Should().Be("Welcome!");
+
+        var uriDa1 = new ItemUri(this.itemId, Language.Parse("da"), Version.Parse(1), db.Database);
+        Database.GetItem(uriDa1)["Title"].Should().Be("Hello!");
+
+        var uriDa2 = new ItemUri(this.itemId, Language.Parse("da"), Version.Parse(2), db.Database);
+        Database.GetItem(uriDa2)["Title"].Should().Be("Velkommen!");
+      }
+    }
+
+    [Fact]
     public void ShouldGetItemParent()
     {
       // arrange
@@ -1000,10 +1029,7 @@
                                  {
                                    new DbItem("item")
                                      {
-                                       new DbField("Title")
-                                         {
-                                           { "en", 1, "Hi!" },
-                                         },
+                                       new DbField("Title") { { "en", 1, "Hi!" } },
                                      }
                                  }, new DbItem("new root") })
       {
