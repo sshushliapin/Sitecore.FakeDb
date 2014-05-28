@@ -133,6 +133,7 @@
     <Compile Include="Security\Authentication\AuthenticationManagerTest.cs" />
     <Compile Include="Security\AuthorizationProviderStubTest.cs" />
     <Compile Include="Security\FakeAccessRightProviderTest.cs" />
+    <Compile Include="Tasks\FakeTaskDatabaseTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

@@ -17,7 +17,9 @@
     public override string GetStandardValue(Field field)
     {
       var templateId = field.Item.TemplateID;
-      var template = storage.GetFakeTemplate(templateId);
+
+      Assert.IsNotNull(this.storage, "DataStorage cannot be null.");
+      var template = this.storage.GetFakeTemplate(templateId);
 
       if (template == null)
       {
@@ -36,7 +38,7 @@
 
     void IRequireDataStorage.SetDataStorage(DataStorage dataStorage)
     {
-      Assert.ArgumentNotNull(dataStorage, "storage");
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
       this.storage = dataStorage;
     }
