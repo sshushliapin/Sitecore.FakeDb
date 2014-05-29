@@ -1,6 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
   using System;
+  using System.Linq;
   using FluentAssertions;
   using Sitecore.Configuration;
   using Sitecore.Data;
@@ -1018,6 +1019,35 @@
         db.GetItem(copy.ID, "en", 1)["Title"].Should().Be("Hi!");
         db.GetItem(copy.ID, "en", 2)["Title"].Should().Be("Welcome!");
         db.GetItem(copy.ID, "da", 1)["Title"].Should().Be("Velkommen!");
+      }
+    }
+
+    [Fact]
+    public void ShouldDeepCopyItem()
+    {
+      // arrange
+      using (var db = new Db{
+        new DbItem("original")
+        {
+          new DbItem("child") { { "Title", "Child" } }
+        }
+      })
+      {
+        var original = db.GetItem("/sitecore/content/original");
+        var root = db.GetItem("/sitecore/content");
+
+        // act
+        var copy = original.CopyTo(root, "copy"); // deep is the default
+
+        // assert
+        copy.Should().NotBeNull();
+        copy.Children.Should().HaveCount(1);
+
+        var child = copy.Children.First();
+        child.Fields["Title"].Value.Should().Be("Child");
+        child.ParentID.Should().Be(copy.ID);
+        child.Name.Should().Be("child");
+        child.Paths.FullPath.Should().Be("/sitecore/content/copy/child");
       }
     }
 

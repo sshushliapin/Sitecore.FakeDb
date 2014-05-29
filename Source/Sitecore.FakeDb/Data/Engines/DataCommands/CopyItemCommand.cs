@@ -1,8 +1,11 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Linq;
+  using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
+  using Sitecore.Data.Managers;
+
 
   public class CopyItemCommand : Sitecore.Data.Engines.DataCommands.CopyItemCommand, IDataEngineCommand
   {
@@ -36,6 +39,14 @@
       this.CopyFields(fakeItem, fakeCopy);
 
       var copy = this.innerCommand.DataStorage.GetSitecoreItem(this.CopyId, this.Source.Language);
+
+      if (this.Deep)
+      {
+        foreach (Item child in this.Source.Children)
+        {
+          ItemManager.Provider.CopyItem(child, copy, this.Deep, child.Name, ID.NewID);
+        }
+      }
 
       return copy;
     }
