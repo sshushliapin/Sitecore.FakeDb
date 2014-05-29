@@ -65,6 +65,7 @@
     <Compile Include="Links\FakeLinkDatabase.cs" />
     <Compile Include="Links\SwitchingLinkDatabase.cs" />
     <Compile Include="Pipelines\DbArgs.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitGlobals.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitStandardValuesProvider.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommands.cs" />
     <Compile Include="IRequireDataStorage.cs" />

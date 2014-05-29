@@ -66,6 +66,7 @@
       return this.Behavior.GetItemVersionReferrers(version);
     }
 
+    [Obsolete("Deprecated - Use GetReferrers(item) instead.")]
     public override ItemLink[] GetReferrers(Item item, bool deep)
     {
       return this.Behavior.GetReferrers(item, deep);

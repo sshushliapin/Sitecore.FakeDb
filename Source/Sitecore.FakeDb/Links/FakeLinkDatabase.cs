@@ -1,3 +1,5 @@
+using System;
+
 namespace Sitecore.FakeDb.Links
 {
   using Sitecore.Data;
@@ -56,6 +58,7 @@ namespace Sitecore.FakeDb.Links
       return new ItemLink[0];
     }
 
+    [Obsolete("Deprecated - Use GetReferrers(item) instead.")]
     public override ItemLink[] GetReferrers(Item item, bool deep)
     {
       return new ItemLink[0];
