@@ -1,102 +1,192 @@
-using System;
-
 namespace Sitecore.FakeDb.Links
 {
+  using System;
+  using System.Threading;
   using Sitecore.Data;
   using Sitecore.Data.Items;
-  using Sitecore.Globalization;
   using Sitecore.Links;
 
   public class FakeLinkDatabase : LinkDatabase
   {
+    private readonly ThreadLocal<LinkDatabase> behavior = new ThreadLocal<LinkDatabase>();
+
+    public LinkDatabase Behavior
+    {
+      get { return this.behavior.Value; }
+      set { this.behavior.Value = value; }
+    }
+
     public override void Compact(Database database)
     {
+      if (this.Behavior != null)
+      {
+        this.Behavior.Compact(database);        
+      }
     }
 
     public override ItemLink[] GetBrokenLinks(Database database)
     {
-      return new ItemLink[0];
+      if (this.Behavior != null)
+      {
+        return this.Behavior.GetBrokenLinks(database);
+      }
+      else
+      {
+        return new ItemLink[] {};
+      }
     }
 
     public override int GetReferenceCount(Item item)
     {
-      return 0;
+      if (this.Behavior != null)
+      {
+        return this.Behavior.GetReferenceCount(item);
+      }
+      else
+      {
+        return 0;
+      }
     }
 
     public override ItemLink[] GetReferences(Item item)
     {
-      return new ItemLink[0];
+      if (this.Behavior != null)
+      {
+        return this.Behavior.GetReferences(item);
+      }
+      else
+      {
+        return new ItemLink[] {};
+      }
     }
 
     public override ItemLink[] GetItemReferences(Item item, bool includeStandardValuesLinks)
     {
-      return new ItemLink[0];
+      if (this.Behavior != null)
+      {
+        return this.Behavior.GetItemReferences(item, includeStandardValuesLinks);
+      }
+      else
+      {
+        return new ItemLink[] {};
+      }
     }
 
     public override int GetReferrerCount(Item item)
     {
-      return 0;
+      if (this.Behavior != null)
+      {
+        return this.Behavior.GetReferrerCount(item);
+      }
+      else
+      {
+        return 0;
+      }
     }
 
     public override ItemLink[] GetReferrers(Item item)
     {
-      return new ItemLink[0];
+      if (this.Behavior != null)
+      {
+        return this.Behavior.GetReferrers(item);
+      }
+      else
+      {
+        return new ItemLink[] {};
+      }
     }
 
     public override ItemLink[] GetReferrers(Item item, ID sourceFieldId)
     {
-      return new ItemLink[0];
+      if (this.Behavior != null)
+      {
+        return this.Behavior.GetReferrers(item);
+      }
+      else
+      {
+        return new ItemLink[] {};
+      }
     }
 
     public override ItemLink[] GetItemReferrers(Item item, bool includeStandardValuesLinks)
     {
-      return new ItemLink[0];
+      if (this.Behavior != null)
+      {
+        return this.Behavior.GetItemReferrers(item, includeStandardValuesLinks);
+      }
+      else
+      {
+        return new ItemLink[] {};
+      }
     }
 
     public override ItemLink[] GetItemVersionReferrers(Item version)
     {
-      return new ItemLink[0];
+      if (this.Behavior != null)
+      {
+        return this.Behavior.GetItemVersionReferrers(version);
+      }
+      else
+      {
+        return new ItemLink[] {};
+      }
     }
 
     [Obsolete("Deprecated - Use GetReferrers(item) instead.")]
     public override ItemLink[] GetReferrers(Item item, bool deep)
     {
-      return new ItemLink[0];
+      if (this.Behavior != null)
+      {
+        return this.Behavior.GetReferrers(item, deep);
+      }
+      else
+      {
+        return new ItemLink[] {};
+      }
     }
 
     public override bool HasExternalReferrers(Item item, bool deep)
     {
-      return false;
+      if (this.Behavior != null)
+      {
+        return this.Behavior.HasExternalReferrers(item, deep);
+      }
+      else
+      {
+        return false;
+      }
     }
 
     public override void Rebuild(Database database)
     {
+      if (this.Behavior != null)
+      {
+        this.Behavior.Rebuild(database);
+      }
     }
 
     public override void RemoveReferences(Item item)
     {
+      if (this.Behavior != null)
+      {
+        this.Behavior.RemoveReferences(item);
+      }
     }
 
     public override void UpdateItemVersionReferences(Item item)
     {
+      if (this.Behavior != null)
+      {
+        this.Behavior.UpdateItemVersionReferences(item);
+      }
     }
 
     public override void UpdateReferences(Item item)
     {
-    }
-
-    protected override bool ItemExists(ID itemId, string itemPath, Language itemLanguage, Version itemVersion, Database database)
-    {
-      return false;
-    }
-
-    protected override bool TargetExists(ID targetID, string targetPath, Database database)
-    {
-      return false;
-    }
-
-    protected override void UpdateItemVersionLinks(Item item, ItemLink[] links)
-    {
+      if (this.Behavior != null)
+      {
+        this.Behavior.UpdateReferences(item);
+      }
     }
 
     protected override void UpdateLinks(Item item, ItemLink[] links)
