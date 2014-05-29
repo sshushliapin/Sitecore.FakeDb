@@ -1,12 +1,10 @@
-﻿using FluentAssertions;
-using NSubstitute;
-using Sitecore.FakeDb.Links;
-using Sitecore.Links;
-
-namespace Sitecore.FakeDb.Tests.Links
+﻿namespace Sitecore.FakeDb.Tests.Links
 {
-
   using Xunit;
+  using FluentAssertions;
+  using NSubstitute;
+  using Sitecore.FakeDb.Links;
+  using Sitecore.Links;
 
   public class LinkDatabaseSwitcherTest
   {
