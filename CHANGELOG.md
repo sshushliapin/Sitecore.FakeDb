@@ -1,6 +1,7 @@
 0.12.0
 * [NEW] Implemented item moving
 * [NEW] Implemented item copying
+* [NEW] Added Link and Task database stubs
 * [FIX] Db disposing actions have been moved to "releaseFakeDb" pipeline
 * [FIX] Fixed settings resetting
 
