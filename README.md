@@ -159,6 +159,65 @@ public void HowDoICreateAVersionedItem()
     }
 ```
 
+### How do I work with LinkDatabase
+
+``` csharp
+    [Fact]
+    public void HowDoIWorkWithLinkDatabase()
+    {
+      // arrange your database and items
+
+      Sitecore.Data.ID sourceId = Sitecore.Data.ID.NewID;
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+      {
+        new Sitecore.FakeDb.DbItem("source", sourceId),
+        new Sitecore.FakeDb.DbItem("clone"),
+        new Sitecore.FakeDb.DbItem("alias", Sitecore.Data.ID.NewID, Sitecore.TemplateIDs.Alias)
+        {
+          // not really needed but this is how aliases look in the real world
+          new Sitecore.FakeDb.DbField("Linked item")
+          {
+            Type = "Link",
+            Value = string.Format("<link linktype='internal' id='{0}' />", sourceId)
+          }
+        }
+      })
+      {
+        // arrange desired LinkDatabase behavior
+        
+        var behavior = Substitute.For<Sitecore.Links.LinkDatabase>();
+
+        Sitecore.Data.Items.Item source = db.GetItem("/sitecore/content/source");
+        Sitecore.Data.Items.Item alias = db.GetItem("/sitecore/content/alias");
+        Sitecore.Data.Items.Item clone = db.GetItem("/sitecore/content/clone");
+
+        behavior.GetReferrers(source).Returns(new[]
+        {
+          new Sitecore.Links.ItemLink(alias, alias.Fields["Linked item"].ID, source, source.Paths.FullPath),
+          new Sitecore.Links.ItemLink(clone, Sitecore.FieldIDs.Source, source, source.Paths.FullPath)
+        });
+
+        // act & assert
+
+        // link database is clean
+        Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
+ 
+        using (new Sitecore.FakeDb.Links.LinkDatabaseSwitcher(behavior))
+        {
+          Sitecore.Links.ItemLink[] referrers = Sitecore.Globals.LinkDatabase.GetReferrers(source);
+
+          Assert.Equal(referrers.Count(), 2);
+          Assert.Equal(referrers.Count(r => r.SourceItemID == clone.ID && r.TargetItemID == source.ID), 1);
+          Assert.Equal(referrers.Count(r => r.SourceItemID == alias.ID && r.TargetItemID == source.ID), 1);
+        }
+ 
+         // link database is clean again
+        Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
+      }
+    }
+```
+
 ## Security
 ### How do I configure item access
 
