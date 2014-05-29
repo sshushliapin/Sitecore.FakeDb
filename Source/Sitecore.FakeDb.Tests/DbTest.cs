@@ -1048,5 +1048,20 @@
         db.GetItem(item.ID)["Title"].Should().Be("Hi!");
       }
     }
+
+    [Fact]
+    public void ShouldCleanupSettingsOnDispose()
+    {
+      // arrange
+      using (var db = new Db())
+      {
+        db.Configuration.Settings["Database"] = "core";
+
+        // act & assert
+        Settings.GetSetting("Database").Should().Be("core");
+      }
+
+      Settings.GetSetting("Database").Should().BeNullOrEmpty();
+    }
   }
 }

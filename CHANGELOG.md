@@ -2,6 +2,7 @@
 * [NEW] Implemented item moving
 * [NEW] Implemented item copying
 * [FIX] Db disposing actions have been moved to "releaseFakeDb" pipeline
+* [FIX] Fixed settings resetting
 
 0.11.1
 * [FIX] Fixed monitroing of multiple pipeline calls

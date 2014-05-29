@@ -2,7 +2,7 @@
 {
   public class DataEngineCommand
   {
-    private static DataEngineCommand notInitialized = new NotInitializedDataEngineCommand();
+    public static readonly DataEngineCommand NotInitialized = new NotInitializedDataEngineCommand();
 
     internal DataEngineCommand()
     {
@@ -11,11 +11,6 @@
     public DataEngineCommand(DataStorage dataStorage)
     {
       this.DataStorage = dataStorage;
-    }
-
-    public static DataEngineCommand NotInitialized
-    {
-      get { return notInitialized; }
     }
 
     public virtual DataStorage DataStorage { get; private set; }
