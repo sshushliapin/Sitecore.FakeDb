@@ -25,7 +25,7 @@
         return new ID(this.ItemPath);
       }
 
-      var kvp = this.innerCommand.DataStorage.FakeItems.SingleOrDefault(fi => string.Compare(fi.Value.FullPath, this.ItemPath, StringComparison.OrdinalIgnoreCase) == 0);
+      var kvp = this.innerCommand.DataStorage.FakeItems.SingleOrDefault(fi => string.Compare(fi.Value.FullPath, StringUtil.RemovePostfix("/", this.ItemPath), StringComparison.OrdinalIgnoreCase) == 0);
 
       return kvp.Key;
     }
