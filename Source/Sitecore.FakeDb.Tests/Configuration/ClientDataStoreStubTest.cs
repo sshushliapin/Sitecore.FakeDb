@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb.Tests.Configuration
 {
-  using System;
   using FluentAssertions;
   using Sitecore.FakeDb.Configuration;
   using Xunit;
@@ -15,31 +14,31 @@
     }
 
     [Fact]
-    public void ShouldThrowNotImplementedExceptionOnCompactData()
+    public void ShouldNotThrowExceptionOnCompactData()
     {
       // act & assert
-      Assert.Throws<NotImplementedException>(() => this.dataStore.CompactData());
+      Assert.DoesNotThrow(() => this.dataStore.CompactData());
     }
 
     [Fact]
-    public void ShouldThrowNotImplementedExceptionOnLoadData()
+    public void ShouldReturnNullOnLoadData()
     {
       // act & assert
-      Assert.Throws<NotImplementedException>(() => this.dataStore.LoadData("key"));
+      this.dataStore.LoadData("key").Should().BeNull();
     }
 
     [Fact]
-    public void ShouldThrowNotImplementedExceptionOnSaveData()
+    public void ShouldNotThrowExceptionOnSaveData()
     {
       // act & assert
-      Assert.Throws<NotImplementedException>(() => this.dataStore.SaveData("key", "data"));
+      Assert.DoesNotThrow(() => this.dataStore.SaveData("key", "data"));
     }
 
     [Fact]
-    public void ShouldThrowNotImplementedExceptionOnRemoveData()
+    public void ShouldNotThrowExceptionOnRemoveData()
     {
       // act & assert
-      Assert.Throws<NotImplementedException>(() => this.dataStore.RemoveData("key"));
+      Assert.DoesNotThrow(() => this.dataStore.RemoveData("key"));
     }
 
     private class OpenClientDataStoreStub : ClientDataStoreStub

@@ -12,22 +12,19 @@
 
     protected override void CompactData()
     {
-      throw new NotImplementedException();
     }
 
     protected override string LoadData(string key)
     {
-      throw new NotImplementedException();
+      return null;
     }
 
     protected override void SaveData(string key, string data)
     {
-      throw new NotImplementedException();
     }
 
     protected override void RemoveData(string key)
     {
-      throw new NotImplementedException();
     }
   }
 }
