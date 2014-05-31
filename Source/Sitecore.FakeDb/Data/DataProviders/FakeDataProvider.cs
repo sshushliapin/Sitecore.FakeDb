@@ -64,6 +64,7 @@
 
     public override LanguageCollection GetLanguages(CallContext context)
     {
+      // ToDo: Globals sets the default culture to en-US. Maybe we should default to en-US here?
       return new LanguageCollection { Language.Parse("en") };
     }
   }

@@ -32,6 +32,7 @@
     [Theory]
     [InlineData("/sitecore/content/home")]
     [InlineData("/Sitecore/Content/Home")]
+    [InlineData("/Sitecore/Content/Home/")]
     public void ShouldResolvePath(string path)
     {
       // arrange
