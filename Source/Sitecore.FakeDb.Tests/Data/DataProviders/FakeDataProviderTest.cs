@@ -127,7 +127,7 @@
 
       // assert
       langs.Should().HaveCount(1);
-      langs.First().Name.Should().Be("en");
+      langs.First().Name.Should().Be("en-US");
     }
 
     private DbTemplate CreateTestTemplateInDataStorage()

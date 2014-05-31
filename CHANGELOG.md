@@ -1,3 +1,8 @@
+0.13.0
+* [NEW] Implemented LinkDatabaseSwitcher
+* [FIX] Implemented deep copy
+* [FIX] Default language is set to "en-US"
+
 0.12.0
 * [NEW] Implemented item moving
 * [NEW] Implemented item copying

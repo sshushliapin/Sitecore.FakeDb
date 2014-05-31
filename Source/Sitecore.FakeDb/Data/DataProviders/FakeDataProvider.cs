@@ -1,8 +1,8 @@
 ﻿namespace Sitecore.FakeDb.Data.DataProviders
 {
+  using System.Collections.Generic;
   using System.Linq;
   using Sitecore.Collections;
-  using System.Collections.Generic;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
   using Sitecore.Data.Templates;
@@ -28,7 +28,7 @@
       get { return this.dataStorage; }
     }
 
-    public void SetDataStorage(DataStorage dataStorage)
+    public virtual void SetDataStorage(DataStorage dataStorage)
     {
       this.dataStorage = dataStorage;
     }
@@ -64,8 +64,7 @@
 
     public override LanguageCollection GetLanguages(CallContext context)
     {
-      // ToDo: Globals sets the default culture to en-US. Maybe we should default to en-US here?
-      return new LanguageCollection { Language.Parse("en") };
+      return new LanguageCollection { Language.Parse("en-US") };
     }
   }
 }
