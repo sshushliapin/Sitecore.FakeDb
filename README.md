@@ -327,6 +327,31 @@ private partial class ProductRepository
 }
 ```
 
+## Globalization
+### How do I translate texts
+FakeDb supports simple localization mechanism. You can call Translate.Text() or
+Translate.TextByLanguage() method to get a 'translated' version of the original text.
+The translated version has got language name added to the initial phrase.
+
+``` csharp
+[Fact]
+public void HowDoITranslateTexts()
+{
+  // init languages
+  Sitecore.Globalization.Language enLang = Sitecore.Globalization.Language.Parse("en");
+  Sitecore.Globalization.Language daLang = Sitecore.Globalization.Language.Parse("da");
+
+  const string Phrase = "Welcome!";
+
+  // translate
+  string enTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, enLang);
+  string daTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, daLang);
+
+  Assert.Equal("en:Welcome!", enTranslation);
+  Assert.Equal("da:Welcome!", daTranslation);
+}
+```
+
 ## Configuration
 ### How do I configure settings
 

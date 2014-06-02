@@ -1,5 +1,6 @@
 0.13.0
 * [NEW] Implemented LinkDatabaseSwitcher
+* [NEW] Implemented fake text translation
 * [FIX] Implemented deep copy
 * [FIX] Default language is set to "en-US"
 

@@ -181,7 +181,7 @@
 
         // link database is clean
         Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
- 
+
         using (new Sitecore.FakeDb.Links.LinkDatabaseSwitcher(behavior))
         {
           Sitecore.Links.ItemLink[] referrers = Sitecore.Globals.LinkDatabase.GetReferrers(source);
@@ -190,8 +190,8 @@
           Assert.Equal(referrers.Count(r => r.SourceItemID == clone.ID && r.TargetItemID == source.ID), 1);
           Assert.Equal(referrers.Count(r => r.SourceItemID == alias.ID && r.TargetItemID == source.ID), 1);
         }
- 
-         // link database is clean again
+
+        // link database is clean again
         Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
       }
     }
@@ -301,6 +301,32 @@
 
         return args.CustomData["Product"];
       }
+    }
+
+    #endregion
+
+    #region Globalization
+
+    /// <summary>
+    /// FakeDb supports simple localization mechanism. You can call Translate.Text() or
+    /// Translate.TextByLanguage() method to get a 'translated' version of the original text.
+    /// The translated version has got language name added to the initial phrase.
+    /// </summary>
+    [Fact]
+    public void HowDoITranslateTexts()
+    {
+      // init languages
+      Sitecore.Globalization.Language enLang = Sitecore.Globalization.Language.Parse("en");
+      Sitecore.Globalization.Language daLang = Sitecore.Globalization.Language.Parse("da");
+
+      const string Phrase = "Welcome!";
+
+      // translate
+      string enTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, enLang);
+      string daTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, daLang);
+
+      Assert.Equal("en:Welcome!", enTranslation);
+      Assert.Equal("da:Welcome!", daTranslation);
     }
 
     #endregion
