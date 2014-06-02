@@ -1,7 +1,9 @@
 ﻿namespace Sitecore.FakeDb.Configuration
 {
   using System.Xml;
+  using Sitecore.Diagnostics;
   using Sitecore.StringExtensions;
+  using Sitecore.Xml;
 
   public class Settings
   {
@@ -23,21 +25,22 @@
       {
         var settingNode = this.SelectSettingNode(name);
 
-        return settingNode.Attributes["value"].InnerText;
+        return XmlUtil.GetAttribute("value", settingNode);
       }
 
       set
       {
+        Assert.ArgumentNotNullOrEmpty(name, "name");
+
         var settingNode = this.SelectSettingNode(name);
         if (settingNode != null)
         {
-          settingNode.Attributes["value"].Value = value;
+          XmlUtil.SetAttribute("value", value, settingNode);
         }
         else
         {
-          var settingsNode = this.section.SelectSingleNode("/sitecore/settings");
+          var settingsNode = XmlUtil.EnsurePath("/sitecore/settings", this.section);
           var setting = this.CreateSettingNode(name, value);
-
           settingsNode.AppendChild(setting);
         }
 

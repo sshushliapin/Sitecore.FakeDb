@@ -4,6 +4,7 @@
   using FluentAssertions;
   using Sitecore.FakeDb.Configuration;
   using Xunit;
+  using Xunit.Extensions;
 
   public class SettingsTest
   {
@@ -21,12 +22,33 @@
       settings["MySetting"].Should().Be("MyValue");
     }
 
-    [Fact]
-    public void ShouldSetSettingsInSitecoreSection()
+    [Theory]
+    [InlineData("<sitecore></sitecore>")]
+    [InlineData("<sitecore><settings></settings></sitecore>")]
+    [InlineData("<sitecore><settings><setting name=\"MySetting\" /></settings></sitecore>")]
+    public void ShouldReturnEmptyStringByDefault(string xml)
     {
       // arrange
       var config = new XmlDocument();
-      config.LoadXml("<sitecore><settings><setting name=\"MySetting\" value=\"MyValue\" /></settings></sitecore>");
+      config.LoadXml(xml);
+
+      // act
+      var settings = new Settings(config);
+
+      // assert
+      settings["MySetting"].Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData("<sitecore></sitecore>")]
+    [InlineData("<sitecore><settings></settings></sitecore>")]
+    [InlineData("<sitecore><settings><setting name=\"MySetting\" /></settings></sitecore>")]
+    [InlineData("<sitecore><settings><setting name=\"MySetting\" value=\"MyValue\" /></settings></sitecore>")]
+    public void ShouldSetSetting(string xml)
+    {
+      // arrange
+      var config = new XmlDocument();
+      config.LoadXml(xml);
 
       // act
       var settings = new Settings(config);
@@ -34,21 +56,6 @@
 
       // assert
       config.OuterXml.Should().Be("<sitecore><settings><setting name=\"MySetting\" value=\"MyNewValue\" /></settings></sitecore>");
-    }
-
-    [Fact]
-    public void ShouldAddNewSettingsInSitecoreSection()
-    {
-      // arrange
-      var config = new XmlDocument();
-      config.LoadXml("<sitecore><settings></settings></sitecore>");
-
-      // act
-      var settings = new Settings(config);
-      settings["MySetting"] = "MyValue";
-
-      // assert
-      config.OuterXml.Should().Be("<sitecore><settings><setting name=\"MySetting\" value=\"MyValue\" /></settings></sitecore>");
     }
   }
 }

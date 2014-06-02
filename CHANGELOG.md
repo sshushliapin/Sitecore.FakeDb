@@ -3,6 +3,7 @@
 * [NEW] Implemented fake text translation
 * [FIX] Implemented deep copy
 * [FIX] Default language is set to "en-US"
+* [FIX] Settings return empty string as default value
 
 0.12.0
 * [NEW] Implemented item moving
