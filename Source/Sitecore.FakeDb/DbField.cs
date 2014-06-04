@@ -23,12 +23,10 @@
 
     public DbField(ID id)
     {
-      this.ID = id;
+      Assert.ArgumentNotNull(id, "id");
 
-      if (FieldIdToNameMapping.ContainsKey(id))
-      {
-        this.Name = FieldIdToNameMapping[id];
-      }
+      this.ID = id;
+      this.Name = FieldIdToNameMapping.ContainsKey(id) ? FieldIdToNameMapping[id] : id.ToShortID().ToString();
     }
 
     public DbField(string name)
@@ -38,6 +36,7 @@
 
     public DbField(string name, ID id)
     {
+      Assert.ArgumentNotNull(id, "id");
       Assert.ArgumentNotNullOrEmpty(name, "name");
 
       this.Name = name;

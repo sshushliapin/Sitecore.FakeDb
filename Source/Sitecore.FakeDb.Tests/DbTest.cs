@@ -282,7 +282,7 @@
     public void ShouldGenerateTemplateIdIfNotSet()
     {
       // arrange
-      var template = new DbTemplate { ID = null };
+      var template = new DbTemplate((ID) null);
 
       // act
       using (new Db { template })
@@ -689,7 +689,7 @@
         Action action = () => db.Add(new DbTemplate("products", id));
 
         // assert
-        action.ShouldThrow<ArgumentException>().WithMessage("A tamplete with the same id has already been added.*");
+        action.ShouldThrow<ArgumentException>().WithMessage("A template with the same id has already been added.*");
       }
     }
 

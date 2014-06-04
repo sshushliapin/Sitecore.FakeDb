@@ -94,15 +94,7 @@ namespace Sitecore.FakeDb
     public void Add(DbTemplate template)
     {
       Assert.ArgumentNotNull(template, "template");
-
-      if (ID.IsNullOrEmpty(template.ID))
-      {
-        template.ID = ID.NewID;
-      }
-      else
-      {
-        Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A tamplete with the same id has already been added.");
-      }
+      Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A template with the same id has already been added.");
 
       this.DataStorage.FakeTemplates.Add(template.ID, template);
     }
@@ -193,14 +185,13 @@ namespace Sitecore.FakeDb
         item.TemplateID = ID.NewID;
       }
 
-      var fields = new DbFieldCollection();
+      var template = new DbTemplate(item.Name, item.TemplateID);
+
       foreach (var itemField in item.Fields)
       {
         var templatefield = new DbField(itemField.Name, itemField.ID) { Type = itemField.Type };
-        fields.Add(templatefield);
+        template.Add(templatefield);
       }
-
-      var template = new DbTemplate(item.Name, item.TemplateID, fields);
 
       this.Add(template);
     }
