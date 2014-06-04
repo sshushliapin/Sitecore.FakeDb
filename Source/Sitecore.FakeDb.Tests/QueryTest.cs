@@ -5,7 +5,7 @@
   using Sitecore.Data.Items;
   using Xunit.Extensions;
 
-  public class QureyTest
+  public class QueryTest
   {
 
     [Theory]
@@ -17,17 +17,15 @@
       // arrange
       var homeId = ID.NewID;
 
-      // ToDo (?): add setting (and cleaning) up Context.Database to the Db constructor/dispose
-      var ctxDb = Context.Database;
-
       using (var db = new Db() { new DbItem("home", homeId) })
       {
-        Context.Database = db.Database; // Query needs it
+        Item[] result;
 
         // act
-        Item[] result = Sitecore.Data.Query.Query.SelectItems(query);
-
-        Context.Database = ctxDb;
+        using (new DatabaseSwitcher(db.Database))
+        {
+          result = Sitecore.Data.Query.Query.SelectItems(query);  
+        }
 
         // assert 
         result.Should().HaveCount(1);
