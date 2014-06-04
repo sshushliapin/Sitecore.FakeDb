@@ -1162,8 +1162,12 @@
         template.BaseIDs.Should().HaveCount(1);
         template.GetBaseTemplates().Should().HaveCount(1);
         template.GetBaseTemplates().Any(t => t.ID == baseId).Should().BeTrue();
+
         templateItem.Fields[FieldIDs.BaseTemplate].Should().NotBeNull();
         templateItem.Fields[FieldIDs.BaseTemplate].Value.Should().Contain(baseId.ToString());
+        
+        templateItem.Fields[DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Should().NotBeNull();
+        templateItem.Fields[DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Value.Should().Contain(baseId.ToString());
       }
      
     }
