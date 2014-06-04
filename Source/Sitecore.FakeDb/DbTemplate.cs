@@ -24,7 +24,8 @@
     {
     }
 
-    public DbTemplate(string name, ID id) : base(name, ID.IsNullOrEmpty(id) ? ID.NewID : id)
+    public DbTemplate(string name, ID id)
+      : base(name, ID.IsNullOrEmpty(id) ? ID.NewID : id, TemplateIDs.Template)
     {
       this.StandardValues = new DbFieldCollection();
     }

@@ -1094,5 +1094,54 @@
       Settings.GetSetting("Database").Should().BeNullOrEmpty();
     }
 
+    [Fact]
+    public void ShouldAccessTemplateAsTemplate()
+    {
+      // arrange
+      using (var db = new Db { new DbTemplate("Main", templateId) })
+      {
+        // act & assert
+        TemplateManager.GetTemplate(templateId, db.Database).ID.Should().Be(templateId);
+        TemplateManager.GetTemplate("Main", db.Database).ID.Should().Be(templateId);
+      }
+    }
+
+    [Fact]
+    public void ShouldAccessTemplateAsItem()
+    {
+      // arrange
+      using (var db = new Db { new DbTemplate("Main", templateId) })
+      {
+        // act
+        var item = db.GetItem("/sitecore/templates/Main");
+
+        // assert
+        item.Should().NotBeNull();
+        item.ID.Should().Be(templateId);
+      }
+    }
+
+    [Fact]
+    public void ShouldBeAbleToWorkWithTemplatesInFolders()
+    {
+      // arrange
+      var folderId = ID.NewID;
+
+      using (var db = new Db()
+      {
+        new DbItem("folder", folderId, TemplateIDs.Folder) { ParentID = ItemIDs.TemplateRoot },
+        new DbTemplate("Main", templateId) { ParentID = folderId }
+      })
+      {
+        // act 
+        var templateItem = db.GetItem("/sitecore/templates/folder/Main");
+
+        // assert
+        TemplateManager.GetTemplate(templateId, db.Database).ID.Should().Be(templateId);
+        TemplateManager.GetTemplate("Main", db.Database).ID.Should().Be(templateId);
+        templateItem.Should().NotBeNull();
+        templateItem.ID.Should().Be(templateId);
+      }
+    }
   }
 }

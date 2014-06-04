@@ -19,6 +19,8 @@ namespace Sitecore.FakeDb
   {
     private static readonly ID DefaultItemRoot = ItemIDs.ContentRoot;
 
+    private static readonly ID DefaultTemplateRoot = ItemIDs.TemplateRoot;
+
     private readonly Database database;
 
     private readonly DataStorage dataStorage;
@@ -96,6 +98,7 @@ namespace Sitecore.FakeDb
       Assert.ArgumentNotNull(template, "template");
       Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A template with the same id has already been added.");
 
+      this.Add(template as DbItem);
       this.DataStorage.FakeTemplates.Add(template.ID, template);
     }
 
@@ -198,6 +201,11 @@ namespace Sitecore.FakeDb
 
     protected virtual bool ResolveTemplate(DbItem item)
     {
+      if (item.TemplateID == TemplateIDs.Template)
+      {
+        return true;
+      }
+
       if (this.dataStorage.FakeTemplates.ContainsKey(item.TemplateID))
       {
         var template = this.dataStorage.FakeTemplates[item.TemplateID];
@@ -261,7 +269,7 @@ namespace Sitecore.FakeDb
     {
       if (ID.IsNullOrEmpty(item.ParentID))
       {
-        item.ParentID = DefaultItemRoot;
+        item.ParentID = item is DbTemplate ? DefaultTemplateRoot : DefaultItemRoot;
       }
     }
 
