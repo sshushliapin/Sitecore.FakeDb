@@ -98,8 +98,8 @@ namespace Sitecore.FakeDb
       Assert.ArgumentNotNull(template, "template");
       Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A template with the same id has already been added.");
 
-      this.Add(template as DbItem);
       this.DataStorage.FakeTemplates.Add(template.ID, template);
+      this.Add(template as DbItem);
     }
 
     public Item GetItem(ID id)

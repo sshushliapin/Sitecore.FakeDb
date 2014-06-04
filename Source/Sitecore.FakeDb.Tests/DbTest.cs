@@ -1143,5 +1143,29 @@
         templateItem.ID.Should().Be(templateId);
       }
     }
+
+    [Fact]
+    public void TemplateShouldComeBackWithBaseTemplatesDefinedOnTemplateAndItem()
+    {
+      // arrange
+      var baseId = ID.NewID;
+      using (var db = new Db
+      {
+        new DbTemplate("base", baseId),
+        new DbTemplate("main", templateId) {BaseIDs = new ID[] {baseId}}
+      })
+      {
+        var template = TemplateManager.GetTemplate("main", db.Database);
+        var templateItem = db.GetItem(templateId);
+
+        // assert
+        template.BaseIDs.Should().HaveCount(1);
+        template.GetBaseTemplates().Should().HaveCount(1);
+        template.GetBaseTemplates().Any(t => t.ID == baseId).Should().BeTrue();
+        templateItem.Fields[FieldIDs.BaseTemplate].Should().NotBeNull();
+        templateItem.Fields[FieldIDs.BaseTemplate].Value.Should().Contain(baseId.ToString());
+      }
+     
+    }
   }
 }
