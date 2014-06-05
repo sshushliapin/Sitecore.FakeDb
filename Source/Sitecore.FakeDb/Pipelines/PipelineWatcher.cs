@@ -2,6 +2,7 @@ namespace Sitecore.FakeDb.Pipelines
 {
   using System;
   using System.Collections.Generic;
+  using System.Linq;
   using System.Xml;
   using Sitecore.Diagnostics;
   using Sitecore.Pipelines;
@@ -124,9 +125,21 @@ namespace Sitecore.FakeDb.Pipelines
         this.actualCalls.Add(pipelineName, e.PipelineArgs);
       }
 
-      if (this.filterThisArgs != null && this.processThisArgs.ContainsKey(pipelineName) && this.filterThisArgs[pipelineName](e.PipelineArgs))
+      if (this.filterThisArgs == null || !this.processThisArgs.ContainsKey(pipelineName))
       {
-        this.processThisArgs[pipelineName](e.PipelineArgs);
+        return;
+      }
+
+      if (!this.filterThisArgs.ContainsKey(pipelineName))
+      {
+        this.filterThisArgs.Add(pipelineName, a => true);
+      }
+
+      if (this.filterThisArgs[pipelineName](e.PipelineArgs))
+      {
+        {
+          this.processThisArgs[pipelineName](e.PipelineArgs);
+        }
       }
     }
 

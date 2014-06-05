@@ -232,6 +232,24 @@
       args2.CustomData["key2"].Should().Be("new value2");
     }
 
+    [Fact]
+    public void ShouldCallThenBlockIfWithArgsIsMissing()
+    {
+      // arrange
+      var args = new PipelineArgs();
+      args.CustomData["CanSet"] = true;
+
+      this.watcher
+        .WhenCall("pipeline")
+        .Then(a => a.CustomData["Value"] = "1");
+
+      // act
+      CorePipeline.Run("pipeline", args);
+
+      // assert
+      args.CustomData["Value"].Should().Be("1");
+    }
+
     public void Dispose()
     {
       this.watcher.Dispose();

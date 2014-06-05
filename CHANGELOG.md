@@ -1,9 +1,10 @@
-0.13.0
+﻿0.13.0
 * [NEW] Implemented LinkDatabaseSwitcher
 * [NEW] Implemented fake text translation
 * [FIX] Implemented deep copy
 * [FIX] Default language is set to "en-US"
 * [FIX] Settings return empty string as default value
+* [FIX] Fixed pipeline watcher initialization which allows to use "WhenCall" and "Then" blocks ignoring "WithArgs" part
 
 0.12.0
 * [NEW] Implemented item moving
