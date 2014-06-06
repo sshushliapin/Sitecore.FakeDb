@@ -1093,5 +1093,6 @@
 
       Settings.GetSetting("Database").Should().BeNullOrEmpty();
     }
+
   }
 }
