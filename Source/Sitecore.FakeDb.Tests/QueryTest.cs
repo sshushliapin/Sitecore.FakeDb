@@ -13,12 +13,13 @@
     [InlineData("/sitecore/content/home")]
     [InlineData("/sitecore/content/*")]
     [InlineData("/sitecore/content/*[@@key = 'home']")]
+    [InlineData("/sitecore/content/*[@@templatekey = 'home']")]
     public void ShouldSupportQuery(string query)
     {
       // arrange
       ID homeId = ID.NewID;
 
-      using (var db = new Db {new DbItem("home", homeId)})
+      using (var db = new Db { new DbItem("home", homeId) })
       {
         Item[] result;
 
