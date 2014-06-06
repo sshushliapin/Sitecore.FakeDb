@@ -119,8 +119,6 @@
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
     <Compile Include="Links\LinkDatabaseSwitcherTest.cs" />
-    <Compile Include="Pipelines\GetTranslation\GetFakeTranslation.cs" />
-    <Compile Include="Pipelines\GetTranslation\GetFakeTranslationTest.cs" />
     <Compile Include="Pipelines\PipelineWatcherProcessorTests.cs" />
     <Compile Include="Pipelines\PipelineWatcherTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommandsTest.cs" />
