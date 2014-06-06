@@ -3,13 +3,14 @@
   using System;
   using FluentAssertions;
   using NSubstitute;
+  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
   using Xunit;
 
-  public class InitDataEngineCommandsTest
+  public class InitDataEngineCommandsTest : IDisposable
   {
     private readonly Database database;
 
@@ -25,7 +26,7 @@
     public void ShouldSetDataStorageForIRequireDataStorageCommands()
     {
       // arrange
-      var commands = database.Engines.DataEngine.Commands;
+      var commands = this.database.Engines.DataEngine.Commands;
 
       commands.AddFromTemplatePrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand, IDataEngineCommand>();
       commands.CopyItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.CopyItemCommand, IDataEngineCommand>();
@@ -40,32 +41,32 @@
       commands.ResolvePathPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.ResolvePathCommand, IDataEngineCommand>();
       commands.SaveItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.SaveItemCommand, IDataEngineCommand>();
 
-      var args = new InitDbArgs(database, dataStorage);
+      var args = new InitDbArgs(this.database, this.dataStorage);
       var processor = new InitDataEngineCommands();
 
       // act
       processor.Process(args);
 
       // assert
-      ((IDataEngineCommand)commands.AddFromTemplatePrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
-      ((IDataEngineCommand)commands.CopyItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
-      ((IDataEngineCommand)commands.CreateItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
-      ((IDataEngineCommand)commands.DeletePrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
-      ((IDataEngineCommand)commands.GetChildrenPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
-      ((IDataEngineCommand)commands.GetItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
-      ((IDataEngineCommand)commands.GetParentPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
-      ((IDataEngineCommand)commands.GetRootItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
-      ((IDataEngineCommand)commands.HasChildrenPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
-      ((IDataEngineCommand)commands.MoveItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
-      ((IDataEngineCommand)commands.ResolvePathPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
-      ((IDataEngineCommand)commands.SaveItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == dataStorage));
+      ((IDataEngineCommand)commands.AddFromTemplatePrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.CopyItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.CreateItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.DeletePrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.GetChildrenPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.GetItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.GetParentPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.GetRootItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.HasChildrenPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.MoveItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.ResolvePathPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.SaveItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
     }
 
     [Fact]
     public void ShouldNotSetDataStorageIfNoIRequireDataStorageCommandFound()
     {
       // arrange
-      var commands = database.Engines.DataEngine.Commands;
+      var commands = this.database.Engines.DataEngine.Commands;
 
       commands.AddFromTemplatePrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand>();
       commands.CopyItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.CopyItemCommand>();
@@ -80,7 +81,7 @@
       commands.ResolvePathPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.ResolvePathCommand>();
       commands.SaveItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.SaveItemCommand>();
 
-      var args = new InitDbArgs(database, dataStorage);
+      var args = new InitDbArgs(this.database, this.dataStorage);
       var processor = new InitDataEngineCommands();
 
       // act
@@ -88,6 +89,11 @@
 
       // assert
       action.ShouldNotThrow();
+    }
+
+    public void Dispose()
+    {
+      Factory.Reset();
     }
   }
 }
