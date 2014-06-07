@@ -1163,6 +1163,9 @@
         template.GetBaseTemplates().Should().HaveCount(1);
         template.GetBaseTemplates().Any(t => t.ID == baseId).Should().BeTrue();
 
+        template.GetField(FieldIDs.BaseTemplate).Should().NotBeNull();
+        template.GetField(DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]).Should().NotBeNull();
+
         templateItem.Fields[FieldIDs.BaseTemplate].Should().NotBeNull();
         templateItem.Fields[FieldIDs.BaseTemplate].Value.Should().Contain(baseId.ToString());
         

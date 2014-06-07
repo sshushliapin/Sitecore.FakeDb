@@ -48,6 +48,7 @@
       {
         var builder = new Template.Builder(ft.Name, ft.ID, templates);
         var section = builder.AddSection("Data", ID.NewID);
+        section.AddField("__Base template", FieldIDs.BaseTemplate).SetType("tree list");
 
         foreach (var field in ft.Fields)
         {
