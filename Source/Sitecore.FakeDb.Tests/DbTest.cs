@@ -282,7 +282,7 @@
     public void ShouldGenerateTemplateIdIfNotSet()
     {
       // arrange
-      var template = new DbTemplate { ID = null };
+      var template = new DbTemplate((ID) null);
 
       // act
       using (new Db { template })
@@ -689,7 +689,7 @@
         Action action = () => db.Add(new DbTemplate("products", id));
 
         // assert
-        action.ShouldThrow<ArgumentException>().WithMessage("A tamplete with the same id has already been added.*");
+        action.ShouldThrow<ArgumentException>().WithMessage("A template with the same id has already been added.*");
       }
     }
 
@@ -1094,5 +1094,85 @@
       Settings.GetSetting("Database").Should().BeNullOrEmpty();
     }
 
+    [Fact]
+    public void ShouldAccessTemplateAsTemplate()
+    {
+      // arrange
+      using (var db = new Db { new DbTemplate("Main", templateId) })
+      {
+        // act & assert
+        TemplateManager.GetTemplate(templateId, db.Database).ID.Should().Be(templateId);
+        TemplateManager.GetTemplate("Main", db.Database).ID.Should().Be(templateId);
+      }
+    }
+
+    [Fact]
+    public void ShouldAccessTemplateAsItem()
+    {
+      // arrange
+      using (var db = new Db { new DbTemplate("Main", templateId) })
+      {
+        // act
+        var item = db.GetItem("/sitecore/templates/Main");
+
+        // assert
+        item.Should().NotBeNull();
+        item.ID.Should().Be(templateId);
+      }
+    }
+
+    [Fact]
+    public void ShouldBeAbleToWorkWithTemplatesInFolders()
+    {
+      // arrange
+      var folderId = ID.NewID;
+
+      using (var db = new Db()
+      {
+        new DbItem("folder", folderId, TemplateIDs.Folder) { ParentID = ItemIDs.TemplateRoot },
+        new DbTemplate("Main", templateId) { ParentID = folderId }
+      })
+      {
+        // act 
+        var templateItem = db.GetItem("/sitecore/templates/folder/Main");
+
+        // assert
+        TemplateManager.GetTemplate(templateId, db.Database).ID.Should().Be(templateId);
+        TemplateManager.GetTemplate("Main", db.Database).ID.Should().Be(templateId);
+        templateItem.Should().NotBeNull();
+        templateItem.ID.Should().Be(templateId);
+      }
+    }
+
+    [Fact]
+    public void TemplateShouldComeBackWithBaseTemplatesDefinedOnTemplateAndItem()
+    {
+      // arrange
+      var baseId = ID.NewID;
+      using (var db = new Db
+      {
+        new DbTemplate("base", baseId),
+        new DbTemplate("main", templateId) {BaseIDs = new ID[] {baseId}}
+      })
+      {
+        var template = TemplateManager.GetTemplate("main", db.Database);
+        var templateItem = db.GetItem(templateId);
+
+        // assert
+        template.BaseIDs.Should().HaveCount(1);
+        template.GetBaseTemplates().Should().HaveCount(1);
+        template.GetBaseTemplates().Any(t => t.ID == baseId).Should().BeTrue();
+
+        template.GetField(FieldIDs.BaseTemplate).Should().NotBeNull();
+        template.GetField(DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]).Should().NotBeNull();
+
+        templateItem.Fields[FieldIDs.BaseTemplate].Should().NotBeNull();
+        templateItem.Fields[FieldIDs.BaseTemplate].Value.Should().Contain(baseId.ToString());
+        
+        templateItem.Fields[DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Should().NotBeNull();
+        templateItem.Fields[DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Value.Should().Contain(baseId.ToString());
+      }
+     
+    }
   }
 }

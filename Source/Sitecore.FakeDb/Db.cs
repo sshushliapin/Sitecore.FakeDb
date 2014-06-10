@@ -19,6 +19,8 @@ namespace Sitecore.FakeDb
   {
     private static readonly ID DefaultItemRoot = ItemIDs.ContentRoot;
 
+    private static readonly ID DefaultTemplateRoot = ItemIDs.TemplateRoot;
+
     private readonly Database database;
 
     private readonly DataStorage dataStorage;
@@ -94,17 +96,10 @@ namespace Sitecore.FakeDb
     public void Add(DbTemplate template)
     {
       Assert.ArgumentNotNull(template, "template");
-
-      if (ID.IsNullOrEmpty(template.ID))
-      {
-        template.ID = ID.NewID;
-      }
-      else
-      {
-        Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A tamplete with the same id has already been added.");
-      }
+      Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A template with the same id has already been added.");
 
       this.DataStorage.FakeTemplates.Add(template.ID, template);
+      this.Add(template as DbItem);
     }
 
     public Item GetItem(ID id)
@@ -193,20 +188,24 @@ namespace Sitecore.FakeDb
         item.TemplateID = ID.NewID;
       }
 
-      var fields = new DbFieldCollection();
+      var template = new DbTemplate(item.Name, item.TemplateID);
+
       foreach (var itemField in item.Fields)
       {
         var templatefield = new DbField(itemField.Name, itemField.ID) { Type = itemField.Type };
-        fields.Add(templatefield);
+        template.Add(templatefield);
       }
-
-      var template = new DbTemplate(item.Name, item.TemplateID, fields);
 
       this.Add(template);
     }
 
     protected virtual bool ResolveTemplate(DbItem item)
     {
+      if (item.TemplateID == TemplateIDs.Template)
+      {
+        return true;
+      }
+
       if (this.dataStorage.FakeTemplates.ContainsKey(item.TemplateID))
       {
         var template = this.dataStorage.FakeTemplates[item.TemplateID];
@@ -270,7 +269,7 @@ namespace Sitecore.FakeDb
     {
       if (ID.IsNullOrEmpty(item.ParentID))
       {
-        item.ParentID = DefaultItemRoot;
+        item.ParentID = item is DbTemplate ? DefaultTemplateRoot : DefaultItemRoot;
       }
     }
 

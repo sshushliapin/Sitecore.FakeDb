@@ -7,6 +7,17 @@
 
   public class DbTemplateTest
   {
+
+    [Fact]
+    public void ShouldBeAnItem()
+    {
+      // arrange
+      var template = new DbTemplate();
+
+      // assert
+      (template is DbItem).Should().BeTrue();
+    }
+
     [Fact]
     public void ShouldCreateEmptyFieldsCollection()
     {

@@ -1,6 +1,7 @@
 namespace Sitecore.FakeDb.Data.Engines
 {
   using System.Collections.Generic;
+  using System.Linq;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
@@ -138,6 +139,12 @@ namespace Sitecore.FakeDb.Data.Engines
         fields.Add(fieldId, value);
       }
 
+      var fakeItemAsTemplate = fakeItem as DbTemplate;
+      if (fakeItemAsTemplate != null && fakeItemAsTemplate.BaseIDs != null)
+      {
+        fields.Add(FieldIDs.BaseTemplate, string.Join("|", fakeItemAsTemplate.BaseIDs.ToList()));
+      }
+
       var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);
 
       return item;
@@ -148,7 +155,7 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeTemplates.Add(TemplateIdSitecore, new DbTemplate("Sitecore", new TemplateID(TemplateIdSitecore)));
       this.FakeTemplates.Add(TemplateIDs.MainSection, new DbTemplate("Main Section", TemplateIDs.MainSection));
 
-      this.FakeTemplates.Add(TemplateIDs.Template, new DbTemplate(TemplateItemName, TemplateIDs.Template));
+      this.FakeTemplates.Add(TemplateIDs.Template, new DbTemplate(TemplateItemName, TemplateIDs.Template) { new DbField(FieldIDs.BaseTemplate) });
       this.FakeTemplates.Add(TemplateIDs.Folder, new DbTemplate(FolderItemName, TemplateIDs.Folder));
     }
 

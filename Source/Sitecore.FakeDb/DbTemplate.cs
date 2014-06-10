@@ -3,39 +3,30 @@
   using System.Collections;
   using Sitecore.Data;
 
-  public class DbTemplate : IEnumerable
+  public class DbTemplate : DbItem
   {
-    public string Name { get; private set; }
-
-    public ID ID { get; internal set; }
-
-    public DbFieldCollection Fields { get; private set; }
-
     public ID[] BaseIDs { get; set; }
 
     internal DbFieldCollection StandardValues { get; private set; }
 
     public DbTemplate()
-      : this(null)
+      : this((string) null)
+    {
+    }
+
+    public DbTemplate(ID id)
+      : this(null, id)
     {
     }
 
     public DbTemplate(string name)
-      : this(name, ID.Null)
+      : this(name, ID.NewID)
     {
     }
 
     public DbTemplate(string name, ID id)
-      : this(name, id, new DbFieldCollection())
+      : base(name, ID.IsNullOrEmpty(id) ? ID.NewID : id, TemplateIDs.Template)
     {
-    }
-
-    public DbTemplate(string name, ID id, DbFieldCollection fields)
-    {
-      this.Name = name;
-      this.ID = id;
-
-      this.Fields = fields;
       this.StandardValues = new DbFieldCollection();
     }
 
@@ -44,23 +35,21 @@
       this.Add(fieldName, string.Empty);
     }
 
-    public void Add(string fieldName, string standardValue)
-    {
-      var id = ID.NewID;
-      var field = new DbField(fieldName, id);
-
-      this.Add(field, standardValue);
-    }
-
     public void Add(ID id)
     {
       this.Add(id, string.Empty);
     }
 
+    public new void Add(string fieldName, string standardValue)
+    {
+      var field = new DbField(fieldName, ID.NewID);
+
+      this.Add(field, standardValue);
+    }
+
     public void Add(ID id, string standardValue)
     {
-      var fieldName = id.ToShortID().ToString();
-      var field = new DbField(fieldName, id);
+      var field = new DbField(id);
 
       this.Add(field, standardValue);
     }
