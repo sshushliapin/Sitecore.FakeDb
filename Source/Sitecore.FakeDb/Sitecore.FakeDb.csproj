@@ -82,6 +82,8 @@
     <Compile Include="Pipelines\ReleaseFakeDb\ResetSettings.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ResetTemplateEngine.cs" />
     <Compile Include="Properties\AssemblyVersionInfo.cs" />
+    <Compile Include="Resources\Media\FakeMediaProvider.cs" />
+    <Compile Include="Resources\Media\StubMediaProvider.cs" />
     <Compile Include="Security\AccessControl\DbItemAccess.cs" />
     <Compile Include="Configuration\ClientDataStoreStub.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommand.cs" />
