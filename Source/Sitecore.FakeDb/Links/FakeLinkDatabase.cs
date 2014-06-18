@@ -6,7 +6,7 @@ namespace Sitecore.FakeDb.Links
   using Sitecore.Data.Items;
   using Sitecore.Links;
 
-  public class FakeLinkDatabase : LinkDatabase
+  public class FakeLinkDatabase : LinkDatabase, IBehavioral<LinkDatabase>
   {
     private readonly ThreadLocal<LinkDatabase> behavior = new ThreadLocal<LinkDatabase>();
 
@@ -20,7 +20,7 @@ namespace Sitecore.FakeDb.Links
     {
       if (this.Behavior != null)
       {
-        this.Behavior.Compact(database);        
+        this.Behavior.Compact(database);
       }
     }
 
@@ -30,10 +30,8 @@ namespace Sitecore.FakeDb.Links
       {
         return this.Behavior.GetBrokenLinks(database);
       }
-      else
-      {
-        return new ItemLink[] {};
-      }
+
+      return new ItemLink[] { };
     }
 
     public override int GetReferenceCount(Item item)
@@ -42,10 +40,8 @@ namespace Sitecore.FakeDb.Links
       {
         return this.Behavior.GetReferenceCount(item);
       }
-      else
-      {
-        return 0;
-      }
+
+      return 0;
     }
 
     public override ItemLink[] GetReferences(Item item)
@@ -54,10 +50,8 @@ namespace Sitecore.FakeDb.Links
       {
         return this.Behavior.GetReferences(item);
       }
-      else
-      {
-        return new ItemLink[] {};
-      }
+
+      return new ItemLink[] { };
     }
 
     public override ItemLink[] GetItemReferences(Item item, bool includeStandardValuesLinks)
@@ -66,10 +60,8 @@ namespace Sitecore.FakeDb.Links
       {
         return this.Behavior.GetItemReferences(item, includeStandardValuesLinks);
       }
-      else
-      {
-        return new ItemLink[] {};
-      }
+
+      return new ItemLink[] { };
     }
 
     public override int GetReferrerCount(Item item)
@@ -78,10 +70,8 @@ namespace Sitecore.FakeDb.Links
       {
         return this.Behavior.GetReferrerCount(item);
       }
-      else
-      {
-        return 0;
-      }
+
+      return 0;
     }
 
     public override ItemLink[] GetReferrers(Item item)
@@ -90,10 +80,8 @@ namespace Sitecore.FakeDb.Links
       {
         return this.Behavior.GetReferrers(item);
       }
-      else
-      {
-        return new ItemLink[] {};
-      }
+
+      return new ItemLink[] { };
     }
 
     public override ItemLink[] GetReferrers(Item item, ID sourceFieldId)
@@ -102,10 +90,8 @@ namespace Sitecore.FakeDb.Links
       {
         return this.Behavior.GetReferrers(item);
       }
-      else
-      {
-        return new ItemLink[] {};
-      }
+
+      return new ItemLink[] { };
     }
 
     public override ItemLink[] GetItemReferrers(Item item, bool includeStandardValuesLinks)
@@ -114,10 +100,8 @@ namespace Sitecore.FakeDb.Links
       {
         return this.Behavior.GetItemReferrers(item, includeStandardValuesLinks);
       }
-      else
-      {
-        return new ItemLink[] {};
-      }
+
+      return new ItemLink[] { };
     }
 
     public override ItemLink[] GetItemVersionReferrers(Item version)
@@ -126,10 +110,8 @@ namespace Sitecore.FakeDb.Links
       {
         return this.Behavior.GetItemVersionReferrers(version);
       }
-      else
-      {
-        return new ItemLink[] {};
-      }
+
+      return new ItemLink[] { };
     }
 
     [Obsolete("Deprecated - Use GetReferrers(item) instead.")]
@@ -139,10 +121,8 @@ namespace Sitecore.FakeDb.Links
       {
         return this.Behavior.GetReferrers(item, deep);
       }
-      else
-      {
-        return new ItemLink[] {};
-      }
+
+      return new ItemLink[] { };
     }
 
     public override bool HasExternalReferrers(Item item, bool deep)
@@ -151,10 +131,8 @@ namespace Sitecore.FakeDb.Links
       {
         return this.Behavior.HasExternalReferrers(item, deep);
       }
-      else
-      {
-        return false;
-      }
+
+      return false;
     }
 
     public override void Rebuild(Database database)

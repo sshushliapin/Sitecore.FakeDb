@@ -62,6 +62,7 @@
     <Compile Include="Configuration\DbConfiguration.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />
+    <Compile Include="IBehavioral.cs" />
     <Compile Include="Links\FakeLinkDatabase.cs" />
     <Compile Include="Links\LinkDatabaseSwitcher.cs" />
     <Compile Include="Pipelines\DbArgs.cs" />
@@ -82,7 +83,9 @@
     <Compile Include="Pipelines\ReleaseFakeDb\ResetSettings.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ResetTemplateEngine.cs" />
     <Compile Include="Properties\AssemblyVersionInfo.cs" />
+    <Compile Include="ProviderBehaviorSwitcher.cs" />
     <Compile Include="Resources\Media\FakeMediaProvider.cs" />
+    <Compile Include="Resources\Media\MediaProviderSwitcher.cs" />
     <Compile Include="Resources\Media\StubMediaProvider.cs" />
     <Compile Include="Security\AccessControl\DbItemAccess.cs" />
     <Compile Include="Configuration\ClientDataStoreStub.cs" />

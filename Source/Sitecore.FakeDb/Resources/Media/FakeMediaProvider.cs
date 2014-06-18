@@ -5,7 +5,7 @@
   using Sitecore.Data.Items;
   using Sitecore.Resources.Media;
 
-  public class FakeMediaProvider : MediaProvider
+  public class FakeMediaProvider : MediaProvider, IBehavioral<MediaProvider>
   {
     private static readonly MediaProvider Stub = new StubMediaProvider();
 

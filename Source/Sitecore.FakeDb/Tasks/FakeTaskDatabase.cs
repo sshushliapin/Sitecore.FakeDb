@@ -1,11 +1,21 @@
 ﻿namespace Sitecore.FakeDb.Tasks
 {
   using System;
+  using System.Threading;
   using Sitecore.Data.Items;
   using Sitecore.Tasks;
 
-  public class FakeTaskDatabase : TaskDatabase
+  // TODO: Implement
+  public class FakeTaskDatabase : TaskDatabase, IBehavioral<TaskDatabase>
   {
+    private readonly ThreadLocal<TaskDatabase> behavior = new ThreadLocal<TaskDatabase>();
+
+    public TaskDatabase Behavior
+    {
+      get { return this.behavior.Value; }
+      set { this.behavior.Value = value; }
+    }
+
     public override void Disable(Task task)
     {
     }

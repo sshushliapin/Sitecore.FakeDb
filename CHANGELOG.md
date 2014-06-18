@@ -1,5 +1,5 @@
 ﻿0.13.0
-* [NEW] Implemented LinkDatabaseSwitcher
+* [NEW] Implemented Link Database, Task Database and Media Provider switchers
 * [NEW] Implemented fake text translation
 * [NEW] Introduced Sitecore Query support
 * [FIX] Implemented deep copy

@@ -2,7 +2,6 @@
 {
   using FluentAssertions;
   using Sitecore.FakeDb.Resources.Media;
-  using Sitecore.Resources.Media;
   using Xunit;
 
   public class StubMediaProviderTest
