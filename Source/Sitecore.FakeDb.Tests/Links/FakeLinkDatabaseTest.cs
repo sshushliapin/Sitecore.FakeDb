@@ -13,7 +13,7 @@
   {
     private readonly LinkDatabase behavior;
 
-    private readonly FakeLinkDatabase _fakeLinkDatabase;
+    private readonly FakeLinkDatabase linkDatabase;
 
     private readonly Database database = Database.GetDatabase("master");
 
@@ -26,46 +26,21 @@
       this.item = ItemHelper.CreateInstance(this.database);
 
       this.behavior = Substitute.For<LinkDatabase>();
-      this._fakeLinkDatabase = new FakeLinkDatabase {Behavior = this.behavior};
-    }
-
-    [Fact]
-    public void ShouldReturnEmptyValuesWithoutBehaviorSet()
-    {
-      // arrange
-      var linkDatabase = new FakeLinkDatabase();
-
-      // act & assert
-      linkDatabase.Compact(null);
-      linkDatabase.GetBrokenLinks(null).Should().BeEmpty();
-      linkDatabase.GetReferenceCount(null).Should().Be(0);
-      linkDatabase.GetReferences(null).Should().BeEmpty();
-      linkDatabase.GetItemReferences(null, false).Should().BeEmpty();
-      linkDatabase.GetReferrerCount(null).Should().Be(0);
-      linkDatabase.GetReferrers(null).Should().BeEmpty();
-      linkDatabase.GetReferrers(null, null).Should().BeEmpty();
-      linkDatabase.GetItemReferrers(null, false).Should().BeEmpty();
-      linkDatabase.GetItemVersionReferrers(null).Should().BeEmpty();
-      linkDatabase.GetReferrers(null, false).Should().BeEmpty();
-      linkDatabase.HasExternalReferrers(null, false).Should().BeFalse();
-      linkDatabase.Rebuild(null);
-      linkDatabase.RemoveReferences(null);
-      linkDatabase.UpdateItemVersionReferences(null);
-      linkDatabase.UpdateReferences(null);
+      this.linkDatabase = new FakeLinkDatabase { Behavior = this.behavior };
     }
 
     [Fact]
     public void ShouldSetBehaviour()
     {
       // assert
-      this._fakeLinkDatabase.Behavior.Should().BeSameAs(this.behavior);
+      this.linkDatabase.Behavior.Should().BeSameAs(this.behavior);
     }
 
     [Fact]
     public void ShouldCallCompact()
     {
       // act
-      this._fakeLinkDatabase.Compact(this.database);
+      this.linkDatabase.Compact(this.database);
 
       // assert
       this.behavior.Received().Compact(this.database);
@@ -78,7 +53,7 @@
       this.behavior.GetBrokenLinks(this.database).Returns(this.links);
 
       // act & assert
-      this._fakeLinkDatabase.GetBrokenLinks(this.database).ShouldBeEquivalentTo(this.links);
+      this.linkDatabase.GetBrokenLinks(this.database).ShouldBeEquivalentTo(this.links);
     }
 
     [Fact]
@@ -87,7 +62,7 @@
       this.behavior.GetReferenceCount(this.item).Returns(1);
 
       // act
-      this._fakeLinkDatabase.GetReferenceCount(this.item).Should().Be(1);
+      this.linkDatabase.GetReferenceCount(this.item).Should().Be(1);
     }
 
     [Fact]
@@ -97,7 +72,7 @@
       this.behavior.GetReferences(this.item).Returns(this.links);
 
       // act & assert
-      this._fakeLinkDatabase.GetReferences(this.item).ShouldBeEquivalentTo(this.links);
+      this.linkDatabase.GetReferences(this.item).ShouldBeEquivalentTo(this.links);
     }
 
     [Fact]
@@ -107,7 +82,7 @@
       this.behavior.GetItemReferences(this.item, false).Returns(this.links);
 
       // act & assert
-      this._fakeLinkDatabase.GetItemReferences(this.item, false).ShouldBeEquivalentTo(this.links);
+      this.linkDatabase.GetItemReferences(this.item, false).ShouldBeEquivalentTo(this.links);
     }
 
     [Fact]
@@ -116,7 +91,7 @@
       this.behavior.GetReferrerCount(this.item).Returns(1);
 
       // act
-      this._fakeLinkDatabase.GetReferrerCount(this.item).Should().Be(1);
+      this.linkDatabase.GetReferrerCount(this.item).Should().Be(1);
     }
 
     [Fact]
@@ -126,7 +101,7 @@
       this.behavior.GetReferrers(this.item).Returns(this.links);
 
       // act & assert
-      this._fakeLinkDatabase.GetReferrers(this.item).ShouldBeEquivalentTo(this.links);
+      this.linkDatabase.GetReferrers(this.item).ShouldBeEquivalentTo(this.links);
     }
 
     [Fact]
@@ -136,7 +111,7 @@
       this.behavior.GetReferrers(this.item, ID.Null).Returns(this.links);
 
       // act & assert
-      this._fakeLinkDatabase.GetReferrers(this.item, ID.Null).ShouldBeEquivalentTo(this.links);
+      this.linkDatabase.GetReferrers(this.item, ID.Null).ShouldBeEquivalentTo(this.links);
     }
 
     [Fact]
@@ -146,7 +121,7 @@
       this.behavior.GetItemReferrers(this.item, false).Returns(this.links);
 
       // act & assert
-      this._fakeLinkDatabase.GetItemReferrers(this.item, false).ShouldBeEquivalentTo(this.links);
+      this.linkDatabase.GetItemReferrers(this.item, false).ShouldBeEquivalentTo(this.links);
     }
 
     [Fact]
@@ -156,7 +131,7 @@
       this.behavior.GetItemVersionReferrers(this.item).Returns(this.links);
 
       // act & assert
-      this._fakeLinkDatabase.GetItemVersionReferrers(this.item).ShouldBeEquivalentTo(this.links);
+      this.linkDatabase.GetItemVersionReferrers(this.item).ShouldBeEquivalentTo(this.links);
     }
 
     [Fact]
@@ -166,7 +141,7 @@
       this.behavior.GetReferrers(this.item, false).Returns(this.links);
 
       // act & assert
-      this._fakeLinkDatabase.GetReferrers(this.item, false).ShouldBeEquivalentTo(this.links);
+      this.linkDatabase.GetReferrers(this.item, false).ShouldBeEquivalentTo(this.links);
     }
 
     [Fact]
@@ -176,14 +151,14 @@
       this.behavior.HasExternalReferrers(this.item, false).Returns(true);
 
       // act & assert
-      this._fakeLinkDatabase.HasExternalReferrers(this.item, false).Should().BeTrue();
+      this.linkDatabase.HasExternalReferrers(this.item, false).Should().BeTrue();
     }
 
     [Fact]
     public void ShouldCallRebuild()
     {
       // act
-      this._fakeLinkDatabase.Rebuild(this.database);
+      this.linkDatabase.Rebuild(this.database);
 
       // assert
       this.behavior.Received().Rebuild(this.database);
@@ -193,7 +168,7 @@
     public void ShouldCallRemoveReferences()
     {
       // act
-      this._fakeLinkDatabase.RemoveReferences(this.item);
+      this.linkDatabase.RemoveReferences(this.item);
 
       // assert
       this.behavior.Received().RemoveReferences(this.item);
@@ -203,7 +178,7 @@
     public void ShouldCallUpdateItemVersionReferences()
     {
       // act
-      this._fakeLinkDatabase.UpdateItemVersionReferences(this.item);
+      this.linkDatabase.UpdateItemVersionReferences(this.item);
 
       // assert
       this.behavior.Received().UpdateItemVersionReferences(this.item);
@@ -213,11 +188,10 @@
     public void ShouldCallUpdateReferences()
     {
       // act
-      this._fakeLinkDatabase.UpdateReferences(this.item);
+      this.linkDatabase.UpdateReferences(this.item);
 
       // assert
       this.behavior.Received().UpdateReferences(this.item);
     }
-
   }
 }

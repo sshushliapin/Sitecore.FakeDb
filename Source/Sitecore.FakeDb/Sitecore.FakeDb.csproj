@@ -65,6 +65,7 @@
     <Compile Include="IBehavioral.cs" />
     <Compile Include="Links\FakeLinkDatabase.cs" />
     <Compile Include="Links\LinkDatabaseSwitcher.cs" />
+    <Compile Include="Links\StubLinkDatabase.cs" />
     <Compile Include="Pipelines\DbArgs.cs" />
     <Compile Include="Pipelines\GetTranslation\GetFakeTranslation.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitGlobals.cs" />
@@ -129,6 +130,8 @@
     <Compile Include="Security\Web\FakeProfileProvider.cs" />
     <Compile Include="Security\Web\FakeRoleProvider.cs" />
     <Compile Include="Tasks\FakeTaskDatabase.cs" />
+    <Compile Include="Tasks\StubTaskDatabase.cs" />
+    <Compile Include="Tasks\TaskDatabaseSwitcher.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

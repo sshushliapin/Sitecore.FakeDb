@@ -7,13 +7,13 @@
 
   public class FakeMediaProvider : MediaProvider, IBehavioral<MediaProvider>
   {
-    private static readonly MediaProvider Stub = new StubMediaProvider();
-
     private readonly ThreadLocal<MediaProvider> behavior = new ThreadLocal<MediaProvider>();
+
+    private readonly MediaProvider stub = new StubMediaProvider();
 
     public MediaProvider Behavior
     {
-      get { return this.behavior.Value ?? Stub; }
+      get { return this.behavior.Value ?? stub; }
       set { this.behavior.Value = value; }
     }
 

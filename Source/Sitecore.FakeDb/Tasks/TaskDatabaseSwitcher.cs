@@ -1,6 +1,5 @@
-﻿namespace Sitecore.FakeDb.Tests.Tasks
+﻿namespace Sitecore.FakeDb.Tasks
 {
-  using Sitecore.FakeDb.Tasks;
   using Sitecore.Tasks;
 
   public class TaskDatabaseSwitcher : ProviderBehaviorSwitcher<TaskDatabase>

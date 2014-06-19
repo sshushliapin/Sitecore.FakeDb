@@ -9,10 +9,16 @@
 
     protected ProviderBehaviorSwitcher(IBehavioral<TProvider> provider, TProvider behavior)
     {
+      Assert.ArgumentNotNull(provider, "provider");
       Assert.ArgumentNotNull(behavior, "behavior");
 
       this.provider = provider;
       this.provider.Behavior = behavior;
+    }
+
+    public IBehavioral<TProvider> Provider
+    {
+      get { return this.provider; }
     }
 
     public void Dispose()
