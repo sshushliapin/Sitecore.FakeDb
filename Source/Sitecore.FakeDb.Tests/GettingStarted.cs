@@ -362,6 +362,41 @@
 
     #endregion
 
+    #region Media
+
+    [Fact]
+    public void HowDoIMockMediaItemProvider()
+    {
+      const string MyImageUrl = "~/media/myimage.ashx";
+      Sitecore.Data.ID mediaItemId = Sitecore.Data.ID.NewID;
+
+      // create some media item. Location, fields and template are not important
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+      {
+        new Sitecore.FakeDb.DbItem("my-image", mediaItemId)
+      })
+      {
+        Sitecore.Data.Items.Item mediaItem = db.GetItem(mediaItemId);
+
+        // create media provider mock and configure behaviour
+        Sitecore.Resources.Media.MediaProvider mediaProvider =
+          NSubstitute.Substitute.For<Sitecore.Resources.Media.MediaProvider>();
+
+        mediaProvider
+          .GetMediaUrl(Arg.Is<Sitecore.Data.Items.MediaItem>(i => i.ID == mediaItemId))
+          .Returns(MyImageUrl);
+
+        // substitute the original provider with the mocked one
+        using (new Sitecore.FakeDb.Resources.Media.MediaProviderSwitcher(mediaProvider))
+        {
+          string mediaUrl = Sitecore.Resources.Media.MediaManager.GetMediaUrl(mediaItem);
+          Assert.Equal(MyImageUrl, mediaUrl);
+        }
+      }
+    }
+
+    #endregion
+
     #region Miscellaneous
 
     [Fact]
