@@ -35,6 +35,7 @@
       }
     }
 
+    // TODO:[High] Fails sometimes in xUnit Test Runner (works fine in NCrunch). Database SingleInstance="false" solves the problem but this is no go (item URI won't work).
     [Fact]
     public void ShouldSupportQueryByBaseTemplate()
     {
