@@ -424,21 +424,6 @@
       }
     }
 
-    [Fact]
-    public void HowDoIMockTrackerVisitor()
-    {
-      // create a visitor mock
-      var visitorMock = Substitute.For<Sitecore.Analytics.Data.DataAccess.Visitor>(Guid.NewGuid());
-
-      // inject the visitor mock into Analytics Tracker
-      using (new Sitecore.Common.Switcher<Sitecore.Analytics.Data.DataAccess.Visitor>(visitorMock))
-      {
-        // the mocked visitor instance is now available via Analytics.Tracker.Visitor property
-        var currentVisitor = Sitecore.Analytics.Tracker.Visitor;
-        Assert.Equal(visitorMock, currentVisitor);
-      }
-    }
-
     #endregion
   }
 }
