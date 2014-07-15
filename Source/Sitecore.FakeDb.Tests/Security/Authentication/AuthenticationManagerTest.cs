@@ -2,7 +2,6 @@
 {
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Common;
   using Sitecore.Security.Accounts;
   using Sitecore.Security.Authentication;
   using Xunit;
@@ -12,9 +11,27 @@
   {
     private readonly AuthenticationProvider provider;
 
+    private readonly User user;
+
     public AuthenticationManagerTest()
     {
       this.provider = Substitute.For<AuthenticationProvider>();
+
+      this.user = Substitute.For<User>("John", false);
+      this.user.Name.Returns("John");
+    }
+
+    [Fact]
+    public void ShouldGetActiveUser()
+    {
+      // arrange
+      this.provider.GetActiveUser().Returns(this.user);
+
+      using (new AuthenticationSwitcher(this.provider))
+      {
+        // act & assert
+        AuthenticationManager.GetActiveUser().Should().Be(this.user);
+      }
     }
 
     [Theory]
@@ -23,15 +40,12 @@
     public void ShouldLoginUser(bool login)
     {
       // arrange
-      var user = Substitute.For<User>("John", true);
-      user.Name.Returns("John");
+      this.provider.Login(this.user).Returns(login);
 
-      this.provider.Login(user).Returns(login);
-
-      using (new Switcher<AuthenticationProvider>(this.provider))
+      using (new AuthenticationSwitcher(this.provider))
       {
         // act & assert
-        AuthenticationManager.Login(user).Should().Be(login);
+        AuthenticationManager.Login(this.user).Should().Be(login);
       }
     }
 
@@ -43,7 +57,7 @@
       // arrange
       this.provider.Login("John", false).Returns(login);
 
-      using (new Switcher<AuthenticationProvider>(this.provider))
+      using (new AuthenticationSwitcher(this.provider))
       {
         // act & assert
         AuthenticationManager.Login("John", false).Should().Be(login);
@@ -54,7 +68,9 @@
     public void ShouldLogout()
     {
       // arrange
-      using (new Switcher<AuthenticationProvider>(this.provider))
+      this.provider.GetActiveUser().Returns(this.user);
+
+      using (new AuthenticationSwitcher(this.provider))
       {
         // act
         AuthenticationManager.Logout();
@@ -68,16 +84,13 @@
     public void ShouldSetActiveUser()
     {
       // arrange
-      var user = Substitute.For<User>("John", false);
-      user.Name.Returns("John");
-
-      using (new Switcher<AuthenticationProvider>(this.provider))
+      using (new AuthenticationSwitcher(this.provider))
       {
         // act
-        AuthenticationManager.SetActiveUser(user);
+        AuthenticationManager.SetActiveUser(this.user);
 
         // assert
-        this.provider.Received().SetActiveUser(user);
+        this.provider.Received().SetActiveUser(this.user);
       }
     }
 
@@ -85,7 +98,7 @@
     public void ShouldSetActiveUserByName()
     {
       // arrange
-      using (new Switcher<AuthenticationProvider>(this.provider))
+      using (new AuthenticationSwitcher(this.provider))
       {
         // act
         AuthenticationManager.SetActiveUser("John");

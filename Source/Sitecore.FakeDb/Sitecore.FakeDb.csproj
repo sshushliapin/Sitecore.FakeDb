@@ -127,6 +127,8 @@
     <Compile Include="DbTemplate.cs" />
     <Compile Include="Security\AccessControl\FakeAuthorizationProvider.cs" />
     <Compile Include="Security\AccessControl\SwitchingAuthorizationProvider.cs" />
+    <Compile Include="Security\Authentication\FakeAuthenticationProvider.cs" />
+    <Compile Include="Security\Authentication\SwitchingAuthenticationProvider.cs" />
     <Compile Include="Security\Web\FakeMembershipProvider.cs" />
     <Compile Include="Security\Web\FakeProfileProvider.cs" />
     <Compile Include="Security\Web\FakeRoleProvider.cs" />

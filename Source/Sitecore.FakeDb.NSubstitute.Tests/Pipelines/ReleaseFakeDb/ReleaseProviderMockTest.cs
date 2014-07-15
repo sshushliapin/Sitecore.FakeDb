@@ -5,7 +5,6 @@
   using Sitecore.Buckets.Managers;
   using Sitecore.FakeDb.NSubstitute.Pipelines.ReleaseFakeDb;
   using Sitecore.Pipelines;
-  using Sitecore.Security.Authentication;
   using Xunit;
 
   public class ReleaseProviderMockTest
@@ -14,20 +13,7 @@
 
     public ReleaseProviderMockTest()
     {
-      processor = new ReleaseProviderMock();
-    }
-
-    [Fact]
-    public void ShouldReleaseAuthenticationProvider()
-    {
-      // arrange
-      AuthenticationManager.Provider.Login(null);
-
-      // assert
-      this.processor.ReleaseAuthenticationProvider(new PipelineArgs());
-
-      // assert
-      AuthenticationManager.Provider.ReceivedCalls().Should().BeEmpty();
+      this.processor = new ReleaseProviderMock();
     }
 
     [Fact]

@@ -78,6 +78,7 @@
     <Compile Include="..\Sitecore.FakeDb\Properties\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="ContextTest.cs" />
     <Compile Include="Data\Engines\DataCommands\CopyItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\MoveItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\RemoveVersionCommandTest.cs" />
@@ -138,7 +139,10 @@
     <Compile Include="Security\AccessControl\DbItemAccessTest.cs" />
     <Compile Include="Security\AccessControl\FakeAuthorizationProviderTest.cs" />
     <Compile Include="Security\AccessControl\SwitchingAuthorizationProviderTest.cs" />
+    <Compile Include="Security\Accounts\UserSwitcherTest.cs" />
     <Compile Include="Security\Authentication\AuthenticationManagerTest.cs" />
+    <Compile Include="Security\Authentication\FakeAuthenticationProviderTest.cs" />
+    <Compile Include="Security\Authentication\SwitchingAuthenticationProviderTest.cs" />
     <Compile Include="Security\AuthorizationProviderStubTest.cs" />
     <Compile Include="Security\FakeAccessRightProviderTest.cs" />
     <Compile Include="Tasks\FakeTaskDatabaseTest.cs" />

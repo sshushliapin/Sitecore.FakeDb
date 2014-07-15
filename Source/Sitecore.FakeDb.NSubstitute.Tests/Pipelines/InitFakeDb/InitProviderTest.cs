@@ -10,20 +10,6 @@
   public class InitAuthenticationProviderTest
   {
     [Fact]
-    public void ShouldInitAuthenticationProvider()
-    {
-      // arrange
-      var processor = new InitProviderMock();
-
-      // act
-      processor.InitAuthenticationProvider(new PipelineArgs());
-
-      // assert
-      AuthenticationManager.Provider.Name.Should().Be("mock");
-      AuthenticationManager.Provider.GetActiveUser().Name.Should().Be(@"sitecore\Anonymous");
-    }
-
-    [Fact]
     public void ShouldInitBucketProvider()
     {
       // arrange

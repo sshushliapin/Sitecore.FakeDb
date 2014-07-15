@@ -1,4 +1,8 @@
-﻿0.13.0
+﻿0.14.0
+* [NEW] Implemented context user switching
+* [NEW] Reconfigured authentication provider.
+
+0.13.0
 * [NEW] Implemented Link Database, Task Database and Media Provider switchers
 * [NEW] Implemented fake text translation
 * [NEW] Introduced Sitecore Query support

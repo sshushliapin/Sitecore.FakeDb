@@ -18,14 +18,6 @@
     }
 
     [Fact]
-    public void ShouldCreateAuthenticationManagerProviderMock()
-    {
-      // act & assert
-      AuthenticationManager.Provider.Should().BeAssignableTo<AuthenticationProvider>();
-      AuthenticationManager.Provider.GetType().FullName.Should().Be("Castle.Proxies.AuthenticationProviderProxy");
-    }
-
-    [Fact]
     public void ShouldCreateBucketProvider()
     {
       // act & assert
@@ -34,9 +26,7 @@
     }
 
     [Theory]
-    [InlineData("initFakeDb", "Sitecore.FakeDb.NSubstitute.Pipelines.InitFakeDb.InitProviderMock, Sitecore.FakeDb.NSubstitute", "InitAuthenticationProvider")]
     [InlineData("initFakeDb", "Sitecore.FakeDb.NSubstitute.Pipelines.InitFakeDb.InitProviderMock, Sitecore.FakeDb.NSubstitute", "InitBucketProvider")]
-    [InlineData("releaseFakeDb", "Sitecore.FakeDb.NSubstitute.Pipelines.ReleaseFakeDb.ReleaseProviderMock, Sitecore.FakeDb.NSubstitute", "ReleaseAuthenticationProvider")]
     [InlineData("releaseFakeDb", "Sitecore.FakeDb.NSubstitute.Pipelines.ReleaseFakeDb.ReleaseProviderMock, Sitecore.FakeDb.NSubstitute", "ReleaseBucketProvider")]
     public void ShouldRegisterProcessor(string processor, string type, string method)
     {

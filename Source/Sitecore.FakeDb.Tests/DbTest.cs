@@ -81,14 +81,14 @@
       // act
       using (var db = new Db
                         {
-                          new DbTemplate("Sample", templateId) { "Title" },
-                          new DbItem("Home", this.itemId, templateId)
+                          new DbTemplate("Sample", this.templateId) { "Title" },
+                          new DbItem("Home", this.itemId, this.templateId)
                         })
       {
         // assert
-        var item = db.Database.GetItem(itemId);
+        var item = db.Database.GetItem(this.itemId);
         item.Fields["Title"].Should().NotBeNull();
-        item.TemplateID.Should().Be(templateId);
+        item.TemplateID.Should().Be(this.templateId);
       }
     }
 
@@ -98,8 +98,8 @@
       // act
       using (var db = new Db
                         {
-                          new DbTemplate("Sample", templateId) { "Title" },
-                          new DbItem("Home", itemId, templateId) { { "Title", "Welcome!" } }
+                          new DbTemplate("Sample", this.templateId) { "Title" },
+                          new DbItem("Home", this.itemId, this.templateId) { { "Title", "Welcome!" } }
                         })
       {
         // assert
@@ -282,7 +282,7 @@
     public void ShouldGenerateTemplateIdIfNotSet()
     {
       // arrange
-      var template = new DbTemplate((ID) null);
+      var template = new DbTemplate((ID)null);
 
       // act
       using (new Db { template })
@@ -996,18 +996,14 @@
     public void ShouldCopyItemInAllLanguagesAndVersions()
     {
       // arrange
-      using (var db = new Db { new DbItem("old root")
-                                 {
-                                   new DbItem("item")
-                                     {
-                                       new DbField("Title")
-                                         {
-                                           { "en", 1, "Hi!" },
-                                           { "en", 2, "Welcome!" }, 
-                                           { "da", 1, "Velkommen!" }
-                                         },
-                                     }
-                                 }, new DbItem("new root") })
+      using (var db = new Db
+                        {
+                          new DbItem("old root")
+                            {
+                              new DbItem("item") { new DbField("Title") { { "en", 1, "Hi!" }, { "en", 2, "Welcome!" }, { "da", 1, "Velkommen!" } }, }
+                            },
+                          new DbItem("new root")
+                        })
       {
         var item = db.GetItem("/sitecore/content/old root/item");
         var newRoot = db.GetItem("/sitecore/content/new root");
@@ -1026,12 +1022,10 @@
     public void ShouldDeepCopyItem()
     {
       // arrange
-      using (var db = new Db{
-        new DbItem("original")
-        {
-          new DbItem("child") { { "Title", "Child" } }
-        }
-      })
+      using (var db = new Db
+                        {
+                          new DbItem("original") { new DbItem("child") { { "Title", "Child" } } }
+                        })
       {
         var original = db.GetItem("/sitecore/content/original");
         var root = db.GetItem("/sitecore/content");
@@ -1055,13 +1049,14 @@
     public void ShouldNotUpdateOriginalItemOnEditing()
     {
       // arrange
-      using (var db = new Db { new DbItem("old root")
-                                 {
-                                   new DbItem("item")
-                                     {
-                                       new DbField("Title") { { "en", 1, "Hi!" } },
-                                     }
-                                 }, new DbItem("new root") })
+      using (var db = new Db
+                        {
+                          new DbItem("old root")
+                            {
+                              new DbItem("item") { new DbField("Title") { { "en", 1, "Hi!" } }, }
+                            },
+                          new DbItem("new root")
+                        })
       {
         var item = db.GetItem("/sitecore/content/old root/item");
         var newRoot = db.GetItem("/sitecore/content/new root");
@@ -1098,11 +1093,11 @@
     public void ShouldAccessTemplateAsTemplate()
     {
       // arrange
-      using (var db = new Db { new DbTemplate("Main", templateId) })
+      using (var db = new Db { new DbTemplate("Main", this.templateId) })
       {
         // act & assert
-        TemplateManager.GetTemplate(templateId, db.Database).ID.Should().Be(templateId);
-        TemplateManager.GetTemplate("Main", db.Database).ID.Should().Be(templateId);
+        TemplateManager.GetTemplate(this.templateId, db.Database).ID.Should().Be(this.templateId);
+        TemplateManager.GetTemplate("Main", db.Database).ID.Should().Be(this.templateId);
       }
     }
 
@@ -1110,14 +1105,14 @@
     public void ShouldAccessTemplateAsItem()
     {
       // arrange
-      using (var db = new Db { new DbTemplate("Main", templateId) })
+      using (var db = new Db { new DbTemplate("Main", this.templateId) })
       {
         // act
         var item = db.GetItem("/sitecore/templates/Main");
 
         // assert
         item.Should().NotBeNull();
-        item.ID.Should().Be(templateId);
+        item.ID.Should().Be(this.templateId);
       }
     }
 
@@ -1127,20 +1122,20 @@
       // arrange
       var folderId = ID.NewID;
 
-      using (var db = new Db()
-      {
-        new DbItem("folder", folderId, TemplateIDs.Folder) { ParentID = ItemIDs.TemplateRoot },
-        new DbTemplate("Main", templateId) { ParentID = folderId }
-      })
+      using (var db = new Db
+                        {
+                          new DbItem("folder", folderId, TemplateIDs.Folder) { ParentID = ItemIDs.TemplateRoot },
+                          new DbTemplate("Main", this.templateId) { ParentID = folderId }
+                        })
       {
         // act 
         var templateItem = db.GetItem("/sitecore/templates/folder/Main");
 
         // assert
-        TemplateManager.GetTemplate(templateId, db.Database).ID.Should().Be(templateId);
-        TemplateManager.GetTemplate("Main", db.Database).ID.Should().Be(templateId);
+        TemplateManager.GetTemplate(this.templateId, db.Database).ID.Should().Be(this.templateId);
+        TemplateManager.GetTemplate("Main", db.Database).ID.Should().Be(this.templateId);
         templateItem.Should().NotBeNull();
-        templateItem.ID.Should().Be(templateId);
+        templateItem.ID.Should().Be(this.templateId);
       }
     }
 
@@ -1150,13 +1145,13 @@
       // arrange
       var baseId = ID.NewID;
       using (var db = new Db
-      {
-        new DbTemplate("base", baseId),
-        new DbTemplate("main", templateId) {BaseIDs = new ID[] {baseId}}
-      })
+                        {
+                          new DbTemplate("base", baseId), 
+                          new DbTemplate("main", this.templateId) { BaseIDs = new ID[] { baseId } }
+                        })
       {
         var template = TemplateManager.GetTemplate("main", db.Database);
-        var templateItem = db.GetItem(templateId);
+        var templateItem = db.GetItem(this.templateId);
 
         // assert
         template.BaseIDs.Should().HaveCount(1);
@@ -1168,11 +1163,10 @@
 
         templateItem.Fields[FieldIDs.BaseTemplate].Should().NotBeNull();
         templateItem.Fields[FieldIDs.BaseTemplate].Value.Should().Contain(baseId.ToString());
-        
+
         templateItem.Fields[DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Should().NotBeNull();
         templateItem.Fields[DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Value.Should().Contain(baseId.ToString());
       }
-     
     }
   }
 }

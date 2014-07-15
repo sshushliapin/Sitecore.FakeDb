@@ -1,6 +1,5 @@
 ﻿namespace Examples
 {
-  using System;
   using System.Linq;
   using NSubstitute;
   using Xunit;
@@ -102,7 +101,7 @@
 
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
         {
-          new Sitecore.FakeDb.DbTemplate("sample", templateId) { { "Title", "$name"} }
+          new Sitecore.FakeDb.DbTemplate("sample", templateId) { { "Title", "$name" } }
         })
       {
         var root = db.GetItem(Sitecore.ItemIDs.ContentRoot);
@@ -199,6 +198,33 @@
     #endregion
 
     #region Security
+
+    [Fact]
+    public void HowDoIMockAuthenticationProvider()
+    {
+      // create and configure authentication provider mock
+      var provider = Substitute.For<Sitecore.Security.Authentication.AuthenticationProvider>();
+      provider.Login("John", true).Returns(true);
+
+      // switch the authentication provider so the mocked version is used
+      using (new Sitecore.Security.Authentication.AuthenticationSwitcher(provider))
+      {
+        // the authentication manager is called with the expected parameters. It returns 'true'
+        Assert.True(Sitecore.Security.Authentication.AuthenticationManager.Login("John", true));
+
+        // the authentication manager is called with some unexpected parameters. It returns 'false'
+        Assert.False(Sitecore.Security.Authentication.AuthenticationManager.Login("Robber", true));
+      }
+    }
+
+    [Fact]
+    public void HowDoISwitchContextUser()
+    {
+      using (new Sitecore.Security.Accounts.UserSwitcher("sitecore\\admin", true))
+      {
+        Assert.Equal("sitecore\\admin", Sitecore.Context.User.Name);
+      }
+    }
 
     [Fact]
     public void HowDoIConfigureItemAccess()
