@@ -477,6 +477,31 @@ public void HowDoIMockMediaItemProvider()
 ```
 
 ## Miscellaneous    
+
+### How do I work with the Query API?
+
+The `Query` API needs `Context.Database` set and the example below uses `DatabaseSwitcher` to do so:
+
+```csharp
+[Fact]
+public void HowDoIQorkWithQueryApi()
+{
+  using (var db = new Sitecore.FakeDb.Db { new Sitecore.FakeDb.DbItem("home") })
+  {
+    var query = "/sitecore/content/*[@@key = 'home']";
+
+    Sitecore.Data.Items.Item[] result;
+    using (new Sitecore.Data.DatabaseSwitcher(db.Database))
+    {
+      result = Sitecore.Data.Query.Query.SelectItems(query);
+    }
+
+    Assert.Equal(result.Count(), 1);
+    Assert.Equal(result[0].Key, "home");
+  }
+}
+```
+
 ### How do I mock the content search logic
 
 The example below creates and configure a content search index mock so that it returns Home item:

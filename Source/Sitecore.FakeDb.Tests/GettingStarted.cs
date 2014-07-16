@@ -400,6 +400,24 @@
     #region Miscellaneous
 
     [Fact]
+    public void HowDoIWorkWithQueryApi()
+    {
+      using (var db = new Sitecore.FakeDb.Db { new Sitecore.FakeDb.DbItem("home") })
+      {
+        var query = "/sitecore/content/*[@@key = 'home']";
+
+        Sitecore.Data.Items.Item[] result;
+        using (new Sitecore.Data.DatabaseSwitcher(db.Database))
+        {
+          result = Sitecore.Data.Query.Query.SelectItems(query);
+        }
+
+        Assert.Equal(result.Count(), 1);
+        Assert.Equal(result[0].Key, "home");
+      }
+    }
+
+    [Fact]
     public void HowDoIMockContentSearchLogic()
     {
       try
