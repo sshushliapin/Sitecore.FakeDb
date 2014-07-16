@@ -83,6 +83,7 @@
     <Compile Include="Pipelines\ReleaseFakeDb\ResetFactory.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ResetSettings.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ResetTemplateEngine.cs" />
+    <Compile Include="Profile\FakeUserProfile.cs" />
     <Compile Include="Properties\AssemblyVersionInfo.cs" />
     <Compile Include="ProviderBehaviorSwitcher.cs" />
     <Compile Include="Resources\Media\FakeMediaProvider.cs" />
