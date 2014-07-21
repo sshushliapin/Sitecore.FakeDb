@@ -146,6 +146,7 @@
     <Compile Include="Security\Authentication\SwitchingAuthenticationProviderTest.cs" />
     <Compile Include="Security\AuthorizationProviderStubTest.cs" />
     <Compile Include="Security\FakeAccessRightProviderTest.cs" />
+    <Compile Include="Data\Fields\ReferenceFieldTest.cs" />
     <Compile Include="Tasks\FakeTaskDatabaseTest.cs" />
     <Compile Include="Tasks\TaskDatabaseSwitcherTest.cs" />
     <Compile Include="Tasks\StubTaskDatabaseTest.cs" />
