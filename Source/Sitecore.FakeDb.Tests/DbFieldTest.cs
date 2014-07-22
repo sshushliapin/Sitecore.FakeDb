@@ -170,5 +170,12 @@
       // assert
       action.ShouldThrow<ArgumentException>().WithMessage("An item with the same version has already been added.");
     }
+
+    [Fact]
+    public void ShouldBeReadonlyDictionary()
+    {
+      // act & assert
+      Assert.Throws<NotSupportedException>(() => DbField.FieldIdToNameMapping.Clear());
+    }
   }
 }

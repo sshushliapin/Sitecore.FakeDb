@@ -3,6 +3,7 @@
   using System;
   using System.Collections;
   using System.Collections.Generic;
+  using System.Collections.ObjectModel;
   using System.Diagnostics;
   using System.Linq;
   using Sitecore.Data;
@@ -12,12 +13,12 @@
   [DebuggerDisplay("ID = {ID}, Name = {Name}, Value = {Value}")]
   public class DbField : IEnumerable
   {
-    public static readonly IDictionary<ID, string> FieldIdToNameMapping = new Dictionary<ID, string>
+    public static readonly IDictionary<ID, string> FieldIdToNameMapping = new ReadOnlyDictionary<ID, string>(new Dictionary<ID, string>
     {
       { FieldIDs.LayoutField, "__Renderings" },
       { FieldIDs.BaseTemplate, "__Base template" },
       { FieldIDs.StandardValues, "__Standard values"}
-    };
+    });
 
     private readonly IDictionary<string, IDictionary<int, string>> values = new Dictionary<string, IDictionary<int, string>>();
 
