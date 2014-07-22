@@ -3,6 +3,7 @@
   using System;
   using System.Collections.Generic;
   using FluentAssertions;
+  using Sitecore.Data;
   using Sitecore.Globalization;
   using Xunit;
   using Xunit.Extensions;
@@ -176,6 +177,23 @@
     {
       // act & assert
       Assert.Throws<NotSupportedException>(() => DbField.FieldIdToNameMapping.Clear());
+    }
+
+    [Theory]
+    [InlineData("{12C33F3F-86C5-43A5-AEB4-5598CEC45116}", "__Base template")]
+    [InlineData("{001DD393-96C5-490B-924A-B0F25CD9EFD8}", "__Lock")]
+    [InlineData("{F1A1FE9E-A60C-4DDB-A3A0-BB5B29FE732E}", "__Renderings")]
+    [InlineData("{F7D48A55-2158-4F02-9356-756654404F73}", "__Standard values")]
+    public void ShouldMapDefaultFieldNameById(string fieldId, string expectedName)
+    {
+      // arrange
+      var id = new ID(fieldId);
+
+      // act
+      var dbfield = new DbField(id);
+
+      // assert
+      dbfield.Name.Should().Be(expectedName);
     }
   }
 }

@@ -10,7 +10,7 @@
     internal DbFieldCollection StandardValues { get; private set; }
 
     public DbTemplate()
-      : this((string) null)
+      : this((string)null)
     {
     }
 
@@ -28,6 +28,8 @@
       : base(name, ID.IsNullOrEmpty(id) ? ID.NewID : id, TemplateIDs.Template)
     {
       this.StandardValues = new DbFieldCollection();
+
+      this.Add(FieldIDs.Lock);
     }
 
     public void Add(string fieldName)

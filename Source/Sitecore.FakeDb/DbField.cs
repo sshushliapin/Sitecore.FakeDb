@@ -14,11 +14,12 @@
   public class DbField : IEnumerable
   {
     public static readonly IDictionary<ID, string> FieldIdToNameMapping = new ReadOnlyDictionary<ID, string>(new Dictionary<ID, string>
-    {
-      { FieldIDs.LayoutField, "__Renderings" },
-      { FieldIDs.BaseTemplate, "__Base template" },
-      { FieldIDs.StandardValues, "__Standard values"}
-    });
+      {
+        { FieldIDs.BaseTemplate, "__Base template" },   
+        { FieldIDs.LayoutField, "__Renderings" },
+        { FieldIDs.Lock, "__Lock" },
+        { FieldIDs.StandardValues, "__Standard values" }
+      });
 
     private readonly IDictionary<string, IDictionary<int, string>> values = new Dictionary<string, IDictionary<int, string>>();
 
@@ -79,7 +80,10 @@
 
     internal IDictionary<string, IDictionary<int, string>> Values
     {
-      get { return this.values; }
+      get
+      {
+        return this.values;
+      }
     }
 
     public virtual void Add(string language, string value)
