@@ -22,6 +22,19 @@
     }
 
     [Fact]
+    public void HowDoICreateAnItemUnderSystem()
+    {
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+      {
+        new Sitecore.FakeDb.DbItem("home") {ParentID = Sitecore.ItemIDs.SystemRoot}
+      })
+      {
+        Sitecore.Data.Items.Item home = db.GetItem("/sitecore/system/home");
+        Assert.Equal("home", home.Key);
+      }
+    }
+
+    [Fact]
     public void HowDoICreateAnItemHierarchy()
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
