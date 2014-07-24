@@ -43,6 +43,25 @@ public void HowDoICreateASimpleItem()
 }
 ```
 
+### How do I create an item under system or media library
+
+The code below sets `ParentID` explicitely:
+
+```csharp
+[Fact]
+public void HowDoICreateAnItemUnderSystem()
+{
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+  {
+    new Sitecore.FakeDb.DbItem("home") {ParentID = Sitecore.ItemIDs.SystemRoot}
+  })
+  {
+    Sitecore.Data.Items.Item home = db.GetItem("/sitecore/system/home");
+    Assert.Equal("home", home.Key);
+  }
+}
+```
+
 ### How do I create an item hierarchy
 
 This code creates a root item Articles and two child items Getting Started and Troubleshooting:
