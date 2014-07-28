@@ -264,13 +264,15 @@
     #region Pipelines
 
     /// <summary>
-    /// How do I ensure the pipeline is called.
-    /// Imagine you have a product repository. The repository should be able to get a product by id.
-    /// The implementation of the repository is 'thin' and does nothing than calling a corresponding pipeline with proper arguments.
-    /// The next example shows how to unit test the pipeline call (please note that the pipeline is not defined in the tests assembly config file):
+    /// How to ensure the pipeline is called with specific argsuments.
+    /// Imagine you have a product repository. The repository should be able to get a product
+    /// by id. The implementation of the repository is 'thin' and does nothing than calling a
+    /// corresponding pipeline with proper arguments. The next example shows how to unit test
+    /// the pipeline call (please note that the pipeline is not defined in the tests assembly
+    /// config file):
     /// </summary>
     [Xunit.Fact]
-    public void HowToEnsurePipelineIsCalled()
+    public void HowToEnsurePipelineIsCalledWithSpecificArgs()
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
       {
@@ -300,11 +302,11 @@
     }
 
     /// <summary>
-    /// How do I configure the pipeline behaviour.
+    /// How to configure the pipeline behaviour.
     /// The code sample above checks that the pipeline is called with proper arguments. 
     /// The next scenario would be to validate the pipeline call results. 
-    /// In the code below we configure pipeline proressor behaviour to return an expected product only
-    /// if the product id id set to "1".
+    /// In the code below we configure pipeline proressor behaviour to return an expected
+    /// product only if the product id is set to "1".
     /// </summary>
     [Xunit.Fact]
     public void HowToConfigurePipelineBehaviour()
@@ -314,12 +316,14 @@
         // create a product to get from the repository
         object expectedProduct = new object();
 
-        // configure processing of the pipeline arguments. Will set the 'expectedProduct' instance 
-        // to CustomData["Product"] property only when the CustomData["ProductId"] is "1"
+        // configure processing of the pipeline arguments. Will set the 'expectedProduct'
+        // instance to CustomData["Product"] property only when the CustomData["ProductId"]
+        // is "1"
         string productId = "1";
 
-        // configure a pipeline watcher to expect a pipeline call where the args custom data contains
-        // ProductId. Once the args received the pipeline result is set into Product custom data property
+        // configure a pipeline watcher to expect a pipeline call where the args custom data
+        // contains ProductId. Once the args received the pipeline result is set into
+        // Product custom data property
         db.PipelineWatcher
           .WhenCall("findProductById")
           .WithArgs(a => a.CustomData["ProductId"].Equals(productId))
@@ -469,13 +473,29 @@
         var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
         Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Add("my_index", index);
 
-        using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db { new Sitecore.FakeDb.DbItem("home") })
+        using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+          {
+            new Sitecore.FakeDb.DbItem("home")
+          })
         {
-          var searchResultItem = Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
-          searchResultItem.GetItem().Returns(db.GetItem("/sitecore/content/home"));
-          index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Returns((new[] { searchResultItem }).AsQueryable());
+          var searchResultItem =
+            Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
 
-          Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Single().GetItem();
+          searchResultItem
+            .GetItem()
+            .Returns(db.GetItem("/sitecore/content/home"));
+
+          index
+            .CreateSearchContext()
+            .GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>()
+            .Returns((new[] { searchResultItem }).AsQueryable());
+
+          Sitecore.Data.Items.Item result =
+            index
+            .CreateSearchContext()
+            .GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>()
+            .Single()
+            .GetItem();
 
           Xunit.Assert.Equal("/sitecore/content/home", result.Paths.FullPath);
         }
