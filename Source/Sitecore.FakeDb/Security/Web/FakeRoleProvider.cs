@@ -13,61 +13,69 @@
 
     public override string ApplicationName { get; set; }
 
+    public virtual ThreadLocal<RoleProvider> LocalProvider
+    {
+      get { return this.localProvider; }
+    }
+
     public override void AddUsersToRoles(string[] usernames, string[] roleNames)
     {
     }
 
     public override void CreateRole(string roleName)
     {
+      if (this.IsLocalProviderSet())
+      {
+        this.localProvider.Value.CreateRole(roleName);
+      }
     }
 
     public override bool DeleteRole(string roleName, bool throwOnPopulatedRole)
     {
-      return false;
+      return this.IsLocalProviderSet() && this.localProvider.Value.DeleteRole(roleName, throwOnPopulatedRole);
     }
 
     public override string[] FindUsersInRole(string roleName, string usernameToMatch)
     {
-      return this.emptyUsers;
+      return this.IsLocalProviderSet() ? this.localProvider.Value.FindUsersInRole(roleName, usernameToMatch) : this.emptyUsers;
     }
 
     public override string[] GetAllRoles()
     {
-      return this.emptyRoles;
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetAllRoles() : this.emptyRoles;
     }
 
     public override string[] GetRolesForUser(string username)
     {
-      return this.emptyRoles;
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetRolesForUser(username) : this.emptyRoles;
     }
 
     public override string[] GetUsersInRole(string roleName)
     {
-      return this.emptyUsers;
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetUsersInRole(roleName) : this.emptyUsers;
+    }
+
+    public virtual bool IsLocalProviderSet()
+    {
+      return this.localProvider.Value != null;
     }
 
     public override bool IsUserInRole(string username, string roleName)
     {
-      return false;
+      return this.IsLocalProviderSet() && this.localProvider.Value.IsUserInRole(username, roleName);
     }
 
     public override void RemoveUsersFromRoles(string[] usernames, string[] roleNames)
     {
+      if (this.IsLocalProviderSet())
+      {
+        this.localProvider.Value.RemoveUsersFromRoles(usernames, roleNames);
+      }
     }
 
     public override bool RoleExists(string roleName)
     {
-      return false;
-    }
-
-    ThreadLocal<RoleProvider> IThreadLocalProvider<RoleProvider>.LocalProvider
-    {
-      get { return this.localProvider; }
-    }
-
-    bool IThreadLocalProvider<RoleProvider>.IsLocalProviderSet()
-    {
-      return this.localProvider.Value != null;
+      return this.IsLocalProviderSet() && this.localProvider.Value.RoleExists(roleName);
     }
   }
 }
