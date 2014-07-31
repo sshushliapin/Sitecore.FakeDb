@@ -236,6 +236,25 @@
     }
 
     [Xunit.Fact]
+    public void HowToMockRoleProvider()
+    {
+      // create and configure role provider mock
+      string[] roles = { @"sitecore/Authors", @"sitecore/Editors" };
+
+      System.Web.Security.RoleProvider provider = Substitute.For<System.Web.Security.RoleProvider>();
+      provider.GetAllRoles().Returns(roles);
+
+      // switch the role provider so the mocked version is used
+      using (new Sitecore.FakeDb.Security.Web.RoleProviderSwitcher(provider))
+      {
+        string[] resultRoles = System.Web.Security.Roles.GetAllRoles();
+
+        Xunit.Assert.True(resultRoles.Contains(@"sitecore/Authors"));
+        Xunit.Assert.True(resultRoles.Contains(@"sitecore/Editors"));
+      }
+    }
+
+    [Xunit.Fact]
     public void HowToSwitchContextUser()
     {
       using (new Sitecore.Security.Accounts.UserSwitcher(@"extranet\John", true))

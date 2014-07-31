@@ -1,4 +1,7 @@
-﻿0.14.0
+﻿0.15.0
+* [NEW] Implemented RoleProviderSwitcher
+
+0.14.0
 * [NEW] Implemented context user switching
 * [NEW] Reconfigured authentication provider
 * [NEW] Introduced FakeUserProfile. Thanks to [Pavel Veller](https://github.com/pveller)

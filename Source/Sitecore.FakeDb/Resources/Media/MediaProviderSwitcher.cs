@@ -2,7 +2,7 @@
 {
   using Sitecore.Resources.Media;
 
-  public class MediaProviderSwitcher : ProviderBehaviorSwitcher<MediaProvider>
+  public class MediaProviderSwitcher : ThreadLocalProviderSwitcher<MediaProvider>
   {
     public MediaProviderSwitcher(MediaProvider innerProvider)
       : base((IThreadLocalProvider<MediaProvider>)MediaManager.Provider, innerProvider)

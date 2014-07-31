@@ -2,10 +2,10 @@
 {
   using Sitecore.Links;
 
-  public class LinkDatabaseSwitcher : ProviderBehaviorSwitcher<LinkDatabase>
+  public class LinkDatabaseSwitcher : ThreadLocalProviderSwitcher<LinkDatabase>
   {
-    public LinkDatabaseSwitcher(LinkDatabase behavior)
-      : base((FakeLinkDatabase)Globals.LinkDatabase, behavior)
+    public LinkDatabaseSwitcher(LinkDatabase localProvider)
+      : base((IThreadLocalProvider<LinkDatabase>)Globals.LinkDatabase, localProvider)
     {
     }
   }

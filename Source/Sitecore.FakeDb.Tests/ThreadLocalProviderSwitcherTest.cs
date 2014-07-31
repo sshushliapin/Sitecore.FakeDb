@@ -6,10 +6,10 @@
   using NSubstitute;
   using Xunit;
 
-  public class ProviderBehaviorSwithcerTest
+  public class ThreadLocalProviderSwitcherTest
   {
     [Fact]
-    public void ShouldSetProviderBehaviour()
+    public void ShouldSetLocalProvider()
     {
       // arrange
       var provider = Substitute.For<IThreadLocalProvider<ProviderBase>, ProviderBase>();
@@ -17,7 +17,7 @@
       var befaviour = Substitute.For<ProviderBase>();
 
       // act
-      var swithcer = new TestProviderBehaviorSwithcer<ProviderBase>(provider, befaviour);
+      var swithcer = new SampleThreadLocalProviderSwithcer<ProviderBase>(provider, befaviour);
 
       // assert
       swithcer.Provider.Should().Be(provider);
@@ -25,14 +25,14 @@
     }
 
     [Fact]
-    public void ShouldResetProviderBehaviourOnDispose()
+    public void ShouldResetLocalProviderOnDispose()
     {
       // arrange
       var provider = Substitute.For<IThreadLocalProvider<ProviderBase>, ProviderBase>();
       provider.LocalProvider.Returns(Substitute.For<ThreadLocal<ProviderBase>>());
       var befaviour = Substitute.For<ProviderBase>();
 
-      var swithcer = new TestProviderBehaviorSwithcer<ProviderBase>(provider, befaviour);
+      var swithcer = new SampleThreadLocalProviderSwithcer<ProviderBase>(provider, befaviour);
 
       // act
       swithcer.Dispose();
@@ -41,10 +41,10 @@
       swithcer.Provider.LocalProvider.Value.Should().BeNull();
     }
 
-    private class TestProviderBehaviorSwithcer<TProvider> : ProviderBehaviorSwitcher<TProvider>
+    private class SampleThreadLocalProviderSwithcer<TProvider> : ThreadLocalProviderSwitcher<TProvider>
     {
-      public TestProviderBehaviorSwithcer(IThreadLocalProvider<TProvider> provider, TProvider behavior)
-        : base(provider, behavior)
+      public SampleThreadLocalProviderSwithcer(IThreadLocalProvider<TProvider> rootProvider, TProvider localProvider)
+        : base(rootProvider, localProvider)
       {
       }
     }

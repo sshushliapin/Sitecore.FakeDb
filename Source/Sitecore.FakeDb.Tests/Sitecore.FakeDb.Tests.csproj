@@ -122,7 +122,8 @@
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
     <Compile Include="Profile\UserProfileTest.cs" />
-    <Compile Include="ProviderBehaviorSwitcherTest.cs" />
+    <Compile Include="Security\RoleProviderSwitcherTest.cs" />
+    <Compile Include="ThreadLocalProviderSwitcherTest.cs" />
     <Compile Include="Links\LinkDatabaseSwitcherTest.cs" />
     <Compile Include="Pipelines\PipelineWatcherProcessorTests.cs" />
     <Compile Include="Pipelines\PipelineWatcherTest.cs" />
