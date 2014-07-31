@@ -1,17 +1,38 @@
-﻿using System;
-using System.Web.Security;
-
-namespace Sitecore.FakeDb.Security.Web
+﻿namespace Sitecore.FakeDb.Security.Web
 {
-  public class FakeRoleProvider : RoleProvider
+  using System.Web.Security;
+
+  public class FakeRoleProvider : RoleProvider, IBehavioral<RoleProvider>
   {
     private readonly string[] emptyRoles = { };
 
+    private readonly string[] emptyUsers = { };
+
     public override string ApplicationName { get; set; }
 
-    public override bool IsUserInRole(string username, string roleName)
+    public virtual RoleProvider Behavior { get; set; }
+
+    public override void AddUsersToRoles(string[] usernames, string[] roleNames)
     {
-      throw new NotImplementedException();
+    }
+
+    public override void CreateRole(string roleName)
+    {
+    }
+
+    public override bool DeleteRole(string roleName, bool throwOnPopulatedRole)
+    {
+      return false;
+    }
+
+    public override string[] FindUsersInRole(string roleName, string usernameToMatch)
+    {
+      return this.emptyUsers;
+    }
+
+    public override string[] GetAllRoles()
+    {
+      return this.emptyRoles;
     }
 
     public override string[] GetRolesForUser(string username)
@@ -19,44 +40,23 @@ namespace Sitecore.FakeDb.Security.Web
       return this.emptyRoles;
     }
 
-    public override void CreateRole(string roleName)
+    public override string[] GetUsersInRole(string roleName)
     {
-      throw new NotImplementedException();
+      return this.emptyUsers;
     }
 
-    public override bool DeleteRole(string roleName, bool throwOnPopulatedRole)
+    public override bool IsUserInRole(string username, string roleName)
     {
-      throw new NotImplementedException();
-    }
-
-    public override bool RoleExists(string roleName)
-    {
-      throw new NotImplementedException();
-    }
-
-    public override void AddUsersToRoles(string[] usernames, string[] roleNames)
-    {
-      throw new NotImplementedException();
+      return false;
     }
 
     public override void RemoveUsersFromRoles(string[] usernames, string[] roleNames)
     {
-      throw new NotImplementedException();
     }
 
-    public override string[] GetUsersInRole(string roleName)
+    public override bool RoleExists(string roleName)
     {
-      throw new NotImplementedException();
-    }
-
-    public override string[] GetAllRoles()
-    {
-      throw new NotImplementedException();
-    }
-
-    public override string[] FindUsersInRole(string roleName, string usernameToMatch)
-    {
-      throw new NotImplementedException();
+      return false;
     }
   }
 }

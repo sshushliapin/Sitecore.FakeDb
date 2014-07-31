@@ -62,6 +62,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -147,6 +148,7 @@
     <Compile Include="Security\AuthorizationProviderStubTest.cs" />
     <Compile Include="Security\FakeAccessRightProviderTest.cs" />
     <Compile Include="Data\Fields\ReferenceFieldTest.cs" />
+    <Compile Include="Security\FakeRoleProviderTest.cs" />
     <Compile Include="Tasks\FakeTaskDatabaseTest.cs" />
     <Compile Include="Tasks\TaskDatabaseSwitcherTest.cs" />
     <Compile Include="Tasks\StubTaskDatabaseTest.cs" />
