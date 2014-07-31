@@ -1,13 +1,13 @@
 ﻿namespace Sitecore.FakeDb.Tests.Links
 {
   using FluentAssertions;
-  using Xunit;
   using NSubstitute;
   using Sitecore.Data;
-  using Sitecore.Links;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Links;
   using Sitecore.FakeDb.Data.Items;
+  using Sitecore.FakeDb.Links;
+  using Sitecore.Links;
+  using Xunit;
 
   public class FakeLinkDatabaseTest
   {
@@ -26,14 +26,40 @@
       this.item = ItemHelper.CreateInstance(this.database);
 
       this.behavior = Substitute.For<LinkDatabase>();
-      this.linkDatabase = new FakeLinkDatabase { Behavior = this.behavior };
+      this.linkDatabase = new FakeLinkDatabase();
+      this.linkDatabase.LocalProvider.Value = this.behavior;
+    }
+
+    [Fact]
+    public void ShouldReturnEmptyValuesWithoutBehaviorSet()
+    {
+      // arrange
+      var stubLinkDatabase = new FakeLinkDatabase();
+
+      // act & assert
+      Assert.DoesNotThrow(() => stubLinkDatabase.Compact(null));
+      stubLinkDatabase.GetBrokenLinks(null).Should().BeEmpty();
+      stubLinkDatabase.GetReferenceCount(null).Should().Be(0);
+      stubLinkDatabase.GetReferences(null).Should().BeEmpty();
+      stubLinkDatabase.GetItemReferences(null, false).Should().BeEmpty();
+      stubLinkDatabase.GetReferrerCount(null).Should().Be(0);
+      stubLinkDatabase.GetReferrers(null).Should().BeEmpty();
+      stubLinkDatabase.GetReferrers(null, null).Should().BeEmpty();
+      stubLinkDatabase.GetItemReferrers(null, false).Should().BeEmpty();
+      stubLinkDatabase.GetItemVersionReferrers(null).Should().BeEmpty();
+      stubLinkDatabase.GetReferrers(null, false).Should().BeEmpty();
+      stubLinkDatabase.HasExternalReferrers(null, false).Should().BeFalse();
+      Assert.DoesNotThrow(() => stubLinkDatabase.Rebuild(null));
+      Assert.DoesNotThrow(() => stubLinkDatabase.RemoveReferences(null));
+      Assert.DoesNotThrow(() => stubLinkDatabase.UpdateItemVersionReferences(null));
+      Assert.DoesNotThrow(() => stubLinkDatabase.UpdateReferences(null));
     }
 
     [Fact]
     public void ShouldSetBehaviour()
     {
       // assert
-      this.linkDatabase.Behavior.Should().BeSameAs(this.behavior);
+      this.linkDatabase.LocalProvider.Value.Should().BeSameAs(this.behavior);
     }
 
     [Fact]

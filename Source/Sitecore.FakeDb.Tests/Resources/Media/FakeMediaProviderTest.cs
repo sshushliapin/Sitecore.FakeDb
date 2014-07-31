@@ -11,31 +11,50 @@
 
   public class FakeMediaProviderTest
   {
-    private readonly MediaProvider behaviour;
+    private readonly MediaProvider localProvider;
 
     private readonly FakeMediaProvider provider;
 
     public FakeMediaProviderTest()
     {
-      this.behaviour = Substitute.For<MediaProvider>();
-      this.provider = new FakeMediaProvider { Behavior = behaviour };
+      this.localProvider = Substitute.For<MediaProvider>();
+      this.provider = new FakeMediaProvider();
+      this.provider.LocalProvider.Value = this.localProvider;
     }
 
     [Fact]
-    public void ShouldGetStubMediaProviderByDefault()
+    public void ShouldReturnDefaultValuesIfNoLocalProviderSet()
     {
+      // arrange
+      var mediaProvider = new FakeMediaProvider();
+
       // act & assert
-      new FakeMediaProvider().Behavior.Should().BeOfType<StubMediaProvider>();
+      mediaProvider.Cache.Should().NotBeNull();
+      mediaProvider.Config.Should().NotBeNull();
+      mediaProvider.Creator.Should().NotBeNull();
+      mediaProvider.Effects.Should().NotBeNull();
+      mediaProvider.MediaLinkPrefix.Should().NotBeNull();
+      mediaProvider.MimeResolver.Should().NotBeNull();
+
+      mediaProvider.GetMedia((MediaItem)null).Should().BeNull();
+      mediaProvider.GetMedia((MediaUri)null).Should().BeNull();
+      mediaProvider.GetMediaUrl(null).Should().BeNull();
+      mediaProvider.GetMediaUrl(null, null).Should().BeNull();
+      mediaProvider.GetThumbnailUrl(null).Should().BeNull();
+      mediaProvider.HasMediaContent(null).Should().BeFalse();
+      mediaProvider.IsMediaRequest(null).Should().BeFalse();
+      mediaProvider.IsMediaUrl(null).Should().BeFalse();
+      mediaProvider.ParseMediaRequest(null).Should().BeNull();
     }
 
     [Fact]
     public void ShouldSetMediaProviderBehaviour()
     {
       // act
-      this.provider.Behavior = this.behaviour;
+      this.provider.LocalProvider.Value = this.localProvider;
 
       // assert
-      this.provider.Behavior.Should().Be(this.behaviour);
+      this.provider.LocalProvider.Value.Should().Be(this.localProvider);
     }
 
     [Fact]
@@ -48,7 +67,7 @@
       this.provider.Cache = mock;
 
       // assert
-      this.behaviour.Cache.Should().Be(mock);
+      this.localProvider.Cache.Should().Be(mock);
       this.provider.Cache.Should().Be(mock);
     }
 
@@ -62,7 +81,7 @@
       this.provider.Config = mock;
 
       // assert
-      this.behaviour.Config.Should().Be(mock);
+      this.localProvider.Config.Should().Be(mock);
       this.provider.Config.Should().Be(mock);
     }
 
@@ -76,7 +95,7 @@
       this.provider.Creator = mock;
 
       // assert
-      this.behaviour.Creator.Should().Be(mock);
+      this.localProvider.Creator.Should().Be(mock);
       this.provider.Creator.Should().Be(mock);
     }
 
@@ -90,7 +109,7 @@
       this.provider.Effects = mock;
 
       // assert
-      this.behaviour.Effects.Should().Be(mock);
+      this.localProvider.Effects.Should().Be(mock);
       this.provider.Effects.Should().Be(mock);
     }
 
@@ -98,7 +117,7 @@
     public void ShouldGetMediaLinkPrefix()
     {
       // arrange
-      this.behaviour.MediaLinkPrefix.Returns("prefix");
+      this.localProvider.MediaLinkPrefix.Returns("prefix");
 
       // act
       this.provider.MediaLinkPrefix.Should().Be("prefix");
@@ -114,7 +133,7 @@
       this.provider.MimeResolver = mock;
 
       // assert
-      this.behaviour.MimeResolver.Should().Be(mock);
+      this.localProvider.MimeResolver.Should().Be(mock);
       this.provider.MimeResolver.Should().Be(mock);
     }
 
@@ -126,7 +145,7 @@
       var result = Substitute.For<Media>();
 
       // act
-      this.behaviour.GetMedia(mock).Returns(result);
+      this.localProvider.GetMedia(mock).Returns(result);
 
       // assert
       this.provider.GetMedia(mock).Should().Be(result);
@@ -140,7 +159,7 @@
       var result = Substitute.For<Media>();
 
       // act
-      this.behaviour.GetMedia(mock).Returns(result);
+      this.localProvider.GetMedia(mock).Returns(result);
 
       // assert
       this.provider.GetMedia(mock).Should().Be(result);
@@ -152,7 +171,7 @@
       // arrange
       var mock = CreateMediaItemMock();
 
-      this.behaviour.GetMediaUrl(mock).Returns("http://smth");
+      this.localProvider.GetMediaUrl(mock).Returns("http://smth");
 
       // assert
       this.provider.GetMediaUrl(mock).Should().Be("http://smth");
@@ -165,7 +184,7 @@
       var mock = CreateMediaItemMock();
 
       // act
-      this.behaviour.GetMediaUrl(mock, null).Returns("http://smth");
+      this.localProvider.GetMediaUrl(mock, null).Returns("http://smth");
 
       // assert
       this.provider.GetMediaUrl(mock, null).Should().Be("http://smth");
@@ -178,7 +197,7 @@
       var mock = CreateMediaItemMock();
 
       // act
-      this.behaviour.GetThumbnailUrl(mock).Returns("http://smth");
+      this.localProvider.GetThumbnailUrl(mock).Returns("http://smth");
 
       // assert
       this.provider.GetThumbnailUrl(mock).Should().Be("http://smth");
@@ -191,7 +210,7 @@
       var mock = CreateMediaItemMock();
 
       // act
-      this.behaviour.HasMediaContent(mock).Returns(true);
+      this.localProvider.HasMediaContent(mock).Returns(true);
 
       // assert
       this.provider.HasMediaContent(mock).Should().BeTrue();
@@ -201,7 +220,7 @@
     public void ShouldCallIsMediaRequest()
     {
       // act
-      this.behaviour.IsMediaRequest(null).ReturnsForAnyArgs(true);
+      this.localProvider.IsMediaRequest(null).ReturnsForAnyArgs(true);
 
       // assert
       this.provider.IsMediaRequest(null).Should().BeTrue();
@@ -211,7 +230,7 @@
     public void ShouldCallIsMediaUrl()
     {
       // act
-      this.behaviour.IsMediaUrl("http://smth").Returns(true);
+      this.localProvider.IsMediaUrl("http://smth").Returns(true);
 
       // assert
       this.provider.IsMediaUrl("http://smth").Should().BeTrue();
@@ -224,7 +243,7 @@
       var mock = Substitute.For<MediaRequest>();
 
       // act
-      this.behaviour.ParseMediaRequest(null).Returns(mock);
+      this.localProvider.ParseMediaRequest(null).Returns(mock);
 
       // assert
       this.provider.ParseMediaRequest(null).Should().Be(mock);

@@ -1,10 +1,10 @@
 ﻿namespace Sitecore.FakeDb.Tests.Links
 {
-  using Xunit;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.FakeDb.Links;
   using Sitecore.Links;
+  using Xunit;
 
   public class LinkDatabaseSwitcherTest
   {
@@ -19,7 +19,7 @@
       // act & assert
       using (new LinkDatabaseSwitcher(behavior))
       {
-        ((FakeLinkDatabase)Globals.LinkDatabase).Behavior.Should().Be(behavior);
+        ((IThreadLocalProvider<LinkDatabase>)Globals.LinkDatabase).LocalProvider.Value.Should().Be(behavior);
       }
     }
   }

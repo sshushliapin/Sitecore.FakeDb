@@ -13,9 +13,15 @@
 
     private readonly FakeAuthenticationProvider provider;
 
+    private readonly AuthenticationProvider localProvider;
+
+    private readonly User user;
+
     public FakeAuthenticationProviderTest()
     {
       this.provider = new FakeAuthenticationProvider();
+      this.localProvider = Substitute.For<AuthenticationProvider>();
+      this.user = User.FromName(UserName, false);
     }
 
     [Fact]
@@ -51,12 +57,9 @@
     [Fact]
     public void ShouldSetAndGetActiveUser()
     {
-      // arrange
-      var user = User.FromName(UserName, false);
-
       // act & assert
-      this.provider.SetActiveUser(user);
-      this.provider.GetActiveUser().Should().BeSameAs(user);
+      this.provider.SetActiveUser(this.user);
+      this.provider.GetActiveUser().Should().BeSameAs(this.user);
     }
 
     [Fact]
@@ -74,10 +77,119 @@
       var behaviour = Substitute.For<AuthenticationProvider>();
       behaviour.Login(UserName, true).Returns(true);
 
-      this.provider.Behavior = behaviour;
+      this.provider.LocalProvider.Value = behaviour;
 
       // act & assert
       this.provider.Login(UserName, true).Should().Be(true);
     }
+
+    #region Local provider
+
+    [Fact]
+    public void ShouldBuildVirtualUserUsingLocalProvider()
+    {
+      // arrange
+      this.localProvider.BuildVirtualUser(UserName, true).Returns(this.user);
+      this.provider.LocalProvider.Value = this.localProvider;
+
+      // act & assert
+      this.provider.BuildVirtualUser(UserName, true).Should().Be(this.user);
+    }
+
+    [Fact]
+    public void ShouldCheckLegacyPasswordUsingLocalProvider()
+    {
+      // arrange
+      this.localProvider.CheckLegacyPassword(this.user, "******").Returns(true);
+      this.provider.LocalProvider.Value = this.localProvider;
+
+      // act & assert
+      this.provider.CheckLegacyPassword(this.user, "******").Should().BeTrue();
+    }
+
+    [Fact]
+    public void ShouldGetActiveUserUsingLocalProvider()
+    {
+      // arrange
+      this.localProvider.GetActiveUser().Returns(this.user);
+      this.provider.LocalProvider.Value = this.localProvider;
+
+      // act & assert
+      this.provider.GetActiveUser().Should().Be(this.user);
+    }
+
+    [Fact]
+    public void ShouldLoginUsingLocalProvider()
+    {
+      // arrange
+      this.localProvider.Login(this.user).Returns(true);
+      this.provider.LocalProvider.Value = this.localProvider;
+
+      // act & assert
+      this.provider.Login(this.user).Should().BeTrue();
+    }
+
+    [Fact]
+    public void ShouldLoginByNameUsingLocalProvider()
+    {
+      // arrange
+      this.localProvider.Login(UserName, true).Returns(true);
+      this.provider.LocalProvider.Value = this.localProvider;
+
+      // act & assert
+      this.provider.Login(UserName, true).Should().BeTrue();
+    }
+
+    [Fact]
+    public void ShouldLoginByNameAndPasswordUsingLocalProvider()
+    {
+      // arrange
+      this.localProvider.Login(UserName, "******", true).Returns(true);
+      this.provider.LocalProvider.Value = this.localProvider;
+
+      // act & assert
+      this.provider.Login(UserName, "******", true).Should().BeTrue();
+    }
+
+    [Fact]
+    public void ShouldLogoutUsingLocalProvider()
+    {
+      // arrange
+      this.provider.LocalProvider.Value = this.localProvider;
+
+      // act
+      this.provider.Logout();
+
+      // assert
+      this.localProvider.Received().Logout();
+    }
+
+    [Fact]
+    public void ShouldSetActiveUserInLocalProvider()
+    {
+      // arrange
+      this.provider.LocalProvider.Value = this.localProvider;
+
+      // act
+      this.provider.SetActiveUser(this.user);
+
+      // assert
+      this.localProvider.Received().SetActiveUser(this.user);
+    }
+
+    [Fact]
+    public void ShouldSetActiveUserInLocalProviderByName()
+    {
+      // arrange
+      this.provider.LocalProvider.Value = this.localProvider;
+
+      // act
+      this.provider.SetActiveUser(UserName);
+
+      // assert
+      this.localProvider.Received().SetActiveUser(UserName);
+    }
+
+    #endregion
   }
 }

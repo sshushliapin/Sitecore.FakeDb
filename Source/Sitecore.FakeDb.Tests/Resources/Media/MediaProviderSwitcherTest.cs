@@ -18,7 +18,7 @@
       using (new MediaProviderSwitcher(behaviour))
       {
         // assert
-        ((IBehavioral<MediaProvider>)MediaManager.Provider).Behavior.Should().Be(behaviour);
+        ((IThreadLocalProvider<MediaProvider>)MediaManager.Provider).LocalProvider.Value.Should().Be(behaviour);
       }
     }
   }

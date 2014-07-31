@@ -19,7 +19,7 @@
       // act & assert
       using (new TaskDatabaseSwitcher(behavior))
       {
-        ((FakeTaskDatabase)Globals.TaskDatabase).Behavior.Should().Be(behavior);
+        ((IThreadLocalProvider<TaskDatabase>)Globals.TaskDatabase).LocalProvider.Value.Should().Be(behavior);
       }
     }
   }

@@ -35,7 +35,7 @@
     public void ShouldBeBehavioral()
     {
       // act & assert
-      this.provider.Should().BeAssignableTo<IBehavioral<RoleProvider>>();
+      this.provider.Should().BeAssignableTo<IThreadLocalProvider<RoleProvider>>();
     }
   }
 }

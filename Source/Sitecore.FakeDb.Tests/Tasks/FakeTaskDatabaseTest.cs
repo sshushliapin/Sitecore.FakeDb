@@ -3,6 +3,7 @@
   using System;
   using FluentAssertions;
   using NSubstitute;
+  using Sitecore.Data;
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.FakeDb.Tasks;
   using Sitecore.Tasks;
@@ -18,16 +19,39 @@
 
     public FakeTaskDatabaseTest()
     {
-      task = Substitute.For<Task>(DateTime.Now);
-      behavior = Substitute.For<TaskDatabase>();
-      taskDatabase = new FakeTaskDatabase { Behavior = this.behavior };
+      this.task = Substitute.For<Task>(DateTime.Now);
+      this.behavior = Substitute.For<TaskDatabase>();
+      this.taskDatabase = new FakeTaskDatabase();
+      this.taskDatabase.LocalProvider.Value = this.behavior;
     }
 
     [Fact]
-    public void ShouldGetStubTaskDatabaseBehaviorByDefault()
+    public void ShouldBeQuiet()
     {
+      // arrange
+      var stubTaskDatabase = new FakeTaskDatabase();
+      var item = ItemHelper.CreateInstance(Database.GetDatabase("master"));
+
       // act & assert
-      new FakeTaskDatabase().Behavior.Should().BeOfType<StubTaskDatabase>();
+      stubTaskDatabase.Disable(this.task);
+      stubTaskDatabase.Enable(this.task);
+      stubTaskDatabase.GetPendingTasks().Should().BeEmpty();
+      stubTaskDatabase.MarkDone(this.task);
+      stubTaskDatabase.Remove(this.task);
+      stubTaskDatabase.RemoveItemTasks(item);
+      stubTaskDatabase.RemoveItemTasks(item, typeof(Task));
+      stubTaskDatabase.Update(this.task, false);
+      stubTaskDatabase.UpdateItemTask(this.task, false);
+    }
+
+    [Fact]
+    public void ShouldGetTheSamePendingTasks()
+    {
+      // arrange
+      var stubTaskDatabase = new FakeTaskDatabase();
+
+      // act & assert
+      stubTaskDatabase.GetPendingTasks().Should().BeSameAs(stubTaskDatabase.GetPendingTasks());
     }
 
     [Fact]

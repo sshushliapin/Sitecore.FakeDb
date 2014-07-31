@@ -4,8 +4,8 @@
 
   public class MediaProviderSwitcher : ProviderBehaviorSwitcher<MediaProvider>
   {
-    public MediaProviderSwitcher(MediaProvider behavior)
-      : base((IBehavioral<MediaProvider>)MediaManager.Provider, behavior)
+    public MediaProviderSwitcher(MediaProvider innerProvider)
+      : base((IThreadLocalProvider<MediaProvider>)MediaManager.Provider, innerProvider)
     {
     }
   }

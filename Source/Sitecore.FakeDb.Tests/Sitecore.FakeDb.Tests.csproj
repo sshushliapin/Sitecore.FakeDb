@@ -121,7 +121,6 @@
     <Compile Include="Globalization\TranslateTest.cs" />
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
-    <Compile Include="Links\StubLinkDatabaseTest.cs" />
     <Compile Include="Profile\UserProfileTest.cs" />
     <Compile Include="ProviderBehaviorSwitcherTest.cs" />
     <Compile Include="Links\LinkDatabaseSwitcherTest.cs" />
@@ -135,7 +134,6 @@
     <Compile Include="QueryTest.cs" />
     <Compile Include="Resources\Media\FakeMediaProviderTest.cs" />
     <Compile Include="Resources\Media\MediaProviderSwitcherTest.cs" />
-    <Compile Include="Resources\Media\StubMediaProviderTest.cs" />
     <Compile Include="SecurityModel\FakeDomainProviderTest.cs" />
     <Compile Include="Security\AccessControl\AuthorizationManagerTest.cs" />
     <Compile Include="Security\AccessControl\DbItemAccessTest.cs" />
@@ -151,7 +149,6 @@
     <Compile Include="Security\FakeRoleProviderTest.cs" />
     <Compile Include="Tasks\FakeTaskDatabaseTest.cs" />
     <Compile Include="Tasks\TaskDatabaseSwitcherTest.cs" />
-    <Compile Include="Tasks\StubTaskDatabaseTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

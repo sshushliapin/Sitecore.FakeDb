@@ -6,97 +6,116 @@ namespace Sitecore.FakeDb.Links
   using Sitecore.Data.Items;
   using Sitecore.Links;
 
-  public class FakeLinkDatabase : LinkDatabase, IBehavioral<LinkDatabase>
+  public class FakeLinkDatabase : LinkDatabase, IThreadLocalProvider<LinkDatabase>
   {
-    private readonly ThreadLocal<LinkDatabase> behavior = new ThreadLocal<LinkDatabase>();
+    private readonly ThreadLocal<LinkDatabase> localProvider = new ThreadLocal<LinkDatabase>();
 
-    private readonly LinkDatabase stub = new StubLinkDatabase();
+    private readonly ItemLink[] emptyLinks = { };
 
-    public LinkDatabase Behavior
+    public virtual ThreadLocal<LinkDatabase> LocalProvider
     {
-      get { return this.behavior.Value ?? this.stub; }
-      set { this.behavior.Value = value; }
+      get { return this.localProvider; }
     }
 
     public override void Compact(Database database)
     {
-      this.Behavior.Compact(database);
+      if (this.IsLocalProviderSet())
+      {
+        this.localProvider.Value.Compact(database);
+      }
     }
 
     public override ItemLink[] GetBrokenLinks(Database database)
     {
-      return this.Behavior.GetBrokenLinks(database);
-    }
-
-    public override int GetReferenceCount(Item item)
-    {
-      return this.Behavior.GetReferenceCount(item);
-    }
-
-    public override ItemLink[] GetReferences(Item item)
-    {
-      return this.Behavior.GetReferences(item);
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetBrokenLinks(database) : this.emptyLinks;
     }
 
     public override ItemLink[] GetItemReferences(Item item, bool includeStandardValuesLinks)
     {
-      return this.Behavior.GetItemReferences(item, includeStandardValuesLinks);
-    }
-
-    public override int GetReferrerCount(Item item)
-    {
-      return this.Behavior.GetReferrerCount(item);
-    }
-
-    public override ItemLink[] GetReferrers(Item item)
-    {
-      return this.Behavior.GetReferrers(item);
-    }
-
-    public override ItemLink[] GetReferrers(Item item, ID sourceFieldId)
-    {
-      return this.Behavior.GetReferrers(item);
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetItemReferences(item, includeStandardValuesLinks) : this.emptyLinks;
     }
 
     public override ItemLink[] GetItemReferrers(Item item, bool includeStandardValuesLinks)
     {
-      return this.Behavior.GetItemReferrers(item, includeStandardValuesLinks);
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetItemReferrers(item, includeStandardValuesLinks) : this.emptyLinks;
     }
 
     public override ItemLink[] GetItemVersionReferrers(Item version)
     {
-      return this.Behavior.GetItemVersionReferrers(version);
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetItemVersionReferrers(version) : this.emptyLinks;
+    }
+
+    public override int GetReferenceCount(Item item)
+    {
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetReferenceCount(item) : 0;
+    }
+
+    public override ItemLink[] GetReferences(Item item)
+    {
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetReferences(item) : this.emptyLinks;
+    }
+
+    public override int GetReferrerCount(Item item)
+    {
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetReferrerCount(item) : 0;
+    }
+
+    public override ItemLink[] GetReferrers(Item item)
+    {
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetReferrers(item) : this.emptyLinks;
+    }
+
+    public override ItemLink[] GetReferrers(Item item, ID sourceFieldId)
+    {
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetReferrers(item) : this.emptyLinks;
     }
 
     [Obsolete("Deprecated - Use GetReferrers(item) instead.")]
     public override ItemLink[] GetReferrers(Item item, bool deep)
     {
-      return this.Behavior.GetReferrers(item, deep);
+      return this.IsLocalProviderSet() ? this.localProvider.Value.GetReferrers(item, deep) : this.emptyLinks;
     }
 
     public override bool HasExternalReferrers(Item item, bool deep)
     {
-      return this.Behavior.HasExternalReferrers(item, deep);
+      return this.IsLocalProviderSet() && this.localProvider.Value.HasExternalReferrers(item, deep);
+    }
+
+    public virtual bool IsLocalProviderSet()
+    {
+      return this.localProvider.Value != null;
     }
 
     public override void Rebuild(Database database)
     {
-      this.Behavior.Rebuild(database);
+      if (this.IsLocalProviderSet())
+      {
+        this.localProvider.Value.Rebuild(database);
+      }
     }
 
     public override void RemoveReferences(Item item)
     {
-      this.Behavior.RemoveReferences(item);
+      if (this.IsLocalProviderSet())
+      {
+        this.localProvider.Value.RemoveReferences(item);
+      }
     }
 
     public override void UpdateItemVersionReferences(Item item)
     {
-      this.Behavior.UpdateItemVersionReferences(item);
+      if (this.IsLocalProviderSet())
+      {
+        this.localProvider.Value.UpdateItemVersionReferences(item);
+      }
     }
 
     public override void UpdateReferences(Item item)
     {
-      this.Behavior.UpdateReferences(item);
+      if (this.IsLocalProviderSet())
+      {
+        this.localProvider.Value.UpdateReferences(item);
+      }
     }
 
     protected override void UpdateLinks(Item item, ItemLink[] links)

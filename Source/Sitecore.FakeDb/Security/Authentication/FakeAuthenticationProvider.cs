@@ -1,104 +1,77 @@
 ﻿namespace Sitecore.FakeDb.Security.Authentication
 {
   using System.Threading;
-  using Sitecore.Diagnostics;
   using Sitecore.Security.Accounts;
   using Sitecore.Security.Authentication;
 
-  public class FakeAuthenticationProvider : AuthenticationProvider, IBehavioral<AuthenticationProvider>
+  public class FakeAuthenticationProvider : AuthenticationProvider, IThreadLocalProvider<AuthenticationProvider>
   {
-    private readonly ThreadLocal<AuthenticationProvider> behavior = new ThreadLocal<AuthenticationProvider>();
-
-    private readonly User defaultVirtualUser = User.FromName(@"default\Virtual", false);
-
-    private readonly User defaultActiveUser = User.FromName(@"default\Anonymous", false);
+    private readonly ThreadLocal<AuthenticationProvider> localProvider = new ThreadLocal<AuthenticationProvider>();
 
     private readonly ThreadLocal<User> activeUser = new ThreadLocal<User>();
 
-    public AuthenticationProvider Behavior
+    private readonly User defaultActiveUser = User.FromName(@"default\Anonymous", false);
+
+    private readonly User defaultVirtualUser = User.FromName(@"default\Virtual", false);
+
+    public virtual ThreadLocal<AuthenticationProvider> LocalProvider
     {
-      get { return this.behavior.Value; }
-      set { this.behavior.Value = value; }
+      get { return this.localProvider; }
     }
 
     public override User BuildVirtualUser(string userName, bool isAuthenticated)
     {
-      if (this.Behavior != null)
-      {
-        return this.Behavior.BuildVirtualUser(userName, isAuthenticated);
-      }
-
-      return this.defaultVirtualUser;
+      return this.IsLocalProviderSet() ? this.localProvider.Value.BuildVirtualUser(userName, isAuthenticated) : this.defaultVirtualUser;
     }
 
     public override bool CheckLegacyPassword(User user, string password)
     {
-      if (this.Behavior != null)
-      {
-        return this.Behavior.CheckLegacyPassword(user, password);
-      }
-
-      return false;
+      return this.IsLocalProviderSet() && this.localProvider.Value.CheckLegacyPassword(user, password);
     }
 
     public override User GetActiveUser()
     {
-      if (this.Behavior != null)
+      if (this.IsLocalProviderSet())
       {
-        return this.Behavior.GetActiveUser();
+        return this.localProvider.Value.GetActiveUser();
       }
 
-      if (this.activeUser.Value != null)
-      {
-        return this.activeUser.Value;
-      }
+      return this.activeUser.Value ?? this.defaultActiveUser;
+    }
 
-      return this.defaultActiveUser;
+    public virtual bool IsLocalProviderSet()
+    {
+      return this.localProvider.Value != null;
     }
 
     public override bool Login(User user)
     {
-      if (this.Behavior != null)
-      {
-        return this.Behavior.Login(user);
-      }
-
-      return false;
+      return this.IsLocalProviderSet() && this.localProvider.Value.Login(user);
     }
 
     public override bool Login(string userName, bool persistent)
     {
-      if (this.Behavior != null)
-      {
-        return this.Behavior.Login(userName, persistent);
-      }
-
-      return false;
+      return this.IsLocalProviderSet() && this.localProvider.Value.Login(userName, persistent);
     }
 
     public override bool Login(string userName, string password, bool persistent)
     {
-      if (this.Behavior != null)
-      {
-        return this.Behavior.Login(userName, password, persistent);
-      }
-
-      return false;
+      return this.IsLocalProviderSet() && this.localProvider.Value.Login(userName, password, persistent);
     }
 
     public override void Logout()
     {
-      if (this.Behavior != null)
+      if (this.IsLocalProviderSet())
       {
-        this.Behavior.Logout();
+        this.localProvider.Value.Logout();
       }
     }
 
     public override void SetActiveUser(string userName)
     {
-      if (this.Behavior != null)
+      if (this.IsLocalProviderSet())
       {
-        this.Behavior.SetActiveUser(userName);
+        this.localProvider.Value.SetActiveUser(userName);
       }
       else
       {
@@ -108,9 +81,9 @@
 
     public override void SetActiveUser(User user)
     {
-      if (this.Behavior != null)
+      if (this.IsLocalProviderSet())
       {
-        this.Behavior.SetActiveUser(user);
+        this.localProvider.Value.SetActiveUser(user);
       }
       else
       {

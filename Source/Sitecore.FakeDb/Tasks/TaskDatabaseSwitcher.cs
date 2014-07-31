@@ -4,8 +4,8 @@
 
   public class TaskDatabaseSwitcher : ProviderBehaviorSwitcher<TaskDatabase>
   {
-    public TaskDatabaseSwitcher(TaskDatabase behavior)
-      : base((FakeTaskDatabase)Globals.TaskDatabase, behavior)
+    public TaskDatabaseSwitcher(TaskDatabase provider)
+      : base((FakeTaskDatabase)Globals.TaskDatabase, provider)
     {
     }
   }

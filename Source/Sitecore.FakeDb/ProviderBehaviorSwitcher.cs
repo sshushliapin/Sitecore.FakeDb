@@ -5,25 +5,25 @@
 
   public abstract class ProviderBehaviorSwitcher<TProvider> : IDisposable
   {
-    private readonly IBehavioral<TProvider> provider;
+    private readonly IThreadLocalProvider<TProvider> provider;
 
-    protected ProviderBehaviorSwitcher(IBehavioral<TProvider> provider, TProvider behavior)
+    protected ProviderBehaviorSwitcher(IThreadLocalProvider<TProvider> provider, TProvider behavior)
     {
       Assert.ArgumentNotNull(provider, "provider");
       Assert.ArgumentNotNull(behavior, "behavior");
 
       this.provider = provider;
-      this.provider.Behavior = behavior;
+      this.provider.LocalProvider.Value = behavior;
     }
 
-    public IBehavioral<TProvider> Provider
+    public IThreadLocalProvider<TProvider> Provider
     {
       get { return this.provider; }
     }
 
     public void Dispose()
     {
-      this.provider.Behavior = default(TProvider);
+      this.provider.LocalProvider.Value = default(TProvider);
     }
   }
 }
