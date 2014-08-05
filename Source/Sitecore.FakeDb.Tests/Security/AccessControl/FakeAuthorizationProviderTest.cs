@@ -31,6 +31,20 @@
     }
 
     [Fact]
+    public void ShouldGetEmptyAccessRuleCollection()
+    {
+      // act & assert
+      this.provider.GetAccessRules(null).Should().BeEmpty();
+    }
+
+    [Fact]
+    public void ShouldNotFailOnSetAccessRules()
+    {
+      // act & assert
+      Assert.DoesNotThrow(() => this.provider.SetAccessRules(null, null));
+    }
+
+    [Fact]
     public void ShouldGetAccessPermissionAllowByDefault()
     {
       // arrange

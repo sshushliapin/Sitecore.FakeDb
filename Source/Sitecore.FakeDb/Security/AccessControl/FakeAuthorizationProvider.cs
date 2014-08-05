@@ -13,12 +13,11 @@
 
     public override AccessRuleCollection GetAccessRules(ISecurable entity)
     {
-      throw new NotImplementedException();
+      return new AccessRuleCollection();
     }
 
     public override void SetAccessRules(ISecurable entity, AccessRuleCollection rules)
     {
-      throw new NotImplementedException();
     }
 
     public void SetDataStorage(DataStorage dataStorage)
