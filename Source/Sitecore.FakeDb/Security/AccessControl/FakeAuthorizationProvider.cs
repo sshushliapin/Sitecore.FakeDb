@@ -6,18 +6,35 @@
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Security.AccessControl;
   using Sitecore.Security.Accounts;
+  using System.Collections.Generic;
 
   public class FakeAuthorizationProvider : AuthorizationProvider, IRequireDataStorage
   {
+    private readonly IDictionary<ISecurable, AccessRuleCollection> accessRulesStorage;
+
     public DataStorage DataStorage { get; private set; }
+
+    public FakeAuthorizationProvider()
+      : this(new Dictionary<ISecurable, AccessRuleCollection>())
+    {
+    }
+
+    public FakeAuthorizationProvider(IDictionary<ISecurable, AccessRuleCollection> accessRulesStorage)
+    {
+      this.accessRulesStorage = accessRulesStorage;
+    }
 
     public override AccessRuleCollection GetAccessRules(ISecurable entity)
     {
-      return new AccessRuleCollection();
+      return this.accessRulesStorage.ContainsKey(entity) ? this.accessRulesStorage[entity] : null;
     }
 
     public override void SetAccessRules(ISecurable entity, AccessRuleCollection rules)
     {
+      Assert.ArgumentNotNull(entity, "entity");
+      Assert.ArgumentNotNull(rules, "rules");
+
+      this.accessRulesStorage[entity] = rules;
     }
 
     public void SetDataStorage(DataStorage dataStorage)

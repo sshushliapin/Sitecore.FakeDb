@@ -14,46 +14,83 @@
   using Sitecore.Security.Accounts;
   using Xunit;
   using Xunit.Extensions;
+  using System.Collections.Generic;
 
   public class FakeAuthorizationProviderTest : IDisposable
   {
-    private readonly FakeAuthorizationProvider provider;
-
     private readonly Fixture fixture;
 
     private readonly Database database;
+
+    private readonly ISecurable entity;
+
+    private readonly AccessRuleCollection rules;
+
+    private FakeAuthorizationProvider provider;
 
     public FakeAuthorizationProviderTest()
     {
       this.provider = new FakeAuthorizationProvider();
       this.fixture = new Fixture();
       this.database = Database.GetDatabase("master");
+
+      this.entity = Substitute.For<ISecurable>();
+      this.rules = new AccessRuleCollection();
     }
 
     [Fact]
-    public void ShouldGetEmptyAccessRuleCollection()
+    public void ShouldGetNullIfNoEntityFound()
     {
+      // arrange
+      var missingEntity = Substitute.For<ISecurable>();
+
       // act & assert
-      this.provider.GetAccessRules(null).Should().BeEmpty();
+      this.provider.GetAccessRules(missingEntity).Should().BeNull();
     }
 
     [Fact]
-    public void ShouldNotFailOnSetAccessRules()
+    public void ShouldNotFailWhenSetAccessRules()
     {
       // act & assert
-      Assert.DoesNotThrow(() => this.provider.SetAccessRules(null, null));
+      Assert.DoesNotThrow(() => this.provider.SetAccessRules(this.entity, this.rules));
+    }
+
+    [Fact]
+    public void ShouldGetAccessRules()
+    {
+      // arrange    
+      var rulesStorage = new Dictionary<ISecurable, AccessRuleCollection> { { this.entity, this.rules } };
+
+      this.provider = new FakeAuthorizationProvider(rulesStorage);
+
+      // act & assert
+      this.provider.GetAccessRules(this.entity).Should().BeSameAs(this.rules);
+    }
+
+    [Fact]
+    public void ShouldSetAccessRules()
+    {
+      // arrange    
+      var rulesStorage = new Dictionary<ISecurable, AccessRuleCollection>();
+
+      this.provider = new FakeAuthorizationProvider(rulesStorage);
+
+      // act
+      this.provider.SetAccessRules(this.entity, this.rules);
+
+      // assert
+      rulesStorage[this.entity].Should().BeSameAs(rules);
     }
 
     [Fact]
     public void ShouldGetAccessPermissionAllowByDefault()
     {
       // arrange
-      var entity = Substitute.For<ISecurable>();
       var account = this.fixture.Create<User>();
       var accessRight = this.fixture.Create<AccessRight>();
 
       // act & assert
-      this.provider.GetAccess(entity, account, accessRight).ShouldBeEquivalentTo(new AccessResult(AccessPermission.Allow, new AccessExplanation("Allow")));
+      this.provider.GetAccess(this.entity, account, accessRight).ShouldBeEquivalentTo(new AccessResult(AccessPermission.Allow, new AccessExplanation("Allow")));
     }
 
     [Theory]
@@ -68,7 +105,6 @@
       // arrange
       var itemId = ID.NewID;
 
-      var entity = Substitute.For<ISecurable>();
       entity.GetUniqueId().Returns(ItemHelper.CreateInstance(itemId, this.database).GetUniqueId());
 
       var item = new DbItem("propertyName");
@@ -80,7 +116,7 @@
       this.provider.SetDataStorage(dataStorage);
 
       // act
-      var accessResult = this.provider.GetAccess(entity, User.Current, AccessRight.FromName(accessRightName));
+      var accessResult = this.provider.GetAccess(this.entity, User.Current, AccessRight.FromName(accessRightName));
 
       // assert
       accessResult.Permission.Should().Be(AccessPermission.Deny);
