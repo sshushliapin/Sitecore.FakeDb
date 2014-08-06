@@ -15,6 +15,8 @@
   using Xunit;
   using Xunit.Extensions;
   using System.Collections.Generic;
+  using System.Threading.Tasks;
+  using System.Threading;
 
   public class FakeAuthorizationProviderTest : IDisposable
   {
@@ -120,6 +122,34 @@
 
       // assert
       accessResult.Permission.Should().Be(AccessPermission.Deny);
+    }
+
+    [Fact]
+    public void ShouldBeThreadSafe()
+    {
+      // arrange
+      var rules1 = new AccessRuleCollection();
+      var rules2 = new AccessRuleCollection();
+
+      var t1 = Task.Factory.StartNew(() =>
+        {
+          this.provider.AccessRulesStorage.Value = new Dictionary<ISecurable, AccessRuleCollection>();
+          this.provider.SetAccessRules(this.entity, rules1);
+
+          Thread.Sleep(100);
+
+          this.provider.GetAccessRules(this.entity).Should().BeSameAs(rules1);
+        });
+
+      var t2 = Task.Factory.StartNew(() =>
+        {
+          this.provider.AccessRulesStorage.Value = new Dictionary<ISecurable, AccessRuleCollection>();
+          this.provider.SetAccessRules(this.entity, rules2);
+          this.provider.GetAccessRules(this.entity).Should().BeSameAs(rules2);
+        });
+
+      t1.Wait();
+      t2.Wait();
     }
 
     public void Dispose()

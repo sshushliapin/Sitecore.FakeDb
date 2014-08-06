@@ -7,12 +7,18 @@
   using Sitecore.Security.AccessControl;
   using Sitecore.Security.Accounts;
   using System.Collections.Generic;
+  using System.Threading;
 
   public class FakeAuthorizationProvider : AuthorizationProvider, IRequireDataStorage
   {
-    private readonly IDictionary<ISecurable, AccessRuleCollection> accessRulesStorage;
+    private readonly ThreadLocal<IDictionary<ISecurable, AccessRuleCollection>> accessRulesStorage;
 
     public DataStorage DataStorage { get; private set; }
+
+    public ThreadLocal<IDictionary<ISecurable, AccessRuleCollection>> AccessRulesStorage
+    {
+      get { return this.accessRulesStorage; }
+    }
 
     public FakeAuthorizationProvider()
       : this(new Dictionary<ISecurable, AccessRuleCollection>())
@@ -21,12 +27,13 @@
 
     public FakeAuthorizationProvider(IDictionary<ISecurable, AccessRuleCollection> accessRulesStorage)
     {
-      this.accessRulesStorage = accessRulesStorage;
+      this.accessRulesStorage = new ThreadLocal<IDictionary<ISecurable, AccessRuleCollection>>();
+      this.accessRulesStorage.Value = accessRulesStorage;
     }
 
     public override AccessRuleCollection GetAccessRules(ISecurable entity)
     {
-      return this.accessRulesStorage.ContainsKey(entity) ? this.accessRulesStorage[entity] : null;
+      return this.accessRulesStorage.Value.ContainsKey(entity) ? this.accessRulesStorage.Value[entity] : null;
     }
 
     public override void SetAccessRules(ISecurable entity, AccessRuleCollection rules)
@@ -34,7 +41,7 @@
       Assert.ArgumentNotNull(entity, "entity");
       Assert.ArgumentNotNull(rules, "rules");
 
-      this.accessRulesStorage[entity] = rules;
+      this.accessRulesStorage.Value[entity] = rules;
     }
 
     public void SetDataStorage(DataStorage dataStorage)
