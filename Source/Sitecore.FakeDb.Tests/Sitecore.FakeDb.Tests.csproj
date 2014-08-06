@@ -121,6 +121,8 @@
     <Compile Include="Globalization\TranslateTest.cs" />
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitAuthorizationProviderTest.cs" />
+    <Compile Include="Pipelines\ReleaseDb\ReleaseAuthorizationProviderTest.cs" />
     <Compile Include="Profile\UserProfileTest.cs" />
     <Compile Include="Security\RoleProviderSwitcherTest.cs" />
     <Compile Include="ThreadLocalProviderSwitcherTest.cs" />

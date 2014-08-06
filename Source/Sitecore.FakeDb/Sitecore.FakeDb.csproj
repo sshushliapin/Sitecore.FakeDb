@@ -78,6 +78,7 @@
     <Compile Include="Pipelines\PipelineRunEventArgs.cs" />
     <Compile Include="Pipelines\PipelineWatcherProcessor.cs" />
     <Compile Include="Pipelines\PipelineWatcher.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ReleaseAuthorizationProvider.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ReleasePipelineWatcher.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ResetFactory.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ResetSettings.cs" />

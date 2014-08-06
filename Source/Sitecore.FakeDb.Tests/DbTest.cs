@@ -13,6 +13,7 @@
   using Xunit;
   using Xunit.Extensions;
   using Version = Sitecore.Data.Version;
+  using Sitecore.Security.AccessControl;
 
   public class DbTest
   {
@@ -517,6 +518,16 @@
         db.Database.GetItem("/sitecore/content/new home").Name.Should().Be("new home");
         db.Database.GetItem("/sitecore/content/home").Should().BeNull();
       }
+    }
+
+    [Fact]
+    public void ShouldResetAthorizationProviderOnDispose()
+    {
+      // arrange & act
+      using (new Db()) { }
+
+      // assert
+      ((FakeAuthorizationProvider)AuthorizationManager.Provider).AccessRulesStorage.Value.Should().BeNull();
     }
 
     [Theory]
