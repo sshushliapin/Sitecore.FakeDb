@@ -119,12 +119,10 @@
     <Compile Include="DbFieldCollection.cs" />
     <Compile Include="DbItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\AccessControl\AuthorizationProviderStub.cs" />
     <Compile Include="Security\AccessControl\FakeAccessRightProvider.cs" />
     <Compile Include="SecurityModel\FakeDomainProvider.cs" />
     <Compile Include="DbTemplate.cs" />
     <Compile Include="Security\AccessControl\FakeAuthorizationProvider.cs" />
-    <Compile Include="Security\AccessControl\SwitchingAuthorizationProvider.cs" />
     <Compile Include="Security\Authentication\FakeAuthenticationProvider.cs" />
     <Compile Include="Security\Authentication\SwitchingAuthenticationProvider.cs" />
     <Compile Include="Security\Web\FakeMembershipProvider.cs" />
