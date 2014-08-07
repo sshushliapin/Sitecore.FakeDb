@@ -9,12 +9,6 @@
     public override void Process(InitDbArgs args)
     {
       this.SetDataStorage(AuthorizationManager.Provider, args.DataStorage);
-
-      if (AuthorizationManager.Provider is FakeAuthorizationProvider)
-      {
-        ((FakeAuthorizationProvider)AuthorizationManager.Provider).AccessRulesStorage.Value =
-          new Dictionary<ISecurable, AccessRuleCollection>();
-      }
     }
   }
 }

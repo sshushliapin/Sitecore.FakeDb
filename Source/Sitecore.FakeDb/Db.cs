@@ -14,6 +14,9 @@ namespace Sitecore.FakeDb
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
   using Sitecore.Globalization;
   using Sitecore.Pipelines;
+  using Sitecore.Security.AccessControl;
+  using Sitecore.FakeDb.Data.Items;
+  using Sitecore.FakeDb.Security.AccessControl;
 
   public class Db : IDisposable, IEnumerable
   {
@@ -311,8 +314,33 @@ namespace Sitecore.FakeDb
     protected virtual void SetAccess(DbItem item)
     {
       var fakeItem = this.DataStorage.GetFakeItem(item.ID);
-
       fakeItem.Access = item.Access;
+
+      // TODO:[Medium] Changes to DbItem.Access after Db.Add() will be ignored.
+      // TODO:[Minor] Should it be Language.Current?
+      var fake = ItemHelper.CreateInstance(item.ID, this.Database);
+      var uniqueId = fake.GetUniqueId();
+
+      var rules = new AccessRuleCollection();
+
+      this.FillAccessRules(rules, item.Access, AccessRight.ItemRead, a => a.CanRead);
+      this.FillAccessRules(rules, item.Access, AccessRight.ItemWrite, a => a.CanWrite);
+      this.FillAccessRules(rules, item.Access, AccessRight.ItemRename, a => a.CanRename);
+      this.FillAccessRules(rules, item.Access, AccessRight.ItemCreate, a => a.CanCreate);
+      this.FillAccessRules(rules, item.Access, AccessRight.ItemDelete, a => a.CanDelete);
+      this.FillAccessRules(rules, item.Access, AccessRight.ItemAdmin, a => a.CanAdmin);
+
+      this.DataStorage.AccessRules.Add(uniqueId, rules);
+    }
+
+    protected virtual void FillAccessRules(AccessRuleCollection rules, DbItemAccess itemAccess, AccessRight accessRight, Func<DbItemAccess, bool?> canAct)
+    {
+      var canActRest = canAct(itemAccess);
+      if (canActRest != null)
+      {
+        var permission = (bool)canActRest ? SecurityPermission.AllowAccess : SecurityPermission.DenyAccess;
+        rules.Add(AccessRule.Create(Context.User, accessRight, PropagationType.Entity, permission));
+      }
     }
   }
 }

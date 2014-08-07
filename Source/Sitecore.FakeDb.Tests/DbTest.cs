@@ -14,6 +14,9 @@
   using Xunit.Extensions;
   using Version = Sitecore.Data.Version;
   using Sitecore.Security.AccessControl;
+  using Sitecore.Security.Accounts;
+  using Sitecore.SecurityModel;
+  using Sitecore.Reflection;
 
   public class DbTest
   {
@@ -518,16 +521,6 @@
         db.Database.GetItem("/sitecore/content/new home").Name.Should().Be("new home");
         db.Database.GetItem("/sitecore/content/home").Should().BeNull();
       }
-    }
-
-    [Fact]
-    public void ShouldResetAthorizationProviderOnDispose()
-    {
-      // arrange & act
-      using (new Db()) { }
-
-      // assert
-      ((FakeAuthorizationProvider)AuthorizationManager.Provider).AccessRulesStorage.Value.Should().BeNull();
     }
 
     [Theory]
@@ -1177,6 +1170,56 @@
 
         templateItem.Fields[DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Should().NotBeNull();
         templateItem.Fields[DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Value.Should().Contain(baseId.ToString());
+      }
+    }
+
+    [Theory]
+    [InlineData("CanRead", WellknownRights.ItemRead, true, SecurityPermission.AllowAccess)]
+    [InlineData("CanRead", WellknownRights.ItemRead, false, SecurityPermission.DenyAccess)]
+    [InlineData("CanWrite", WellknownRights.ItemWrite, true, SecurityPermission.AllowAccess)]
+    [InlineData("CanWrite", WellknownRights.ItemWrite, false, SecurityPermission.DenyAccess)]
+    [InlineData("CanRename", WellknownRights.ItemRename, true, SecurityPermission.AllowAccess)]
+    [InlineData("CanRename", WellknownRights.ItemRename, false, SecurityPermission.DenyAccess)]
+    [InlineData("CanCreate", WellknownRights.ItemCreate, true, SecurityPermission.AllowAccess)]
+    [InlineData("CanCreate", WellknownRights.ItemCreate, false, SecurityPermission.DenyAccess)]
+    [InlineData("CanDelete", WellknownRights.ItemDelete, true, SecurityPermission.AllowAccess)]
+    [InlineData("CanDelete", WellknownRights.ItemDelete, false, SecurityPermission.DenyAccess)]
+    [InlineData("CanAdmin", WellknownRights.ItemAdmin, true, SecurityPermission.AllowAccess)]
+    [InlineData("CanAdmin", WellknownRights.ItemAdmin, false, SecurityPermission.DenyAccess)]
+    public void ShouldSetItemAccessRules(string propertyName, string accessRight, bool actualPermission, SecurityPermission expectedPermission)
+    {
+      // arrange
+      var user = User.FromName(@"extranet\John", false);
+
+      using (new UserSwitcher(user))
+      {
+        // TODO:[Minor] Try to avoid Security Disabler usage
+        using (new SecurityDisabler())
+        {
+          using (var db = new Db())
+          {
+            var dbitem = new DbItem("home");
+            ReflectionUtil.SetProperty(dbitem.Access, propertyName, actualPermission);
+
+            // act
+            db.Add(dbitem);
+
+            var item = db.GetItem("/sitecore/content/home");
+            var uniqueId = item.GetUniqueId();
+
+            // assert
+            db.DataStorage.AccessRules.Should().ContainKey(uniqueId);
+
+            // TODO:[Minor] Uncomment when DbItemAccess does not set access right in constructor
+            //db.DataStorage.AccessRules[uniqueId].Should().HaveCount(1);
+
+            var accessRule = db.DataStorage.AccessRules[uniqueId].Single(ar => ar.AccessRight.Name == accessRight);
+            accessRule.Account.Should().Be(user);
+            accessRule.AccessRight.Name.Should().Be(accessRight);
+            accessRule.PropagationType.Should().Be(PropagationType.Entity);
+            accessRule.SecurityPermission.Should().Be(expectedPermission);
+          }
+        }
       }
     }
   }

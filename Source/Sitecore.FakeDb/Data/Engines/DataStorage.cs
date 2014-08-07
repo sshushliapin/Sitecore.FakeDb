@@ -8,7 +8,7 @@ namespace Sitecore.FakeDb.Data.Engines
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
   using Version = Sitecore.Data.Version;
-  using System.Threading;
+  using Sitecore.Security.AccessControl;
 
   public class DataStorage
   {
@@ -26,9 +26,11 @@ namespace Sitecore.FakeDb.Data.Engines
 
     private const string MediaLibraryItemName = "media library";
 
-    private readonly ThreadLocal<IDictionary<ID, DbItem>> fakeItems;
+    private readonly IDictionary<ID, DbItem> fakeItems;
 
-    private readonly ThreadLocal<IDictionary<ID, DbTemplate>> fakeTemplates;
+    private readonly IDictionary<ID, DbTemplate> fakeTemplates;
+
+    private readonly IDictionary<string, AccessRuleCollection> accessRules;
 
     public const string TemplateItemName = "Template";
 
@@ -46,8 +48,9 @@ namespace Sitecore.FakeDb.Data.Engines
     {
       this.database = database;
 
-      this.fakeItems = new ThreadLocal<IDictionary<ID, DbItem>>();
-      this.fakeTemplates = new ThreadLocal<IDictionary<ID, DbTemplate>>();
+      this.fakeItems = new Dictionary<ID, DbItem>();
+      this.fakeTemplates = new Dictionary<ID, DbTemplate>();
+      this.accessRules = new Dictionary<string, AccessRuleCollection>();
 
       this.FillDefaultFakeTemplates();
       this.FillDefaultFakeItems();
@@ -60,12 +63,17 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public IDictionary<ID, DbItem> FakeItems
     {
-      get { return this.fakeItems.Value ?? (this.fakeItems.Value = new Dictionary<ID, DbItem>()); }
+      get { return this.fakeItems; }
     }
 
     public IDictionary<ID, DbTemplate> FakeTemplates
     {
-      get { return this.fakeTemplates.Value ?? (this.fakeTemplates.Value = new Dictionary<ID, DbTemplate>()); }
+      get { return this.fakeTemplates; }
+    }
+
+    public IDictionary<string, AccessRuleCollection> AccessRules
+    {
+      get { return this.accessRules; }
     }
 
     public virtual DbItem GetFakeItem(ID itemId)

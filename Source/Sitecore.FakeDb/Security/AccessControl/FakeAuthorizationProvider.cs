@@ -7,40 +7,25 @@
   using Sitecore.Security.AccessControl;
   using Sitecore.Security.Accounts;
   using System.Collections.Generic;
+  using System.Linq;
   using System.Threading;
+  using Sitecore.Data.Items;
 
   public class FakeAuthorizationProvider : AuthorizationProvider, IRequireDataStorage
   {
-    private readonly ThreadLocal<IDictionary<ISecurable, AccessRuleCollection>> accessRulesStorage;
-
-    private readonly ThreadLocal<DataStorage> dataStorage;
+    private readonly ThreadLocal<DataStorage> dataStorage = new ThreadLocal<DataStorage>();
 
     public DataStorage DataStorage
     {
       get { return this.dataStorage.Value; }
     }
 
-    public ThreadLocal<IDictionary<ISecurable, AccessRuleCollection>> AccessRulesStorage
-    {
-      get { return this.accessRulesStorage; }
-    }
-
-    public FakeAuthorizationProvider()
-      : this(new Dictionary<ISecurable, AccessRuleCollection>())
-    {
-    }
-
-    public FakeAuthorizationProvider(IDictionary<ISecurable, AccessRuleCollection> accessRulesStorage)
-    {
-      this.dataStorage = new ThreadLocal<DataStorage>();
-
-      this.accessRulesStorage = new ThreadLocal<IDictionary<ISecurable, AccessRuleCollection>>();
-      this.accessRulesStorage.Value = accessRulesStorage;
-    }
-
     public override AccessRuleCollection GetAccessRules(ISecurable entity)
     {
-      return this.accessRulesStorage.Value.ContainsKey(entity) ? this.accessRulesStorage.Value[entity] : null;
+      var id = entity.GetUniqueId();
+      var accessRules = this.DataStorage.AccessRules;
+
+      return accessRules.ContainsKey(id) ? accessRules[id] : new AccessRuleCollection();
     }
 
     public override void SetAccessRules(ISecurable entity, AccessRuleCollection rules)
@@ -48,7 +33,7 @@
       Assert.ArgumentNotNull(entity, "entity");
       Assert.ArgumentNotNull(rules, "rules");
 
-      this.accessRulesStorage.Value[entity] = rules;
+      this.DataStorage.AccessRules[entity.GetUniqueId()] = rules;
     }
 
     public void SetDataStorage(DataStorage dataStorage)
@@ -60,65 +45,19 @@
 
     protected override AccessResult GetAccessCore(ISecurable entity, Account account, AccessRight accessRight)
     {
-      var uniqueId = entity.GetUniqueId();
-
-      if (string.IsNullOrEmpty(uniqueId))
+      var accessRules = this.GetAccessRules(entity);
+      var rule = accessRules.SingleOrDefault(r => r.Account == account && r.AccessRight == accessRight && r.PropagationType == PropagationType.Entity);
+      if (rule == null)
       {
         return this.GetDefaultAccessResult();
       }
 
-      var id = uniqueId.Substring(uniqueId.IndexOf("{", StringComparison.Ordinal), uniqueId.IndexOf("}", StringComparison.Ordinal) - uniqueId.IndexOf("{", StringComparison.Ordinal) + 1);
-      var itemId = ID.Parse(id);
-      var item = this.DataStorage.GetFakeItem(itemId);
-
-      return this.GetPermission(item.Access, accessRight);
+      return new AccessResult((AccessPermission)rule.SecurityPermission, new AccessExplanation(rule.SecurityPermission.ToString()));
     }
 
     protected virtual AccessResult GetDefaultAccessResult()
     {
       return new AccessResult(AccessPermission.Allow, new AccessExplanation("Allow"));
-    }
-
-    protected virtual AccessResult GetPermission(DbItemAccess access, AccessRight accessRight)
-    {
-      if (accessRight == AccessRight.ItemRead)
-      {
-        return this.GetAccessResult(access, i => i.CanRead);
-      }
-
-      if (accessRight == AccessRight.ItemWrite)
-      {
-        return this.GetAccessResult(access, i => i.CanWrite);
-      }
-
-      if (accessRight == AccessRight.ItemRename)
-      {
-        return this.GetAccessResult(access, i => i.CanRename);
-      }
-
-      if (accessRight == AccessRight.ItemCreate)
-      {
-        return this.GetAccessResult(access, i => i.CanCreate);
-      }
-
-      if (accessRight == AccessRight.ItemDelete)
-      {
-        return this.GetAccessResult(access, i => i.CanDelete);
-      }
-
-      if (accessRight == AccessRight.ItemAdmin)
-      {
-        return this.GetAccessResult(access, i => i.CanAdmin);
-      }
-
-      return this.GetDefaultAccessResult();
-    }
-
-    protected virtual AccessResult GetAccessResult(DbItemAccess access, Func<DbItemAccess, bool> func)
-    {
-      var permission = func(access) ? AccessPermission.Allow : AccessPermission.Deny;
-
-      return new AccessResult(permission, new AccessExplanation(permission.ToString()));
     }
   }
 }

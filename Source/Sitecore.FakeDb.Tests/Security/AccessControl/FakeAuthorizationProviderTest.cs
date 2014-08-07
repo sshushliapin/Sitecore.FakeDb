@@ -24,6 +24,8 @@
 
     private readonly Database database;
 
+    private readonly DataStorage dataStorage;
+
     private readonly ISecurable entity;
 
     private readonly AccessRuleCollection rules;
@@ -32,22 +34,25 @@
 
     public FakeAuthorizationProviderTest()
     {
-      this.provider = new FakeAuthorizationProvider();
       this.fixture = new Fixture();
       this.database = Database.GetDatabase("master");
+      this.dataStorage = new DataStorage(this.database);
+
+      this.provider = new FakeAuthorizationProvider();
+      this.provider.SetDataStorage(this.dataStorage);
 
       this.entity = Substitute.For<ISecurable>();
       this.rules = new AccessRuleCollection();
     }
 
     [Fact]
-    public void ShouldGetNullIfNoEntityFound()
+    public void ShouldGetEmptyCollectionIfNoEntityFound()
     {
       // arrange
       var missingEntity = Substitute.For<ISecurable>();
 
       // act & assert
-      this.provider.GetAccessRules(missingEntity).Should().BeNull();
+      this.provider.GetAccessRules(missingEntity).Should().BeEmpty();
     }
 
     [Fact]
@@ -60,10 +65,9 @@
     [Fact]
     public void ShouldGetAccessRules()
     {
-      // arrange    
-      var rulesStorage = new Dictionary<ISecurable, AccessRuleCollection> { { this.entity, this.rules } };
-
-      this.provider = new FakeAuthorizationProvider(rulesStorage);
+      // arrange   
+      this.entity.GetUniqueId().Returns("1");
+      this.dataStorage.AccessRules.Add("1", this.rules);
 
       // act & assert
       this.provider.GetAccessRules(this.entity).Should().BeSameAs(this.rules);
@@ -72,16 +76,14 @@
     [Fact]
     public void ShouldSetAccessRules()
     {
-      // arrange    
-      var rulesStorage = new Dictionary<ISecurable, AccessRuleCollection>();
-
-      this.provider = new FakeAuthorizationProvider(rulesStorage);
+      // arrange
+      this.entity.GetUniqueId().Returns("1");
 
       // act
       this.provider.SetAccessRules(this.entity, this.rules);
 
       // assert
-      rulesStorage[this.entity].Should().BeSameAs(rules);
+      this.dataStorage.AccessRules["1"].Should().BeSameAs(this.rules);
     }
 
     [Fact]
@@ -95,30 +97,23 @@
       this.provider.GetAccess(this.entity, account, accessRight).ShouldBeEquivalentTo(new AccessResult(AccessPermission.Allow, new AccessExplanation("Allow")));
     }
 
-    [Theory]
-    [InlineData("CanRead", WellknownRights.ItemRead)]
-    [InlineData("CanWrite", WellknownRights.ItemWrite)]
-    [InlineData("CanRename", WellknownRights.ItemRename)]
-    [InlineData("CanCreate", WellknownRights.ItemCreate)]
-    [InlineData("CanDelete", WellknownRights.ItemDelete)]
-    [InlineData("CanAdmin", WellknownRights.ItemAdmin)]
-    public void ShouldGetAccessPermissionIfConfigured(string propertyName, string accessRightName)
+    [Fact]
+    public void ShouldGetAccessPermission()
     {
       // arrange
-      var itemId = ID.NewID;
+      this.entity.GetUniqueId().Returns("1");
+      var user = Context.User;
 
-      entity.GetUniqueId().Returns(ItemHelper.CreateInstance(itemId, this.database).GetUniqueId());
+      var rules = new AccessRuleCollection 
+        {
+          AccessRule.Create(user, AccessRight.ItemWrite, PropagationType.Entity, AccessPermission.Deny),
+          AccessRule.Create(user, AccessRight.ItemWrite, PropagationType.Descendants, AccessPermission.Deny)
+        };
 
-      var item = new DbItem("propertyName");
-      ReflectionUtil.SetProperty(item.Access, propertyName, false);
-
-      var dataStorage = Substitute.For<DataStorage>(this.database);
-      dataStorage.GetFakeItem(itemId).Returns(item);
-
-      this.provider.SetDataStorage(dataStorage);
+      this.dataStorage.AccessRules.Add("1", rules);
 
       // act
-      var accessResult = this.provider.GetAccess(this.entity, User.Current, AccessRight.FromName(accessRightName));
+      var accessResult = this.provider.GetAccess(this.entity, user, AccessRight.ItemWrite);
 
       // assert
       accessResult.Permission.Should().Be(AccessPermission.Deny);
@@ -133,7 +128,8 @@
 
       var t1 = Task.Factory.StartNew(() =>
         {
-          this.provider.AccessRulesStorage.Value = new Dictionary<ISecurable, AccessRuleCollection>();
+          this.provider.SetDataStorage(new DataStorage(this.database));
+
           this.provider.SetAccessRules(this.entity, rules1);
 
           Thread.Sleep(100);
@@ -143,7 +139,8 @@
 
       var t2 = Task.Factory.StartNew(() =>
         {
-          this.provider.AccessRulesStorage.Value = new Dictionary<ISecurable, AccessRuleCollection>();
+          this.provider.SetDataStorage(new DataStorage(this.database));
+
           this.provider.SetAccessRules(this.entity, rules2);
           this.provider.GetAccessRules(this.entity).Should().BeSameAs(rules2);
         });

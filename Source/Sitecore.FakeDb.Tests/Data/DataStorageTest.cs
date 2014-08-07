@@ -181,5 +181,12 @@
       // assert
       item[fieldId].Should().Be("Sample");
     }
+
+    [Fact]
+    public void ShouldCreateEmptyAccessRulesCollection()
+    {
+      // assert
+      this.dataStorage.AccessRules.Should().BeEmpty();
+    }
   }
 }

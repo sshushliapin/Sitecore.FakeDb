@@ -7,18 +7,18 @@
   public class DbItemAccessTest
   {
     [Fact]
-    public void ShouldSetAllAccessRightsToTrueByDefault()
+    public void ShouldNotSetAccessRightsByDefault()
     {
       // arrange
       var itemAccess = new DbItemAccess();
 
       // act & assert
-      itemAccess.CanRead.Should().BeTrue();
-      itemAccess.CanWrite.Should().BeTrue();
-      itemAccess.CanRename.Should().BeTrue();
-      itemAccess.CanCreate.Should().BeTrue();
-      itemAccess.CanDelete.Should().BeTrue();
-      itemAccess.CanAdmin.Should().BeTrue();
+      itemAccess.CanRead.Should().Be(null);
+      itemAccess.CanWrite.Should().Be(null);
+      itemAccess.CanRename.Should().Be(null);
+      itemAccess.CanCreate.Should().Be(null);
+      itemAccess.CanDelete.Should().Be(null);
+      itemAccess.CanAdmin.Should().Be(null);
     }
   }
 }
