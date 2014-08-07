@@ -7,6 +7,7 @@
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.FakeDb.Links;
   using Sitecore.Links;
+  using System;
   using Xunit;
 
   public class FakeLinkDatabaseTest
@@ -47,7 +48,7 @@
       stubLinkDatabase.GetReferrers(null, null).Should().BeEmpty();
       stubLinkDatabase.GetItemReferrers(null, false).Should().BeEmpty();
       stubLinkDatabase.GetItemVersionReferrers(null).Should().BeEmpty();
-      stubLinkDatabase.GetReferrers(null, false).Should().BeEmpty();
+      stubLinkDatabase.GetReferrers(null).Should().BeEmpty();
       stubLinkDatabase.HasExternalReferrers(null, false).Should().BeFalse();
       Assert.DoesNotThrow(() => stubLinkDatabase.Rebuild(null));
       Assert.DoesNotThrow(() => stubLinkDatabase.RemoveReferences(null));
@@ -161,6 +162,7 @@
     }
 
     [Fact]
+    [Obsolete]
     public void ShouldGetReferrersDeep()
     {
       // arrange
