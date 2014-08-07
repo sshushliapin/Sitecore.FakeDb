@@ -1,24 +1,31 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using Sitecore.Data.Items;
+  using System.Threading;
 
   public class GetRootItemCommand : Sitecore.Data.Engines.DataCommands.GetRootItemCommand, IDataEngineCommand
   {
-    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
+    private ThreadLocal<DataEngineCommand> innerCommand;
+
+    public GetRootItemCommand()
+    {
+      this.innerCommand = new ThreadLocal<DataEngineCommand>();
+      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+    }
 
     public virtual void Initialize(DataEngineCommand command)
     {
-      this.innerCommand = command;
+      this.innerCommand.Value = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.GetRootItemCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetRootItemCommand, GetRootItemCommand>();
+      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.GetRootItemCommand, GetRootItemCommand>();
     }
 
     protected override Item DoExecute()
     {
-      return this.innerCommand.DataStorage.GetSitecoreItem(ItemIDs.RootID, this.Language);
+      return this.innerCommand.Value.DataStorage.GetSitecoreItem(ItemIDs.RootID, this.Language);
     }
   }
 }

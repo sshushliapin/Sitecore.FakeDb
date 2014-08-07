@@ -4,24 +4,31 @@
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
+  using System.Threading;
 
   public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand, IDataEngineCommand
   {
-    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
+    private ThreadLocal<DataEngineCommand> innerCommand;
+
+    public DeleteItemCommand()
+    {
+      this.innerCommand = new ThreadLocal<DataEngineCommand>();
+      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+    }
 
     public virtual void Initialize(DataEngineCommand command)
     {
-      this.innerCommand = command;
+      this.innerCommand.Value = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.DeleteItemCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.DeleteItemCommand, DeleteItemCommand>();
+      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.DeleteItemCommand, DeleteItemCommand>();
     }
 
     protected override bool DoExecute()
     {
-      return this.RemoveRecursive(this.innerCommand.DataStorage.FakeItems, Item.ID);
+      return this.RemoveRecursive(this.innerCommand.Value.DataStorage.FakeItems, Item.ID);
     }
 
     private bool RemoveRecursive(IDictionary<ID, DbItem> fakeItems, ID itemId)

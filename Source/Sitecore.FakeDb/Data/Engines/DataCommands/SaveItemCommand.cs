@@ -2,24 +2,31 @@
 {
   using Sitecore.Data.Fields;
   using Sitecore.Diagnostics;
+  using System.Threading;
 
   public class SaveItemCommand : Sitecore.Data.Engines.DataCommands.SaveItemCommand, IDataEngineCommand
   {
-    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
+    private ThreadLocal<DataEngineCommand> innerCommand;
+
+    public SaveItemCommand()
+    {
+      this.innerCommand = new ThreadLocal<DataEngineCommand>();
+      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+    }
 
     public virtual void Initialize(DataEngineCommand command)
     {
-      this.innerCommand = command;
+      this.innerCommand.Value = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.SaveItemCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.SaveItemCommand, SaveItemCommand>();
+      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.SaveItemCommand, SaveItemCommand>();
     }
 
     protected override bool DoExecute()
     {
-      var fakeItem = this.innerCommand.DataStorage.GetFakeItem(Item.ID);
+      var fakeItem = this.innerCommand.Value.DataStorage.GetFakeItem(Item.ID);
 
       this.UpdateBasicData(fakeItem);
       this.UpdateFields(fakeItem);
@@ -47,7 +54,7 @@
 
     protected virtual void UpdateFields(DbItem fakeItem)
     {
-      var template = this.innerCommand.DataStorage.GetFakeTemplate(fakeItem.TemplateID);
+      var template = this.innerCommand.Value.DataStorage.GetFakeTemplate(fakeItem.TemplateID);
       Assert.IsNotNull(template, "Item template not found. Item: '{0}', '{1}'; template: '{2}'.", Item.Name, Item.ID, Item.TemplateID);
 
       foreach (Field field in this.Item.Fields)

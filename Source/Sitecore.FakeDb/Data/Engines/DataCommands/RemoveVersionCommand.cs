@@ -1,24 +1,31 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Linq;
+  using System.Threading;
 
   public class RemoveVersionCommand : Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, IDataEngineCommand
   {
-    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
+    private ThreadLocal<DataEngineCommand> innerCommand;
 
-    public void Initialize(DataEngineCommand command)
+    public RemoveVersionCommand()
     {
-      this.innerCommand = command;
+      this.innerCommand = new ThreadLocal<DataEngineCommand>();
+      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+    }
+
+    public virtual void Initialize(DataEngineCommand command)
+    {
+      this.innerCommand.Value = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.RemoveVersionCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, RemoveVersionCommand>();
+      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, RemoveVersionCommand>();
     }
 
     protected override bool DoExecute()
     {
-      var dbitem = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
+      var dbitem = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
       var language = this.Item.Language.Name;
 
       var removed = false;

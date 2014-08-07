@@ -8,7 +8,7 @@
 
   public class DbConcurrencyTest
   {
-    [Fact(Skip = "To be solved")]
+    [Fact]
     public void ShouldBeThreadSafe()
     {
       // arrange

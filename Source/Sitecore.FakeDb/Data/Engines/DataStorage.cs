@@ -8,6 +8,7 @@ namespace Sitecore.FakeDb.Data.Engines
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
   using Version = Sitecore.Data.Version;
+  using System.Threading;
 
   public class DataStorage
   {
@@ -25,6 +26,10 @@ namespace Sitecore.FakeDb.Data.Engines
 
     private const string MediaLibraryItemName = "media library";
 
+    private readonly ThreadLocal<IDictionary<ID, DbItem>> fakeItems;
+
+    private readonly ThreadLocal<IDictionary<ID, DbTemplate>> fakeTemplates;
+
     public const string TemplateItemName = "Template";
 
     public const string TemplateSectionItemName = "Template section";
@@ -41,8 +46,8 @@ namespace Sitecore.FakeDb.Data.Engines
     {
       this.database = database;
 
-      this.FakeItems = new Dictionary<ID, DbItem>();
-      this.FakeTemplates = new Dictionary<ID, DbTemplate>();
+      this.fakeItems = new ThreadLocal<IDictionary<ID, DbItem>>();
+      this.fakeTemplates = new ThreadLocal<IDictionary<ID, DbTemplate>>();
 
       this.FillDefaultFakeTemplates();
       this.FillDefaultFakeItems();
@@ -53,12 +58,15 @@ namespace Sitecore.FakeDb.Data.Engines
       get { return this.database; }
     }
 
-    /// <summary>
-    /// Gets the fake items.
-    /// </summary>
-    public IDictionary<ID, DbItem> FakeItems { get; private set; }
+    public IDictionary<ID, DbItem> FakeItems
+    {
+      get { return this.fakeItems.Value ?? (this.fakeItems.Value = new Dictionary<ID, DbItem>()); }
+    }
 
-    public IDictionary<ID, DbTemplate> FakeTemplates { get; private set; }
+    public IDictionary<ID, DbTemplate> FakeTemplates
+    {
+      get { return this.fakeTemplates.Value ?? (this.fakeTemplates.Value = new Dictionary<ID, DbTemplate>()); }
+    }
 
     public virtual DbItem GetFakeItem(ID itemId)
     {
@@ -164,7 +172,7 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems.Add(ItemIDs.RootID, new DbItem(SitecoreItemName, ItemIDs.RootID, RootTemplateId) { ParentID = ID.Null, FullPath = "/sitecore" });
       this.FakeItems.Add(ItemIDs.ContentRoot, new DbItem(ContentItemName, ItemIDs.ContentRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/content" });
       this.FakeItems.Add(ItemIDs.TemplateRoot, new DbItem(TemplatesItemName, ItemIDs.TemplateRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/templates" });
-      this.FakeItems.Add(ItemIDs.SystemRoot, new DbItem(SystemItemName, ItemIDs.SystemRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/system"});
+      this.FakeItems.Add(ItemIDs.SystemRoot, new DbItem(SystemItemName, ItemIDs.SystemRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/system" });
       this.FakeItems.Add(ItemIDs.MediaLibraryRoot, new DbItem(MediaLibraryItemName, ItemIDs.MediaLibraryRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/media library" });
 
       this.FakeItems[ItemIDs.RootID].Add(this.FakeItems[ItemIDs.ContentRoot]);

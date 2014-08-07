@@ -3,19 +3,26 @@
   using Sitecore.Configuration;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
+  using System.Threading;
 
   public class GetParentCommand : Sitecore.Data.Engines.DataCommands.GetParentCommand, IDataEngineCommand
   {
-    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
+    private ThreadLocal<DataEngineCommand> innerCommand;
+
+    public GetParentCommand()
+    {
+      this.innerCommand = new ThreadLocal<DataEngineCommand>();
+      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+    }
 
     public virtual void Initialize(DataEngineCommand command)
     {
-      this.innerCommand = command;
+      this.innerCommand.Value = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.GetParentCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetParentCommand, GetParentCommand>();
+      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.GetParentCommand, GetParentCommand>();
     }
 
     protected override Item DoExecute()
@@ -25,9 +32,9 @@
         return null;
       }
 
-      var fakeItem = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
+      var fakeItem = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
 
-      return fakeItem != null ? this.innerCommand.DataStorage.GetSitecoreItem(fakeItem.ParentID, this.Item.Language) : null;
+      return fakeItem != null ? this.innerCommand.Value.DataStorage.GetSitecoreItem(fakeItem.ParentID, this.Item.Language) : null;
     }
   }
 }

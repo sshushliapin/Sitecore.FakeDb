@@ -4,27 +4,34 @@
   using Sitecore.Collections;
   using Sitecore.Configuration;
   using Sitecore.Diagnostics;
+  using System.Threading;
 
   public class GetChildrenCommand : Sitecore.Data.Engines.DataCommands.GetChildrenCommand, IDataEngineCommand
   {
-    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
+    private ThreadLocal<DataEngineCommand> innerCommand;
+
+    public GetChildrenCommand()
+    {
+      this.innerCommand = new ThreadLocal<DataEngineCommand>();
+      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+    }
 
     public virtual void Initialize(DataEngineCommand command)
     {
-      this.innerCommand = command;
+      this.innerCommand.Value = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.GetChildrenCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetChildrenCommand, GetChildrenCommand>();
+      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.GetChildrenCommand, GetChildrenCommand>();
     }
 
     protected override ItemList DoExecute()
     {
-      var item = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
+      var item = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
       var itemList = new ItemList();
 
-      itemList.AddRange(item.Children.Select(child => this.innerCommand.DataStorage.GetSitecoreItem(child.ID, this.Item.Language)));
+      itemList.AddRange(item.Children.Select(child => this.innerCommand.Value.DataStorage.GetSitecoreItem(child.ID, this.Item.Language)));
 
       return itemList;
     }

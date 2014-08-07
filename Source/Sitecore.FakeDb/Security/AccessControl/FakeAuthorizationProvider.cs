@@ -13,7 +13,12 @@
   {
     private readonly ThreadLocal<IDictionary<ISecurable, AccessRuleCollection>> accessRulesStorage;
 
-    public DataStorage DataStorage { get; private set; }
+    private readonly ThreadLocal<DataStorage> dataStorage;
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage.Value; }
+    }
 
     public ThreadLocal<IDictionary<ISecurable, AccessRuleCollection>> AccessRulesStorage
     {
@@ -27,6 +32,8 @@
 
     public FakeAuthorizationProvider(IDictionary<ISecurable, AccessRuleCollection> accessRulesStorage)
     {
+      this.dataStorage = new ThreadLocal<DataStorage>();
+
       this.accessRulesStorage = new ThreadLocal<IDictionary<ISecurable, AccessRuleCollection>>();
       this.accessRulesStorage.Value = accessRulesStorage;
     }
@@ -48,7 +55,7 @@
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.DataStorage = dataStorage;
+      this.dataStorage.Value = dataStorage;
     }
 
     protected override AccessResult GetAccessCore(ISecurable entity, Account account, AccessRight accessRight)

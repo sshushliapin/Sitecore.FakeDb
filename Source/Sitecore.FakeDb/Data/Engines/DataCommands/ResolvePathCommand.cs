@@ -3,19 +3,27 @@
   using System;
   using System.Linq;
   using Sitecore.Data;
+  using Sitecore.Diagnostics;
+  using System.Threading;
 
   public class ResolvePathCommand : Sitecore.Data.Engines.DataCommands.ResolvePathCommand, IDataEngineCommand
   {
-    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
+    private ThreadLocal<DataEngineCommand> innerCommand;
+
+    public ResolvePathCommand()
+    {
+      this.innerCommand = new ThreadLocal<DataEngineCommand>();
+      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+    }
 
     public virtual void Initialize(DataEngineCommand command)
     {
-      this.innerCommand = command;
+      this.innerCommand.Value = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.ResolvePathCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.ResolvePathCommand, ResolvePathCommand>();
+      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.ResolvePathCommand, ResolvePathCommand>();
     }
 
     protected override ID DoExecute()
@@ -25,7 +33,10 @@
         return new ID(this.ItemPath);
       }
 
-      var kvp = this.innerCommand.DataStorage.FakeItems.SingleOrDefault(fi => string.Compare(fi.Value.FullPath, StringUtil.RemovePostfix("/", this.ItemPath), StringComparison.OrdinalIgnoreCase) == 0);
+      Assert.IsNotNull(this.innerCommand.Value.DataStorage.FakeItems, "this.innerCommand.Value.DataStorage.FakeItems");
+
+      var itemPath = StringUtil.RemovePostfix("/", this.ItemPath);
+      var kvp = this.innerCommand.Value.DataStorage.FakeItems.SingleOrDefault(fi => string.Compare(fi.Value.FullPath, itemPath, StringComparison.OrdinalIgnoreCase) == 0);
 
       return kvp.Key;
     }

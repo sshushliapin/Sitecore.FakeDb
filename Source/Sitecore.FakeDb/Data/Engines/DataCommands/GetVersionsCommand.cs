@@ -3,24 +3,31 @@
   using System.Linq;
   using Sitecore.Collections;
   using Sitecore.Data;
+  using System.Threading;
 
   public class GetVersionsCommand : Sitecore.Data.Engines.DataCommands.GetVersionsCommand, IDataEngineCommand
   {
-    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
+    private ThreadLocal<DataEngineCommand> innerCommand;
 
-    public void Initialize(DataEngineCommand command)
+    public GetVersionsCommand()
     {
-      this.innerCommand = command;
+      this.innerCommand = new ThreadLocal<DataEngineCommand>();
+      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+    }
+
+    public virtual void Initialize(DataEngineCommand command)
+    {
+      this.innerCommand.Value = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.GetVersionsCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetVersionsCommand, GetVersionsCommand>();
+      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.GetVersionsCommand, GetVersionsCommand>();
     }
 
     protected override VersionCollection DoExecute()
     {
-      var dbitem = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
+      var dbitem = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
       int versionsCount = 1;
 
       foreach (var field in dbitem.Fields)
