@@ -124,6 +124,7 @@
     <Compile Include="Pipelines\InitFakeDb\InitAuthorizationProviderTest.cs" />
     <Compile Include="Pipelines\ReleaseDb\ReleaseAuthorizationProviderTest.cs" />
     <Compile Include="Profile\UserProfileTest.cs" />
+    <Compile Include="Security\Authentication\AuthenticationSwitcherTest.cs" />
     <Compile Include="Security\RoleProviderSwitcherTest.cs" />
     <Compile Include="ThreadLocalProviderSwitcherTest.cs" />
     <Compile Include="Links\LinkDatabaseSwitcherTest.cs" />
