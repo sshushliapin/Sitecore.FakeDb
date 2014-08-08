@@ -26,11 +26,19 @@
 
     private readonly DataStorage dataStorage;
 
+    private readonly FakeAuthorizationProvider provider;
+
+    private readonly AuthorizationProvider localProvider;
+
     private readonly ISecurable entity;
 
     private readonly AccessRuleCollection rules;
 
-    private FakeAuthorizationProvider provider;
+    private readonly Account account;
+
+    private readonly AccessRight accessRight;
+
+    private readonly AccessResult accessResult;
 
     public FakeAuthorizationProviderTest()
     {
@@ -40,9 +48,14 @@
 
       this.provider = new FakeAuthorizationProvider();
       this.provider.SetDataStorage(this.dataStorage);
+      this.localProvider = Substitute.For<AuthorizationProvider>();
 
       this.entity = Substitute.For<ISecurable>();
       this.rules = new AccessRuleCollection();
+
+      this.account = this.fixture.Create<User>();
+      this.accessRight = this.fixture.Create<AccessRight>();
+      this.accessResult = this.fixture.Create<AccessResult>();
     }
 
     [Fact]
@@ -149,8 +162,55 @@
       t2.Wait();
     }
 
+    #region  ThreadLocal Provider
+
+    [Fact]
+    public void ShouldBeThreadLocalProvider()
+    {
+      // act & assert
+      this.provider.Should().BeAssignableTo<IThreadLocalProvider<AuthorizationProvider>>();
+    }
+
+    [Fact]
+    public void ShouldCallGetAccess()
+    {
+      // arrange
+      this.provider.LocalProvider.Value = this.localProvider;
+      this.localProvider.GetAccess(this.entity, this.account, this.accessRight).Returns(this.accessResult);
+
+      // act & assert
+      this.provider.GetAccess(this.entity, this.account, this.accessRight).Should().BeSameAs(this.accessResult);
+    }
+
+    [Fact]
+    public void ShouldCallGetAccessRules()
+    {
+      // arrange
+      this.provider.LocalProvider.Value = this.localProvider;
+      this.localProvider.GetAccessRules(this.entity).Returns(this.rules);
+
+      // act & assert
+      this.provider.GetAccessRules(this.entity).Should().BeSameAs(this.rules);
+    }
+
+    [Fact]
+    public void ShouldCallSetAccessRules()
+    {
+      // arrange
+      this.provider.LocalProvider.Value = this.localProvider;
+
+      // act 
+      this.provider.SetAccessRules(this.entity, this.rules);
+
+      // assert
+      this.localProvider.Received().SetAccessRules(this.entity, this.rules);
+    }
+
+    #endregion
+
     public void Dispose()
     {
+      this.provider.LocalProvider.Value = null;
       Factory.Reset();
     }
   }

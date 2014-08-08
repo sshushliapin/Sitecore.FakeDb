@@ -122,6 +122,12 @@
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
     <Compile Include="Profile\UserProfileTest.cs" />
+    <Compile Include="Security\AccessControl\AllowAccessResultTest.cs" />
+    <Compile Include="Security\AccessControl\AuthorizationSwitcherTest.cs" />
+    <Compile Include="Security\AccessControl\DenyAccessResultTest.cs" />
+    <Compile Include="Security\AccessControl\ItemSecurityTest.cs" />
+    <Compile Include="Security\Accounts\FakeRolesInRolesProviderTest.cs" />
+    <Compile Include="Security\Accounts\RolesInRolesSwitcherTest.cs" />
     <Compile Include="Security\Authentication\AuthenticationSwitcherTest.cs" />
     <Compile Include="Security\RoleProviderSwitcherTest.cs" />
     <Compile Include="ThreadLocalProviderSwitcherTest.cs" />

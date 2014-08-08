@@ -236,6 +236,127 @@
     }
 
     [Xunit.Fact]
+    public void HowToMockAuthorizationProvider()
+    {
+      // create sample users
+      var editorUser = Sitecore.Security.Accounts.User.FromName(@"extranet\Editor", true);
+      var anonymousUser = Sitecore.Security.Accounts.User.FromName(@"extranet\Anonymous", true);
+
+      // define access permissions
+      var allowAccessResult = new Sitecore.FakeDb.Security.AccessControl.AllowAccessResult();
+      var denyAccessResult = new Sitecore.FakeDb.Security.AccessControl.DenyAccessResult();
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home")
+        })
+      {
+        Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
+
+        // create and configure authorization provider mock
+        var provider = Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
+        var itemReadAccessRight = Sitecore.Security.AccessControl.AccessRight.ItemRead;
+        provider
+          .GetAccess(homeItem, editorUser, itemReadAccessRight)
+          .Returns(allowAccessResult);
+        provider
+          .GetAccess(homeItem, anonymousUser, itemReadAccessRight)
+          .Returns(denyAccessResult);
+
+        // switch the authorization provider
+        using (new Sitecore.FakeDb.Security.AccessControl.AuthorizationSwitcher(provider))
+        {
+          // check the access result for different accounts
+          bool allowReadForEditor =
+            Sitecore.Security.AccessControl.AuthorizationManager.IsAllowed(
+              homeItem,
+              Sitecore.Security.AccessControl.AccessRight.ItemRead,
+              editorUser);
+
+          bool allowReadForAnonymous =
+            Sitecore.Security.AccessControl.AuthorizationManager.IsAllowed(
+              homeItem,
+              Sitecore.Security.AccessControl.AccessRight.ItemRead,
+              anonymousUser);
+
+          Xunit.Assert.True(allowReadForEditor);
+          Xunit.Assert.False(allowReadForAnonymous);
+        }
+      }
+    }
+
+    [Xunit.Fact]
+    public void HowToCheckItemSecurityWithMocks()
+    {
+      // create sample item
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home")
+        })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // substitute the authorization provider
+        var provider = Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
+        using (new Sitecore.FakeDb.Security.AccessControl.AuthorizationSwitcher(provider))
+        {
+          // call your business logic that changes the item security, e.g. denies Read for Everyone
+          var account = Sitecore.Security.Accounts.Role.FromName("Everyone");
+          var accessRight = Sitecore.Security.AccessControl.AccessRight.ItemRead;
+          var propagationType = Sitecore.Security.AccessControl.PropagationType.Entity;
+          var permission = Sitecore.Security.AccessControl.AccessPermission.Deny;
+
+          Sitecore.Security.AccessControl.AccessRuleCollection rules =
+            new Sitecore.Security.AccessControl.AccessRuleCollection
+              {
+                Sitecore.Security.AccessControl.AccessRule.Create(account, accessRight, propagationType, permission)
+              };
+          Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(item, rules);
+
+          // check the provider is called with proper arguments
+          provider
+            .Received()
+            .SetAccessRules(
+              item,
+              NSubstitute.Arg.Is<Sitecore.Security.AccessControl.AccessRuleCollection>(
+                r => r[0].Account.Name == "Everyone"
+                  && r[0].AccessRight.Name == "item:read"
+                  && r[0].PropagationType == Sitecore.Security.AccessControl.PropagationType.Entity
+                  && r[0].SecurityPermission == Sitecore.Security.AccessControl.SecurityPermission.DenyAccess));
+        }
+      }
+    }
+
+    [Xunit.Fact]
+    public void HowToCheckItemSecurityWithFakeProviders()
+    {
+      // create sample item
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home")
+        })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // call your business logic that changes the item security, e.g. denies Read for Everyone
+        var account = Sitecore.Security.Accounts.Role.FromName("Everyone");
+        var accessRight = Sitecore.Security.AccessControl.AccessRight.ItemRead;
+        var propagationType = Sitecore.Security.AccessControl.PropagationType.Entity;
+        var permission = Sitecore.Security.AccessControl.AccessPermission.Deny;
+
+        Sitecore.Security.AccessControl.AccessRuleCollection rules =
+          new Sitecore.Security.AccessControl.AccessRuleCollection
+              {
+                Sitecore.Security.AccessControl.AccessRule.Create(account, accessRight, propagationType, permission)
+              };
+        Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(item, rules);
+
+        // check the account cannot read the item
+        Xunit.Assert.False(item.Security.CanRead(account));
+      }
+    }
+
+    [Xunit.Fact]
     public void HowToMockRoleProvider()
     {
       // create and configure role provider mock

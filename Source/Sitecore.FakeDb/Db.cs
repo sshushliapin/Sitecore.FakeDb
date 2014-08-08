@@ -41,6 +41,8 @@ namespace Sitecore.FakeDb
 
     public Db(string databaseName)
     {
+      //new DatabaseCacheDisabler();
+
       this.database = Database.GetDatabase(databaseName);
       this.dataStorage = new DataStorage(this.database);
 

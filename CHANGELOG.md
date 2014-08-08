@@ -1,6 +1,7 @@
 ﻿0.15.0
-* [NEW] Implemented RoleProviderSwitcher
-* [NEW] Implemented FakeAuthorizationProvider
+* [NEW] Implemented Fake Authorization Provider
+* [NEW] Implemented Fake Role Provider
+* [NEW] Implemented Fake RolesInRoles Provider
 * [FIX] DataEngine commands became thread local to solve concurrency issue
 
 0.14.0

@@ -11,17 +11,34 @@
   using System.Threading;
   using Sitecore.Data.Items;
 
-  public class FakeAuthorizationProvider : AuthorizationProvider, IRequireDataStorage
+  public class FakeAuthorizationProvider : AuthorizationProvider, IRequireDataStorage, IThreadLocalProvider<AuthorizationProvider>
   {
     private readonly ThreadLocal<DataStorage> dataStorage = new ThreadLocal<DataStorage>();
 
-    public DataStorage DataStorage
+    private readonly ThreadLocal<AuthorizationProvider> localProvider = new ThreadLocal<AuthorizationProvider>();
+
+    public virtual DataStorage DataStorage
     {
       get { return this.dataStorage.Value; }
     }
 
+    public virtual ThreadLocal<AuthorizationProvider> LocalProvider
+    {
+      get { return this.localProvider; }
+    }
+
+    public override AccessResult GetAccess(ISecurable entity, Account account, AccessRight accessRight)
+    {
+      return this.IsLocalProviderSet() ? this.LocalProvider.Value.GetAccess(entity, account, accessRight) : base.GetAccess(entity, account, accessRight);
+    }
+
     public override AccessRuleCollection GetAccessRules(ISecurable entity)
     {
+      if (this.IsLocalProviderSet())
+      {
+        return this.LocalProvider.Value.GetAccessRules(entity);
+      }
+
       var id = entity.GetUniqueId();
       var accessRules = this.DataStorage.AccessRules;
 
@@ -33,18 +50,35 @@
       Assert.ArgumentNotNull(entity, "entity");
       Assert.ArgumentNotNull(rules, "rules");
 
-      this.DataStorage.AccessRules[entity.GetUniqueId()] = rules;
+      if (this.IsLocalProviderSet())
+      {
+        this.LocalProvider.Value.SetAccessRules(entity, rules);
+      }
+      else
+      {
+        this.DataStorage.AccessRules[entity.GetUniqueId()] = rules;
+      }
     }
 
-    public void SetDataStorage(DataStorage dataStorage)
+    public virtual void SetDataStorage(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
       this.dataStorage.Value = dataStorage;
     }
 
+    public virtual bool IsLocalProviderSet()
+    {
+      return this.localProvider.Value != null;
+    }
+
     protected override AccessResult GetAccessCore(ISecurable entity, Account account, AccessRight accessRight)
     {
+      if (this.IsLocalProviderSet())
+      {
+        return this.GetDefaultAccessResult();
+      }
+
       var accessRules = this.GetAccessRules(entity);
       var rule = accessRules.SingleOrDefault(r => r.Account == account && r.AccessRight == accessRight && r.PropagationType == PropagationType.Entity);
       if (rule == null)

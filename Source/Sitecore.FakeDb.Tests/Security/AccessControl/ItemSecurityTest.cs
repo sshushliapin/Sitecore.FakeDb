@@ -8,7 +8,7 @@
   public class ItemSecurityTest
   {
     [Fact]
-    public void ShouldCrantFullAccessToEveryone()
+    public void ShouldGrantFullAccessToEveryone()
     {
       // arrange & act
       using (var db = new Db())
@@ -22,7 +22,7 @@
       }
     }
 
-    //[Fact]
+    [Fact(Skip = "To be implemented")]
     public void ShouldSetItemSecurity()
     {
       // arrange

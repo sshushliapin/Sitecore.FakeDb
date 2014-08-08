@@ -84,6 +84,11 @@
     <Compile Include="Pipelines\ReleaseFakeDb\ResetTemplateEngine.cs" />
     <Compile Include="Profile\FakeUserProfile.cs" />
     <Compile Include="Properties\AssemblyVersionInfo.cs" />
+    <Compile Include="Security\AccessControl\AllowAccessResult.cs" />
+    <Compile Include="Security\AccessControl\AuthorizationSwitcher.cs" />
+    <Compile Include="Security\AccessControl\DenyAccessResult.cs" />
+    <Compile Include="Security\Accounts\FakeRolesInRolesProvider.cs" />
+    <Compile Include="Security\Accounts\RolesInRolesSwitcher.cs" />
     <Compile Include="ThreadLocalProviderSwitcher.cs" />
     <Compile Include="Resources\Media\FakeMediaProvider.cs" />
     <Compile Include="Resources\Media\MediaProviderSwitcher.cs" />
