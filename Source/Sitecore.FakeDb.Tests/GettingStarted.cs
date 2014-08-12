@@ -173,17 +173,21 @@
     public void HowToMockAuthenticationProvider()
     {
       // create and configure authentication provider mock
-      var provider = Substitute.For<Sitecore.Security.Authentication.AuthenticationProvider>();
+      var provider =
+        Substitute.For<Sitecore.Security.Authentication.AuthenticationProvider>();
+
       provider.Login("John", true).Returns(true);
 
       // switch the authentication provider so the mocked version is used
       using (new Sitecore.Security.Authentication.AuthenticationSwitcher(provider))
       {
-        // the authentication manager is called with the expected parameters. It returns True
-        Xunit.Assert.True(Sitecore.Security.Authentication.AuthenticationManager.Login("John", true));
+        // the authentication manager is called with expected parameters and returns True
+        Xunit.Assert.True(
+          Sitecore.Security.Authentication.AuthenticationManager.Login("John", true));
 
-        // the authentication manager is called with some unexpected parameters. It returns False
-        Xunit.Assert.False(Sitecore.Security.Authentication.AuthenticationManager.Login("Robber", true));
+        // the authentication manager is called with unexpected parameters and returns False
+        Xunit.Assert.False(
+          Sitecore.Security.Authentication.AuthenticationManager.Login("Robber", true));
       }
     }
 
@@ -201,7 +205,9 @@
         Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
 
         // configure authorization provider mock to deny item read for the user
-        var provider = Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
+        var provider =
+          Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
+
         provider
           .GetAccess(home, user, Sitecore.Security.AccessControl.AccessRight.ItemRead)
           .Returns(new Sitecore.FakeDb.Security.AccessControl.DenyAccessResult());
@@ -252,11 +258,13 @@
         Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
 
         // substitute the authorization provider
-        var provider = Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
+        var provider =
+          Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
 
         using (new Sitecore.FakeDb.Security.AccessControl.AuthorizationSwitcher(provider))
         {
-          // call your business logic that changes the item security, e.g. denies Read for Editors
+          // call your business logic that changes the item security, e.g. denies Read
+          // for Editors
           var account = Sitecore.Security.Accounts.Role.FromName(@"sitecore\Editors");
           var accessRight = Sitecore.Security.AccessControl.AccessRight.ItemRead;
           var propagationType = Sitecore.Security.AccessControl.PropagationType.Entity;
@@ -295,7 +303,8 @@
       {
         Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
 
-        // call your business logic that changes the item security, e.g. denies Read for Editors
+        // call your business logic that changes the item security, e.g. denies Read
+        // for Editors
         var account = Sitecore.Security.Accounts.Role.FromName(@"sitecore\Editors");
         var accessRight = Sitecore.Security.AccessControl.AccessRight.ItemRead;
         var propagationType = Sitecore.Security.AccessControl.PropagationType.Entity;
@@ -606,7 +615,8 @@
       try
       {
         var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
-        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Add("my_index", index);
+        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes
+          .Add("my_index", index);
 
         using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
           {
@@ -637,7 +647,8 @@
       }
       finally
       {
-        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Remove("my_index");
+        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes
+          .Remove("my_index");
       }
     }
 
