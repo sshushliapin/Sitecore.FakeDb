@@ -18,10 +18,35 @@ can be replaced by mocks in unit tests using special provider switchers.
 ## Contents
 - [Installation](#installation)
 - [Content](#content)
+  - [How to create a simple item](#how-to-create-a-simple-item)
+  - [How to create an item under System](#how-to-create-an-item-under-system)
+  - [How to create an item hierarchy](#how-to-create-an-item-hierarchy)
+  - [How to create a multilingual item](#how-to-create-a-multilingual-item)
+  - [How to create an item of specific template](#how-to-create-an-item-of-specific-template)
+  - [How to create a versioned item](#how-to-create-a-versioned-item)
+  - [How to create a template with standard values](#how-to-create-a-template-with-standard-values)
+  - [How to create a template hierarchy](#how-to-create-a-template-hierarchy)
 - [Security](#security)
+  - [How to mock Authentication Provider](#how-to-mock-authentication-provider)
+  - [How to mock Authorization Provider](#how-to-mock-authorization-provider)
+  - [How to mock Role Provider](#how-to-mock-role-provider)
+  - [How to unit test item security with mocked provider](#how-to-unit-test-item-security-with-mocked-provider)
+  - [How to unit test item security with fake provider](#how-to-unit-test-item-security-with-fake-provider)
+  - [How to switch Context User](#how-to-switch-context-user)
+  - [How to configure Item Access](#how-to-configure-item-access)
 - [Pipelines](#pipelines)
+  - [How to unit test a pipeline call](#how-to-unit-test-a-pipeline-call)
+  - [How to configure a pipeline behaviour](#how-to-configure-a-pipeline-behaviour)
 - [Configuration](#configuration)
+  - [How to configure Settings](#how-to-configure-settings)
+  - [Database lifetime configuration](#database-lifetime-configuration)
 - [Miscellaneous](#miscellaneous)
+  - [How to unit test localization](#how-to-unit-test-localization)
+  - [How to work with Link Database](#how-to-work-with-link-database)
+  - [How to mock Media Provider](#how-to-mock-media-provider)
+  - [How to work with the Query API](#how-to-work-with-the-query-api)
+  - [How to mock the content search logic](#how-to-mock-the-content-search-logic)
+- [FakeDb NSubstitute](#fakedb-nsubstitute)
 
 ## <a id="installation"></a>Installation
 
@@ -43,7 +68,7 @@ file using LicenseFile setting if necessary. By default the license file path is
 
 ## <a id="content"></a>Content
 
-### How to create a simple item
+### <a id="how-to-create-a-simple-item"></a>How to create a simple item
 
 The code below creates a fake in-memory database with a single item Home that
 contains field Title with value 'Welcome!' ([xUnit](http://xunit.codeplex.com/)
@@ -64,7 +89,7 @@ public void HowToCreateSimpleItem()
 }
 ```
 
-### How to create an item under System or Media Library
+### <a id="how-to-create-an-item-under-system"></a>How to create an item under System
 
 The code below sets `ParentID` explicitely:
 
@@ -83,7 +108,7 @@ public void HowToCreateItemUnderSystem()
 }
 ```
 
-### How to create an item hierarchy
+### <a id="how-to-create-an-item-hierarchy"></a>How to create an item hierarchy
 
 This code creates root item Articles and two child items Getting Started and Troubleshooting:
 
@@ -108,7 +133,7 @@ public void HowToCreateItemHierarchy()
 }
 ```    
  
-### How to create a multilingual item
+### <a id="how-to-create-a-multilingual-item"></a>How to create a multilingual item
 
 The next example demonstrates how to configure field values for different languages:
 
@@ -133,7 +158,7 @@ public void HowToCreateMultilingualItem()
 }
 ```
 
-### How to create an item of specific template
+### <a id="how-to-create-an-item-of-specific-template"></a>How to create an item of specific template
 
 In some cases you may want to create an item template first and only then add items based on this template.
 It can be acheived using the next sample:
@@ -158,7 +183,7 @@ public void HowToCreateItemWithSpecificTemplate()
 }
 ```
 
-### How to create a versioned item
+### <a id="how-to-create-a-versioned-item"></a>How to create a versioned item
 
 ``` csharp
 [Fact]
@@ -185,7 +210,7 @@ public void HowToCreateVersionedItem()
 }
 ```
 
-### How to create a template with standard values
+### <a id="how-to-create-a-template-with-standard-values"></a>How to create a template with standard values
 
 ``` csharp
 [Fact]
@@ -209,7 +234,7 @@ public void HowToCreateTemplateWithStandardValues()
 }
 ```
 
-### How to create a template hierarchy
+### <a id="how-to-create-a-template-hierarchy"></a>How to create a template hierarchy
 
 ``` csharp
 [Fact]
@@ -248,7 +273,7 @@ By default security allows to perform all the basic item operations without
 any additional configuration. For advanced scenarios where some security logic 
 needs to be unit tested mocked providers and provider switchers can be used.
 
-### How to mock Authentication Provider
+### <a id="how-to-mock-authentication-provider"></a>How to mock Authentication Provider
 
 ``` csharp
 [Fact]
@@ -270,7 +295,7 @@ public void HowToMockAuthenticationProvider()
 }
 ```
 
-### How to mock Authorization Provider
+### <a id="how-to-mock-authorization-provider"></a>How to mock Authorization Provider
 
 ``` csharp
 [Fact]
@@ -308,7 +333,30 @@ public void HowToMockAuthorizationProvider()
 }
 ```
 
-### How to unit test item security with mocked provider
+### <a id="how-to-mock-role-provider"></a>How to mock Role Provider
+
+``` csharp
+[Fact]
+public void HowToMockRoleProvider()
+{
+  // create and configure role provider mock
+  string[] roles = { @"sitecore/Authors", @"sitecore/Editors" };
+
+  var provider = Substitute.For<System.Web.Security.RoleProvider>();
+  provider.GetAllRoles().Returns(roles);
+
+  // switch the role provider so the mocked version is used
+  using (new Sitecore.FakeDb.Security.Web.RoleProviderSwitcher(provider))
+  {
+    string[] resultRoles = System.Web.Security.Roles.GetAllRoles();
+
+    Xunit.Assert.True(resultRoles.Contains(@"sitecore/Authors"));
+    Xunit.Assert.True(resultRoles.Contains(@"sitecore/Editors"));
+  }
+}
+```
+
+### <a id="how-to-unit-test-item-security-with-mocked-provider"></a>How to unit test item security with mocked provider
 
 ``` csharp
 [Fact]
@@ -356,7 +404,7 @@ public void HowToUnitTestItemSecurityWithMockedProvider()
 }
 ```
 
-### How to unit test item security with fake provider
+### <a id="how-to-unit-test-item-security-with-fake-provider"></a>How to unit test item security with fake provider
 
 ``` csharp
 [Fact]
@@ -390,30 +438,7 @@ public void HowToUnitTestItemSecurityWithFakeProvider()
 }
 ```
 
-### How to mock Role Provider
-
-``` csharp
-[Fact]
-public void HowToMockRoleProvider()
-{
-  // create and configure role provider mock
-  string[] roles = { @"sitecore/Authors", @"sitecore/Editors" };
-
-  var provider = Substitute.For<System.Web.Security.RoleProvider>();
-  provider.GetAllRoles().Returns(roles);
-
-  // switch the role provider so the mocked version is used
-  using (new Sitecore.FakeDb.Security.Web.RoleProviderSwitcher(provider))
-  {
-    string[] resultRoles = System.Web.Security.Roles.GetAllRoles();
-
-    Xunit.Assert.True(resultRoles.Contains(@"sitecore/Authors"));
-    Xunit.Assert.True(resultRoles.Contains(@"sitecore/Editors"));
-  }
-}
-```
-
-### How to switch Context User
+### <a id="how-to-switch-context-user"></a>How to switch Context User
 
 ``` csharp
 [Fact]
@@ -426,7 +451,7 @@ public void HowToSwitchContextUser()
 }
 ```
 
-### How to configure Item Access
+### <a id="how-to-configure-item-access"></a>How to configure Item Access
 
 The code below denies item read, so that GetItem() method returns null: 
 
@@ -451,7 +476,7 @@ public void HowToConfigureItemAccess()
 
 ## <a id="pipelines"></a>Pipelines
 
-### How to unit test a pipeline call
+### <a id="how-to-unit-test-a-pipeline-call"></a>How to unit test a pipeline call
 
 Imagine you have a product repository. The repository should be able to get a 
 product by id. The implementation of the repository is 'thin' and does nothing 
@@ -491,7 +516,7 @@ private partial class ProductRepository
 }
 ```
 
-### How to configure the pipeline behaviour
+### <a id="how-to-configure-a-pipeline-behaviour"></a>How to configure a pipeline behaviour
 
 The code sample above checks that the pipeline is called with proper arguments. 
 The next scenario would be to validate the pipeline call results. 
@@ -542,7 +567,7 @@ private partial class ProductRepository
 
 ## <a id="configuration"></a>Configuration
 
-### How to configure settings
+### <a id="how-to-configure-settings"></a>How to configure Settings
 
 In some cases you may prefer to use a setting instead of a dependency injected 
 in your code via constructor or property. The code below instantiates new Db 
@@ -567,7 +592,7 @@ public void HowToConfigureSettings()
 }
 ```
 
-### Database lifetime configuration
+### <a id="database-lifetime-configuration"></a>Database lifetime configuration
 
 By default Sitecore set `singleInstance="true"` for all databases so that each 
 of the three default databases behaves as singletones. This approach has list 
@@ -606,7 +631,7 @@ allowing developers to choose between usability or isolation.
 
 ## <a id="miscellaneous"></a>Miscellaneous    
 
-### How to translate texts
+### <a id="how-to-unit-test-localization"></a>How to unit test localization
 
 FakeDb supports simple localization mechanism. You can call Translate.Text() or
 Translate.TextByLanguage() method to get a 'translated' version of the original text.
@@ -614,7 +639,7 @@ The translated version has got language name added to the initial phrase.
 
 ``` csharp
 [Fact]
-public void HowToTranslateTexts()
+public void HowToUnitTestLocalization()
 {
   // init languages
   Sitecore.Globalization.Language en = Sitecore.Globalization.Language.Parse("en");
@@ -631,7 +656,7 @@ public void HowToTranslateTexts()
 }
 ```
 
-### How to work with LinkDatabase
+### <a id="how-to-work-with-link-database"></a>How to work with Link Database
 
 ``` csharp
 [Fact]
@@ -687,7 +712,7 @@ public void HowToWorkWithLinkDatabase()
 }
 ```
 
-### How to mock Media Provider
+### <a id="how-to-mock-media-provider"></a>How to mock Media Provider
 
 ``` csharp
 [Fact]
@@ -722,7 +747,7 @@ public void HowToMockMediaItemProvider()
 }
 ```
 
-### How to work with the Query API
+### <a id="how-to-work-with-the-query-api"></a>How to work with the Query API
 
 The `Query` API needs `Context.Database` set and the example below uses 
 `DatabaseSwitcher` to do so:
@@ -750,7 +775,7 @@ public void HowToWorkWithQueryApi()
 }
 ```
 
-### How to mock the content search logic
+### <a id="how-to-mock-the-content-search-logic"></a>How to mock the content search logic
 
 The example below creates and configure a content search index mock so that it returns Home item:
 
@@ -797,7 +822,7 @@ public void HowToMockContentSearchLogic()
 }
 ```
     
-## FakeDb NSubstitute
+## <a id="fakedb-nsubstitute"></a>FakeDb NSubstitute
 Mocking is one of the fundamental things about unit testing. Mock objects 
 allows to simulate an abstraction behaviour keeping unit tests fast and 
 isolated.
@@ -824,6 +849,6 @@ To instantiate a mock object NSubstitute Factory should be used:
 This configuration allows BucketManager to create a new mocked instance of the 
 BucketProvider class.
 
-*WARNING: BucketManager is a static class. It means that the mocked 
+***WARNING:** BucketManager is a static class. It means that the mocked 
 BucketProvider instance can be shared between different unit tests which 
 may lead to unstable sceanrios.*

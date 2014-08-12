@@ -222,6 +222,25 @@
     }
 
     [Fact]
+    public void HowToMockRoleProvider()
+    {
+      // create and configure role provider mock
+      string[] roles = { @"sitecore/Authors", @"sitecore/Editors" };
+
+      var provider = Substitute.For<System.Web.Security.RoleProvider>();
+      provider.GetAllRoles().Returns(roles);
+
+      // switch the role provider so the mocked version is used
+      using (new Sitecore.FakeDb.Security.Web.RoleProviderSwitcher(provider))
+      {
+        string[] resultRoles = System.Web.Security.Roles.GetAllRoles();
+
+        Xunit.Assert.True(resultRoles.Contains(@"sitecore/Authors"));
+        Xunit.Assert.True(resultRoles.Contains(@"sitecore/Editors"));
+      }
+    }
+
+    [Fact]
     public void HowToUnitTestItemSecurityWithMockedProvider()
     {
       // create sample item
@@ -292,25 +311,6 @@
 
         // check the account cannot read the item
         Xunit.Assert.False(home.Security.CanRead(account));
-      }
-    }
-
-    [Fact]
-    public void HowToMockRoleProvider()
-    {
-      // create and configure role provider mock
-      string[] roles = { @"sitecore/Authors", @"sitecore/Editors" };
-
-      var provider = Substitute.For<System.Web.Security.RoleProvider>();
-      provider.GetAllRoles().Returns(roles);
-
-      // switch the role provider so the mocked version is used
-      using (new Sitecore.FakeDb.Security.Web.RoleProviderSwitcher(provider))
-      {
-        string[] resultRoles = System.Web.Security.Roles.GetAllRoles();
-
-        Xunit.Assert.True(resultRoles.Contains(@"sitecore/Authors"));
-        Xunit.Assert.True(resultRoles.Contains(@"sitecore/Editors"));
       }
     }
 
@@ -480,7 +480,7 @@
     /// The translated version has got language name added to the initial phrase.
     /// </summary>
     [Fact]
-    public void HowToTranslateTexts()
+    public void HowToUnitTestLocalization()
     {
       // init languages
       Sitecore.Globalization.Language en = Sitecore.Globalization.Language.Parse("en");
