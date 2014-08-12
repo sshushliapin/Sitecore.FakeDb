@@ -16,14 +16,14 @@ replicate the real providers behavior. Its used as stubs with minimal logic and
 can be replaced by mocks in unit tests using special provider switchers.
 
 ## Contents
-- [Installation](#Installation)
-- [Content](#Content)
-- [Security](#Security)
-- [Pipelines](#Pipelines)
-- [Configuration](#Configuration)
-- [Miscellaneous](#Miscellaneous)
+- [Installation](#installation)
+- [Content](#content)
+- [Security](#security)
+- [Pipelines](#pipelines)
+- [Configuration](#configuration)
+- [Miscellaneous](#miscellaneous)
 
-## <a id="Installation" /> Installation
+## <a id="installation"></a>Installation
 
 Sitecore FakeDb is available on NuGet.
 To install the framework:
@@ -41,7 +41,7 @@ file using LicenseFile setting if necessary. By default the license file path is
       <setting name="LicenseFile" value="..\..\license.xml" />
       ```
 
-## <a id="Content" /> Content
+## <a id="content"></a>Content
 
 ### How to create a simple item
 
@@ -242,7 +242,7 @@ public void HowToCreateTemplateHierarchy()
 ```
 
 
-## <a id="Security" /> Security
+## <a id="Security"></a>Security
 
 By default security allows to perform all the basic item operations without 
 any additional configuration. For advanced scenarios where some security logic 
@@ -336,7 +336,8 @@ public void HowToUnitTestItemSecurityWithMockedProvider()
       Sitecore.Security.AccessControl.AccessRuleCollection rules =
         new Sitecore.Security.AccessControl.AccessRuleCollection
           {
-            Sitecore.Security.AccessControl.AccessRule.Create(account, accessRight, propagationType, permission)
+            Sitecore.Security.AccessControl.AccessRule.Create
+              (account, accessRight, propagationType, permission)
           };
       Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(home, rules);
 
@@ -348,8 +349,8 @@ public void HowToUnitTestItemSecurityWithMockedProvider()
           NSubstitute.Arg.Is<Sitecore.Security.AccessControl.AccessRuleCollection>(
             r => r[0].Account.Name == @"sitecore\Editors"
               && r[0].AccessRight.Name == "item:read"
-              && r[0].PropagationType == Sitecore.Security.AccessControl.PropagationType.Entity
-              && r[0].SecurityPermission == Sitecore.Security.AccessControl.SecurityPermission.DenyAccess));
+              && r[0].PropagationType.ToString() == "Entity"
+              && r[0].SecurityPermission.ToString() == "DenyAccess"));
     }
   }
 }
@@ -378,7 +379,8 @@ public void HowToUnitTestItemSecurityWithFakeProvider()
     Sitecore.Security.AccessControl.AccessRuleCollection rules =
       new Sitecore.Security.AccessControl.AccessRuleCollection
           {
-            Sitecore.Security.AccessControl.AccessRule.Create(account, accessRight, propagationType, permission)
+            Sitecore.Security.AccessControl.AccessRule.Create
+              (account, accessRight, propagationType, permission)
           };
     Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(home, rules);
 
@@ -447,7 +449,7 @@ public void HowToConfigureItemAccess()
 ```
 
 
-## <a id="Pipelines" /> Pipelines
+## <a id="pipelines"></a>Pipelines
 
 ### How to unit test a pipeline call
 
@@ -538,7 +540,7 @@ private partial class ProductRepository
 ```
 
 
-## <a id="Configuration" /> Configuration
+## <a id="configuration"></a>Configuration
 
 ### How to configure settings
 
@@ -602,7 +604,7 @@ Sitecore FakeDb can deal with both single or transcient lifetime modes
 allowing developers to choose between usability or isolation.
 
 
-## <a id="Miscellaneous" /> Miscellaneous    
+## <a id="miscellaneous"></a>Miscellaneous    
 
 ### How to translate texts
 
@@ -813,7 +815,8 @@ To instantiate a mock object NSubstitute Factory should be used:
 ``` xml
 <bucketManager enabled="true">
   <providers>
-    <add name="mock" factory="nsubstitute" ref="Sitecore.Buckets.Managers.BucketProvider, Sitecore.Buckets" />
+    <add name="mock" factory="nsubstitute"
+      ref="Sitecore.Buckets.Managers.BucketProvider, Sitecore.Buckets" />
   </providers>
 </bucketManager>
 ```

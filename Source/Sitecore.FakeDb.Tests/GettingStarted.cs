@@ -246,7 +246,8 @@
           Sitecore.Security.AccessControl.AccessRuleCollection rules =
             new Sitecore.Security.AccessControl.AccessRuleCollection
               {
-                Sitecore.Security.AccessControl.AccessRule.Create(account, accessRight, propagationType, permission)
+                Sitecore.Security.AccessControl.AccessRule.Create
+                  (account, accessRight, propagationType, permission)
               };
           Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(home, rules);
 
@@ -258,8 +259,8 @@
               NSubstitute.Arg.Is<Sitecore.Security.AccessControl.AccessRuleCollection>(
                 r => r[0].Account.Name == @"sitecore\Editors"
                   && r[0].AccessRight.Name == "item:read"
-                  && r[0].PropagationType == Sitecore.Security.AccessControl.PropagationType.Entity
-                  && r[0].SecurityPermission == Sitecore.Security.AccessControl.SecurityPermission.DenyAccess));
+                  && r[0].PropagationType.ToString() == "Entity"
+                  && r[0].SecurityPermission.ToString() == "DenyAccess"));
         }
       }
     }
@@ -284,7 +285,8 @@
         Sitecore.Security.AccessControl.AccessRuleCollection rules =
           new Sitecore.Security.AccessControl.AccessRuleCollection
               {
-                Sitecore.Security.AccessControl.AccessRule.Create(account, accessRight, propagationType, permission)
+                Sitecore.Security.AccessControl.AccessRule.Create
+                  (account, accessRight, propagationType, permission)
               };
         Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(home, rules);
 
