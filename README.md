@@ -862,4 +862,4 @@ BucketProvider class.
 
 *<b>WARNING:</b> BucketManager is a static class. It means that the mocked 
 BucketProvider instance can be shared between different unit tests which 
-may lead to unstable sceanrios.*
+may lead to unstable behavior.*
