@@ -2,12 +2,17 @@
 {
   using System.Linq;
   using NSubstitute;
+  using Xunit;
 
   public class GettingStarted
   {
     #region Content
 
-    [Xunit.Fact]
+    /// <summary>
+    /// The code below creates a fake in-memory database with a single item Home that
+    /// contains field Title with value 'Welcome!' (xUnit unit testing framework is used):
+    /// </summary>
+    [Fact]
     public void HowToCreateSimpleItem()
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
@@ -15,17 +20,17 @@
           new Sitecore.FakeDb.DbItem("Home") { { "Title", "Welcome!" } }
         })
       {
-        Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
-        Xunit.Assert.Equal("Welcome!", homeItem["Title"]);
+        Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
+        Xunit.Assert.Equal("Welcome!", home["Title"]);
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToCreateItemUnderSystem()
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
         {
-          new Sitecore.FakeDb.DbItem("home") { ParentID = Sitecore.ItemIDs.SystemRoot }
+          new Sitecore.FakeDb.DbItem("Home") { ParentID = Sitecore.ItemIDs.SystemRoot }
         })
       {
         Sitecore.Data.Items.Item home = db.GetItem("/sitecore/system/home");
@@ -33,7 +38,7 @@
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToCreateItemHierarchy()
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
@@ -47,12 +52,12 @@
       {
         Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/Articles");
 
-        Xunit.Assert.NotNull(articles["Getting Started"]);
-        Xunit.Assert.NotNull(articles["Troubleshooting"]);
+        Xunit.Assert.NotNull(articles.Children["Getting Started"]);
+        Xunit.Assert.NotNull(articles.Children["Troubleshooting"]);
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToCreateMultilingualItem()
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
@@ -71,7 +76,7 @@
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToCreateItemWithSpecificTemplate()
     {
       Sitecore.Data.ID templateId = Sitecore.Data.ID.NewID;
@@ -89,7 +94,7 @@
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToCreateVersionedItem()
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
@@ -112,24 +117,27 @@
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToCreateTemplateWithStandardValues()
     {
       var templateId = new Sitecore.Data.TemplateID(Sitecore.Data.ID.NewID);
 
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
         {
-          new Sitecore.FakeDb.DbTemplate("sample", templateId) { { "Title", "$name" } }
+          // create template with field Title and standard value $name
+          new Sitecore.FakeDb.DbTemplate("Sample", templateId) { { "Title", "$name" } }
         })
       {
+        // add item based on the template to the content root
         Sitecore.Data.Items.Item contentRoot = db.GetItem(Sitecore.ItemIDs.ContentRoot);
         Sitecore.Data.Items.Item item = contentRoot.Add("Home", templateId);
 
+        // the Title field is set to 'Home'
         Xunit.Assert.Equal("Home", item["Title"]);
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToCreateTemplateHierarchy()
     {
       var baseTemplateIdOne = Sitecore.Data.ID.NewID;
@@ -146,7 +154,8 @@
           }
       })
       {
-        var template = Sitecore.Data.Managers.TemplateManager.GetTemplate(templateId, db.Database);
+        var template =
+          Sitecore.Data.Managers.TemplateManager.GetTemplate(templateId, db.Database);
 
         Xunit.Assert.Contains(baseTemplateIdOne, template.BaseIDs);
         Xunit.Assert.Contains(baseTemplateIdTwo, template.BaseIDs);
@@ -158,66 +167,9 @@
 
     #endregion
 
-    #region Links
-
-    [Xunit.Fact]
-    public void HowToWorkWithLinkDatabase()
-    {
-      // arrange your database and items
-      Sitecore.Data.ID sourceId = Sitecore.Data.ID.NewID;
-
-      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-      {
-        new Sitecore.FakeDb.DbItem("source", sourceId),
-        new Sitecore.FakeDb.DbItem("clone"),
-        new Sitecore.FakeDb.DbItem("alias", Sitecore.Data.ID.NewID, Sitecore.TemplateIDs.Alias)
-        {
-          // not really needed but this is how aliases look in the real world
-          new Sitecore.FakeDb.DbField("Linked item")
-          {
-            Type = "Link",
-            Value = string.Format("<link linktype='internal' id='{0}' />", sourceId)
-          }
-        }
-      })
-      {
-        // arrange desired LinkDatabase behavior
-        var behavior = Substitute.For<Sitecore.Links.LinkDatabase>();
-
-        Sitecore.Data.Items.Item source = db.GetItem("/sitecore/content/source");
-        Sitecore.Data.Items.Item alias = db.GetItem("/sitecore/content/alias");
-        Sitecore.Data.Items.Item clone = db.GetItem("/sitecore/content/clone");
-
-        behavior.GetReferrers(source).Returns(new[]
-        {
-          new Sitecore.Links.ItemLink(alias, alias.Fields["Linked item"].ID, source, source.Paths.FullPath),
-          new Sitecore.Links.ItemLink(clone, Sitecore.FieldIDs.Source, source, source.Paths.FullPath)
-        });
-
-        // act & assert
-
-        // link database is clean
-        Xunit.Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
-
-        using (new Sitecore.FakeDb.Links.LinkDatabaseSwitcher(behavior))
-        {
-          Sitecore.Links.ItemLink[] referrers = Sitecore.Globals.LinkDatabase.GetReferrers(source);
-
-          Xunit.Assert.Equal(referrers.Count(), 2);
-          Xunit.Assert.Equal(referrers.Count(r => r.SourceItemID == clone.ID && r.TargetItemID == source.ID), 1);
-          Xunit.Assert.Equal(referrers.Count(r => r.SourceItemID == alias.ID && r.TargetItemID == source.ID), 1);
-        }
-
-        // link database is clean again
-        Xunit.Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
-      }
-    }
-
-    #endregion
-
     #region Security
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToMockAuthenticationProvider()
     {
       // create and configure authentication provider mock
@@ -227,66 +179,50 @@
       // switch the authentication provider so the mocked version is used
       using (new Sitecore.Security.Authentication.AuthenticationSwitcher(provider))
       {
-        // the authentication manager is called with the expected parameters. It returns 'true'
+        // the authentication manager is called with the expected parameters. It returns True
         Xunit.Assert.True(Sitecore.Security.Authentication.AuthenticationManager.Login("John", true));
 
-        // the authentication manager is called with some unexpected parameters. It returns 'false'
+        // the authentication manager is called with some unexpected parameters. It returns False
         Xunit.Assert.False(Sitecore.Security.Authentication.AuthenticationManager.Login("Robber", true));
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToMockAuthorizationProvider()
     {
-      // create sample users
-      var editorUser = Sitecore.Security.Accounts.User.FromName(@"extranet\Editor", true);
-      var anonymousUser = Sitecore.Security.Accounts.User.FromName(@"extranet\Anonymous", true);
-
-      // define access permissions
-      var allowAccessResult = new Sitecore.FakeDb.Security.AccessControl.AllowAccessResult();
-      var denyAccessResult = new Sitecore.FakeDb.Security.AccessControl.DenyAccessResult();
+      // create sample user
+      var user = Sitecore.Security.Accounts.User.FromName(@"extranet\John", true);
 
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
         {
           new Sitecore.FakeDb.DbItem("home")
         })
       {
-        Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
+        Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
 
-        // create and configure authorization provider mock
+        // configure authorization provider mock to deny item read for the user
         var provider = Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
-        var itemReadAccessRight = Sitecore.Security.AccessControl.AccessRight.ItemRead;
         provider
-          .GetAccess(homeItem, editorUser, itemReadAccessRight)
-          .Returns(allowAccessResult);
-        provider
-          .GetAccess(homeItem, anonymousUser, itemReadAccessRight)
-          .Returns(denyAccessResult);
+          .GetAccess(home, user, Sitecore.Security.AccessControl.AccessRight.ItemRead)
+          .Returns(new Sitecore.FakeDb.Security.AccessControl.DenyAccessResult());
 
         // switch the authorization provider
         using (new Sitecore.FakeDb.Security.AccessControl.AuthorizationSwitcher(provider))
         {
-          // check the access result for different accounts
-          bool allowReadForEditor =
+          // check the user cannot read the item
+          bool canRead =
             Sitecore.Security.AccessControl.AuthorizationManager.IsAllowed(
-              homeItem,
+              home,
               Sitecore.Security.AccessControl.AccessRight.ItemRead,
-              editorUser);
+              user);
 
-          bool allowReadForAnonymous =
-            Sitecore.Security.AccessControl.AuthorizationManager.IsAllowed(
-              homeItem,
-              Sitecore.Security.AccessControl.AccessRight.ItemRead,
-              anonymousUser);
-
-          Xunit.Assert.True(allowReadForEditor);
-          Xunit.Assert.False(allowReadForAnonymous);
+          Xunit.Assert.False(canRead);
         }
       }
     }
 
-    [Xunit.Fact]
-    public void HowToCheckItemSecurityWithMocks()
+    [Fact]
+    public void HowToUnitTestItemSecurityWithMockedProvider()
     {
       // create sample item
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
@@ -294,14 +230,15 @@
           new Sitecore.FakeDb.DbItem("home")
         })
       {
-        var item = db.GetItem("/sitecore/content/home");
+        Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
 
         // substitute the authorization provider
         var provider = Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
+
         using (new Sitecore.FakeDb.Security.AccessControl.AuthorizationSwitcher(provider))
         {
-          // call your business logic that changes the item security, e.g. denies Read for Everyone
-          var account = Sitecore.Security.Accounts.Role.FromName("Everyone");
+          // call your business logic that changes the item security, e.g. denies Read for Editors
+          var account = Sitecore.Security.Accounts.Role.FromName(@"sitecore\Editors");
           var accessRight = Sitecore.Security.AccessControl.AccessRight.ItemRead;
           var propagationType = Sitecore.Security.AccessControl.PropagationType.Entity;
           var permission = Sitecore.Security.AccessControl.AccessPermission.Deny;
@@ -311,15 +248,15 @@
               {
                 Sitecore.Security.AccessControl.AccessRule.Create(account, accessRight, propagationType, permission)
               };
-          Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(item, rules);
+          Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(home, rules);
 
           // check the provider is called with proper arguments
           provider
             .Received()
             .SetAccessRules(
-              item,
+              home,
               NSubstitute.Arg.Is<Sitecore.Security.AccessControl.AccessRuleCollection>(
-                r => r[0].Account.Name == "Everyone"
+                r => r[0].Account.Name == @"sitecore\Editors"
                   && r[0].AccessRight.Name == "item:read"
                   && r[0].PropagationType == Sitecore.Security.AccessControl.PropagationType.Entity
                   && r[0].SecurityPermission == Sitecore.Security.AccessControl.SecurityPermission.DenyAccess));
@@ -327,8 +264,8 @@
       }
     }
 
-    [Xunit.Fact]
-    public void HowToCheckItemSecurityWithFakeProviders()
+    [Fact]
+    public void HowToUnitTestItemSecurityWithFakeProvider()
     {
       // create sample item
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
@@ -336,10 +273,10 @@
           new Sitecore.FakeDb.DbItem("home")
         })
       {
-        var item = db.GetItem("/sitecore/content/home");
+        Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
 
-        // call your business logic that changes the item security, e.g. denies Read for Everyone
-        var account = Sitecore.Security.Accounts.Role.FromName("Everyone");
+        // call your business logic that changes the item security, e.g. denies Read for Editors
+        var account = Sitecore.Security.Accounts.Role.FromName(@"sitecore\Editors");
         var accessRight = Sitecore.Security.AccessControl.AccessRight.ItemRead;
         var propagationType = Sitecore.Security.AccessControl.PropagationType.Entity;
         var permission = Sitecore.Security.AccessControl.AccessPermission.Deny;
@@ -349,20 +286,20 @@
               {
                 Sitecore.Security.AccessControl.AccessRule.Create(account, accessRight, propagationType, permission)
               };
-        Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(item, rules);
+        Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(home, rules);
 
         // check the account cannot read the item
-        Xunit.Assert.False(item.Security.CanRead(account));
+        Xunit.Assert.False(home.Security.CanRead(account));
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToMockRoleProvider()
     {
       // create and configure role provider mock
       string[] roles = { @"sitecore/Authors", @"sitecore/Editors" };
 
-      System.Web.Security.RoleProvider provider = Substitute.For<System.Web.Security.RoleProvider>();
+      var provider = Substitute.For<System.Web.Security.RoleProvider>();
       provider.GetAllRoles().Returns(roles);
 
       // switch the role provider so the mocked version is used
@@ -375,7 +312,7 @@
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToSwitchContextUser()
     {
       using (new Sitecore.Security.Accounts.UserSwitcher(@"extranet\John", true))
@@ -384,11 +321,12 @@
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToConfigureItemAccess()
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
         {
+          // set Access.CanRead to False
           new Sitecore.FakeDb.DbItem("home") { Access = { CanRead = false } }
         })
       {
@@ -404,15 +342,14 @@
     #region Pipelines
 
     /// <summary>
-    /// How to ensure the pipeline is called with specific argsuments.
-    /// Imagine you have a product repository. The repository should be able to get a product
-    /// by id. The implementation of the repository is 'thin' and does nothing than calling a
-    /// corresponding pipeline with proper arguments. The next example shows how to unit test
-    /// the pipeline call (please note that the pipeline is not defined in the tests assembly
-    /// config file):
+    /// Imagine you have a product repository. The repository should be able to get a 
+    /// product by id. The implementation of the repository is 'thin' and does nothing 
+    /// else than calling a corresponding pipeline with proper arguments. The next 
+    /// example shows how to unit test the pipeline calls (please note that the 
+    /// pipeline is not defined in config file):
     /// </summary>
-    [Xunit.Fact]
-    public void HowToEnsurePipelineIsCalledWithSpecificArgs()
+    [Fact]
+    public void HowToUnitTestPipelineCall()
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
       {
@@ -448,22 +385,18 @@
     /// In the code below we configure pipeline proressor behaviour to return an expected
     /// product only if the product id is set to "1".
     /// </summary>
-    [Xunit.Fact]
+    [Fact]
     public void HowToConfigurePipelineBehaviour()
     {
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
       {
         // create a product to get from the repository
         object expectedProduct = new object();
-
-        // configure processing of the pipeline arguments. Will set the 'expectedProduct'
-        // instance to CustomData["Product"] property only when the CustomData["ProductId"]
-        // is "1"
         string productId = "1";
 
-        // configure a pipeline watcher to expect a pipeline call where the args custom data
-        // contains ProductId. Once the args received the pipeline result is set into
-        // Product custom data property
+        // configure Pipeline Watcher to expect a pipeline call where the args Custom Data
+        // contains ProductId equals "1". Once the args received the pipeline result is set
+        // to the Product Custom Data property
         db.PipelineWatcher
           .WhenCall("findProductById")
           .WithArgs(a => a.CustomData["ProductId"].Equals(productId))
@@ -493,14 +426,58 @@
 
     #endregion
 
-    #region Globalization
+    #region Configuration
+
+    [Fact]
+    public void HowToConfigureSettings()
+    {
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+      {
+        // set the setting value in unit test using db instance
+        db.Configuration.Settings["MySetting"] = "1234";
+
+        // get the setting value in your code using regular Sitecore API
+        var value = Sitecore.Configuration.Settings.GetSetting("MySetting");
+        Xunit.Assert.Equal("1234", value);
+      }
+    }
+
+    /// <summary>
+    /// By default Sitecore set `singleInstance="true"` for all databases so that each 
+    /// of the three default databases behaves as singletones. This approach has list 
+    /// of pros and cons; it is important to be avare about potential issues that may 
+    /// appear.
+    /// 
+    /// Single instance allows one to resolve a database in any place of code using 
+    /// Sitecore Factory. The same content is available no matter how many times the 
+    /// database has been resolved. The next code creates item Home using simplified 
+    /// FakeDb API and then reads the item from database resolved from Factory:
+    /// </summary>
+    [Fact]
+    public void HowToGetItemFromSitecoreDatabase()
+    {
+      using (new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("Home")
+        })
+      {
+        Sitecore.Data.Database database =
+          Sitecore.Configuration.Factory.GetDatabase("master");
+
+        Xunit.Assert.NotNull(database.GetItem("/sitecore/content/home"));
+      }
+    }
+
+    #endregion
+
+    #region Miscellaneous
 
     /// <summary>
     /// FakeDb supports simple localization mechanism. You can call Translate.Text() or
     /// Translate.TextByLanguage() method to get a 'translated' version of the original text.
     /// The translated version has got language name added to the initial phrase.
     /// </summary>
-    [Xunit.Fact]
+    [Fact]
     public void HowToTranslateTexts()
     {
       // init languages
@@ -517,42 +494,59 @@
       Xunit.Assert.Equal("da:Welcome!", daTranslation);
     }
 
-    #endregion
-
-    #region Configuration
-
-    [Xunit.Fact]
-    public void HowToConfigureSettings()
+    [Fact]
+    public void HowToWorkWithLinkDatabase()
     {
-      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+      // arrange your database and items
+      Sitecore.Data.ID sourceId = Sitecore.Data.ID.NewID;
+      Sitecore.Data.ID aliasId = Sitecore.Data.ID.NewID;
+      Sitecore.Data.ID linkedItemId = Sitecore.Data.ID.NewID;
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
       {
-        // set the setting value in unit test using db instance
-        db.Configuration.Settings["MySetting"] = "1234";
-
-        // get the setting value in your code using regular Sitecore API
-        var value = Sitecore.Configuration.Settings.GetSetting("MySetting");
-        Xunit.Assert.Equal("1234", value);
-      }
-    }
-
-    [Xunit.Fact]
-    public void HowToGetItemFromSitecoreDatabase()
-    {
-      using (new Sitecore.FakeDb.Db
+        new Sitecore.FakeDb.DbItem("source", sourceId),
+        new Sitecore.FakeDb.DbItem("clone"),
+        new Sitecore.FakeDb.DbItem("alias", aliasId, Sitecore.TemplateIDs.Alias)
         {
-          new Sitecore.FakeDb.DbItem("Home")
-        })
+          new Sitecore.FakeDb.DbField("Linked item", linkedItemId)
+        }
+      })
       {
-        Sitecore.Data.Database database = Sitecore.Configuration.Factory.GetDatabase("master");
-        Xunit.Assert.NotNull(database.GetItem("/sitecore/content/home"));
+        // arrange desired LinkDatabase behavior
+        var behavior = Substitute.For<Sitecore.Links.LinkDatabase>();
+
+        Sitecore.Data.Items.Item source = db.GetItem("/sitecore/content/source");
+        Sitecore.Data.Items.Item alias = db.GetItem("/sitecore/content/alias");
+        Sitecore.Data.Items.Item clone = db.GetItem("/sitecore/content/clone");
+
+        string sourcePath = source.Paths.FullPath;
+        behavior.GetReferrers(source).Returns(new[]
+        {
+          new Sitecore.Links.ItemLink(alias, linkedItemId, source, sourcePath),
+          new Sitecore.Links.ItemLink(clone, Sitecore.FieldIDs.Source, source, sourcePath)
+        });
+
+        // link database is clean
+        Xunit.Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
+
+        using (new Sitecore.FakeDb.Links.LinkDatabaseSwitcher(behavior))
+        {
+          Sitecore.Links.ItemLink[] referrers =
+            Sitecore.Globals.LinkDatabase.GetReferrers(source);
+
+          Xunit.Assert.Equal(referrers.Count(), 2);
+          Xunit.Assert.Equal(referrers.Count(r => r.SourceItemID == clone.ID
+            && r.TargetItemID == source.ID), 1);
+          Xunit.Assert.Equal(referrers.Count(r => r.SourceItemID == alias.ID
+            && r.TargetItemID == source.ID), 1);
+        }
+
+        // link database is clean again
+        Xunit.Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
       }
     }
 
-    #endregion
-
-    #region Media
-
-    [Xunit.Fact]
+    [Fact]
     public void HowToMockMediaItemProvider()
     {
       const string MyImageUrl = "~/media/myimage.ashx";
@@ -583,14 +577,13 @@
       }
     }
 
-    #endregion
-
-    #region Miscellaneous
-
-    [Xunit.Fact]
+    [Fact]
     public void HowToWorkWithQueryApi()
     {
-      using (var db = new Sitecore.FakeDb.Db { new Sitecore.FakeDb.DbItem("home") })
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db 
+        {
+          new Sitecore.FakeDb.DbItem("home")
+        })
       {
         var query = "/sitecore/content/*[@@key = 'home']";
 
@@ -605,7 +598,7 @@
       }
     }
 
-    [Xunit.Fact]
+    [Fact]
     public void HowToMockContentSearchLogic()
     {
       try

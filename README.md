@@ -1,11 +1,29 @@
 Sitecore FakeDb
 ===============
 
-A unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory. 
-Designed to minimize efforts for the test content initialization keeping focus on the minimal test data rather 
-than comprehensive content tree representation.
+A unit testing framework for Sitecore that enables creation and manipulation of 
+Sitecore content in memory. Designed to minimize efforts for the test content 
+initialization keeping focus on the minimal test data rather than comprehensive 
+content tree representation.
 
-## Installation
+Sitecore FakeDb does not set goal to run entire Sitecore instance in-memory. 
+It is a unit testing framework which is not supposed to be used for integration 
+testing.
+
+FakeDb substitutes real Sitecore providers with fake "in-memory" providers to 
+avoid calls to databases or configuration. The fake providers does not 
+replicate the real providers behavior. Its used as stubs with minimal logic and
+can be replaced by mocks in unit tests using special provider switchers.
+
+## Contents
+- [Installation](#Installation)
+- [Content](#Content)
+- [Security](#Security)
+- [Pipelines](#Pipelines)
+- [Configuration](#Configuration)
+- [Miscellaneous](#Miscellaneous)
+
+## <a id="Installation" /> Installation
 
 Sitecore FakeDb is available on NuGet.
 To install the framework:
@@ -16,59 +34,62 @@ To install the framework:
 
       `Install-Package Sitecore.FakeDb`
 
-4. Open App.config file added by the package and update path to the license.xml file using LicenseFile setting if necessary. By default the license file path is set to the root folder of the project:
+4. Open App.config file added by the package and update path to the license.xml
+file using LicenseFile setting if necessary. By default the license file path is set to the root folder of the project:
 
       ``` xml
       <setting name="LicenseFile" value="..\..\license.xml" />
       ```
 
-## How do I...
-### How do I create a simple item
+## <a id="Content" /> Content
 
-The code below creates a fake in-memory database with a single item Home that contains field Title with value 'Welcome!' 
-([xUnit](http://xunit.codeplex.com/) unit testing framework is used):
+### How to create a simple item
+
+The code below creates a fake in-memory database with a single item Home that
+contains field Title with value 'Welcome!' ([xUnit](http://xunit.codeplex.com/)
+unit testing framework is used):
 
 ``` csharp
 [Fact]
-public void HowDoICreateASimpleItem()
+public void HowToCreateSimpleItem()
 {
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
     {
       new Sitecore.FakeDb.DbItem("Home") { { "Title", "Welcome!" } }
     })
   {
-    Sitecore.Data.Items.Item homeItem = db.GetItem("/sitecore/content/home");
-    Assert.Equal("Welcome!", homeItem["Title"]);
+    Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
+    Xunit.Assert.Equal("Welcome!", home["Title"]);
   }
 }
 ```
 
-### How do I create an item under system or media library
+### How to create an item under System or Media Library
 
 The code below sets `ParentID` explicitely:
 
 ```csharp
 [Fact]
-public void HowDoICreateAnItemUnderSystem()
+public void HowToCreateItemUnderSystem()
 {
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-  {
-    new Sitecore.FakeDb.DbItem("home") {ParentID = Sitecore.ItemIDs.SystemRoot}
-  })
+    {
+      new Sitecore.FakeDb.DbItem("Home") { ParentID = Sitecore.ItemIDs.SystemRoot }
+    })
   {
     Sitecore.Data.Items.Item home = db.GetItem("/sitecore/system/home");
-    Assert.Equal("home", home.Key);
+    Xunit.Assert.Equal("home", home.Key);
   }
 }
 ```
 
-### How do I create an item hierarchy
+### How to create an item hierarchy
 
-This code creates a root item Articles and two child items Getting Started and Troubleshooting:
+This code creates root item Articles and two child items Getting Started and Troubleshooting:
 
 ``` csharp
 [Fact]
-public void HowDoICreateAnItemHierarchy()
+public void HowToCreateItemHierarchy()
 {
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
     {
@@ -80,19 +101,20 @@ public void HowDoICreateAnItemHierarchy()
     })
   {
     Sitecore.Data.Items.Item articles = db.GetItem("/sitecore/content/Articles");
-    Assert.NotNull(articles["Getting Started"]);
-    Assert.NotNull(articles["Troubleshooting"]);
+
+    Xunit.Assert.NotNull(articles.Children["Getting Started"]);
+    Xunit.Assert.NotNull(articles.Children["Troubleshooting"]);
   }
 }
 ```    
  
-### How do I create a multilingual item
+### How to create a multilingual item
 
 The next example demonstrates how to configure field values for different languages:
 
 ``` csharp
 [Fact]
-public void HowDoICreateAMultilingualItem()
+public void HowToCreateMultilingualItem()
 {
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
     {
@@ -103,22 +125,22 @@ public void HowDoICreateAMultilingualItem()
     })
   {
     Sitecore.Data.Items.Item homeEn = db.GetItem("/sitecore/content/home", "en");
-    Assert.Equal("Hello!", homeEn["Title"]);
+    Xunit.Assert.Equal("Hello!", homeEn["Title"]);
 
     Sitecore.Data.Items.Item homeDa = db.GetItem("/sitecore/content/home", "da");
-    Assert.Equal("Hej!", homeDa["Title"]);
+    Xunit.Assert.Equal("Hej!", homeDa["Title"]);
   }
 }
 ```
 
-### How do I create an item of specific template
+### How to create an item of specific template
 
 In some cases you may want to create an item template first and only then add items based on this template.
 It can be acheived using the next sample:
 
 ``` csharp
 [Fact]
-public void HowDoICreateAnItemOfSpecificTemplate()
+public void HowToCreateItemWithSpecificTemplate()
 {
   Sitecore.Data.ID templateId = Sitecore.Data.ID.NewID;
 
@@ -129,120 +151,108 @@ public void HowDoICreateAnItemOfSpecificTemplate()
     })
   {
     Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/apple");
-    Assert.Equal(templateId, item.TemplateID);
-    Assert.NotNull(item.Fields["Name"]);
+
+    Xunit.Assert.Equal(templateId, item.TemplateID);
+    Xunit.Assert.NotNull(item.Fields["Name"]);
   }
 }
 ```
 
-### How do I create a versioned item
+### How to create a versioned item
 
 ``` csharp
 [Fact]
-public void HowDoICreateAVersionedItem()
+public void HowToCreateVersionedItem()
 {
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
     {
       new Sitecore.FakeDb.DbItem("home")
         {
-          new Sitecore.FakeDb.DbField("Title") { { "en", 1, "Hello!" }, { "en", 2, "Welcome!" } }
+          new Sitecore.FakeDb.DbField("Title")
+            {
+              { "en", 1, "Hello!" },
+              { "en", 2, "Welcome!" }
+            }
         }
     })
   {
-    Sitecore.Data.Items.Item homeV1 = db.GetItem("/sitecore/content/home", "en", 1);
-    Assert.Equal("Hello!", homeV1["Title"]);
+    Sitecore.Data.Items.Item home1 = db.GetItem("/sitecore/content/home", "en", 1);
+    Xunit.Assert.Equal("Hello!", home1["Title"]);
 
-    Sitecore.Data.Items.Item homeV2 = db.GetItem("/sitecore/content/home", "en", 2);
-    Assert.Equal("Welcome!", homeV2["Title"]);
+    Sitecore.Data.Items.Item home2 = db.GetItem("/sitecore/content/home", "en", 2);
+    Xunit.Assert.Equal("Welcome!", home2["Title"]);
   }
 }
 ```
 
-### How do I create a template with standard values
-
-``` csharp
-    [Fact]
-    public void HowDoICreateATemplateWithStandardValues()
-    {
-      var templateId = Sitecore.Data.ID.NewID;
-
-      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-        {
-          new Sitecore.FakeDb.DbTemplate("sample", templateId) { { "Title", "$name"} }
-        })
-      {
-        var root = db.GetItem(Sitecore.ItemIDs.ContentRoot);
-        var item = Sitecore.Data.Managers.ItemManager.CreateItem("Home", root, templateId);
-        Assert.Equal("Home", item["Title"]);
-      }
-    }
-```
-
-### How do I work with LinkDatabase
+### How to create a template with standard values
 
 ``` csharp
 [Fact]
-public void HowDoIWorkWithLinkDatabase()
+public void HowToCreateTemplateWithStandardValues()
 {
-  // arrange your database and items
+  var templateId = new Sitecore.Data.TemplateID(Sitecore.Data.ID.NewID);
 
-  Sitecore.Data.ID sourceId = Sitecore.Data.ID.NewID;
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+    {
+      // create template with field Title and standard value $name
+      new Sitecore.FakeDb.DbTemplate("Sample", templateId) { { "Title", "$name" } }
+    })
+  {
+    // add item based on the template to the content root
+    Sitecore.Data.Items.Item contentRoot = db.GetItem(Sitecore.ItemIDs.ContentRoot);
+    Sitecore.Data.Items.Item item = contentRoot.Add("Home", templateId);
+
+    // the Title field is set to 'Home'
+    Xunit.Assert.Equal("Home", item["Title"]);
+  }
+}
+```
+
+### How to create a template hierarchy
+
+``` csharp
+[Fact]
+public void HowToCreateTemplateHierarchy()
+{
+  var baseTemplateIdOne = Sitecore.Data.ID.NewID;
+  var baseTemplateIdTwo = Sitecore.Data.ID.NewID;
+  var templateId = Sitecore.Data.ID.NewID;
 
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
   {
-    new Sitecore.FakeDb.DbItem("source", sourceId),
-    new Sitecore.FakeDb.DbItem("clone"),
-    new Sitecore.FakeDb.DbItem("alias", Sitecore.Data.ID.NewID, Sitecore.TemplateIDs.Alias)
-    {
-      // not really needed but this is how aliases look in the real world
-      new Sitecore.FakeDb.DbField("Linked item")
+    new Sitecore.FakeDb.DbTemplate("base one", baseTemplateIdOne),
+    new Sitecore.FakeDb.DbTemplate("base two", baseTemplateIdTwo),
+    new Sitecore.FakeDb.DbTemplate("Main", templateId)
       {
-        Type = "Link",
-        Value = string.Format("<link linktype='internal' id='{0}' />", sourceId)
+        BaseIDs = new[] { baseTemplateIdOne, baseTemplateIdTwo }
       }
-    }
   })
   {
-    // arrange desired LinkDatabase behavior
-        
-    var behavior = Substitute.For<Sitecore.Links.LinkDatabase>();
+    var template =
+      Sitecore.Data.Managers.TemplateManager.GetTemplate(templateId, db.Database);
 
-    Sitecore.Data.Items.Item source = db.GetItem("/sitecore/content/source");
-    Sitecore.Data.Items.Item alias = db.GetItem("/sitecore/content/alias");
-    Sitecore.Data.Items.Item clone = db.GetItem("/sitecore/content/clone");
+    Xunit.Assert.Contains(baseTemplateIdOne, template.BaseIDs);
+    Xunit.Assert.Contains(baseTemplateIdTwo, template.BaseIDs);
 
-    behavior.GetReferrers(source).Returns(new[]
-    {
-      new Sitecore.Links.ItemLink(alias, alias.Fields["Linked item"].ID, source, source.Paths.FullPath),
-      new Sitecore.Links.ItemLink(clone, Sitecore.FieldIDs.Source, source, source.Paths.FullPath)
-    });
-
-    // act & assert
-
-    // link database is clean
-    Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
- 
-    using (new Sitecore.FakeDb.Links.LinkDatabaseSwitcher(behavior))
-    {
-      Sitecore.Links.ItemLink[] referrers = Sitecore.Globals.LinkDatabase.GetReferrers(source);
-
-      Assert.Equal(referrers.Count(), 2);
-      Assert.Equal(referrers.Count(r => r.SourceItemID == clone.ID && r.TargetItemID == source.ID), 1);
-      Assert.Equal(referrers.Count(r => r.SourceItemID == alias.ID && r.TargetItemID == source.ID), 1);
-    }
- 
-      // link database is clean again
-    Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
+    Xunit.Assert.True(template.InheritsFrom(baseTemplateIdOne));
+    Xunit.Assert.True(template.InheritsFrom(baseTemplateIdTwo));
   }
 }
 ```
 
-## Security
-### How do I mock the authentication provider
+
+## <a id="Security" /> Security
+
+By default security allows to perform all the basic item operations without 
+any additional configuration. For advanced scenarios where some security logic 
+needs to be unit tested mocked providers and provider switchers can be used.
+
+### How to mock Authentication Provider
 
 ``` csharp
 [Fact]
-public void HowDoIMockAuthenticationProvider()
+public void HowToMockAuthenticationProvider()
 {
   // create and configure authentication provider mock
   var provider = Substitute.For<Sitecore.Security.Authentication.AuthenticationProvider>();
@@ -251,11 +261,129 @@ public void HowDoIMockAuthenticationProvider()
   // switch the authentication provider so the mocked version is used
   using (new Sitecore.Security.Authentication.AuthenticationSwitcher(provider))
   {
-    // the authentication manager is called with the expected parameters. It returns 'true'
-    Assert.True(Sitecore.Security.Authentication.AuthenticationManager.Login("John", true));
+    // the authentication manager is called with the expected parameters. It returns True
+    Xunit.Assert.True(Sitecore.Security.Authentication.AuthenticationManager.Login("John", true));
 
-    // the authentication manager is called with some unexpected parameters. It returns 'false'
-    Assert.False(Sitecore.Security.Authentication.AuthenticationManager.Login("Robber", true));
+    // the authentication manager is called with some unexpected parameters. It returns False
+    Xunit.Assert.False(Sitecore.Security.Authentication.AuthenticationManager.Login("Robber", true));
+  }
+}
+```
+
+### How to mock Authorization Provider
+
+``` csharp
+[Fact]
+public void HowToMockAuthorizationProvider()
+{
+  // create sample user
+  var user = Sitecore.Security.Accounts.User.FromName(@"extranet\John", true);
+
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+    {
+      new Sitecore.FakeDb.DbItem("home")
+    })
+  {
+    Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
+
+    // configure authorization provider mock to deny item read for the user
+    var provider = Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
+    provider
+      .GetAccess(home, user, Sitecore.Security.AccessControl.AccessRight.ItemRead)
+      .Returns(new Sitecore.FakeDb.Security.AccessControl.DenyAccessResult());
+
+    // switch the authorization provider
+    using (new Sitecore.FakeDb.Security.AccessControl.AuthorizationSwitcher(provider))
+    {
+      // check the user cannot read the item
+      bool canRead =
+        Sitecore.Security.AccessControl.AuthorizationManager.IsAllowed(
+          home,
+          Sitecore.Security.AccessControl.AccessRight.ItemRead,
+          user);
+
+      Xunit.Assert.False(canRead);
+    }
+  }
+}
+```
+
+### How to unit test item security with mocked provider
+
+``` csharp
+[Fact]
+public void HowToUnitTestItemSecurityWithMockedProvider()
+{
+  // create sample item
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+    {
+      new Sitecore.FakeDb.DbItem("home")
+    })
+  {
+    Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
+
+    // substitute the authorization provider
+    var provider = Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
+
+    using (new Sitecore.FakeDb.Security.AccessControl.AuthorizationSwitcher(provider))
+    {
+      // call your business logic that changes the item security, e.g. denies Read for Editors
+      var account = Sitecore.Security.Accounts.Role.FromName(@"sitecore\Editors");
+      var accessRight = Sitecore.Security.AccessControl.AccessRight.ItemRead;
+      var propagationType = Sitecore.Security.AccessControl.PropagationType.Entity;
+      var permission = Sitecore.Security.AccessControl.AccessPermission.Deny;
+
+      Sitecore.Security.AccessControl.AccessRuleCollection rules =
+        new Sitecore.Security.AccessControl.AccessRuleCollection
+          {
+            Sitecore.Security.AccessControl.AccessRule.Create(account, accessRight, propagationType, permission)
+          };
+      Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(home, rules);
+
+      // check the provider is called with proper arguments
+      provider
+        .Received()
+        .SetAccessRules(
+          home,
+          NSubstitute.Arg.Is<Sitecore.Security.AccessControl.AccessRuleCollection>(
+            r => r[0].Account.Name == @"sitecore\Editors"
+              && r[0].AccessRight.Name == "item:read"
+              && r[0].PropagationType == Sitecore.Security.AccessControl.PropagationType.Entity
+              && r[0].SecurityPermission == Sitecore.Security.AccessControl.SecurityPermission.DenyAccess));
+    }
+  }
+}
+```
+
+### How to unit test item security with fake provider
+
+``` csharp
+[Fact]
+public void HowToUnitTestItemSecurityWithFakeProvider()
+{
+  // create sample item
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+    {
+      new Sitecore.FakeDb.DbItem("home")
+    })
+  {
+    Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
+
+    // call your business logic that changes the item security, e.g. denies Read for Editors
+    var account = Sitecore.Security.Accounts.Role.FromName(@"sitecore\Editors");
+    var accessRight = Sitecore.Security.AccessControl.AccessRight.ItemRead;
+    var propagationType = Sitecore.Security.AccessControl.PropagationType.Entity;
+    var permission = Sitecore.Security.AccessControl.AccessPermission.Deny;
+
+    Sitecore.Security.AccessControl.AccessRuleCollection rules =
+      new Sitecore.Security.AccessControl.AccessRuleCollection
+          {
+            Sitecore.Security.AccessControl.AccessRule.Create(account, accessRight, propagationType, permission)
+          };
+    Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(home, rules);
+
+    // check the account cannot read the item
+    Xunit.Assert.False(home.Security.CanRead(account));
   }
 }
 ```
@@ -263,13 +391,13 @@ public void HowDoIMockAuthenticationProvider()
 ### How to mock Role Provider
 
 ``` csharp
-[Xunit.Fact]
+[Fact]
 public void HowToMockRoleProvider()
 {
   // create and configure role provider mock
   string[] roles = { @"sitecore/Authors", @"sitecore/Editors" };
 
-  System.Web.Security.RoleProvider provider = Substitute.For<System.Web.Security.RoleProvider>();
+  var provider = Substitute.For<System.Web.Security.RoleProvider>();
   provider.GetAllRoles().Returns(roles);
 
   // switch the role provider so the mocked version is used
@@ -283,48 +411,55 @@ public void HowToMockRoleProvider()
 }
 ```
 
-### How do I switch a context user
+### How to switch Context User
 
 ``` csharp
 [Fact]
-public void HowDoISwitchContextUser()
+public void HowToSwitchContextUser()
 {
-  using (new Sitecore.Security.Accounts.UserSwitcher("sitecore\\admin", true))
+  using (new Sitecore.Security.Accounts.UserSwitcher(@"extranet\John", true))
   {
-    Assert.Equal("sitecore\\admin", Sitecore.Context.User.Name);
+    Xunit.Assert.Equal(@"extranet\John", Sitecore.Context.User.Name);
   }
 }
 ```
 
-### How do I configure item access
+### How to configure Item Access
+
 The code below denies item read, so that GetItem() method returns null: 
 
 ``` csharp
 [Fact]
-public void HowDoIConfigureItemAccess()
+public void HowToConfigureItemAccess()
 {
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
     {
+      // set Access.CanRead to False
       new Sitecore.FakeDb.DbItem("home") { Access = { CanRead = false } }
     })
   {
     Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/home");
 
     // item is null because read is denied
-    Assert.Null(item);
+    Xunit.Assert.Null(item);
   }
 }
 ```
 
-## Pipelines
-### How do I ensure the pipeline is called
-Imagine you have a product repository. The repository should be able to get a product by id.
-The implementation of the repository is 'thin' and does nothing than calling a corresponding pipeline with proper arguments.
-The next example shows how to unit test the pipeline call (please note that the pipeline is not defined in the tests assembly config file):
+
+## <a id="Pipelines" /> Pipelines
+
+### How to unit test a pipeline call
+
+Imagine you have a product repository. The repository should be able to get a 
+product by id. The implementation of the repository is 'thin' and does nothing 
+else than calling a corresponding pipeline with proper arguments. The next 
+example shows how to unit test the pipeline calls (please note that the 
+pipeline is not defined in config file):
 
 ``` csharp
 [Fact]
-public void HowDoIEnsureThePipelineIsCalled()
+public void HowToUnitTestPipelineCall()
 {
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
   {
@@ -354,7 +489,8 @@ private partial class ProductRepository
 }
 ```
 
-### How do I configure the pipeline behaviour
+### How to configure the pipeline behaviour
+
 The code sample above checks that the pipeline is called with proper arguments. 
 The next scenario would be to validate the pipeline call results. 
 In the code below we configure pipeline proressor behaviour to return an expected product only
@@ -362,19 +498,17 @@ if the product id id set to "1".
 
 ``` csharp
 [Fact]
-public void HowDoIConfigureThePipelineBehaviour()
+public void HowToConfigurePipelineBehaviour()
 {
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
   {
     // create a product to get from the repository
     object expectedProduct = new object();
-
-    // configure processing of the pipeline arguments. Will set the 'expectedProduct' instance 
-    // to CustomData["Product"] property only when the CustomData["ProductId"] is "1"
     string productId = "1";
 
-    // configure a pipeline watcher to expect a pipeline call where the args custom data contains
-    // ProductId. Once the args received the pipeline result is set into Product custom data property
+    // configure Pipeline Watcher to expect a pipeline call where the args Custom Data
+    // contains ProductId equals "1". Once the args received the pipeline result is set
+    // to the Product Custom Data property
     db.PipelineWatcher
       .WhenCall("findProductById")
       .WithArgs(a => a.CustomData["ProductId"].Equals(productId))
@@ -385,7 +519,7 @@ public void HowDoIConfigureThePipelineBehaviour()
     var actualProduct = repository.GetProductById(productId);
 
     // assert the received product is the same as the expected one
-    Assert.Equal(expectedProduct, actualProduct);
+    Xunit.Assert.Equal(expectedProduct, actualProduct);
   }
 }
 
@@ -403,42 +537,21 @@ private partial class ProductRepository
 }
 ```
 
-## Globalization
-### How do I translate texts
-FakeDb supports simple localization mechanism. You can call Translate.Text() or
-Translate.TextByLanguage() method to get a 'translated' version of the original text.
-The translated version has got language name added to the initial phrase.
+
+## <a id="Configuration" /> Configuration
+
+### How to configure settings
+
+In some cases you may prefer to use a setting instead of a dependency injected 
+in your code via constructor or property. The code below instantiates new Db 
+context and sets "MySetting" setting value to "1234". Please note that the 
+setting is not defined explicitly in the App.config file, but nevertheless it 
+is accessible using Sitecore.Configuration.Settings and can be used in unit 
+tests:
 
 ``` csharp
 [Fact]
-public void HowDoITranslateTexts()
-{
-  // init languages
-  Sitecore.Globalization.Language enLang = Sitecore.Globalization.Language.Parse("en");
-  Sitecore.Globalization.Language daLang = Sitecore.Globalization.Language.Parse("da");
-
-  const string Phrase = "Welcome!";
-
-  // translate
-  string enTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, enLang);
-  string daTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, daLang);
-
-  Assert.Equal("en:Welcome!", enTranslation);
-  Assert.Equal("da:Welcome!", daTranslation);
-}
-```
-
-## Configuration
-### How do I configure settings
-
-In some cases you may prefer to use a setting instead of a dependency injected in your code via constructor or property. 
-The code below instantiates new Db context and sets "MySetting" setting value to "1234". Please note that the setting is 
-not defined explicitly in the App.config file, but nevertheless it is accessible using Sitecore.Configuration.Settings 
-and can be used in unit tests:
-
-``` csharp
-[Fact]
-public void HowDoIConfigureSettings()
+public void HowToConfigureSettings()
 {
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
   {
@@ -447,81 +560,136 @@ public void HowDoIConfigureSettings()
 
     // get the setting value in your code using regular Sitecore API
     var value = Sitecore.Configuration.Settings.GetSetting("MySetting");
-    Assert.Equal("1234", value);
+    Xunit.Assert.Equal("1234", value);
   }
 }
 ```
 
 ### Database lifetime configuration
-By default Sitecore set `singleInstance="true"` for all databases so that each of the three default databases behaves as singletones. 
-This approach has list of pros and cons; it is important to be avare about potential issues that may appear.
 
-Single instance allows one to resolve a database in any place of code using Sitecore Factory. 
-The same content is available no matter how many times the database has been resolved. 
-The next code creates item Home using simplified FakeDb API and then reads the item from database resolved from Factory:
+By default Sitecore set `singleInstance="true"` for all databases so that each 
+of the three default databases behaves as singletones. This approach has list 
+of pros and cons; it is important to be avare about potential issues that may 
+appear.
+
+Single instance allows one to resolve a database in any place of code using 
+Sitecore Factory. The same content is available no matter how many times the 
+database has been resolved. The next code creates item Home using simplified 
+FakeDb API and then reads the item from database resolved from Factory:
 
 ``` csharp
 [Fact]
-public void HowDoIGetItemFromSitecoreDatabase()
+public void HowToGetItemFromSitecoreDatabase()
 {
   using (new Sitecore.FakeDb.Db
     {
       new Sitecore.FakeDb.DbItem("Home")
     })
   {
-    Sitecore.Data.Database database = Sitecore.Configuration.Factory.GetDatabase("master");
-    Assert.NotNull(database.GetItem("/sitecore/content/home"));
+    Sitecore.Data.Database database = 
+      Sitecore.Configuration.Factory.GetDatabase("master");
+        
+    Xunit.Assert.NotNull(database.GetItem("/sitecore/content/home"));
   }
 }
 ```
-It is important to remember that single instance objects may break unit tests isolation allowing data from one test appear in another one. In order to minimize this negative impact Db context must always be disposed properly.
 
-Sitecore FakeDb can deal with both single or transcient lifetime modes allowing developers to choose between usability or isolation.
+It is important to remember that single instance objects may break unit tests 
+isolation allowing data from one test appear in another one. In order to 
+minimize this negative impact Db context must always be disposed properly.
 
-## Mocks
-Mocking is one of the fundamental things about unit testing. Mock objects allows to simulate an abstraction behaviour keeping unit tests fast and isolated.
+Sitecore FakeDb can deal with both single or transcient lifetime modes 
+allowing developers to choose between usability or isolation.
 
-FakeDb simplifies mocking of Sitecore components. There is a NuGet package 'Sitecore.FakeDb.NSubstitute' that allows to mock Authentication and Bucket providers 
-using [NSubstitute](http://nsubstitute.github.io/) isolation framework.
 
-Run the following command in the NuGet Package Manager Console:
+## <a id="Miscellaneous" /> Miscellaneous    
 
-`Install-Package Sitecore.FakeDb.NSubstitute`
+### How to translate texts
 
-Take a look on the examples below. AuthenticationManager.Provider is a mock. You may configure it's behaviour and then call the AuthenticationManager methods in your code.
+FakeDb supports simple localization mechanism. You can call Translate.Text() or
+Translate.TextByLanguage() method to get a 'translated' version of the original text.
+The translated version has got language name added to the initial phrase.
 
 ``` csharp
 [Fact]
-public void HowDoIMockAuthenticationProvider()
+public void HowToTranslateTexts()
 {
-  // the authentication provider is a mock created by NSubstitute;
-  // the Login() method should return 'true' when it is called with parameters 'John' and 'true'
-  Sitecore.Security.Authentication.AuthenticationManager.Provider.Login("John", true).Returns(true);
+  // init languages
+  Sitecore.Globalization.Language en = Sitecore.Globalization.Language.Parse("en");
+  Sitecore.Globalization.Language da = Sitecore.Globalization.Language.Parse("da");
 
-  // the authentication manager is called with the expected parameters. It returns 'true'
-  Assert.True(Sitecore.Security.Authentication.AuthenticationManager.Login("John", true));
+  const string Phrase = "Welcome!";
 
-  // the authentication manager is called with some unexpected parameters. It returns 'false'
-  Assert.False(Sitecore.Security.Authentication.AuthenticationManager.Login("Robber", true));
-}
+  // translate
+  string enTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, en);
+  string daTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, da);
 
-[Fact]
-public void HowDoIMockBucketProvider()
-{
-  // act
-  Sitecore.Buckets.Managers.BucketManager.AddSearchTabToItem(null);
-
-  // assert
-  Sitecore.Buckets.Managers.BucketManager.Provider.Received().AddSearchTabToItem(null);
+  Xunit.Assert.Equal("en:Welcome!", enTranslation);
+  Xunit.Assert.Equal("da:Welcome!", daTranslation);
 }
 ```
 
-## Media
-### How do I mock the media item provider
+### How to work with LinkDatabase
 
 ``` csharp
 [Fact]
-public void HowDoIMockMediaItemProvider()
+public void HowToWorkWithLinkDatabase()
+{
+  // arrange your database and items
+  Sitecore.Data.ID sourceId = Sitecore.Data.ID.NewID;
+  Sitecore.Data.ID aliasId = Sitecore.Data.ID.NewID;
+  Sitecore.Data.ID linkedItemId = Sitecore.Data.ID.NewID;
+
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+  {
+    new Sitecore.FakeDb.DbItem("source", sourceId),
+    new Sitecore.FakeDb.DbItem("clone"),
+    new Sitecore.FakeDb.DbItem("alias", aliasId, Sitecore.TemplateIDs.Alias)
+    {
+      new Sitecore.FakeDb.DbField("Linked item", linkedItemId)
+    }
+  })
+  {
+    // arrange desired LinkDatabase behavior
+    var behavior = Substitute.For<Sitecore.Links.LinkDatabase>();
+
+    Sitecore.Data.Items.Item source = db.GetItem("/sitecore/content/source");
+    Sitecore.Data.Items.Item alias = db.GetItem("/sitecore/content/alias");
+    Sitecore.Data.Items.Item clone = db.GetItem("/sitecore/content/clone");
+
+    string sourcePath = source.Paths.FullPath;
+    behavior.GetReferrers(source).Returns(new[]
+    {
+      new Sitecore.Links.ItemLink(alias, linkedItemId, source, sourcePath),
+      new Sitecore.Links.ItemLink(clone, Sitecore.FieldIDs.Source, source, sourcePath)
+    });
+
+    // link database is clean
+    Xunit.Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
+
+    using (new Sitecore.FakeDb.Links.LinkDatabaseSwitcher(behavior))
+    {
+      Sitecore.Links.ItemLink[] referrers =
+        Sitecore.Globals.LinkDatabase.GetReferrers(source);
+
+      Xunit.Assert.Equal(referrers.Count(), 2);
+      Xunit.Assert.Equal(referrers.Count(r => r.SourceItemID == clone.ID
+        && r.TargetItemID == source.ID), 1);
+      Xunit.Assert.Equal(referrers.Count(r => r.SourceItemID == alias.ID
+        && r.TargetItemID == source.ID), 1);
+    }
+
+    // link database is clean again
+    Xunit.Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
+  }
+}
+```
+
+### How to mock Media Provider
+
+``` csharp
+[Fact]
+public void HowToMockMediaItemProvider()
 {
   const string MyImageUrl = "~/media/myimage.ashx";
   Sitecore.Data.ID mediaItemId = Sitecore.Data.ID.NewID;
@@ -537,32 +705,34 @@ public void HowDoIMockMediaItemProvider()
     // create media provider mock and configure behaviour
     Sitecore.Resources.Media.MediaProvider mediaProvider =
       NSubstitute.Substitute.For<Sitecore.Resources.Media.MediaProvider>();
-    
+
     mediaProvider
-    .GetMediaUrl(Arg.Is<Sitecore.Data.Items.MediaItem>(i => i.ID == mediaItemId))
-    .Returns(MyImageUrl);
+      .GetMediaUrl(Arg.Is<Sitecore.Data.Items.MediaItem>(i => i.ID == mediaItemId))
+      .Returns(MyImageUrl);
 
     // substitute the original provider with the mocked one
     using (new Sitecore.FakeDb.Resources.Media.MediaProviderSwitcher(mediaProvider))
     {
       string mediaUrl = Sitecore.Resources.Media.MediaManager.GetMediaUrl(mediaItem);
-      Assert.Equal(MyImageUrl, mediaUrl);
+      Xunit.Assert.Equal(MyImageUrl, mediaUrl);
     }
   }
 }
 ```
 
-## Miscellaneous    
+### How to work with the Query API
 
-### How do I work with the Query API?
-
-The `Query` API needs `Context.Database` set and the example below uses `DatabaseSwitcher` to do so:
+The `Query` API needs `Context.Database` set and the example below uses 
+`DatabaseSwitcher` to do so:
 
 ```csharp
 [Fact]
-public void HowDoIQorkWithQueryApi()
+public void HowToWorkWithQueryApi()
 {
-  using (var db = new Sitecore.FakeDb.Db { new Sitecore.FakeDb.DbItem("home") })
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db 
+    {
+      new Sitecore.FakeDb.DbItem("home")
+    })
   {
     var query = "/sitecore/content/*[@@key = 'home']";
 
@@ -572,34 +742,50 @@ public void HowDoIQorkWithQueryApi()
       result = Sitecore.Data.Query.Query.SelectItems(query);
     }
 
-    Assert.Equal(result.Count(), 1);
-    Assert.Equal(result[0].Key, "home");
+    Xunit.Assert.Equal(result.Count(), 1);
+    Xunit.Assert.Equal(result[0].Key, "home");
   }
 }
 ```
 
-### How do I mock the content search logic
+### How to mock the content search logic
 
 The example below creates and configure a content search index mock so that it returns Home item:
 
 ``` csharp
 [Fact]
-public void HowDoIMockContentSearchLogic()
+public void HowToMockContentSearchLogic()
 {
   try
   {
     var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
     Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes.Add("my_index", index);
 
-    using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db { new Sitecore.FakeDb.DbItem("home") })
+    using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+      {
+        new Sitecore.FakeDb.DbItem("home")
+      })
     {
-      var searchResultItem = Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
-      searchResultItem.GetItem().Returns(db.GetItem("/sitecore/content/home"));
-      index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Returns((new[] { searchResultItem }).AsQueryable());
+      var searchResultItem =
+        Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
 
-      Sitecore.Data.Items.Item result = index.CreateSearchContext().GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>().Single().GetItem();
+      searchResultItem
+        .GetItem()
+        .Returns(db.GetItem("/sitecore/content/home"));
 
-      Assert.Equal("/sitecore/content/home", result.Paths.FullPath);
+      index
+        .CreateSearchContext()
+        .GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>()
+        .Returns((new[] { searchResultItem }).AsQueryable());
+
+      Sitecore.Data.Items.Item result =
+        index
+        .CreateSearchContext()
+        .GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>()
+        .Single()
+        .GetItem();
+
+      Xunit.Assert.Equal("/sitecore/content/home", result.Paths.FullPath);
     }
   }
   finally
@@ -609,21 +795,32 @@ public void HowDoIMockContentSearchLogic()
 }
 ```
     
-### How do I mock the Sitecore.Analytics.Tracker.Visitor
+## FakeDb NSubstitute
+Mocking is one of the fundamental things about unit testing. Mock objects 
+allows to simulate an abstraction behaviour keeping unit tests fast and 
+isolated.
 
-``` csharp
-[Fact]
-public void HowDoIMockTrackerVisitor()
-{
-  // create a visitor mock
-  var visitorMock = Substitute.For<Sitecore.Analytics.Data.DataAccess.Visitor>(Guid.NewGuid());
+FakeDb allows to create [NSubstitute](http://nsubstitute.github.io/) mocks 
+using Sitecore Factory.
 
-  // inject the visitor mock into Analytics Tracker
-  using (new Sitecore.Common.Switcher<Sitecore.Analytics.Data.DataAccess.Visitor>(visitorMock))
-  {
-    // the mocked visitor instance is now available via Analytics.Tracker.Visitor property
-    var currentVisitor = Sitecore.Analytics.Tracker.Visitor;
-    Assert.Equal(visitorMock, currentVisitor);
-  }
-}
+In order to install the FakeDb.NSubstitute package run the following command 
+in the NuGet Package Manager Console:
+
+`Install-Package Sitecore.FakeDb.NSubstitute`
+
+To instantiate a mock object NSubstitute Factory should be used:
+
+``` xml
+<bucketManager enabled="true">
+  <providers>
+    <add name="mock" factory="nsubstitute" ref="Sitecore.Buckets.Managers.BucketProvider, Sitecore.Buckets" />
+  </providers>
+</bucketManager>
 ```
+
+This configuration allows BucketManager to create a new mocked instance of the 
+BucketProvider class.
+
+*WARNING: BucketManager is a static class. It means that the mocked 
+BucketProvider instance can be shared between different unit tests which 
+may lead to unstable sceanrios.*
