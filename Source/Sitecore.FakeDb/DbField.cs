@@ -13,36 +13,61 @@
   [DebuggerDisplay("ID = {ID}, Name = {Name}, Value = {Value}")]
   public class DbField : IEnumerable
   {
-    public static readonly IDictionary<ID, string> FieldIdToNameMapping = new ReadOnlyDictionary<ID, string>(new Dictionary<ID, string>
+    internal static readonly IDictionary<ID, string> FieldIdToNameMapping = new ReadOnlyDictionary<ID, string>(new Dictionary<ID, string>
       {
         { FieldIDs.BaseTemplate, "__Base template" },   
         { FieldIDs.LayoutField, "__Renderings" },
         { FieldIDs.Lock, "__Lock" },
+        { FieldIDs.Security, "__Security" },
         { FieldIDs.StandardValues, "__Standard values" }
+      });
+
+    internal static readonly IDictionary<string, ID> FieldNameToIdMapping = new ReadOnlyDictionary<string, ID>(new Dictionary<string, ID>
+      {
+        { "__Base template", FieldIDs.BaseTemplate },   
+        { "__Renderings", FieldIDs.LayoutField },
+        { "__Lock", FieldIDs.Lock },
+        { "__Security", FieldIDs.Security },
+        { "__Standard values", FieldIDs.StandardValues }
       });
 
     private readonly IDictionary<string, IDictionary<int, string>> values = new Dictionary<string, IDictionary<int, string>>();
 
     public DbField(ID id)
+      : this(null, id)
     {
-      Assert.ArgumentNotNull(id, "id");
-
-      this.ID = id;
-      this.Name = FieldIdToNameMapping.ContainsKey(id) ? FieldIdToNameMapping[id] : id.ToShortID().ToString();
     }
 
     public DbField(string name)
-      : this(name, ID.NewID)
+      : this(name, ID.Null)
     {
     }
 
     public DbField(string name, ID id)
     {
-      Assert.ArgumentNotNull(id, "id");
-      Assert.ArgumentNotNullOrEmpty(name, "name");
+      if (!string.IsNullOrEmpty(name))
+      {
+        this.Name = name;
+      }
+      else
+      {
+        this.Name = FieldIdToNameMapping.ContainsKey(id) ? FieldIdToNameMapping[id] : this.Name = id.ToShortID().ToString();
+      }
 
-      this.Name = name;
-      this.ID = id;
+      if (!ID.IsNullOrEmpty(id))
+      {
+        this.ID = id;
+      }
+      else
+      {
+        this.ID = FieldNameToIdMapping.ContainsKey(name) ? FieldNameToIdMapping[name] : ID.NewID;
+      }
+
+      // TODO: Implement
+      //if (this.ID == FieldIDs.Security)
+      //{
+      //  this.Shared = true;
+      //}
     }
 
     public string Name { get; set; }
@@ -78,12 +103,11 @@
       }
     }
 
+    public bool Shared { get; set; }
+
     internal IDictionary<string, IDictionary<int, string>> Values
     {
-      get
-      {
-        return this.values;
-      }
+      get { return this.values; }
     }
 
     public virtual void Add(string language, string value)

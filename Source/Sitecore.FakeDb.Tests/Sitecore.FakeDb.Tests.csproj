@@ -82,6 +82,7 @@
     <Compile Include="Data\Engines\DataCommands\CopyItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\MoveItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\RemoveVersionCommandTest.cs" />
+    <Compile Include="Data\Fields\SecurityFieldTest.cs" />
     <Compile Include="Data\Locking\ItemLockingTest.cs" />
     <Compile Include="DbConcurrencyTest.cs" />
     <Compile Include="Configuration\ClientDataStoreStubTest.cs" />
@@ -105,7 +106,7 @@
     <Compile Include="Data\Engines\DataCommands\NotInitializedDataEngineCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\SaveItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\ResolvePathCommandTest.cs" />
-    <Compile Include="Data\DataStorageTest.cs" />
+    <Compile Include="Data\Engines\DataStorageTest.cs" />
     <Compile Include="Data\Engines\ItemCreatorTest.cs" />
     <Compile Include="Data\FakeStandardValuesProviderTest.cs" />
     <Compile Include="Data\Fields\LayoutFieldTest.cs" />

@@ -1174,19 +1174,19 @@
     }
 
     [Theory]
-    [InlineData("CanRead", WellknownRights.ItemRead, true, SecurityPermission.AllowAccess)]
-    [InlineData("CanRead", WellknownRights.ItemRead, false, SecurityPermission.DenyAccess)]
-    [InlineData("CanWrite", WellknownRights.ItemWrite, true, SecurityPermission.AllowAccess)]
-    [InlineData("CanWrite", WellknownRights.ItemWrite, false, SecurityPermission.DenyAccess)]
-    [InlineData("CanRename", WellknownRights.ItemRename, true, SecurityPermission.AllowAccess)]
-    [InlineData("CanRename", WellknownRights.ItemRename, false, SecurityPermission.DenyAccess)]
-    [InlineData("CanCreate", WellknownRights.ItemCreate, true, SecurityPermission.AllowAccess)]
-    [InlineData("CanCreate", WellknownRights.ItemCreate, false, SecurityPermission.DenyAccess)]
-    [InlineData("CanDelete", WellknownRights.ItemDelete, true, SecurityPermission.AllowAccess)]
-    [InlineData("CanDelete", WellknownRights.ItemDelete, false, SecurityPermission.DenyAccess)]
-    [InlineData("CanAdmin", WellknownRights.ItemAdmin, true, SecurityPermission.AllowAccess)]
-    [InlineData("CanAdmin", WellknownRights.ItemAdmin, false, SecurityPermission.DenyAccess)]
-    public void ShouldSetItemAccessRules(string propertyName, string accessRight, bool actualPermission, SecurityPermission expectedPermission)
+    [InlineData("CanRead", WellknownRights.ItemRead, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:read|")]
+    [InlineData("CanRead", WellknownRights.ItemRead, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:read|")]
+    [InlineData("CanWrite", WellknownRights.ItemWrite, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:write|")]
+    [InlineData("CanWrite", WellknownRights.ItemWrite, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:write|")]
+    [InlineData("CanRename", WellknownRights.ItemRename, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:rename|")]
+    [InlineData("CanRename", WellknownRights.ItemRename, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:rename|")]
+    [InlineData("CanCreate", WellknownRights.ItemCreate, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:create|")]
+    [InlineData("CanCreate", WellknownRights.ItemCreate, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:create|")]
+    [InlineData("CanDelete", WellknownRights.ItemDelete, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:delete|")]
+    [InlineData("CanDelete", WellknownRights.ItemDelete, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:delete|")]
+    [InlineData("CanAdmin", WellknownRights.ItemAdmin, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:admin|")]
+    [InlineData("CanAdmin", WellknownRights.ItemAdmin, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:admin|")]
+    public void ShouldSetItemAccessRules(string propertyName, string accessRight, bool actualPermission, SecurityPermission expectedPermission, string expectedSecurity)
     {
       // arrange
       var user = User.FromName(@"extranet\John", false);
@@ -1208,16 +1208,7 @@
             var uniqueId = item.GetUniqueId();
 
             // assert
-            db.DataStorage.AccessRules.Should().ContainKey(uniqueId);
-
-            // TODO:[Minor] Uncomment when DbItemAccess does not set access right in constructor
-            //db.DataStorage.AccessRules[uniqueId].Should().HaveCount(1);
-
-            var accessRule = db.DataStorage.AccessRules[uniqueId].Single(ar => ar.AccessRight.Name == accessRight);
-            accessRule.Account.Should().Be(user);
-            accessRule.AccessRight.Name.Should().Be(accessRight);
-            accessRule.PropagationType.Should().Be(PropagationType.Entity);
-            accessRule.SecurityPermission.Should().Be(expectedPermission);
+            item["__Security"].Should().Be(expectedSecurity);
           }
         }
       }

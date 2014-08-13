@@ -330,7 +330,20 @@ namespace Sitecore.FakeDb
       this.FillAccessRules(rules, item.Access, AccessRight.ItemDelete, a => a.CanDelete);
       this.FillAccessRules(rules, item.Access, AccessRight.ItemAdmin, a => a.CanAdmin);
 
-      this.DataStorage.AccessRules.Add(uniqueId, rules);
+      if (rules.Any())
+      {
+        var serializer = new AccessRuleSerializer();
+
+        // TODO: Should not require to check if Security field is exists
+        if (fakeItem.Fields.Any(f => f.ID == FieldIDs.Security))
+        {
+          fakeItem.Fields[FieldIDs.Security].Value = serializer.Serialize(rules);
+        }
+        else
+        {
+          fakeItem.Fields.Add("__Security", serializer.Serialize(rules));
+        }
+      }
     }
 
     protected virtual void FillAccessRules(AccessRuleCollection rules, DbItemAccess itemAccess, AccessRight accessRight, Func<DbItemAccess, bool?> canAct)

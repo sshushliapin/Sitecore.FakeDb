@@ -29,7 +29,8 @@
     {
       this.StandardValues = new DbFieldCollection();
 
-      this.Add(FieldIDs.Lock);
+      this.Add(new DbField(FieldIDs.Lock) { Shared = true });
+      this.Add(new DbField(FieldIDs.Security) { Shared = true });
     }
 
     public void Add(string fieldName)
@@ -44,7 +45,7 @@
 
     public new void Add(string fieldName, string standardValue)
     {
-      var field = new DbField(fieldName, ID.NewID);
+      var field = new DbField(fieldName);
 
       this.Add(field, standardValue);
     }

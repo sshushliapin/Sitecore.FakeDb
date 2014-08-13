@@ -7,6 +7,7 @@
   using Sitecore.Security.Domains;
   using System.Collections.Generic;
   using Xunit;
+  using Xunit.Extensions;
 
   public class FakeRolesInRolesProviderTest
   {
@@ -64,8 +65,8 @@
       Assert.DoesNotThrow(() => stubProvider.GetSystemRoles());
       Assert.DoesNotThrow(() => stubProvider.GetUsersInRole(null, true));
       Assert.DoesNotThrow(() => stubProvider.IsCreatorOwnerRole(null));
-      Assert.DoesNotThrow(() => stubProvider.IsEveryoneRole(null));
-      Assert.DoesNotThrow(() => stubProvider.IsEveryoneRole(null, null));
+      Assert.DoesNotThrow(() => stubProvider.IsEveryoneRole("Everyone"));
+      Assert.DoesNotThrow(() => stubProvider.IsEveryoneRole("Everyone", Domain.GetDomain("exranet")));
       Assert.DoesNotThrow(() => stubProvider.IsGlobalRole(null));
       Assert.DoesNotThrow(() => stubProvider.IsRoleInRole(null, null, true));
       Assert.DoesNotThrow(() => stubProvider.IsSystemRole(null));
@@ -94,12 +95,37 @@
       stubProvider.GetSystemRoles().Should().BeEmpty();
       stubProvider.GetUsersInRole(null, true).Should().BeEmpty();
       stubProvider.IsCreatorOwnerRole(null).Should().BeFalse();
-      stubProvider.IsEveryoneRole(null).Should().BeFalse();
-      stubProvider.IsEveryoneRole(null, null).Should().BeFalse();
+      stubProvider.IsEveryoneRole("Everyone").Should().BeTrue();
+      stubProvider.IsEveryoneRole("Everyone", Domain.GetDomain("extranet")).Should().BeTrue();
       stubProvider.IsGlobalRole(null).Should().BeFalse();
       stubProvider.IsRoleInRole(null, null, true).Should().BeFalse();
       stubProvider.IsSystemRole(null).Should().BeFalse();
       stubProvider.IsUserInRole(null, null, true).Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData("Everyone", true)]
+    [InlineData("Somebody", false)]
+    public void ShouldCheckIfEveryoneRole(string roleName, bool expectedResult)
+    {
+      // arrange
+      var stubProvider = new FakeRolesInRolesProvider();
+
+      // act & assert
+      stubProvider.IsEveryoneRole(roleName).Should().Be(expectedResult);
+    }
+
+    [Theory]
+    [InlineData(@"extranet\Everyone", true)]
+    [InlineData(@"extranet\Somebody", false)]
+    public void ShouldCheckIfDomainEveryoneRole(string roleName, bool expectedResult)
+    {
+      // arrange
+      var stubProvider = new FakeRolesInRolesProvider();
+      var domain = Domain.GetDomain("extranet");
+
+      // act & assert
+      stubProvider.IsEveryoneRole(roleName, domain).Should().Be(expectedResult);
     }
 
     [Fact]

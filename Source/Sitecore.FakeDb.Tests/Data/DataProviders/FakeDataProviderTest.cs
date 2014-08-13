@@ -2,7 +2,6 @@
 {
   using System.Linq;
   using FluentAssertions;
-  using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
   using Sitecore.FakeDb.Data.DataProviders;
@@ -19,7 +18,9 @@
     public FakeDataProviderTest()
     {
       var database = Database.GetDatabase("master");
-      this.dataStorage = Substitute.For<DataStorage>(database);
+      this.dataStorage = new DataStorage(database);
+      this.dataStorage.FakeItems.Clear();
+      this.dataStorage.FakeTemplates.Clear();
 
       this.dataProvider = new FakeDataProvider(this.dataStorage);
       ReflectionUtil.CallMethod(database, "AddDataProvider", new object[] { this.dataProvider });
@@ -121,7 +122,7 @@
     public void ShouldSetDataStorage()
     {
       // arrange
-      var ds = Substitute.For<DataStorage>(Database.GetDatabase("master"));
+      var ds = new DataStorage(Database.GetDatabase("master"));
 
       // act
       this.dataProvider.SetDataStorage(ds);

@@ -1,4 +1,7 @@
-﻿0.15.0
+﻿0.15.1
+* [FIX] Fixed security settings inheritance
+
+0.15.0
 * [NEW] Implemented Fake Authorization Provider
 * [NEW] Implemented Fake Role Provider
 * [NEW] Implemented Fake RolesInRoles Provider

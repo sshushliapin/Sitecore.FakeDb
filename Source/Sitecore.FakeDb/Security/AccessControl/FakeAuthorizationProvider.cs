@@ -10,12 +10,15 @@
   using System.Linq;
   using System.Threading;
   using Sitecore.Data.Items;
+  using System.Diagnostics;
 
   public class FakeAuthorizationProvider : AuthorizationProvider, IRequireDataStorage, IThreadLocalProvider<AuthorizationProvider>
   {
     private readonly ThreadLocal<DataStorage> dataStorage = new ThreadLocal<DataStorage>();
 
     private readonly ThreadLocal<AuthorizationProvider> localProvider = new ThreadLocal<AuthorizationProvider>();
+
+    private readonly ItemAuthorizationHelper itemHelper;
 
     public virtual DataStorage DataStorage
     {
@@ -25,6 +28,23 @@
     public virtual ThreadLocal<AuthorizationProvider> LocalProvider
     {
       get { return this.localProvider; }
+    }
+
+    public ItemAuthorizationHelper ItemHelper
+    {
+      get { return this.itemHelper; }
+    }
+
+    public FakeAuthorizationProvider()
+      : this(new ItemAuthorizationHelper())
+    {
+    }
+
+    public FakeAuthorizationProvider(ItemAuthorizationHelper itemHelper)
+    {
+      Assert.ArgumentNotNull(itemHelper, "itemHelper");
+
+      this.itemHelper = itemHelper;
     }
 
     public override AccessResult GetAccess(ISecurable entity, Account account, AccessRight accessRight)
@@ -39,10 +59,13 @@
         return this.LocalProvider.Value.GetAccessRules(entity);
       }
 
-      var id = entity.GetUniqueId();
-      var accessRules = this.DataStorage.AccessRules;
+      var item = entity as Item;
+      if (item != null)
+      {
+        return this.itemHelper.GetAccessRules(item);
+      }
 
-      return accessRules.ContainsKey(id) ? accessRules[id] : new AccessRuleCollection();
+      return new AccessRuleCollection();
     }
 
     public override void SetAccessRules(ISecurable entity, AccessRuleCollection rules)
@@ -54,9 +77,9 @@
       {
         this.LocalProvider.Value.SetAccessRules(entity, rules);
       }
-      else
+      else if (entity is Item)
       {
-        this.DataStorage.AccessRules[entity.GetUniqueId()] = rules;
+        this.itemHelper.SetAccessRules((Item)entity, rules);
       }
     }
 
@@ -74,19 +97,13 @@
 
     protected override AccessResult GetAccessCore(ISecurable entity, Account account, AccessRight accessRight)
     {
-      if (this.IsLocalProviderSet())
+      var item = entity as Item;
+      if (item != null)
       {
-        return this.GetDefaultAccessResult();
+        return this.itemHelper.GetAccess(item, account, accessRight);
       }
 
-      var accessRules = this.GetAccessRules(entity);
-      var rule = accessRules.SingleOrDefault(r => r.Account == account && r.AccessRight == accessRight && r.PropagationType == PropagationType.Entity);
-      if (rule == null)
-      {
-        return this.GetDefaultAccessResult();
-      }
-
-      return new AccessResult((AccessPermission)rule.SecurityPermission, new AccessExplanation(rule.SecurityPermission.ToString()));
+      return this.GetDefaultAccessResult();
     }
 
     protected virtual AccessResult GetDefaultAccessResult()

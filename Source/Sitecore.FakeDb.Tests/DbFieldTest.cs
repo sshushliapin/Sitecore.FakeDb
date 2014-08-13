@@ -172,6 +172,20 @@
       action.ShouldThrow<ArgumentException>().WithMessage("An item with the same version has already been added.");
     }
 
+    [Fact(Skip = "To be implemented")]
+    public void ShouldUseLatesAddedValueIfShared()
+    {
+      // arrange
+      this.field.Shared = true;
+
+      // act
+      this.field.Add("en", "shared value");
+      this.field.Add("da", "new shared value");
+
+      // assert
+      this.field.Value.Should().Be("new shared value");
+    }
+
     [Fact]
     public void ShouldBeReadonlyDictionary()
     {
@@ -183,6 +197,7 @@
     [InlineData("{12C33F3F-86C5-43A5-AEB4-5598CEC45116}", "__Base template")]
     [InlineData("{001DD393-96C5-490B-924A-B0F25CD9EFD8}", "__Lock")]
     [InlineData("{F1A1FE9E-A60C-4DDB-A3A0-BB5B29FE732E}", "__Renderings")]
+    [InlineData("{DEC8D2D5-E3CF-48B6-A653-8E69E2716641}", "__Security")]
     [InlineData("{F7D48A55-2158-4F02-9356-756654404F73}", "__Standard values")]
     public void ShouldMapDefaultFieldNameById(string fieldId, string expectedName)
     {
@@ -194,6 +209,33 @@
 
       // assert
       dbfield.Name.Should().Be(expectedName);
+    }
+
+    [Theory]
+    [InlineData("__Base template", "{12C33F3F-86C5-43A5-AEB4-5598CEC45116}")]
+    [InlineData("__Lock", "{001DD393-96C5-490B-924A-B0F25CD9EFD8}")]
+    [InlineData("__Renderings", "{F1A1FE9E-A60C-4DDB-A3A0-BB5B29FE732E}")]
+    [InlineData("__Security", "{DEC8D2D5-E3CF-48B6-A653-8E69E2716641}")]
+    [InlineData("__Standard values", "{F7D48A55-2158-4F02-9356-756654404F73}")]
+    public void ShouldMapDefaultFieldIdByName(string fieldName, string expectedId)
+    {
+      // act
+      var dbfield = new DbField(fieldName);
+
+      // assert
+      dbfield.ID.ToString().Should().Be(expectedId);
+    }
+
+    [Theory(Skip = "To be implemented")]
+    [InlineData("__Security", true)]
+    [InlineData("Title", false)]
+    public void ShouldMarkStandardFieldsSharedByDefault(string fieldName, bool shared)
+    {
+      // arrange & act
+      var field = new DbField(fieldName);
+
+      // assert
+      field.Shared.Should().Be(shared);
     }
   }
 }

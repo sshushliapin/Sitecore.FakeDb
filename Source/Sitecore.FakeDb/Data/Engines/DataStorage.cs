@@ -8,12 +8,9 @@ namespace Sitecore.FakeDb.Data.Engines
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
   using Version = Sitecore.Data.Version;
-  using Sitecore.Security.AccessControl;
 
   public class DataStorage
   {
-    private static readonly ID RootTemplateId = new ID("{C6576836-910C-4A3D-BA03-C277DBD3B827}");
-
     private static readonly ID TemplateIdSitecore = new ID("{C6576836-910C-4A3D-BA03-C277DBD3B827}");
 
     private const string SitecoreItemName = "sitecore";
@@ -29,8 +26,6 @@ namespace Sitecore.FakeDb.Data.Engines
     private readonly IDictionary<ID, DbItem> fakeItems;
 
     private readonly IDictionary<ID, DbTemplate> fakeTemplates;
-
-    private readonly IDictionary<string, AccessRuleCollection> accessRules;
 
     public const string TemplateItemName = "Template";
 
@@ -50,7 +45,6 @@ namespace Sitecore.FakeDb.Data.Engines
 
       this.fakeItems = new Dictionary<ID, DbItem>();
       this.fakeTemplates = new Dictionary<ID, DbTemplate>();
-      this.accessRules = new Dictionary<string, AccessRuleCollection>();
 
       this.FillDefaultFakeTemplates();
       this.FillDefaultFakeItems();
@@ -69,11 +63,6 @@ namespace Sitecore.FakeDb.Data.Engines
     public IDictionary<ID, DbTemplate> FakeTemplates
     {
       get { return this.fakeTemplates; }
-    }
-
-    public IDictionary<string, AccessRuleCollection> AccessRules
-    {
-      get { return this.accessRules; }
     }
 
     public virtual DbItem GetFakeItem(ID itemId)
@@ -118,6 +107,10 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public virtual Item GetSitecoreItem(ID itemId, Language language, Version version)
     {
+      Assert.ArgumentNotNull(itemId, "itemId");
+      Assert.ArgumentNotNull(language, "language");
+      Assert.ArgumentNotNull(version, "version");
+
       if (!this.FakeItems.ContainsKey(itemId))
       {
         return null;
@@ -166,18 +159,26 @@ namespace Sitecore.FakeDb.Data.Engines
       return item;
     }
 
-    protected virtual void FillDefaultFakeTemplates()
+    protected void FillDefaultFakeTemplates()
     {
-      this.FakeTemplates.Add(TemplateIdSitecore, new DbTemplate("Sitecore", new TemplateID(TemplateIdSitecore)));
+      this.FakeTemplates.Add(TemplateIdSitecore, new DbTemplate("Sitecore", new TemplateID(TemplateIdSitecore)) { new DbField(FieldIDs.Security) });
       this.FakeTemplates.Add(TemplateIDs.MainSection, new DbTemplate("Main Section", TemplateIDs.MainSection));
 
       this.FakeTemplates.Add(TemplateIDs.Template, new DbTemplate(TemplateItemName, TemplateIDs.Template) { new DbField(FieldIDs.BaseTemplate) });
       this.FakeTemplates.Add(TemplateIDs.Folder, new DbTemplate(FolderItemName, TemplateIDs.Folder));
     }
 
-    protected virtual void FillDefaultFakeItems()
+    protected void FillDefaultFakeItems()
     {
-      this.FakeItems.Add(ItemIDs.RootID, new DbItem(SitecoreItemName, ItemIDs.RootID, RootTemplateId) { ParentID = ID.Null, FullPath = "/sitecore" });
+      // TODO: Refactor when Shared Fields are implemented
+      var field = new DbField("__Security") 
+                    {
+                      { "en", "ar|Everyone|p*|+*|" },
+                      { "da", "ar|Everyone|p*|+*|" },
+                      { "uk-UA", "ar|Everyone|p*|+*|" }
+                    };
+
+      this.FakeItems.Add(ItemIDs.RootID, new DbItem(SitecoreItemName, ItemIDs.RootID, TemplateIdSitecore) { ParentID = ID.Null, FullPath = "/sitecore", Fields = { field } });
       this.FakeItems.Add(ItemIDs.ContentRoot, new DbItem(ContentItemName, ItemIDs.ContentRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/content" });
       this.FakeItems.Add(ItemIDs.TemplateRoot, new DbItem(TemplatesItemName, ItemIDs.TemplateRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/templates" });
       this.FakeItems.Add(ItemIDs.SystemRoot, new DbItem(SystemItemName, ItemIDs.SystemRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/system" });

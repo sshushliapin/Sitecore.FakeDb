@@ -22,14 +22,11 @@
       }
     }
 
-    [Fact(Skip = "To be implemented")]
-    public void ShouldSetItemSecurity()
+    [Fact]
+    public void ShouldRestrictItemSecurity()
     {
       // arrange
-      using (var db = new Db 
-                        {
-                          new DbItem("home") { new DbItem("about") }
-                        })
+      using (var db = new Db { new DbItem("home") { new DbItem("about") } })
       {
         var item = db.GetItem("/sitecore/content/home");
         var rules = new AccessRuleCollection 
@@ -41,8 +38,8 @@
         AuthorizationManager.SetAccessRules(item, rules);
 
         // assert
-        db.GetItem("/sitecore/content/home").Should().NotBeNull();
-        db.GetItem("/sitecore/content/home/about").Should().BeNull();
+        Assert.NotNull(db.GetItem("/sitecore/content/home"));
+        Assert.Null(db.GetItem("/sitecore/content/home/about"));
       }
     }
   }

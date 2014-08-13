@@ -17,6 +17,7 @@
   using System.Collections.Generic;
   using System.Threading.Tasks;
   using System.Threading;
+  using Sitecore.Data.Items;
 
   public class FakeAuthorizationProviderTest : IDisposable
   {
@@ -26,9 +27,9 @@
 
     private readonly DataStorage dataStorage;
 
-    private readonly FakeAuthorizationProvider provider;
-
     private readonly AuthorizationProvider localProvider;
+
+    private readonly ItemAuthorizationHelper helper;
 
     private readonly ISecurable entity;
 
@@ -36,9 +37,13 @@
 
     private readonly Account account;
 
+    private readonly Item item;
+
     private readonly AccessRight accessRight;
 
     private readonly AccessResult accessResult;
+
+    private FakeAuthorizationProvider provider;
 
     public FakeAuthorizationProviderTest()
     {
@@ -48,9 +53,12 @@
 
       this.provider = new FakeAuthorizationProvider();
       this.provider.SetDataStorage(this.dataStorage);
+
       this.localProvider = Substitute.For<AuthorizationProvider>();
+      this.helper = Substitute.For<ItemAuthorizationHelper>();
 
       this.entity = Substitute.For<ISecurable>();
+      this.item = ItemHelper.CreateInstance();
       this.rules = new AccessRuleCollection();
 
       this.account = this.fixture.Create<User>();
@@ -76,27 +84,28 @@
     }
 
     [Fact]
-    public void ShouldGetAccessRules()
+    public void ShouldGetItemAccessRules()
     {
       // arrange   
-      this.entity.GetUniqueId().Returns("1");
-      this.dataStorage.AccessRules.Add("1", this.rules);
+      this.helper.GetAccessRules(this.item).Returns(this.rules);
+
+      this.provider = new FakeAuthorizationProvider(this.helper);
 
       // act & assert
-      this.provider.GetAccessRules(this.entity).Should().BeSameAs(this.rules);
+      this.provider.GetAccessRules(this.item).Should().BeSameAs(this.rules);
     }
 
     [Fact]
-    public void ShouldSetAccessRules()
+    public void ShouldSetItemAccessRules()
     {
       // arrange
-      this.entity.GetUniqueId().Returns("1");
+      this.provider = new FakeAuthorizationProvider(this.helper);
 
       // act
-      this.provider.SetAccessRules(this.entity, this.rules);
+      this.provider.SetAccessRules(this.item, this.rules);
 
       // assert
-      this.dataStorage.AccessRules["1"].Should().BeSameAs(this.rules);
+      this.helper.Received().SetAccessRules(this.item, this.rules);
     }
 
     [Fact]
@@ -110,59 +119,7 @@
       this.provider.GetAccess(this.entity, account, accessRight).ShouldBeEquivalentTo(new AccessResult(AccessPermission.Allow, new AccessExplanation("Allow")));
     }
 
-    [Fact]
-    public void ShouldGetAccessPermission()
-    {
-      // arrange
-      this.entity.GetUniqueId().Returns("1");
-      var user = Context.User;
-
-      var rules = new AccessRuleCollection 
-        {
-          AccessRule.Create(user, AccessRight.ItemWrite, PropagationType.Entity, AccessPermission.Deny),
-          AccessRule.Create(user, AccessRight.ItemWrite, PropagationType.Descendants, AccessPermission.Deny)
-        };
-
-      this.dataStorage.AccessRules.Add("1", rules);
-
-      // act
-      var accessResult = this.provider.GetAccess(this.entity, user, AccessRight.ItemWrite);
-
-      // assert
-      accessResult.Permission.Should().Be(AccessPermission.Deny);
-    }
-
-    [Fact]
-    public void ShouldBeThreadSafe()
-    {
-      // arrange
-      var rules1 = new AccessRuleCollection();
-      var rules2 = new AccessRuleCollection();
-
-      var t1 = Task.Factory.StartNew(() =>
-        {
-          this.provider.SetDataStorage(new DataStorage(this.database));
-
-          this.provider.SetAccessRules(this.entity, rules1);
-
-          Thread.Sleep(100);
-
-          this.provider.GetAccessRules(this.entity).Should().BeSameAs(rules1);
-        });
-
-      var t2 = Task.Factory.StartNew(() =>
-        {
-          this.provider.SetDataStorage(new DataStorage(this.database));
-
-          this.provider.SetAccessRules(this.entity, rules2);
-          this.provider.GetAccessRules(this.entity).Should().BeSameAs(rules2);
-        });
-
-      t1.Wait();
-      t2.Wait();
-    }
-
-    #region  ThreadLocal Provider
+    #region ThreadLocal Provider
 
     [Fact]
     public void ShouldBeThreadLocalProvider()

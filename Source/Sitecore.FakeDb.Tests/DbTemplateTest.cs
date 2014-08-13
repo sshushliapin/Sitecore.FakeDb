@@ -67,13 +67,14 @@
     }
 
     [Fact]
-    public void ShouldHaveStandardFields()
+    public void ShouldAddStandardSharedFields()
     {
       // arrange & act
       var template = new DbTemplate();
 
       // assert
-      template.Fields.Should().Contain(f => f.ID == FieldIDs.Lock);
+      template.Fields[FieldIDs.Lock].Shared.Should().BeTrue("__Lock");
+      template.Fields[FieldIDs.Security].Shared.Should().BeTrue("__Security");
     }
   }
 }

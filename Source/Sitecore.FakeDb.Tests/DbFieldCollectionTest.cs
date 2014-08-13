@@ -4,6 +4,7 @@
   using FluentAssertions;
   using Sitecore.Data;
   using Xunit;
+  using System;
 
   public class DbFieldCollectionTest
   {
@@ -79,6 +80,19 @@
       collection.ElementAt(1).Name.Should().Be("field2");
       collection.ElementAt(1).ID.Should().NotBeNull();
       collection.ElementAt(1).Value.Should().Be("value2");
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionIfNoFieldIdPresent()
+    {
+      // arrange
+      var collection = new DbFieldCollection();
+      var missingFieldId = ID.NewID;
+      var expectedMessage = string.Format("The given field \"{0}\" is not present in the item.", missingFieldId);
+
+      // act & assert
+      Assert.Throws<InvalidOperationException>(() => collection[missingFieldId])
+        .Message.Should().Be(expectedMessage);
     }
   }
 }

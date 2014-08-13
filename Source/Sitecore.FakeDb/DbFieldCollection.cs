@@ -18,8 +18,26 @@
 
     public DbField this[ID id]
     {
-      get { return this.fields.Values.Single(f => f.ID == id); }
-      set { this.fields[value.ID] = value; }
+      get
+      {
+        Assert.IsTrue(this.fields.ContainsKey(id), "The given field \"{0}\" is not present in the item.", id);
+
+        return this.fields[id];
+      }
+
+      set
+      {
+        Assert.ArgumentNotNull(value, "value");
+
+        if (this.fields.ContainsKey(value.ID))
+        {
+          this.fields[value.ID] = value;
+        }
+        else
+        {
+          this.fields.Add(value.ID, value);
+        }
+      }
     }
 
     public void Add(string fieldName)

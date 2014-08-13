@@ -116,12 +116,12 @@
 
     public override bool IsEveryoneRole(string accountName)
     {
-      return this.IsLocalProviderSet() && this.LocalProvider.Value.IsEveryoneRole(accountName);
+      return this.IsLocalProviderSet() ? this.LocalProvider.Value.IsEveryoneRole(accountName) : base.IsEveryoneRole(accountName);
     }
 
     public override bool IsEveryoneRole(string accountName, Domain domain)
     {
-      return this.IsLocalProviderSet() && this.LocalProvider.Value.IsEveryoneRole(accountName, domain);
+      return this.IsLocalProviderSet() ? this.LocalProvider.Value.IsEveryoneRole(accountName, domain) : base.IsEveryoneRole(accountName, domain);
     }
 
     public override bool IsGlobalRole(Role role)
