@@ -6,14 +6,14 @@ Sitecore content in memory. Designed to minimize efforts for the test content
 initialization keeping focus on the minimal test data rather than comprehensive 
 content tree representation.
 
-Sitecore FakeDb does not set goal to run entire Sitecore instance in-memory. 
-It is a unit testing framework which is not supposed to be used for integration 
-testing.
-
 FakeDb substitutes real Sitecore providers with fake "in-memory" providers to 
-avoid calls to databases or configuration. The fake providers does not 
-replicate the real providers behavior. Its used as stubs with minimal logic and
-can be replaced by mocks in unit tests using special provider switchers.
+avoid calls to database or configuration. The providers does not replicate real
+Sitecore behavior but used mainly as stubs with minimal logic. They can be 
+replaced with mocks in unit tests using provider switchers.
+
+Sitecore FakeDb does not set goal to run entire Sitecore instance in-memory. It
+is a unit testing framework which is not supposed to be used for integration 
+testing.
 
 ## Contents
 - [Installation](#installation)
