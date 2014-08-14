@@ -1213,5 +1213,16 @@
         }
       }
     }
+
+    [Fact]
+    public void ShouldAddTemplateToTemplateRecords()
+    {
+      // arrange & act
+      using (var db = new Db { new DbTemplate(this.templateId) })
+      {
+        // assert
+        db.Database.Templates[this.templateId].Should().NotBeNull();
+      }
+    }
   }
 }

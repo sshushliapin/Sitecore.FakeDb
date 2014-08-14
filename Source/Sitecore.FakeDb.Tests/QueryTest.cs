@@ -9,12 +9,10 @@
 
   public class QueryTest
   {
-    //[Theory]
-    //[InlineData("/sitecore/content/home")]
-    //[InlineData("/sitecore/content/*")]
-    //[InlineData("/sitecore/content/*[@@key = 'home']")]
-    // TODO:[Med] Unstable.
-    // [InlineData("/sitecore/content/*[@@templatekey = 'home']")]
+    [Theory]
+    [InlineData("/sitecore/content/home")]
+    [InlineData("/sitecore/content/*")]
+    [InlineData("/sitecore/content/*[@@key = 'home']")]
     public void ShouldSupportQuery(string query)
     {
       // arrange
@@ -45,10 +43,10 @@
       ID templateId = ID.NewID;
 
       using (var db = new Db
-      {
-        new DbTemplate("base", baseId),
-        new DbTemplate("derrived", templateId) { BaseIDs = new[] { baseId } }
-      })
+        {
+          new DbTemplate("base", baseId),
+          new DbTemplate("derrived", templateId) { BaseIDs = new[] { baseId } }
+        })
       {
         var query = string.Format("/sitecore/templates//*[contains(@__Base template, '{0}')]", baseId);
         Item[] result;

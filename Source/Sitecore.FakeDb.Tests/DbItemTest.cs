@@ -4,18 +4,29 @@
   using FluentAssertions;
   using Sitecore.FakeDb.Security.AccessControl;
   using Xunit;
+  using Sitecore.Data;
 
   public class DbItemTest
   {
     [Fact]
     public void ShouldGenerateNewIdsIfNotSet()
     {
-      // arrange
+      // arrange & act
       var item = new DbItem("my item");
 
+      // assert
+      item.ID.IsNull.Should().BeFalse();
+    }
+
+    [Fact]
+    public void ShouldGenerateNameBasedOnIdIfNotSet()
+    {
+      // arrange
+      var id = ID.NewID;
+      var item = new DbItem(null, id);
+
       // act & assert
-      item.ID.Should().NotBeNull();
-      item.TemplateID.Should().NotBeNull();
+      item.Name.Should().Be(id.ToShortID().ToString());
     }
 
     [Fact]
@@ -25,6 +36,7 @@
       var item = new DbItem("home");
 
       // assert
+      item.TemplateID.IsNull.Should().BeTrue();
       item.Children.Should().BeEmpty();
       item.Fields.Should().BeEmpty();
       item.FullPath.Should().BeNull();

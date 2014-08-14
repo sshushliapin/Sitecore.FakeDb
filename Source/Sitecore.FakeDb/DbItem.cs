@@ -22,7 +22,7 @@ namespace Sitecore.FakeDb
 
     public DbItem(string name, ID id, ID templateId)
     {
-      this.Name = name;
+      this.Name = !string.IsNullOrEmpty(name) ? name : id.ToShortID().ToString();
       this.ID = id;
       this.TemplateID = templateId;
       this.Access = new DbItemAccess();

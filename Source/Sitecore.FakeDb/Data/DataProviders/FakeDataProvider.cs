@@ -9,28 +9,31 @@
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Globalization;
   using CallContext = Sitecore.Data.DataProviders.CallContext;
+  using System.Threading;
 
   public class FakeDataProvider : DataProvider, IRequireDataStorage
   {
-    private DataStorage dataStorage;
+    private readonly ThreadLocal<DataStorage> dataStorage;
 
     public FakeDataProvider()
     {
+      this.dataStorage = new ThreadLocal<DataStorage>();
     }
 
     internal FakeDataProvider(DataStorage dataStorage)
+      : this()
     {
-      this.dataStorage = dataStorage;
+      this.dataStorage.Value = dataStorage;
     }
 
     public virtual DataStorage DataStorage
     {
-      get { return this.dataStorage; }
+      get { return this.dataStorage.Value; }
     }
 
     public virtual void SetDataStorage(DataStorage dataStorage)
     {
-      this.dataStorage = dataStorage;
+      this.dataStorage.Value = dataStorage;
     }
 
     public override IdCollection GetTemplateItemIds(CallContext context)
