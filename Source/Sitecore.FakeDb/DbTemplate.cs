@@ -29,6 +29,7 @@
     {
       this.StandardValues = new DbFieldCollection();
 
+      this.Add(new DbField(FieldIDs.BaseTemplate) { Shared = true });
       this.Add(new DbField(FieldIDs.Lock) { Shared = true });
       this.Add(new DbField(FieldIDs.Security) { Shared = true });
     }

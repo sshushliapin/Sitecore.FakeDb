@@ -73,6 +73,7 @@
       var template = new DbTemplate();
 
       // assert
+      template.Fields[FieldIDs.BaseTemplate].Shared.Should().BeTrue("__Base template");
       template.Fields[FieldIDs.Lock].Shared.Should().BeTrue("__Lock");
       template.Fields[FieldIDs.Security].Shared.Should().BeTrue("__Security");
     }
