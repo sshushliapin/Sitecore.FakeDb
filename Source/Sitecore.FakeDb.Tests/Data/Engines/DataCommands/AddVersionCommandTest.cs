@@ -91,7 +91,7 @@
       command.DoExecute();
 
       // assert
-      dbitem.Fields.Single().Values["en"][2].Should().BeEmpty();
+      dbitem.Fields.Single().Values["en"][1].Should().BeEmpty();
     }
 
     private class OpenAddVersionCommand : AddVersionCommand

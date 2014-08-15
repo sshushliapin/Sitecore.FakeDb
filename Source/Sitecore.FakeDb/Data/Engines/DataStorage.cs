@@ -170,13 +170,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
     protected void FillDefaultFakeItems()
     {
-      // TODO: Refactor when Shared Fields are implemented
-      var field = new DbField("__Security") 
-                    {
-                      { "en", "ar|Everyone|p*|+*|" },
-                      { "da", "ar|Everyone|p*|+*|" },
-                      { "uk-UA", "ar|Everyone|p*|+*|" }
-                    };
+      var field = new DbField("__Security") { Value = "ar|Everyone|p*|+*|" };
 
       this.FakeItems.Add(ItemIDs.RootID, new DbItem(SitecoreItemName, ItemIDs.RootID, TemplateIdSitecore) { ParentID = ID.Null, FullPath = "/sitecore", Fields = { field } });
       this.FakeItems.Add(ItemIDs.ContentRoot, new DbItem(ContentItemName, ItemIDs.ContentRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/content" });

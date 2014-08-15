@@ -1,6 +1,7 @@
-﻿0.15.1
-* [FIX] Fixed security settings inheritance. Ingroduced Secutiry standard field
-* [FIX] FakeDataProvider has got thread local DataStorage to solve concurrency issue
+﻿0.16.0
+* [NEW] Implemented security settings inheritance. Ingroduced "__Secutiry" standard field
+* [NEW] Implemented Shared fields support
+* [FIX] FakeDataProvider has got thread local DataStorage to solve concurrency issues
 
 0.15.0
 * [NEW] Implemented Fake Authorization Provider

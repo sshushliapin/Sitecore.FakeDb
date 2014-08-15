@@ -112,6 +112,19 @@
     }
 
     [Fact]
+    public void ShouldGetTemplateFieldIsShared()
+    {
+      // arrange
+      var template = this.CreateTestTemplateInDataStorage();
+      template.Fields.Add(new DbField("Title") { Shared = true });
+
+      var result = this.dataProvider.GetTemplates(null).First();
+
+      // act & assert
+      result.GetField("Title").IsShared.Should().BeTrue();
+    }
+
+    [Fact]
     public void ShouldBeIRequireDataStorage()
     {
       // assert

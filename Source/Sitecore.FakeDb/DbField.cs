@@ -22,7 +22,7 @@
         { FieldIDs.StandardValues, "__Standard values" }
       });
 
-    internal static readonly IDictionary<string, ID> FieldNameToIdMapping = new ReadOnlyDictionary<string, ID>(new Dictionary<string, ID>
+    private static readonly IDictionary<string, ID> FieldNameToIdMapping = new ReadOnlyDictionary<string, ID>(new Dictionary<string, ID>
       {
         { "__Base template", FieldIDs.BaseTemplate },   
         { "__Renderings", FieldIDs.LayoutField },
@@ -32,6 +32,8 @@
       });
 
     private readonly IDictionary<string, IDictionary<int, string>> values = new Dictionary<string, IDictionary<int, string>>();
+
+    private string sharedValue = string.Empty;
 
     public DbField(ID id)
       : this(null, id)
@@ -63,47 +65,25 @@
         this.ID = FieldNameToIdMapping.ContainsKey(name) ? FieldNameToIdMapping[name] : ID.NewID;
       }
 
-      // TODO: Implement
-      //if (this.ID == FieldIDs.Security)
-      //{
-      //  this.Shared = true;
-      //}
+      if (this.Name.StartsWith("__"))
+      {
+        this.Shared = true;
+      }
     }
 
     public string Name { get; set; }
 
-    public string Type { get; set; }
-
     public ID ID { get; internal set; }
+
+    public bool Shared { get; set; }
+
+    public string Type { get; set; }
 
     public string Value
     {
-      get
-      {
-        return this.GetValue(Language.Current.Name, Sitecore.Data.Version.Latest.Number);
-      }
-
-      set
-      {
-        var language = Language.Current.Name;
-
-        if (!this.values.ContainsKey(language))
-        {
-          this.values.Add(language, new Dictionary<int, string> { { 1, value } });
-          return;
-        }
-
-        var langValues = this.values[language];
-
-        if (langValues.Any())
-        {
-          var version = langValues.Last().Key;
-          this.values[language][version] = value;
-        }
-      }
+      get { return this.GetValue(Language.Current.Name, Sitecore.Data.Version.Latest.Number); }
+      set { this.SetValue(Language.Current.Name, value); }
     }
-
-    public bool Shared { get; set; }
 
     internal IDictionary<string, IDictionary<int, string>> Values
     {
@@ -112,12 +92,20 @@
 
     public virtual void Add(string language, string value)
     {
-      this.Add(language, 1, value);
+      var version = this.GetLatestVersion(language) + 1;
+
+      this.Add(language, version, value);
     }
 
     public virtual void Add(string language, int version, string value)
     {
       Assert.ArgumentNotNullOrEmpty(language, "language");
+
+      if (this.Shared)
+      {
+        this.sharedValue = value;
+        return;
+      }
 
       if (version <= 0)
       {
@@ -156,6 +144,11 @@
 
     public virtual string GetValue(string language, int version)
     {
+      if (this.Shared)
+      {
+        return this.sharedValue;
+      }
+
       var hasValueForLanguage = this.values.ContainsKey(language);
       if (!hasValueForLanguage)
       {
@@ -180,6 +173,52 @@
     public IEnumerator GetEnumerator()
     {
       return ((IEnumerable)this.values).GetEnumerator();
+    }
+
+    protected virtual int GetLatestVersion(string language)
+    {
+      Assert.ArgumentNotNullOrEmpty(language, "language");
+
+      if (this.values.ContainsKey(language))
+      {
+        var langValues = this.values[language];
+        if (langValues.Any())
+        {
+          return langValues.Last().Key;
+        }
+      }
+
+      return 0;
+    }
+
+    protected virtual void SetValue(string language, string value)
+    {
+      if (this.Shared)
+      {
+        this.sharedValue = value;
+        return;
+      }
+
+      var newVersion = !this.values.ContainsKey(language);
+      if (newVersion)
+      {
+        this.Add(language, 1, value);
+        return;
+      }
+
+      var latestVersion = this.GetLatestVersion(language);
+      this.SetValue(language, latestVersion, value);
+    }
+
+    protected virtual void SetValue(string language, int version, string value)
+    {
+      if (this.Shared)
+      {
+        this.sharedValue = value;
+        return;
+      }
+
+      this.values[language][version] = value;
     }
   }
 }

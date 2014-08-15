@@ -54,7 +54,9 @@
 
         foreach (var field in ft.Fields)
         {
-          section.AddField(field.Name, field.ID).SetType(field.Type);
+          var newField = section.AddField(field.Name, field.ID);
+          newField.SetShared(field.Shared);
+          newField.SetType(field.Type);
         }
 
         builder.SetBaseIDs(string.Join("|", ft.BaseIDs ?? new ID[] { } as IEnumerable<ID>));

@@ -30,30 +30,16 @@
     {
       var dbitem = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
       var language = this.Item.Language.Name;
-      var version = new Version(Item.Version.Number + 1);
+      var currentVersion = Item.Version.Number;
+      var nextVersion = new Version(currentVersion + 1);
 
       foreach (var field in dbitem.Fields)
       {
-        IDictionary<int, string> langValues;
-        string value;
-
-        if (!field.Values.ContainsKey(language))
-        {
-          langValues = new Dictionary<int, string>();
-          value = string.Empty;
-
-          field.Values.Add(language, langValues);
-        }
-        else
-        {
-          langValues = field.Values[language];
-          value = langValues.Last().Value;
-        }
-
-        langValues.Add(version.Number, value);
+        var value = field.GetValue(language, currentVersion);
+        field.Add(language, value);
       }
 
-      return this.innerCommand.Value.DataStorage.GetSitecoreItem(this.Item.ID, this.Item.Language, version);
+      return this.innerCommand.Value.DataStorage.GetSitecoreItem(this.Item.ID, this.Item.Language, nextVersion);
     }
   }
 }

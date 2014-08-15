@@ -123,6 +123,18 @@
     }
 
     [Fact]
+    public void ShouldAddFewVersionsWithoutSpecifyingVersionNumber()
+    {
+      // act
+      this.field.Add("en", "v1");
+      this.field.Add("en", "v2");
+
+      // assert
+      this.field.Values["en"][1].Should().Be("v1");
+      this.field.Values["en"][2].Should().Be("v2");
+    }
+
+    [Fact]
     public void ShouldAddVersionsImplicitly()
     {
       // act
@@ -172,8 +184,32 @@
       action.ShouldThrow<ArgumentException>().WithMessage("An item with the same version has already been added.");
     }
 
-    [Fact(Skip = "To be implemented")]
-    public void ShouldUseLatesAddedValueIfShared()
+    [Fact]
+    public void ShouldSetAndGetSharedFieldValue()
+    {
+      // arrange
+      this.field.Shared = true;
+
+      // act
+      this.field.Value = "shared value";
+
+      // assert
+      this.field.Value.Should().Be("shared value");
+      this.field.Values.Should().BeEmpty("Localized values should not be used for shared fields");
+    }
+
+    [Fact]
+    public void ShouldGetEmptySharedFieldValueByDefault()
+    {
+      // arrange
+      this.field.Shared = true;
+
+      // act & assert
+      this.field.Value.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void ShouldIgnoreLocalizedVersionsIfShared()
     {
       // arrange
       this.field.Shared = true;
@@ -226,9 +262,9 @@
       dbfield.ID.ToString().Should().Be(expectedId);
     }
 
-    [Theory(Skip = "To be implemented")]
-    [InlineData("__Security", true)]
-    [InlineData("Title", false)]
+    [Theory]
+    [InlineData("__Some Standard Field", true)]
+    [InlineData("Not Standard Field", false)]
     public void ShouldMarkStandardFieldsSharedByDefault(string fieldName, bool shared)
     {
       // arrange & act

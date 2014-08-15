@@ -5,7 +5,7 @@
 
   public class SecurityFieldTest
   {
-    private const string Security = "ar|Everyone|p*|+*|";
+    private const string AllowAllAccessRule = "ar|Everyone|p*|+*|";
 
     [Fact]
     public void ShouldSetDefaultRootItemSecurity()
@@ -16,7 +16,7 @@
         var item = db.GetItem("/sitecore");
 
         // assert
-        item[FieldIDs.Security].Should().Be(Security);
+        item[FieldIDs.Security].Should().Be(AllowAllAccessRule);
       }
     }
 
@@ -26,13 +26,13 @@
       // arrange & act
       using (var db = new Db 
                         {
-                          new DbItem("home") { { "__Security", Security } }
+                          new DbItem("home") { { "__Security", AllowAllAccessRule } }
                         })
       {
         var item = db.Database.GetItem("/sitecore/content/home");
 
         // assert
-        item[FieldIDs.Security].Should().Be(Security);
+        item[FieldIDs.Security].Should().Be(AllowAllAccessRule);
       }
     }
 
@@ -42,13 +42,13 @@
       // arrange & act
       using (var db = new Db 
                         {
-                          new DbItem("home") { new DbField(FieldIDs.Security) { Value = Security } }
+                          new DbItem("home") { new DbField(FieldIDs.Security) { Value = AllowAllAccessRule } }
                         })
       {
         var item = db.Database.GetItem("/sitecore/content/home");
 
         // assert
-        item[FieldIDs.Security].Should().Be(Security);
+        item[FieldIDs.Security].Should().Be(AllowAllAccessRule);
       }
     }
 
@@ -66,7 +66,7 @@
       }
     }
 
-    [Fact(Skip = "To be implemented")]
+    [Fact]
     public void ShouldBeShared()
     {
       // arrange & act
