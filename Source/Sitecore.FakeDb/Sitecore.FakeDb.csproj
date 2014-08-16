@@ -87,8 +87,10 @@
     <Compile Include="Security\AccessControl\AllowAccessResult.cs" />
     <Compile Include="Security\AccessControl\AuthorizationSwitcher.cs" />
     <Compile Include="Security\AccessControl\DenyAccessResult.cs" />
+    <Compile Include="Security\Accounts\FakeMembershipUser.cs" />
     <Compile Include="Security\Accounts\FakeRolesInRolesProvider.cs" />
     <Compile Include="Security\Accounts\RolesInRolesSwitcher.cs" />
+    <Compile Include="Security\Web\MembershipSwitcher.cs" />
     <Compile Include="ThreadLocalProviderSwitcher.cs" />
     <Compile Include="Resources\Media\FakeMediaProvider.cs" />
     <Compile Include="Resources\Media\MediaProviderSwitcher.cs" />

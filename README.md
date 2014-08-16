@@ -30,6 +30,7 @@ testing.
   - [How to mock Authentication Provider](#how-to-mock-authentication-provider)
   - [How to mock Authorization Provider](#how-to-mock-authorization-provider)
   - [How to mock Role Provider](#how-to-mock-role-provider)
+  - [How to mock membership provider](#how-to-mock-memberhip-provider)
   - [How to unit test item security with mocked provider](#how-to-unit-test-item-security-with-mocked-provider)
   - [How to unit test item security with fake provider](#how-to-unit-test-item-security-with-fake-provider)
   - [How to switch Context User](#how-to-switch-context-user)
@@ -358,6 +359,29 @@ public void HowToMockRoleProvider()
 
     Xunit.Assert.True(resultRoles.Contains(@"sitecore/Authors"));
     Xunit.Assert.True(resultRoles.Contains(@"sitecore/Editors"));
+  }
+}
+```
+
+### <a id="how-to-mock-memberhip-provider"></a>How to mock membership provider
+
+``` csharp
+[Fact]
+public void HowToMockMembershipProvider()
+{
+  // create fake membership user
+  var user = new Sitecore.FakeDb.Security.Accounts.FakeMembershipUser();
+
+  // create membership provider mock
+  var provider = NSubstitute.Substitute.For<System.Web.Security.MembershipProvider>();
+  provider.GetUser(@"extranet\John", true).Returns(user);
+
+  // switch the membership provider
+  using (new Sitecore.FakeDb.Security.Web.MembershipSwitcher(provider))
+  {
+    // check if the user exists
+    var exists = Sitecore.Security.Accounts.User.Exists(@"extranet\John");
+    Xunit.Assert.True(exists);
   }
 }
 ```

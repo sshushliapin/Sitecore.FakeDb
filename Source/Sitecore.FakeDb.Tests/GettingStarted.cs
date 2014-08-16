@@ -247,6 +247,25 @@
     }
 
     [Fact]
+    public void HowToMockMembershipProvider()
+    {
+      // create fake membership user
+      var user = new Sitecore.FakeDb.Security.Accounts.FakeMembershipUser();
+
+      // create membership provider mock
+      var provider = NSubstitute.Substitute.For<System.Web.Security.MembershipProvider>();
+      provider.GetUser(@"extranet\John", true).Returns(user);
+
+      // switch the membership provider
+      using (new Sitecore.FakeDb.Security.Web.MembershipSwitcher(provider))
+      {
+        // check if the user exists
+        var exists = Sitecore.Security.Accounts.User.Exists(@"extranet\John");
+        Xunit.Assert.True(exists);
+      }
+    }
+
+    [Fact]
     public void HowToUnitTestItemSecurityWithMockedProvider()
     {
       // create sample item

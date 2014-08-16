@@ -127,8 +127,11 @@
     <Compile Include="Security\AccessControl\DenyAccessResultTest.cs" />
     <Compile Include="Security\AccessControl\ItemSecurityTest.cs" />
     <Compile Include="Security\Accounts\FakeRolesInRolesProviderTest.cs" />
+    <Compile Include="Security\Accounts\UserTest.cs" />
     <Compile Include="Security\Accounts\RolesInRolesSwitcherTest.cs" />
     <Compile Include="Security\Authentication\AuthenticationSwitcherTest.cs" />
+    <Compile Include="Security\MembershipSwitcherTest.cs" />
+    <Compile Include="Security\FakeMembershipProviderTest.cs" />
     <Compile Include="Security\RoleProviderSwitcherTest.cs" />
     <Compile Include="ThreadLocalProviderSwitcherTest.cs" />
     <Compile Include="Links\LinkDatabaseSwitcherTest.cs" />
