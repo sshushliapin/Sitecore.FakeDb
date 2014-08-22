@@ -268,10 +268,22 @@
     public void ShouldMarkStandardFieldsSharedByDefault(string fieldName, bool shared)
     {
       // arrange & act
-      var field = new DbField(fieldName);
+      var dbfield = new DbField(fieldName);
 
       // assert
-      field.Shared.Should().Be(shared);
+      dbfield.Shared.Should().Be(shared);
+    }
+
+    [Fact]
+    public void ShouldSetValueOfMissingLanguageAndVersionVersion()
+    {
+      // act
+      this.field.SetValue("en", 1, "v1");
+      this.field.SetValue("en", 2, "v2");
+
+      // assert
+      this.field.Values["en"][1].Should().Be("v1");
+      this.field.Values["en"][2].Should().Be("v2");
     }
   }
 }

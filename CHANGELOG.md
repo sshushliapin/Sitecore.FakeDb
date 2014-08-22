@@ -3,6 +3,7 @@
 * [NEW] Implemented Shared fields support
 * [NEW] Implemented Fake Membership Provider
 * [FIX] FakeDataProvider has got thread local DataStorage to solve concurrency issues
+* [FIX] Fixed item versioning issue
 
 0.15.0
 * [NEW] Implemented Fake Authorization Provider

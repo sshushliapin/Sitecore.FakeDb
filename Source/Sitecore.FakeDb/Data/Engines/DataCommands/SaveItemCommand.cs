@@ -65,7 +65,7 @@
         }
 
         Assert.IsTrue(fakeItem.Fields.InnerFields.ContainsKey(field.ID), "Item field not found. Item: '{0}', '{1}'; field: '{2}'.", Item.Name, Item.ID, field.ID);
-        fakeItem.Fields[field.ID].Value = field.Value;
+        fakeItem.Fields[field.ID].SetValue(Item.Language.Name, Item.Version.Number, field.Value);
       }
     }
   }

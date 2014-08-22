@@ -810,6 +810,26 @@
     }
 
     [Fact]
+    public void ShouldCreateItemOfAnyVersion()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") { { "Title", "title v1" } } })
+      {
+        var version2 = db.GetItem("/sitecore/content/home", "en", 2);
+
+        // act
+        using (new EditContext(version2))
+        {
+          version2["Title"] = "title v2";
+        }
+
+        // assert
+        db.GetItem("/sitecore/content/home", "en", 1)["Title"].Should().Be("title v1");
+        db.GetItem("/sitecore/content/home", "en", 2)["Title"].Should().Be("title v2");
+      }
+    }
+
+    [Fact]
     public void ShouldCreateAndFulfilCompositeFieldsStructure()
     {
       // arrange
@@ -860,10 +880,10 @@
     public void ShouldCreateSampleTemplateIfTemplateIdIsSetButTemplateIsMissing()
     {
       // act
-      using (var db = new Db { new DbItem("home", ID.NewID, templateId) })
+      using (var db = new Db { new DbItem("home", ID.NewID, this.templateId) })
       {
         // assert
-        db.GetItem("/sitecore/content/home").TemplateID.Should().Be(templateId);
+        db.GetItem("/sitecore/content/home").TemplateID.Should().Be(this.templateId);
       }
     }
 

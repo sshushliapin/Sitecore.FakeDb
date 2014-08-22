@@ -16,18 +16,18 @@
     internal static readonly IDictionary<ID, string> FieldIdToNameMapping = new ReadOnlyDictionary<ID, string>(new Dictionary<ID, string>
       {
         { FieldIDs.BaseTemplate, "__Base template" },   
-        { FieldIDs.LayoutField, "__Renderings" },
-        { FieldIDs.Lock, "__Lock" },
-        { FieldIDs.Security, "__Security" },
+        { FieldIDs.LayoutField, "__Renderings" }, 
+        { FieldIDs.Lock, "__Lock" }, 
+        { FieldIDs.Security, "__Security" }, 
         { FieldIDs.StandardValues, "__Standard values" }
       });
 
     private static readonly IDictionary<string, ID> FieldNameToIdMapping = new ReadOnlyDictionary<string, ID>(new Dictionary<string, ID>
       {
         { "__Base template", FieldIDs.BaseTemplate },   
-        { "__Renderings", FieldIDs.LayoutField },
-        { "__Lock", FieldIDs.Lock },
-        { "__Security", FieldIDs.Security },
+        { "__Renderings", FieldIDs.LayoutField }, 
+        { "__Lock", FieldIDs.Lock }, 
+        { "__Security", FieldIDs.Security }, 
         { "__Standard values", FieldIDs.StandardValues }
       });
 
@@ -71,9 +71,9 @@
       }
     }
 
-    public string Name { get; set; }
-
     public ID ID { get; internal set; }
+
+    public string Name { get; set; }
 
     public bool Shared { get; set; }
 
@@ -142,6 +142,11 @@
       }
     }
 
+    public IEnumerator GetEnumerator()
+    {
+      return ((IEnumerable)this.values).GetEnumerator();
+    }
+
     public virtual string GetValue(string language, int version)
     {
       if (this.Shared)
@@ -170,28 +175,7 @@
       return langValues[version];
     }
 
-    public IEnumerator GetEnumerator()
-    {
-      return ((IEnumerable)this.values).GetEnumerator();
-    }
-
-    protected virtual int GetLatestVersion(string language)
-    {
-      Assert.ArgumentNotNullOrEmpty(language, "language");
-
-      if (this.values.ContainsKey(language))
-      {
-        var langValues = this.values[language];
-        if (langValues.Any())
-        {
-          return langValues.Last().Key;
-        }
-      }
-
-      return 0;
-    }
-
-    protected virtual void SetValue(string language, string value)
+    public virtual void SetValue(string language, string value)
     {
       if (this.Shared)
       {
@@ -210,7 +194,7 @@
       this.SetValue(language, latestVersion, value);
     }
 
-    protected virtual void SetValue(string language, int version, string value)
+    public virtual void SetValue(string language, int version, string value)
     {
       if (this.Shared)
       {
@@ -218,7 +202,29 @@
         return;
       }
 
+      if (!this.values.ContainsKey(language))
+      {
+        var langValue = new Dictionary<int, string> { { version, value } };
+        this.values.Add(language, langValue);
+      }
+
       this.values[language][version] = value;
+    }
+
+    protected virtual int GetLatestVersion(string language)
+    {
+      Assert.ArgumentNotNullOrEmpty(language, "language");
+
+      if (this.values.ContainsKey(language))
+      {
+        var langValues = this.values[language];
+        if (langValues.Any())
+        {
+          return langValues.Last().Key;
+        }
+      }
+
+      return 0;
     }
   }
 }

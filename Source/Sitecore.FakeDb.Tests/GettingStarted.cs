@@ -185,7 +185,7 @@
         Xunit.Assert.True(
           Sitecore.Security.Authentication.AuthenticationManager.Login("John", true));
 
-        // the authentication manager is called with unexpected parameters and returns False
+        // the authentication manager is called with wrong parameters and returns False
         Xunit.Assert.False(
           Sitecore.Security.Authentication.AuthenticationManager.Login("Robber", true));
       }
