@@ -14,15 +14,16 @@
     {
       // arrange
       var watcher = Substitute.For<PipelineWatcher, IDisposable>(new XmlDocument());
-      var db = new Db(watcher);
+      using (var db = new Db(watcher))
+      {
+        var processor = new ReleasePipelineWatcher();
 
-      var processor = new ReleasePipelineWatcher();
+        // act
+        processor.Process(new DbArgs(db));
 
-      // act
-      processor.Process(new DbArgs(db));
-
-      // assert
-      watcher.Received().Dispose();
+        // assert
+        watcher.Received().Dispose();
+      }
     }
   }
 }

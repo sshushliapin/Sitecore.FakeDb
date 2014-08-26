@@ -90,6 +90,14 @@ public void HowToCreateSimpleItem()
 }
 ```
 
+
+> **Important:**
+
+> You should always dispose the 'db' instance properly.
+> By default Sitecore databases are singletones, so ignoring proper test data 
+> cleaning may lead to unstable behavior in tests.
+
+
 ### <a id="how-to-create-an-item-under-system"></a>How to create an item under System
 
 The code below sets `ParentID` explicitely:
@@ -884,6 +892,9 @@ To instantiate a mock object NSubstitute Factory should be used:
 This configuration allows BucketManager to create a new mocked instance of the 
 BucketProvider class.
 
-*<b>WARNING:</b> BucketManager is a static class. It means that the mocked 
-BucketProvider instance can be shared between different unit tests which 
-may lead to unstable behavior.*
+
+> **Important:**
+
+> BucketManager is a static class. It means that the mocked BucketProvider 
+> instance can be shared between different unit tests which may lead to 
+> unstable behavior in tests.
