@@ -1244,5 +1244,22 @@
         db.Database.Templates[this.templateId].Should().NotBeNull();
       }
     }
+
+    [Fact]
+    public void ShouldAddTemplateAndResetTemplatesCache()
+    {
+      // arrange
+      using (var db = new Db())
+      {
+        // cache the existing templates
+        TemplateManager.GetTemplates(db.Database);
+
+        // act
+        db.Add(new DbTemplate("My Template", this.templateId));
+
+        // assert
+        TemplateManager.GetTemplate(this.templateId, db.Database).Should().NotBeNull();
+      }
+    }
   }
 }

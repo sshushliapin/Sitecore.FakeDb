@@ -65,6 +65,13 @@ namespace Sitecore.FakeDb.Data.Engines
       get { return this.fakeTemplates; }
     }
 
+    public virtual void AddFakeTemplate(DbTemplate template)
+    {
+      this.FakeTemplates.Add(template.ID, template);
+
+      this.Database.Engines.TemplateEngine.Reset();
+    }
+
     public virtual DbItem GetFakeItem(ID itemId)
     {
       Assert.ArgumentCondition(!ID.IsNullOrEmpty(itemId), "itemId", "Value cannot be null.");

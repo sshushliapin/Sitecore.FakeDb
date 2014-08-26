@@ -1,4 +1,7 @@
-﻿0.16.0
+﻿0.16.1
+* [FIX] Fixed issue when template data might be lost
+
+0.16.0
 * [NEW] Implemented security settings inheritance. Ingroduced "__Secutiry" standard field
 * [NEW] Implemented Shared fields support
 * [NEW] Implemented Fake Membership Provider
