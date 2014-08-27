@@ -121,6 +121,7 @@
     <Compile Include="Globalization\TranslateTest.cs" />
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
+    <Compile Include="Pipelines\CorePipelineFactoryTest.cs" />
     <Compile Include="Profile\UserProfileTest.cs" />
     <Compile Include="Security\AccessControl\AllowAccessResultTest.cs" />
     <Compile Include="Security\AccessControl\AuthorizationSwitcherTest.cs" />
