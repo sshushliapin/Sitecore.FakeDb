@@ -58,14 +58,26 @@ To install the framework:
 2. Add references to Sitecore.Kernel and Sitecore.Nexus assemblies.
 3. Run the following command in the NuGet Package Manager Console:
 
-      `Install-Package Sitecore.FakeDb`
-
+  ```
+  Install-Package Sitecore.FakeDb
+  ```
+      
 4. Open App.config file added by the package and update path to the license.xml
 file using LicenseFile setting if necessary. By default the license file path is set to the root folder of the project:
 
-      ``` xml
-      <setting name="LicenseFile" value="..\..\license.xml" />
-      ```
+  ``` xml
+  <setting name="LicenseFile" value="..\..\license.xml" />
+  ```
+
+To upgrade the framework run the following command in the NuGet Package Manager Console:
+
+```
+Update-Package Sitecore.FakeDb
+```
+
+> **Important:**
+
+> You should always overwrite the App.config file if requested.
 
 ## <a id="content"></a>Content
 
