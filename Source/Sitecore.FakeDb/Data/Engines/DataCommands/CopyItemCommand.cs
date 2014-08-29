@@ -1,25 +1,22 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Linq;
+  using System.Threading;
   using Sitecore.Data;
   using Sitecore.Data.Items;
-  using Sitecore.Diagnostics;
   using Sitecore.Data.Managers;
-  using System.Threading;
-
+  using Sitecore.Diagnostics;
 
   public class CopyItemCommand : Sitecore.Data.Engines.DataCommands.CopyItemCommand, IDataEngineCommand
   {
-    private ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly ThreadLocal<DataEngineCommand> innerCommand;
 
-    private ThreadLocal<ItemCreator> itemCreator;
+    private readonly ThreadLocal<ItemCreator> itemCreator;
 
     public CopyItemCommand()
     {
+      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
       this.itemCreator = new ThreadLocal<ItemCreator>();
-
-      this.innerCommand = new ThreadLocal<DataEngineCommand>();
-      this.innerCommand.Value = DataEngineCommand.NotInitialized;
     }
 
     public virtual void Initialize(DataEngineCommand command)

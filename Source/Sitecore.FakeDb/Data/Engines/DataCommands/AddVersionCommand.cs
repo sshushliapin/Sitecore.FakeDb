@@ -1,19 +1,16 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using System.Collections.Generic;
-  using System.Linq;
+  using System.Threading;
   using Sitecore.Data;
   using Sitecore.Data.Items;
-  using System.Threading;
 
   public class AddVersionCommand : Sitecore.Data.Engines.DataCommands.AddVersionCommand, IDataEngineCommand
   {
-    private ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly ThreadLocal<DataEngineCommand> innerCommand;
 
     public AddVersionCommand()
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand>();
-      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
     }
 
     public virtual void Initialize(DataEngineCommand command)

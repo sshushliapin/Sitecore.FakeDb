@@ -10,13 +10,13 @@
   using Sitecore.Exceptions;
   using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Globalization;
-  using Xunit;
-  using Xunit.Extensions;
-  using Version = Sitecore.Data.Version;
+  using Sitecore.Reflection;
   using Sitecore.Security.AccessControl;
   using Sitecore.Security.Accounts;
   using Sitecore.SecurityModel;
-  using Sitecore.Reflection;
+  using Xunit;
+  using Xunit.Extensions;
+  using Version = Sitecore.Data.Version;
 
   public class DbTest
   {
@@ -107,9 +107,9 @@
                         })
       {
         // assert
-        var item = db.GetItem(itemId);
+        var item = db.GetItem(this.itemId);
         item.Fields["Title"].Value.Should().Be("Welcome!");
-        item.TemplateID.Should().Be(templateId);
+        item.TemplateID.Should().Be(this.templateId);
       }
     }
 
@@ -908,13 +908,29 @@
     }
 
     [Fact]
-    public void ShouldGetChildrenOfContentsRoot()
+    public void ShouldCheckIfItemHasChildren()
     {
       // arrange
       using (var db = new Db { new DbItem("Home") })
       {
         // act & assert
         db.GetItem("/sitecore/content").Children.Count.Should().Be(1);
+        db.GetItem("/sitecore/content").HasChildren.Should().BeTrue();
+      }
+    }
+
+    [Fact]
+    public void ShouldDeleteItemChildren()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("Home") })
+      {
+        // act
+        db.GetItem("/sitecore/content").DeleteChildren();
+
+        // assert
+        db.GetItem("/sitecore/content").Children.Any().Should().BeFalse();
+        db.GetItem("/sitecore/content").HasChildren.Should().BeFalse();
       }
     }
 

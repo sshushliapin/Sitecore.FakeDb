@@ -1,18 +1,15 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using Sitecore.Configuration;
-  using Sitecore.Data.Items;
-  using Sitecore.Diagnostics;
   using System.Threading;
+  using Sitecore.Data.Items;
 
   public class GetParentCommand : Sitecore.Data.Engines.DataCommands.GetParentCommand, IDataEngineCommand
   {
-    private ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly ThreadLocal<DataEngineCommand> innerCommand;
 
     public GetParentCommand()
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand>();
-      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
     }
 
     public virtual void Initialize(DataEngineCommand command)

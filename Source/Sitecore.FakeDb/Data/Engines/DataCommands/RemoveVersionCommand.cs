@@ -5,12 +5,11 @@
 
   public class RemoveVersionCommand : Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, IDataEngineCommand
   {
-    private ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly ThreadLocal<DataEngineCommand> innerCommand;
 
     public RemoveVersionCommand()
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand>();
-      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
     }
 
     public virtual void Initialize(DataEngineCommand command)

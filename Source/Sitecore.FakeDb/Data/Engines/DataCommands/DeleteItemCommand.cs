@@ -1,19 +1,16 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Collections.Generic;
-  using Sitecore.Configuration;
-  using Sitecore.Data;
-  using Sitecore.Diagnostics;
   using System.Threading;
+  using Sitecore.Data;
 
   public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand, IDataEngineCommand
   {
-    private ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly ThreadLocal<DataEngineCommand> innerCommand;
 
     public DeleteItemCommand()
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand>();
-      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
     }
 
     public virtual void Initialize(DataEngineCommand command)
@@ -31,7 +28,7 @@
       return this.RemoveRecursive(this.innerCommand.Value.DataStorage.FakeItems, Item.ID);
     }
 
-    private bool RemoveRecursive(IDictionary<ID, DbItem> fakeItems, ID itemId)
+    protected virtual bool RemoveRecursive(IDictionary<ID, DbItem> fakeItems, ID itemId)
     {
       if (!fakeItems.ContainsKey(itemId))
       {
@@ -42,6 +39,12 @@
       foreach (var child in item.Children)
       {
         this.RemoveRecursive(fakeItems, child.ID);
+      }
+
+      if (!ID.IsNullOrEmpty(item.ParentID))
+      {
+        var parent = fakeItems[item.ParentID];
+        parent.Children.Remove(item);
       }
 
       return fakeItems.Remove(itemId);

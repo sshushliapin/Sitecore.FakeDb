@@ -4,7 +4,6 @@
   using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
@@ -87,6 +86,30 @@
 
       // assert
       result.Should().BeFalse();
+    }
+
+    [Fact]
+    public void ShouldDeleteItemFromParentsChildrenCollection()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var parentId = ID.NewID;
+
+      var item = new DbItem("item", itemId) { ParentID = parentId };
+      var parent = new DbItem("parent", parentId);
+
+      parent.Children.Add(item);
+
+      this.dataStorage.FakeItems.Add(itemId, item);
+      this.dataStorage.FakeItems.Add(parentId, parent);
+
+      this.command.Initialize(ItemHelper.CreateInstance(itemId, this.database), ID.NewID);
+
+      // act
+      this.command.DoExecute();
+
+      // assert
+      this.dataStorage.FakeItems[parentId].Children.Should().BeEmpty();
     }
 
     private class OpenDeleteItemCommand : DeleteItemCommand

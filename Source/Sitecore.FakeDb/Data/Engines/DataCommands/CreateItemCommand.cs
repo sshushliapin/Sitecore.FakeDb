@@ -1,22 +1,18 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using Sitecore.Configuration;
-  using Sitecore.Data.Items;
-  using Sitecore.Diagnostics;
   using System.Threading;
+  using Sitecore.Data.Items;
 
   public class CreateItemCommand : Sitecore.Data.Engines.DataCommands.CreateItemCommand, IDataEngineCommand
   {
-    private ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly ThreadLocal<DataEngineCommand> innerCommand;
 
-    private ThreadLocal<ItemCreator> itemCreator;
+    private readonly ThreadLocal<ItemCreator> itemCreator;
 
     public CreateItemCommand()
     {
+      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
       this.itemCreator = new ThreadLocal<ItemCreator>();
-
-      this.innerCommand = new ThreadLocal<DataEngineCommand>();
-      this.innerCommand.Value = DataEngineCommand.NotInitialized;
     }
 
     public virtual void Initialize(DataEngineCommand command)

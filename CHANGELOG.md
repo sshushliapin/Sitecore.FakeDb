@@ -1,6 +1,7 @@
 ﻿0.16.1
 * [FIX] Fixed issue when template data might be lost
 * [FIX] Clean CorePipelineFactory cache on db disposing
+* [FIX] Fixed item children deleting
 
 0.16.0
 * [NEW] Implemented security settings inheritance. Ingroduced "__Secutiry" standard field

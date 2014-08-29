@@ -4,7 +4,6 @@
   using NSubstitute;
   using Sitecore.Collections;
   using Sitecore.Data.Engines;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;

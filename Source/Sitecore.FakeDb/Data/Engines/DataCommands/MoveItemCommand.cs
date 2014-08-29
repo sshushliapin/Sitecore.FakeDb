@@ -1,21 +1,20 @@
-﻿using System.Threading;
-namespace Sitecore.FakeDb.Data.Engines.DataCommands
+﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System.Threading;
+
   public class MoveItemCommand : Sitecore.Data.Engines.DataCommands.MoveItemCommand, IDataEngineCommand
   {
-    private ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly ThreadLocal<DataEngineCommand> innerCommand;
 
     public MoveItemCommand()
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand>();
-      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
     }
 
     public virtual void Initialize(DataEngineCommand command)
     {
       this.innerCommand.Value = command;
     }
-
 
     protected override Sitecore.Data.Engines.DataCommands.MoveItemCommand CreateInstance()
     {

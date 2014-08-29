@@ -1,19 +1,16 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Linq;
-  using Sitecore.Collections;
-  using Sitecore.Configuration;
-  using Sitecore.Diagnostics;
   using System.Threading;
+  using Sitecore.Collections;
 
   public class GetChildrenCommand : Sitecore.Data.Engines.DataCommands.GetChildrenCommand, IDataEngineCommand
   {
-    private ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly ThreadLocal<DataEngineCommand> innerCommand;
 
     public GetChildrenCommand()
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand>();
-      this.innerCommand.Value = DataEngineCommand.NotInitialized;
+      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
     }
 
     public virtual void Initialize(DataEngineCommand command)
@@ -31,7 +28,8 @@
       var item = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
       var itemList = new ItemList();
 
-      itemList.AddRange(item.Children.Select(child => this.innerCommand.Value.DataStorage.GetSitecoreItem(child.ID, this.Item.Language)));
+      var children = item.Children.Select(child => this.innerCommand.Value.DataStorage.GetSitecoreItem(child.ID, this.Item.Language));
+      itemList.AddRange(children);
 
       return itemList;
     }
