@@ -62,8 +62,8 @@ To install the framework:
   Install-Package Sitecore.FakeDb
   ```
       
-4. Open App.config file added by the package and update path to the license.xml
-file using LicenseFile setting if necessary. By default the license file path is set to the root folder of the project:
+4. Open the App.config file added by the package and update path to the license.xml
+file using the LicenseFile setting if necessary. By default the license file path is set to the root folder of the project:
 
   ``` xml
   <setting name="LicenseFile" value="..\..\license.xml" />
@@ -84,7 +84,7 @@ Update-Package Sitecore.FakeDb
 ### <a id="how-to-create-a-simple-item"></a>How to create a simple item
 
 The code below creates a fake in-memory database with a single item Home that
-contains field Title with value 'Welcome!' ([xUnit](http://xunit.codeplex.com/)
+contains the Title field with the 'Welcome!' value (the [xUnit](http://xunit.codeplex.com/)
 unit testing framework is used):
 
 ``` csharp
@@ -131,7 +131,7 @@ public void HowToCreateItemUnderSystem()
 
 ### <a id="how-to-create-an-item-hierarchy"></a>How to create an item hierarchy
 
-This code creates root item Articles and two child items Getting Started and Troubleshooting:
+This code creates a root item Articles and two child items - Getting Started and Troubleshooting:
 
 ``` csharp
 [Fact]
@@ -156,7 +156,7 @@ public void HowToCreateItemHierarchy()
  
 ### <a id="how-to-create-a-multilingual-item"></a>How to create a multilingual item
 
-The next example demonstrates how to configure field values for different languages:
+The following example demonstrates how to configure field values for different languages:
 
 ``` csharp
 [Fact]
@@ -179,14 +179,14 @@ public void HowToCreateMultilingualItem()
 }
 ```
 
-### <a id="how-to-create-an-item-of-specific-template"></a>How to create an item of specific template
+### <a id="how-to-create-an-item-of-specific-template"></a>How to create an item on a specific template
 
 In some cases you may want to create an item template first and only then add items based on this template.
-It can be acheived using the next sample:
+It can be acheived using the following sample:
 
 ``` csharp
 [Fact]
-public void HowToCreateItemWithSpecificTemplate()
+public void HowToCreateItemOnSpecificTemplate()
 {
   Sitecore.Data.ID templateId = Sitecore.Data.ID.NewID;
 
@@ -290,9 +290,9 @@ public void HowToCreateTemplateHierarchy()
 
 ## <a id="Security"></a>Security
 
-By default security allows to perform all the basic item operations without 
+By default, security allows to perform all the basic item operations without 
 any additional configuration. For advanced scenarios where some security logic 
-needs to be unit tested mocked providers and provider switchers can be used.
+needs to be unit-tested, mocked providers and provider switchers can be used.
 
 ### <a id="how-to-mock-authentication-provider"></a>How to mock Authentication Provider
 
@@ -506,7 +506,7 @@ public void HowToSwitchContextUser()
 
 ### <a id="how-to-configure-item-access"></a>How to configure Item Access
 
-The code below denies item read, so that GetItem() method returns null: 
+The code below denies item read, so that the GetItem() method returns null: 
 
 ``` csharp
 [Fact]
@@ -533,9 +533,9 @@ public void HowToConfigureItemAccess()
 
 Imagine you have a product repository. The repository should be able to get a 
 product by id. The implementation of the repository is 'thin' and does nothing 
-else than calling a corresponding pipeline with proper arguments. The next 
+else than calling a corresponding pipeline with proper arguments. The following 
 example shows how to unit test the pipeline calls (please note that the 
-pipeline is not defined in config file):
+pipeline is not defined in the config file):
 
 ``` csharp
 [Fact]
@@ -572,8 +572,8 @@ private partial class ProductRepository
 ### <a id="how-to-configure-a-pipeline-behaviour"></a>How to configure a pipeline behaviour
 
 The code sample above checks that the pipeline is called with proper arguments. 
-The next scenario would be to validate the pipeline call results. 
-In the code below we configure pipeline proressor behaviour to return an expected product only
+The following scenario is used to validate the pipeline call results. 
+In the code below we configure the pipeline's proressor behaviour to return an expected product only
 if the product id id set to "1".
 
 ``` csharp
@@ -623,10 +623,10 @@ private partial class ProductRepository
 ### <a id="how-to-configure-settings"></a>How to configure Settings
 
 In some cases you may prefer to use a setting instead of a dependency injected 
-in your code via constructor or property. The code below instantiates new Db 
+in your code via a constructor or property. The code below instantiates the new Db 
 context and sets "MySetting" setting value to "1234". Please note that the 
 setting is not defined explicitly in the App.config file, but nevertheless it 
-is accessible using Sitecore.Configuration.Settings and can be used in unit 
+is accessible using Sitecore.Configuration.Settings and can be used in the unit 
 tests:
 
 ``` csharp
@@ -647,15 +647,16 @@ public void HowToConfigureSettings()
 
 ### <a id="database-lifetime-configuration"></a>Database lifetime configuration
 
-By default Sitecore set `singleInstance="true"` for all databases so that each 
-of the three default databases behaves as singletones. This approach has list 
+By default Sitecore sets `singleInstance="true"` for all databases so that each 
+of the three default databases behaves as singletones. This approach has a list 
 of pros and cons; it is important to be avare about potential issues that may 
 appear.
 
-Single instance allows one to resolve a database in any place of code using 
+A single instance allows one to resolve a database in any place of code using 
 Sitecore Factory. The same content is available no matter how many times the 
-database has been resolved. The next code creates item Home using simplified 
-FakeDb API and then reads the item from database resolved from Factory:
+database has been resolved. The following code creates the Home item using the
+simplified FakeDb API and then reads the item from the database resolved from
+Factory:
 
 ``` csharp
 [Fact]
@@ -675,8 +676,8 @@ public void HowToGetItemFromSitecoreDatabase()
 ```
 
 It is important to remember that single instance objects may break unit tests 
-isolation allowing data from one test appear in another one. In order to 
-minimize this negative impact Db context must always be disposed properly.
+isolation allowing the data from one test appear in another one. In order to 
+minimize this negative impact, the Db context must always be disposed properly.
 
 Sitecore FakeDb can deal with both single or transcient lifetime modes 
 allowing developers to choose between usability or isolation.
@@ -686,9 +687,9 @@ allowing developers to choose between usability or isolation.
 
 ### <a id="how-to-unit-test-localization"></a>How to unit test localization
 
-FakeDb supports simple localization mechanism. You can call Translate.Text() or
+FakeDb supports a simple localization mechanism. You can call the Translate.Text() or
 Translate.TextByLanguage() method to get a 'translated' version of the original text.
-The translated version has got language name added to the initial phrase.
+The translated version gets the language name added to the initial phrase.
 
 ``` csharp
 [Fact]
@@ -802,7 +803,7 @@ public void HowToMockMediaItemProvider()
 
 ### <a id="how-to-work-with-the-query-api"></a>How to work with the Query API
 
-The `Query` API needs `Context.Database` set and the example below uses 
+The `Query` API needs the `Context.Database` set, and the example below uses 
 `DatabaseSwitcher` to do so:
 
 ```csharp
@@ -830,7 +831,7 @@ public void HowToWorkWithQueryApi()
 
 ### <a id="how-to-mock-the-content-search-logic"></a>How to mock the content search logic
 
-The example below creates and configure a content search index mock so that it returns Home item:
+The example below creates and configures a content search index mock so that it returns the Home item:
 
 ``` csharp
 [Fact]
@@ -879,7 +880,7 @@ public void HowToMockContentSearchLogic()
     
 ## <a id="fakedb-nsubstitute"></a>FakeDb NSubstitute
 Mocking is one of the fundamental things about unit testing. Mock objects 
-allows to simulate an abstraction behaviour keeping unit tests fast and 
+allows to simulate abstraction behaviour keeping unit tests fast and 
 isolated.
 
 FakeDb allows to create [NSubstitute](http://nsubstitute.github.io/) mocks 
@@ -890,7 +891,7 @@ in the NuGet Package Manager Console:
 
 `Install-Package Sitecore.FakeDb.NSubstitute`
 
-To instantiate a mock object NSubstitute Factory should be used:
+To instantiate a mock object, NSubstitute Factory should be used:
 
 ``` xml
 <bucketManager enabled="true">
@@ -908,5 +909,5 @@ BucketProvider class.
 > **Important:**
 
 > BucketManager is a static class. It means that the mocked BucketProvider 
-> instance can be shared between different unit tests which may lead to 
+> instance can be shared between different unit tests, which may lead to 
 > unstable behavior in tests.
