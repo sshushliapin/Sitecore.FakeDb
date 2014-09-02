@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/sergeyshushlyapin/Sitecore.FakeDb</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <tags>Sitecore, unit testing</tags>
+    <tags>Sitecore unit-testing testing in-memory TDD mocking mocks</tags>
     <dependencies>
       <dependency id="Sitecore.FakeDb" version="$version$" />
     </dependencies>
