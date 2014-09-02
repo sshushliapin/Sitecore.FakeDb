@@ -2,14 +2,15 @@
 {
   using System.Collections.Generic;
   using System.Linq;
+  using System.Threading;
   using Sitecore.Collections;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
+  using Sitecore.Data.Query;
   using Sitecore.Data.Templates;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Globalization;
   using CallContext = Sitecore.Data.DataProviders.CallContext;
-  using System.Threading;
 
   public class FakeDataProvider : DataProvider, IRequireDataStorage
   {
@@ -70,6 +71,22 @@
     public override LanguageCollection GetLanguages(CallContext context)
     {
       return new LanguageCollection { Language.Parse("en-US") };
+    }
+
+    public override ID SelectSingleID(string query, CallContext context)
+    {
+      query = query.Replace("fast:", string.Empty);
+      var item = Query.SelectSingleItem(query, this.Database);
+
+      return item != null ? item.ID : ID.Null;
+    }
+
+    public override IDList SelectIDs(string query, CallContext context)
+    {
+      query = query.Replace("fast:", string.Empty);
+      var items = Query.SelectItems(query, this.Database);
+
+      return items != null ? IDList.Build(items.Select(i => i.ID).ToArray()) : new IDList();
     }
   }
 }

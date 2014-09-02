@@ -1,4 +1,7 @@
-﻿0.16.1
+﻿0.17.0
+* [NEW] Implemented limited Sitecore Fast Query support
+
+0.16.1
 * [FIX] Fixed issue when template data might be lost
 * [FIX] Clean CorePipelineFactory cache on db disposing
 * [FIX] Fixed item children deleting

@@ -610,21 +610,37 @@
     [Fact]
     public void HowToWorkWithQueryApi()
     {
+      const string Query = "/sitecore/content/*[@@key = 'home']";
+
       using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db 
         {
           new Sitecore.FakeDb.DbItem("home")
         })
       {
-        var query = "/sitecore/content/*[@@key = 'home']";
-
         Sitecore.Data.Items.Item[] result;
         using (new Sitecore.Data.DatabaseSwitcher(db.Database))
         {
-          result = Sitecore.Data.Query.Query.SelectItems(query);
+          result = Sitecore.Data.Query.Query.SelectItems(Query);
         }
 
         Xunit.Assert.Equal(result.Count(), 1);
         Xunit.Assert.Equal(result[0].Key, "home");
+      }
+    }
+
+    [Fact]
+    public void HowToWorkWithFastQueryApi()
+    {
+      const string Query = "fast:/sitecore/content/*[@@key = 'home']";
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home")
+        })
+      {
+        Sitecore.Data.Items.Item homeItem = db.Database.SelectSingleItem(Query);
+
+        Xunit.Assert.Equal(homeItem.Key, "home");
       }
     }
 

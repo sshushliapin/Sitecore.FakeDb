@@ -46,6 +46,7 @@ testing.
   - [How to work with Link Database](#how-to-work-with-link-database)
   - [How to mock Media Provider](#how-to-mock-media-provider)
   - [How to work with the Query API](#how-to-work-with-the-query-api)
+  - [How to work with the Fast Query API](#how-to-work-with-the-fast-query-api)
   - [How to mock the content search logic](#how-to-mock-the-content-search-logic)
 - [FakeDb NSubstitute](#fakedb-nsubstitute)
 
@@ -810,17 +811,17 @@ The `Query` API needs the `Context.Database` set, and the example below uses
 [Fact]
 public void HowToWorkWithQueryApi()
 {
+  const string Query = "/sitecore/content/*[@@key = 'home']";
+
   using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db 
     {
       new Sitecore.FakeDb.DbItem("home")
     })
   {
-    var query = "/sitecore/content/*[@@key = 'home']";
-
     Sitecore.Data.Items.Item[] result;
     using (new Sitecore.Data.DatabaseSwitcher(db.Database))
     {
-      result = Sitecore.Data.Query.Query.SelectItems(query);
+      result = Sitecore.Data.Query.Query.SelectItems(Query);
     }
 
     Xunit.Assert.Equal(result.Count(), 1);
@@ -828,6 +829,30 @@ public void HowToWorkWithQueryApi()
   }
 }
 ```
+
+### <a id="how-to-work-with-the-fast-query-api"></a>How to work with the Fast Query API
+
+```csharp
+[Fact]
+public void HowToWorkWithFastQueryApi()
+{
+  const string Query = "fast:/sitecore/content/*[@@key = 'home']";
+
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db 
+    {
+      new Sitecore.FakeDb.DbItem("home")
+    })
+  {
+    Sitecore.Data.Items.Item homeItem = db.Database.SelectSingleItem(Query);
+
+    Xunit.Assert.Equal(homeItem.Key, "home");
+  }
+}
+```
+
+> **Important:**
+
+> Under the hood Sitecore Query is used. The Fast Query limitations are not applied to the result.
 
 ### <a id="how-to-mock-the-content-search-logic"></a>How to mock the content search logic
 
