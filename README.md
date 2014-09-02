@@ -1,18 +1,18 @@
 Sitecore FakeDb
 ===============
 
-A unit testing framework for Sitecore that enables creation and manipulation of 
-Sitecore content in memory. Designed to minimize efforts for the test content 
+This is the unit testing framework for Sitecore that enables creation and manipulation of 
+Sitecore content in memory. It is designed to minimize efforts for the test content 
 initialization keeping focus on the minimal test data rather than comprehensive 
 content tree representation.
 
-FakeDb substitutes real Sitecore providers with fake "in-memory" providers to 
-avoid calls to database or configuration. The providers does not replicate real
-Sitecore behavior but used mainly as stubs with minimal logic. They can be 
-replaced with mocks in unit tests using provider switchers.
+FakeDb substitutes real Sitecore providers with fake "in-memory" providers to
+avoid calls to database or configuration. The providers do not replicate real
+Sitecore behavior, but are used mainly as stubs with minimal logic. They can be 
+replaced with mocks in unit tests using the provider switchers.
 
-Sitecore FakeDb does not set goal to run entire Sitecore instance in-memory. It
-is a unit testing framework which is not supposed to be used for integration 
+Sitecore FakeDb does not set a goal to run the entire Sitecore instance in-memory. It
+is a unit testing framework, which is not supposed to be used for integration
 testing.
 
 ## Contents
