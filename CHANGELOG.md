@@ -1,4 +1,7 @@
-﻿0.17.0
+﻿0.17.1
+* [FIX] Share auto-generated templates for siblings only
+
+0.17.0
 * [NEW] Implemented limited Sitecore Fast Query support
 
 0.16.1

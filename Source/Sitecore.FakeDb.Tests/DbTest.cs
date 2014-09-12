@@ -670,6 +670,29 @@
     }
 
     [Fact]
+    public void ShouldShareTemplateForSiblinsOnly()
+    {
+      // arrange & act
+      using (var db = new Db
+                        {
+                          new DbItem("products")
+                            {
+                              new DbItem("hammer")
+                            },
+                          new DbItem("shapes") 
+                        })
+      {
+        var productsId = db.GetItem("/sitecore/content/products").TemplateID;
+        var hammerId = db.GetItem("/sitecore/content/products/hammer").TemplateID;
+        var shapesId = db.GetItem("/sitecore/content/shapes").TemplateID;
+
+        // assert
+        productsId.Should().Be(shapesId);
+        productsId.Should().NotBe(hammerId);
+      }
+    }
+
+    [Fact]
     public void ShouldThrowExceptionIfNoDbInstanceInitialized()
     {
       // arrange
