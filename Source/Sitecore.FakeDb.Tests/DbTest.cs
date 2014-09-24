@@ -503,6 +503,53 @@
     }
 
     [Fact]
+    public void ShouldRemoveItemVersion()
+    {
+      // arrange
+      using (var db = new Db
+                       {
+                         new DbItem("home")
+                           {
+                             Fields = { new DbField("Title") { { "en", 1, "Hi" }, { "en", 2, "Hello" } } }
+                           }
+                       })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // act
+        item.Versions.RemoveVersion();
+
+        // assert
+        db.GetItem("/sitecore/content/home", "en", 1)["Title"].Should().Be("Hi");
+        db.GetItem("/sitecore/content/home", "en", 2)["Title"].Should().BeEmpty();
+      }
+    }
+
+    [Fact]
+    public void ShouldRemoveAllVersions()
+    {
+      // arrange
+      using (var db = new Db
+                       {
+                         new DbItem("home")
+                           {
+                             Fields = { new DbField("Title") { { "en", 1, "Hi" }, { "da", 2, "Hey" } } }
+                           }
+                       })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // act
+        item.Versions.RemoveAll(true);
+
+        // assert
+        db.GetItem("/sitecore/content/home", "en", 1)["Title"].Should().BeEmpty();
+        db.GetItem("/sitecore/content/home", "da", 1)["Title"].Should().BeEmpty();
+        db.GetItem("/sitecore/content/home", "da", 2)["Title"].Should().BeEmpty();
+      }
+    }
+
+    [Fact]
     public void ShouldRenameItem()
     {
       // arrange
@@ -805,6 +852,30 @@
 
         // act & assert
         item.Versions.Count.Should().Be(2);
+      }
+    }
+
+    [Fact]
+    public void ShouldGetLanguages()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home")
+                            {
+                              Fields =
+                                {
+                                  new DbField("Title") { { "en", 1, string.Empty }, { "da", 2, string.Empty } }
+                                }
+                            }
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // act & assert
+        item.Languages.Length.Should().Be(2);
+        item.Languages.Should().Contain(Language.Parse("en"));
+        item.Languages.Should().Contain(Language.Parse("da"));
       }
     }
 

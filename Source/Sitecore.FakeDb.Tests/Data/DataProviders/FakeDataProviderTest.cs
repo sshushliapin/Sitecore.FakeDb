@@ -145,7 +145,7 @@
     }
 
     [Fact]
-    private void ShouldSupportGetLanguagesAndReturnOne()
+    public void ShouldGetDefaultLanguage()
     {
       // arrange
       var db = this.dataStorage.Database;
@@ -155,7 +155,74 @@
 
       // assert
       langs.Should().HaveCount(1);
-      langs.First().Name.Should().Be("en-US");
+      langs.First().Name.Should().Be("en");
+    }
+
+    [Fact]
+    public void ShouldGetItemDefinition()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var templateId = ID.NewID;
+      var callContext = new CallContext(new DataManager(this.dataStorage.Database), 1);
+
+      this.dataStorage.FakeItems.Add(itemId, new DbItem("home", itemId, templateId));
+
+      // act
+      var definition = this.dataProvider.GetItemDefinition(itemId, callContext);
+
+      // assert
+      definition.ID.Should().Be(itemId);
+      definition.Name.Should().Be("home");
+      definition.TemplateID.Should().Be(templateId);
+      definition.BranchId.Should().Be(ID.Null);
+    }
+
+    [Fact]
+    public void ShouldGetNullItemDefinitionIfNoItemFound()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var callContext = new CallContext(new DataManager(this.dataStorage.Database), 1);
+
+      // act & assert
+      this.dataProvider.GetItemDefinition(itemId, callContext).Should().BeNull();
+    }
+
+    [Fact]
+    public void ShouldGetAllThePossibleItemVersions()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var templateId = ID.NewID;
+
+      var definition = new ItemDefinition(itemId, "home", templateId, ID.Null);
+      var callContext = new CallContext(new DataManager(this.dataStorage.Database), 1);
+
+      var item = new DbItem("home", itemId, templateId)
+                   {
+                     Fields =
+                       {
+                         new DbField("Field 1") { { "en", 1, string.Empty }, { "en", 2, string.Empty }, { "da", 1, string.Empty } },
+                         new DbField("Field 2") { { "en", 1, string.Empty }, { "da", 1, string.Empty }, { "da", 2, string.Empty } }
+                       }
+                   };
+
+      this.dataStorage.FakeItems.Add(itemId, item);
+
+      // act
+      var versions = this.dataProvider.GetItemVersions(definition, callContext);
+
+      // assert
+      versions.Count.Should().Be(4);
+      versions[0].Language.Name.Should().Be("en");
+      versions[0].Version.Number.Should().Be(1);
+      versions[1].Language.Name.Should().Be("en");
+      versions[1].Version.Number.Should().Be(2);
+      versions[2].Language.Name.Should().Be("da");
+      versions[2].Version.Number.Should().Be(1);
+      versions[3].Language.Name.Should().Be("da");
+      versions[3].Version.Number.Should().Be(2);
     }
 
     private DbTemplate CreateTestTemplateInDataStorage()

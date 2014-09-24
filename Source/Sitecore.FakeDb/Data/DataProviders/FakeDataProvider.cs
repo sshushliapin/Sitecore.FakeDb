@@ -44,6 +44,52 @@
       return new IdCollection { ids };
     }
 
+    public override ItemDefinition GetItemDefinition(ID itemId, CallContext context)
+    {
+      if (this.DataStorage == null)
+      {
+        return null;
+      }
+
+      var item = this.DataStorage.GetFakeItem(itemId);
+
+      return item != null ? new ItemDefinition(itemId, item.Name, item.TemplateID, ID.Null) : null;
+    }
+
+    public override VersionUriList GetItemVersions(ItemDefinition itemDefinition, CallContext context)
+    {
+      var list = new List<VersionUri>();
+
+      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
+      foreach (var field in item.Fields)
+      {
+        foreach (var fieldLang in field.Values)
+        {
+          var language = fieldLang.Key;
+
+          foreach (var fieldVer in fieldLang.Value)
+          {
+            var version = fieldVer.Key;
+
+            if (list.Any(l => l.Language.Name == language && l.Version.Number == version))
+            {
+              continue;
+            }
+
+            list.Add(new VersionUri(Language.Parse(language), new Version(version)));
+          }
+        }
+      }
+
+      var versions = new VersionUriList();
+      foreach (var version in list)
+      {
+        versions.Add(version);
+      }
+
+      return versions;
+    }
+
     public override TemplateCollection GetTemplates(CallContext context)
     {
       var templates = new TemplateCollection();
@@ -70,7 +116,7 @@
 
     public override LanguageCollection GetLanguages(CallContext context)
     {
-      return new LanguageCollection { Language.Parse("en-US") };
+      return new LanguageCollection { Language.Parse("en") };
     }
 
     public override ID SelectSingleID(string query, CallContext context)

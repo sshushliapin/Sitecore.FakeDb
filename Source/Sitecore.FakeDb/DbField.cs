@@ -164,6 +164,11 @@
         return this.sharedValue;
       }
 
+      if (version == 0)
+      {
+        version = this.GetLatestVersion(language);
+      }
+
       var hasValueForLanguage = this.values.ContainsKey(language);
       if (!hasValueForLanguage)
       {
@@ -179,7 +184,7 @@
       var hasValueForVersion = langValues.ContainsKey(version);
       if (!hasValueForVersion)
       {
-        return langValues.Last().Value;
+        return string.Empty;
       }
 
       return langValues[version];

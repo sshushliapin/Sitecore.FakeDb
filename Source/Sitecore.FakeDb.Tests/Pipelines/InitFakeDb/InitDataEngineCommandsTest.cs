@@ -38,6 +38,7 @@
       commands.GetRootItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.GetRootItemCommand, IDataEngineCommand>();
       commands.HasChildrenPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.HasChildrenCommand, IDataEngineCommand>();
       commands.MoveItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.MoveItemCommand, IDataEngineCommand>();
+      commands.RemoveVersionPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, IDataEngineCommand>();
       commands.ResolvePathPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.ResolvePathCommand, IDataEngineCommand>();
       commands.SaveItemPrototype = Substitute.For<Sitecore.Data.Engines.DataCommands.SaveItemCommand, IDataEngineCommand>();
 
@@ -58,6 +59,7 @@
       ((IDataEngineCommand)commands.GetRootItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
       ((IDataEngineCommand)commands.HasChildrenPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
       ((IDataEngineCommand)commands.MoveItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.RemoveVersionPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
       ((IDataEngineCommand)commands.ResolvePathPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
       ((IDataEngineCommand)commands.SaveItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
     }

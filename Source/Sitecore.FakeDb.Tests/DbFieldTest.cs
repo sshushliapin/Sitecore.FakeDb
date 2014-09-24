@@ -90,13 +90,13 @@
     }
 
     [Fact]
-    public void ShouldGetLatestAvailableVersionIfNothingFound()
+    public void ShouldGetEmptyStringIfNoVersionFound()
     {
       // arrange
       this.field.Add("en", 1, "value");
 
       // assert
-      this.field.GetValue("en", 100).Should().Be("value");
+      this.field.GetValue("en", 100).Should().BeEmpty();
     }
 
     [Fact]

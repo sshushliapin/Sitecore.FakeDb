@@ -1,6 +1,8 @@
-﻿0.18.0
+﻿0.17.1
 * [NEW] Introduced Item Statistics
 * [FIX] Share auto-generated templates for siblings only
+* [FIX] Fixed item version removing
+* [FIX] Fixed item languages retrieving
 
 0.17.0
 * [NEW] Implemented limited Sitecore Fast Query support
