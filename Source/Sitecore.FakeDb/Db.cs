@@ -89,6 +89,7 @@
     {
       Assert.ArgumentNotNull(item, "item");
 
+      this.SetStatistics(item);
       this.SetParent(item);
       this.CreateTemplate(item);
       this.EnsureIsChild(item);
@@ -173,6 +174,18 @@
       CorePipeline.Run("releaseFakeDb", new DbArgs(this));
 
       this.disposed = true;
+    }
+
+    protected virtual void SetStatistics(DbItem item)
+    {
+      var date = DateUtil.IsoNow;
+      var user = Context.User.Name;
+
+      item.Fields.Add("__Created", date);
+      item.Fields.Add("__Created by", user);
+      item.Fields.Add("__Revision", ID.NewID.ToString());
+      item.Fields.Add("__Updated", date);
+      item.Fields.Add("__Updated by", user);
     }
 
     protected virtual void CreateTemplate(DbItem item)

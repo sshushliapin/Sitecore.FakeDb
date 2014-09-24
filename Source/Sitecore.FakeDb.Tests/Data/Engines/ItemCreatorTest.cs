@@ -97,8 +97,8 @@
       var fieldId = ID.NewID;
       var fieldList = new FieldList { { fieldId, string.Empty } };
 
-      this.dataStorage.GetFieldList(templateId).Returns(fieldList);
-      this.dataStorage.GetFakeTemplate(templateId).Returns(new DbTemplate("sample", templateId) { Fields = { new DbField("Title", fieldId) } });
+      this.dataStorage.GetFieldList(this.templateId).Returns(fieldList);
+      this.dataStorage.GetFakeTemplate(this.templateId).Returns(new DbTemplate("sample", this.templateId) { Fields = { new DbField("Title", fieldId) } });
 
       // act
       this.itemCreator.Create("home", this.itemId, this.templateId, this.database, this.destination);

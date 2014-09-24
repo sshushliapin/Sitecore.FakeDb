@@ -1,4 +1,5 @@
-﻿0.17.1
+﻿0.18.0
+* [NEW] Introduced Item Statistics
 * [FIX] Share auto-generated templates for siblings only
 
 0.17.0
