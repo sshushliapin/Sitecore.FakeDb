@@ -50,14 +50,22 @@
     [Fact]
     public void CacheShouldBeDisabled()
     {
+      // assert
       Settings.Caching.Enabled.Should().BeFalse();
     }
 
     [Fact]
     public void ShouldGetFakeStandardValuesProvider()
     {
-      // act & assert
+      // assert
       StandardValuesManager.Provider.Should().BeOfType<FakeStandardValuesProvider>();
+    }
+
+    [Fact]
+    public void ShouldDisableAllDataProviderCaches()
+    {
+      // assert
+      Factory.GetDatabase("master").GetDataProviders()[0].CacheOptions.DisableAll.Should().BeTrue();
     }
   }
 }
