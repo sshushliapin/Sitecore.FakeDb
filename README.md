@@ -63,13 +63,6 @@ To install the framework:
   Install-Package Sitecore.FakeDb
   ```
       
-4. Open the App.config file added by the package and update path to the license.xml
-file using the LicenseFile setting if necessary. By default the license file path is set to the root folder of the project:
-
-  ``` xml
-  <setting name="LicenseFile" value="..\..\license.xml" />
-  ```
-
 To upgrade the framework run the following command in the NuGet Package Manager Console:
 
 ```
@@ -914,7 +907,9 @@ using Sitecore Factory.
 In order to install the FakeDb.NSubstitute package run the following command 
 in the NuGet Package Manager Console:
 
-`Install-Package Sitecore.FakeDb.NSubstitute`
+```
+Install-Package Sitecore.FakeDb.NSubstitute
+```
 
 To instantiate a mock object, NSubstitute Factory should be used:
 

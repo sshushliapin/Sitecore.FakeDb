@@ -1,5 +1,6 @@
-﻿0.17.1
+﻿0.18.0
 * [NEW] Introduced Item Statistics
+* [NEW] Skipped license check
 * [FIX] Share auto-generated templates for siblings only
 * [FIX] Fixed item version removing
 * [FIX] Fixed item languages retrieving
