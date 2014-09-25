@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.DataProviders
 {
+  using Sitecore.FakeDb.Reflection;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading;
@@ -15,6 +16,11 @@
   public class FakeDataProvider : DataProvider, IRequireDataStorage
   {
     private readonly ThreadLocal<DataStorage> dataStorage;
+
+    static FakeDataProvider()
+    {
+      NullLicenseManager.Activate();
+    }
 
     public FakeDataProvider()
     {

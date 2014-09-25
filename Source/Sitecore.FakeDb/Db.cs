@@ -17,9 +17,7 @@ namespace Sitecore.FakeDb
     using Sitecore.Security.AccessControl;
     using Data.Items;
     using Security.AccessControl;
-    using System.Reflection;
     using Reflection;
-    using Sitecore.SecurityModel.License;
 
   public class Db : IDisposable, IEnumerable
   {
@@ -44,14 +42,7 @@ namespace Sitecore.FakeDb
 
     static Db()
     {
-        var watch = System.Diagnostics.Stopwatch.StartNew();
-
-        MethodBase originalMethod = typeof(LicenseManager).GetMethod("DemandRuntime", BindingFlags.Static | BindingFlags.Public, null, CallingConventions.Any, new []{ typeof(bool)}, new []{new ParameterModifier(1) });
-        MethodBase newMethod = typeof(NullLicenseManager).GetMethod("DemandRuntime", BindingFlags.Static | BindingFlags.Public);
-
-        MethodUtil.ReplaceMethod(newMethod, originalMethod);
-
-        Console.WriteLine("took " + watch.ElapsedMilliseconds + " ms");
+        NullLicenseManager.Activate();
     }
 
     public Db(string databaseName)
