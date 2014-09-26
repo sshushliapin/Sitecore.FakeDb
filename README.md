@@ -30,7 +30,7 @@ testing.
   - [How to mock Authentication Provider](#how-to-mock-authentication-provider)
   - [How to mock Authorization Provider](#how-to-mock-authorization-provider)
   - [How to mock Role Provider](#how-to-mock-role-provider)
-  - [How to mock RolesInRoles Provider](#how-to-mock-roles-in-roles-provider)
+  - [How to mock RolesInRoles Provider](#how-to-mock-rolesinroles-provider)
   - [How to mock Membership Provider](#how-to-mock-membership-provider)
   - [How to unit test item security with mocked provider](#how-to-unit-test-item-security-with-mocked-provider)
   - [How to unit test item security with fake provider](#how-to-unit-test-item-security-with-fake-provider)
@@ -384,7 +384,7 @@ public void HowToMockRoleProvider()
 }
 ```
 
-### <a id="how-to-mock-roles-in-roles-provider"></a>How to mock RolesInRoles Provider
+### <a id="how-to-mock-rolesinroles-provider"></a>How to mock RolesInRoles Provider
 
 ``` csharp
 [Fact]
