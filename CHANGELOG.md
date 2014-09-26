@@ -1,4 +1,7 @@
-﻿0.18.0
+﻿0.18.1
+* [FIX] Added Link Manager registration
+
+0.18.0
 * [NEW] Introduced Item Statistics
 * [NEW] Skipped license check
 * [FIX] Share auto-generated templates for siblings only

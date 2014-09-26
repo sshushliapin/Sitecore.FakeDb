@@ -123,6 +123,7 @@
     <Compile Include="Globalization\TranslateTest.cs" />
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
+    <Compile Include="Links\LinkManagerTest.cs" />
     <Compile Include="Pipelines\CorePipelineFactoryTest.cs" />
     <Compile Include="Profile\UserProfileTest.cs" />
     <Compile Include="Security\AccessControl\AllowAccessResultTest.cs" />
