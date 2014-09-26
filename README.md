@@ -30,6 +30,7 @@ testing.
   - [How to mock Authentication Provider](#how-to-mock-authentication-provider)
   - [How to mock Authorization Provider](#how-to-mock-authorization-provider)
   - [How to mock Role Provider](#how-to-mock-role-provider)
+  - [How to mock RolesInRoles Provider](#how-to-mock-roles-in-roles-provider)
   - [How to mock Membership Provider](#how-to-mock-membership-provider)
   - [How to unit test item security with mocked provider](#how-to-unit-test-item-security-with-mocked-provider)
   - [How to unit test item security with fake provider](#how-to-unit-test-item-security-with-fake-provider)
@@ -62,7 +63,13 @@ To install the framework:
   ```
   Install-Package Sitecore.FakeDb
   ```
-      
+4. Open the App.config file added by the package and update path to the license.xml
+file using the `LicenseFile` setting if necessary. By default the license file path is set to the root folder of the project:
+
+  ``` xml
+  <setting name="LicenseFile" value="..\..\license.xml" />
+  ```
+
 To upgrade the framework run the following command in the NuGet Package Manager Console:
 
 ```
@@ -373,6 +380,27 @@ public void HowToMockRoleProvider()
 
     Xunit.Assert.True(resultRoles.Contains(@"sitecore/Authors"));
     Xunit.Assert.True(resultRoles.Contains(@"sitecore/Editors"));
+  }
+}
+```
+
+### <a id="how-to-mock-roles-in-roles-provider"></a>How to mock RolesInRoles Provider
+
+``` csharp
+[Fact]
+public void HowToMockRolesInRolesProvider()
+{
+  // create and configure roles-in-roles provider mock
+  var role = Sitecore.Security.Accounts.Role.FromName(@"sitecore/Editors");
+  var user = Sitecore.Security.Accounts.User.FromName(@"sitecore/John", false);
+
+  var provider = Substitute.For<Sitecore.Security.Accounts.RolesInRolesProvider>();
+  provider.IsUserInRole(user, role, true).Returns(true);
+
+  // switch the roles-in-roles provider so the mocked version is used
+  using (new Sitecore.FakeDb.Security.Accounts.RolesInRolesSwitcher(provider))
+  {
+    Xunit.Assert.True(user.IsInRole(role));
   }
 }
 ```

@@ -247,6 +247,23 @@
     }
 
     [Fact]
+    public void HowToMockRolesInRolesProvider()
+    {
+      // create and configure roles-in-roles provider mock
+      var role = Sitecore.Security.Accounts.Role.FromName(@"sitecore/Editors");
+      var user = Sitecore.Security.Accounts.User.FromName(@"sitecore/John", false);
+
+      var provider = Substitute.For<Sitecore.Security.Accounts.RolesInRolesProvider>();
+      provider.IsUserInRole(user, role, true).Returns(true);
+
+      // switch the roles-in-roles provider so the mocked version is used
+      using (new Sitecore.FakeDb.Security.Accounts.RolesInRolesSwitcher(provider))
+      {
+        Xunit.Assert.True(user.IsInRole(role));
+      }
+    }
+
+    [Fact]
     public void HowToMockMembershipProvider()
     {
       // create fake membership user
