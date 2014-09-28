@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.Serialization", "Sitecore.FakeDb.Serialization\Sitecore.FakeDb.Serialization.csproj", "{8958B567-7955-4714-B3A8-BCFB43B0A588}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.Serialization.Tests", "Sitecore.FakeDb.Serialization.Tests\Sitecore.FakeDb.Serialization.Tests.csproj", "{FD78101C-A600-4962-B425-5BA86AB3DD41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{8958B567-7955-4714-B3A8-BCFB43B0A588}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8958B567-7955-4714-B3A8-BCFB43B0A588}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8958B567-7955-4714-B3A8-BCFB43B0A588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD78101C-A600-4962-B425-5BA86AB3DD41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD78101C-A600-4962-B425-5BA86AB3DD41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD78101C-A600-4962-B425-5BA86AB3DD41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD78101C-A600-4962-B425-5BA86AB3DD41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
