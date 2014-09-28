@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
+using Sitecore.Configuration;
 using Sitecore.Data;
 using Sitecore.Data.Serialization.ObjectModel;
 using Sitecore.Diagnostics;
@@ -101,47 +103,48 @@ namespace Sitecore.FakeDb.Serialization
 
         /// <summary>
         /// Resolves a sitecore path to the filesystem where it is serialized.
-        /// For example, path=/sitecore/content/item1 and dbName=master 
+        /// For example, path=/sitecore/content/item1 and serializationFolderName=master 
         /// Will be resolved to c:\site\data\serialization\master\sitecore\content\item1.item
-        /// A fallback is used if the database name is not used, for example:
-        /// c:\site\data\serialization\sitecore\content\item1.item
         /// 
-        /// You need to define a setting SerializationFolder in the app.config. For example:
-        /// <setting name="SerializationFolder" value="c:\site\data\serialization\" />
+        /// You need to define the serialization folders in the app.config. For example:
+        /// <szfolders>
+        ///   <folder name="core" value="c:\site\data\serialization\core\" />
+        ///   <folder name="master" value="c:\site\data\serialization\master\" />
+        ///   <folder name="web" value="c:\site\data\serialization\web\" />
+        /// </szfolders>
         /// </summary>
         /// <param name="path">A valid sitecore item path</param>
-        /// <param name="dbName">The name of the database</param>
+        /// <param name="serializationFolderName">Name of serialization folder as configured in app.config</param>
         /// <returns></returns>
-        internal static FileInfo ResolveSerializationPath(string path, string dbName)
+        internal static FileInfo ResolveSerializationPath(string path, string serializationFolderName)
         {
-            DirectoryInfo serializationFolder = new DirectoryInfo(Sitecore.Configuration.Settings.GetSetting("SerializationFolder", "."));
+            Assert.IsNotNullOrEmpty(
+                serializationFolderName,
+                "Please specify a serialization folder when you instantiate a FakeDb or individual DsDbItem/DsDbTemplate");
+
+            XmlNode folderNode = Factory.GetConfigNode(
+                string.Format("szfolders/folder[@name='{0}']", serializationFolderName));
+
+            Assert.IsNotNull(
+                folderNode,
+                string.Format("Configuration for serialization folder name '{0}' could not be found; please check the <szfolders /> configuration in the app.config", serializationFolderName));
+
+            DirectoryInfo serializationFolder = new DirectoryInfo(folderNode.Attributes["value"].Value);
             Assert.IsTrue(
                 serializationFolder.Exists,
-                string.Format("Path '{0}', as configured in the app.config could not be found; please check if the setting SerializationFolder is available and correctly set.", serializationFolder.FullName));
+                string.Format("Path '{0}', as configured in the app.config could not be found; please check the <szfolders /> configuration in the app.config", serializationFolder.FullName));
 
             FileInfo itemLocation = new FileInfo(
                 string.Format(
                     "{0}.item",
                     Path.Combine(
-                        serializationFolder.FullName,
-                        dbName ?? string.Empty,
+                        serializationFolder.FullName.Trim(new[] { Path.DirectorySeparatorChar }),
                         path.Replace('/', Path.DirectorySeparatorChar).Trim(new[] { Path.DirectorySeparatorChar }))));
-            if (! itemLocation.Exists)
-            {
-                // fallback to path without database name
-                itemLocation = new FileInfo(
-                string.Format(
-                    "{0}.item",
-                    Path.Combine(
-                        serializationFolder.FullName,
-                        path.Replace('/', Path.DirectorySeparatorChar).Trim(new[] { Path.DirectorySeparatorChar }))));
-            }
-
+            
             Assert.IsTrue(itemLocation.Exists,
-                string.Format("Serialized item '{0}' could not be found in the path '{1}' (and neither in the location with database {2} included); please check the path and if the item is serialized correctly",
+                string.Format("Serialized item '{0}' could not be found in the path '{1}'; please check the path and if the item is serialized correctly",
                 path,
-                itemLocation.FullName,
-                dbName));
+                itemLocation.FullName));
 
             return itemLocation;
         }

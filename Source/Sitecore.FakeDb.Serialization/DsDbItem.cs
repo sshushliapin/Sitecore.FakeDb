@@ -10,8 +10,16 @@ namespace Sitecore.FakeDb.Serialization
     /// </summary>
     public class DsDbItem : DbItem, IDsDbItem
     {
-        public DsDbItem(string path, string dbName, bool includeDescendants = false)
-            : this(Deserializer.ResolveSerializationPath(path, dbName), includeDescendants)
+        public DsDbItem(string path, bool includeDescendants = false)
+            : this(
+                path,
+                Context.Database != null ? Context.Database.Name : "master",
+                includeDescendants)
+        {
+        }
+
+        public DsDbItem(string path, string serializationFolderName, bool includeDescendants = false)
+            : this(Deserializer.ResolveSerializationPath(path, serializationFolderName), includeDescendants)
         {
         }
 

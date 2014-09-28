@@ -11,8 +11,15 @@ namespace Sitecore.FakeDb.Serialization
     /// </summary>
     public class DsDbTemplate : DbTemplate, IDsDbItem
     {
-        public DsDbTemplate(string path, string dbName)
-            : this(Deserializer.ResolveSerializationPath(path, dbName))
+        public DsDbTemplate(string path)
+            : this(
+                path,
+                Context.Database != null ? Context.Database.Name : "master")
+        {
+        }
+
+        public DsDbTemplate(string path, string serializationFolderName)
+            : this(Deserializer.ResolveSerializationPath(path, serializationFolderName))
         {
         }
 
