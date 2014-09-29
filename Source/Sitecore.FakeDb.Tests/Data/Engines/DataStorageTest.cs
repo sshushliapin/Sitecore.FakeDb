@@ -183,6 +183,35 @@
       item[fieldId].Should().Be("Sample");
     }
 
+    [Fact]
+    public void ShouldGetSitecoreItemWithFieldsFromBaseTemplates()
+    {
+      // arrange
+      var baseTemplateId = ID.NewID;
+      var templateId = ID.NewID;
+      var itemId = ID.NewID;
+      var fieldId = ID.NewID;
+
+      this.dataStorage.FakeTemplates.Add(baseTemplateId, new DbTemplate("Base", baseTemplateId)
+                                                              {
+                                                                Fields = { new DbField("Title", fieldId)},
+                                                                StandardValues = { new DbField("Title", fieldId) { Value = "$name" } }
+                                                              });
+      this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId)
+                                                          {
+                                                            BaseIDs = new ID[] {baseTemplateId}
+                                                          });
+      this.dataStorage.FakeItems.Add(itemId, new DbItem("Home", itemId, templateId));
+
+      // act
+      var item = this.dataStorage.GetSitecoreItem(itemId, Language.Current);
+
+      // assert
+      item[fieldId].Should().NotBeNull();
+      item[fieldId].Should().Be("Home");
+    }
+
+    [Fact]
     public void ShouldSetSecurityFieldForRootItem()
     {
       // assert

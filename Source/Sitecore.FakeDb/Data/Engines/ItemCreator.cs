@@ -29,6 +29,10 @@
         return this.DataStorage.GetSitecoreItem(itemId, language);
       }
 
+      // GetFieldList returns the fields defined on the item's template.
+      // Item's InnerData should only have the fields from the item's template, not the base templates.
+      // This is unlike GetItemCommand that has to actually spider base templates to 
+      // set field values on the item for all fields defines across all templates the item inherits from.
       var fieldList = this.DataStorage.GetFieldList(templateId, itemName);
       var item = ItemHelper.CreateInstance(itemName, itemId, templateId, fieldList, database, language);
 

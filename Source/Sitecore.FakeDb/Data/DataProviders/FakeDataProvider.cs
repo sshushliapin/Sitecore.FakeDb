@@ -96,22 +96,27 @@
 
       foreach (var ft in this.DataStorage.FakeTemplates.Values)
       {
-        var builder = new Template.Builder(ft.Name, ft.ID, templates);
-        var section = builder.AddSection("Data", ID.NewID);
-
-        foreach (var field in ft.Fields)
-        {
-          var newField = section.AddField(field.Name, field.ID);
-          newField.SetShared(field.Shared);
-          newField.SetType(field.Type);
-        }
-
-        builder.SetBaseIDs(string.Join("|", ft.BaseIDs ?? new ID[] { } as IEnumerable<ID>));
-
-        templates.Add(builder.Template);
+        templates.Add(BuildTemplate(ft, templates));
       }
 
       return templates;
+    }
+
+    protected virtual Template BuildTemplate(DbTemplate ft, TemplateCollection templates)
+    {
+      var builder = new Template.Builder(ft.Name, ft.ID, templates);
+      var section = builder.AddSection("Data", ID.NewID);
+
+      foreach (var field in ft.Fields)
+      {
+        var newField = section.AddField(field.Name, field.ID);
+        newField.SetShared(field.Shared);
+        newField.SetType(field.Type);
+      }
+
+      builder.SetBaseIDs(string.Join("|", ft.BaseIDs ?? new ID[] { } as IEnumerable<ID>));
+
+      return builder.Template;
     }
 
     public override LanguageCollection GetLanguages(CallContext context)

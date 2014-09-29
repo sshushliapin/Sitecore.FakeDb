@@ -91,6 +91,15 @@ namespace Sitecore.FakeDb.Data.Engines
       return GetFieldList(templateId, null);
     }
 
+    /// <summary>
+    /// Returns all fields defined on the template with the provided ID. 
+    /// 
+    /// Does not (and should not) return a superset of fields across all base templates. 
+    /// Sitecore does all necessary lookups when it needs to
+    /// </summary>
+    /// <param name="templateId"></param>
+    /// <param name="itemName"></param>
+    /// <returns></returns>
     public virtual FieldList GetFieldList(ID templateId, string itemName)
     {
       Assert.ArgumentCondition(!ID.IsNullOrEmpty(templateId), "templateId", "Value cannot be null.");
@@ -130,17 +139,69 @@ namespace Sitecore.FakeDb.Data.Engines
       var fakeTemplate = this.GetFakeTemplate(fakeItem.TemplateID);
       var itemVersion = version == Version.Latest ? Version.First : version;
 
-      var fields = this.GetFieldList(fakeItem.TemplateID, fakeItem.Name);
+      var fields = BuildItemFieldList(fakeItem, fakeTemplate, language, itemVersion);
+
+      var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);
+
+      return item;
+    }
+
+    protected FieldList BuildItemFieldList(DbItem fakeItem, DbTemplate fakeTemplate, Language language, Version version)
+    {
+      // build a sequence of templates that the item inherits from
+      var templates = new List<DbTemplate>();
+      ExpandTemplatesSequence(fakeTemplate, templates);
+
+      // has to be reversed so that standard values defined in the templates "closer" to the item took precedence
+      templates.Reverse();
+
+      var fields = new FieldList();
+      foreach (var template in templates)
+      {
+        AddFieldsFromTemplate(fields, fakeItem, template, language, version);
+      }
+
+      // If the item is a Template item we also need to add the BaseTemplate field
+      var fakeItemAsTemplate = fakeItem as DbTemplate;
+      if (fakeItemAsTemplate != null && fakeItemAsTemplate.BaseIDs != null)
+      {
+        fields.Add(FieldIDs.BaseTemplate, string.Join("|", fakeItemAsTemplate.BaseIDs.ToList()));
+      }
+
+      return fields;
+    }
+
+    protected void ExpandTemplatesSequence(DbTemplate fakeTemplate, List<DbTemplate> seqeunce)
+    {
+      if (fakeTemplate == null)
+      {
+        return;
+      }
+
+      seqeunce.Add(fakeTemplate);
+
+      if (fakeTemplate.BaseIDs != null && fakeTemplate.BaseIDs.Length > 0)
+      {
+        foreach (var baseId in fakeTemplate.BaseIDs)
+        {
+          ExpandTemplatesSequence(this.GetFakeTemplate(baseId), seqeunce);
+        }
+      }
+    }
+
+    protected void AddFieldsFromTemplate(FieldList allFields, DbItem fakeItem, DbTemplate fakeTemplate, Language language, Version version)
+    {
+      var fields = this.GetFieldList(fakeTemplate.ID, fakeItem.Name);
       foreach (var templateField in fakeTemplate.Fields)
       {
         var fieldId = templateField.ID;
         var value = string.Empty;
 
-        if (fakeItem.Fields.InnerFields.ContainsKey(fieldId))
-        {
-          var itemField = fakeItem.Fields[fieldId];
+        DbField itemField = FindItemDbField(fakeItem, templateField);
 
-          value = itemField.GetValue(language.Name, version.Number);
+        if (itemField != null)
+        {
+          value = itemField.GetValue(language.Name, version.Number);          
         }
 
         if (string.IsNullOrEmpty(value) && fakeTemplate.StandardValues.InnerFields.ContainsKey(fieldId))
@@ -155,15 +216,28 @@ namespace Sitecore.FakeDb.Data.Engines
         fields.Add(fieldId, value);
       }
 
-      var fakeItemAsTemplate = fakeItem as DbTemplate;
-      if (fakeItemAsTemplate != null && fakeItemAsTemplate.BaseIDs != null)
+      foreach (KeyValuePair<ID, string> field in fields)
       {
-        fields.Add(FieldIDs.BaseTemplate, string.Join("|", fakeItemAsTemplate.BaseIDs.ToList()));
+        allFields.Add(field.Key, field.Value);
+      }
+    }
+
+    protected DbField FindItemDbField(DbItem fakeItem, DbField templateField)
+    {
+      Assert.IsNotNull(fakeItem, "fakeItem");
+      Assert.IsNotNull(templateField, "templateField");
+
+      // The item has fields with the IDs matching the fields in the template it directly inherits from
+
+      if (fakeItem.Fields.InnerFields.ContainsKey(templateField.ID))
+      {
+        return fakeItem.Fields[templateField.ID];
       }
 
-      var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);
+      // Field values defined on the item for the fields from up the template inheritance chain
+      // can only be found by name
 
-      return item;
+      return fakeItem.Fields.SingleOrDefault(f => string.Equals(f.Name, templateField.Name));
     }
 
     protected void FillDefaultFakeTemplates()
