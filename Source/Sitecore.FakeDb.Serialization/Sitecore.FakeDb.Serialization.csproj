@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Sitecore.FakeDb\Properties\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Deserializer.cs" />
     <Compile Include="DsDbItem.cs" />
     <Compile Include="DsDbTemplate.cs" />

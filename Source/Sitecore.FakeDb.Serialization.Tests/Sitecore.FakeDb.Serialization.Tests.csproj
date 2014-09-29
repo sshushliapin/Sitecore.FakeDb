@@ -60,6 +60,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Sitecore.FakeDb\Properties\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="DsDbItemTest.cs" />
     <Compile Include="DsDbTemplateTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
