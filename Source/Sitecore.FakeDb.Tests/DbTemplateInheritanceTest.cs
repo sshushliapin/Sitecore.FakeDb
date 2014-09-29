@@ -25,7 +25,7 @@
     }
 
     [Fact]
-    public void ShouldPropagateFieldFromTheBaseTemplate()
+    public void ShouldPropagateFieldsFromTheBaseTemplate()
     {
       // arrange
       ID templateId = ID.NewID;
@@ -59,7 +59,7 @@
     }
 
     [Fact]
-    public void ShouldPropagateFieldFromAllBaseTemplates()
+    public void ShouldPropagateFieldsFromAllBaseTemplates()
     {
       // arrange
       ID myTemplateId = ID.NewID;
@@ -89,7 +89,7 @@
     }
 
     [Fact]
-    public void ShouldHaveTheValueDefinedOnTheItemForTheFieldFromTheBaseTemplates()
+    public void ShouldHaveTheValueDefinedOnTheItemForTheFieldsFromTheBaseTemplates()
     {
       // arrange
       ID templateId = ID.NewID;
@@ -114,30 +114,5 @@
         home["Description"].Should().Be("My Home");
       }
     }
-
-    [Theory]
-    [InlineData("Value", "Value")]
-    [InlineData("$name", "home")]
-    public void ShouldSetStandardValueFromTheBaseTemplate(string value, string expectation)
-    {
-      // arrange
-      var baseTemplateId = ID.NewID;
-      var templateId = ID.NewID;
-
-      using (var db = new Db
-      {
-        new DbTemplate("Base Template", baseTemplateId) {{"Title", value}},
-        new DbTemplate("My Template", templateId) {BaseIDs = new ID[] {baseTemplateId}},
-        new DbItem("home", ID.NewID, templateId)
-      })
-      {
-        // act
-        var home = db.GetItem("/sitecore/content/home");
-
-        // assert
-        home["Title"].Should().Be(expectation);
-      }
-    }
-
   }
 }

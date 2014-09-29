@@ -941,24 +941,6 @@
       }
     }
 
-    [Theory]
-    [InlineData("$name", "Home")]
-    [InlineData("static-text", "static-text")]
-    public void ShouldCreateTemplateWithStandardValues(string standardValue, string expectedValue)
-    {
-      // arrange
-      using (var db = new Db { new DbTemplate("sample", templateId) { { "Title", standardValue } } })
-      {
-        var root = db.GetItem(ItemIDs.ContentRoot);
-
-        // act
-        var item = ItemManager.CreateItem("Home", root, templateId);
-
-        // assert
-        item["Title"].Should().Be(expectedValue);
-      }
-    }
-
     [Fact]
     public void ShouldCreateItemOfFolderTemplate()
     {
