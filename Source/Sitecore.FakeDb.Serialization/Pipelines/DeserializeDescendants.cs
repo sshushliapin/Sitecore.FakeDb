@@ -14,15 +14,17 @@ namespace Sitecore.FakeDb.Serialization.Pipelines
         public void Process(DsItemLoadingArgs args)
         {
             Assert.ArgumentNotNull(args, "args");
+            
+            DsDbItem dsDbItem = args.DsDbItem as DsDbItem;
 
-            if (! (args.DsDbItem is DsDbItem))
+            if (dsDbItem == null)
             {
                 return;
             }
 
             // Deserialize and link descendants, if needed
             FileInfo file = args.DsDbItem.File;
-            if (((DsDbItem)args.DsDbItem).IncludeDescendants && file.Directory != null)
+            if (dsDbItem.IncludeDescendants && file.Directory != null)
             {
                 DirectoryInfo childItemsFolder = new DirectoryInfo(
                     file.Directory.FullName + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(file.Name));
@@ -30,8 +32,8 @@ namespace Sitecore.FakeDb.Serialization.Pipelines
                 {
                     foreach (var itemFile in childItemsFolder.GetFiles("*.item", SearchOption.TopDirectoryOnly))
                     {
-                        DsDbItem childItem = new DsDbItem(itemFile, true);
-                        ((DsDbItem)args.DsDbItem).Children.Add(childItem);
+                        DsDbItem childItem = new DsDbItem(dsDbItem.SerializationFolderName, itemFile, true);
+                        dsDbItem.Children.Add(childItem);
                     }
                 }
             }

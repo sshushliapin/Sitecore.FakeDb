@@ -10,48 +10,62 @@ namespace Sitecore.FakeDb.Serialization
     /// </summary>
     public class DsDbItem : DbItem, IDsDbItem
     {
+        public string SerializationFolderName { get; private set; }
         public SyncItem SyncItem { get; private set; }
         public FileInfo File { get; private set; }
         public bool IncludeDescendants { get; private set; }
+        public bool DeserializeLinkedTemplate { get; private set; }
 
-        public DsDbItem(string path, bool includeDescendants = false)
+        public DsDbItem(string path, bool includeDescendants = false, bool deserializeLinkedTemplate = true)
             : this(
                 path,
                 Context.Database != null ? Context.Database.Name : "master",
-                includeDescendants)
+                includeDescendants,
+                deserializeLinkedTemplate)
         {
         }
 
-        public DsDbItem(ID id, bool includeDescendants = false)
+        public DsDbItem(ID id, bool includeDescendants = false, bool deserializeLinkedTemplate = true)
             : this(
                 id,
                 Context.Database != null ? Context.Database.Name : "master",
-                includeDescendants)
+                includeDescendants,
+                deserializeLinkedTemplate)
         {
         }
 
-        public DsDbItem(string path, string serializationFolderName, bool includeDescendants = false)
-            : this(Deserializer.ResolveSerializationPath(path, serializationFolderName), includeDescendants)
+        public DsDbItem(string path, string serializationFolderName, bool includeDescendants = false, bool deserializeLinkedTemplate = true)
+            : this(
+                serializationFolderName,
+                Deserializer.ResolveSerializationPath(path, serializationFolderName),
+                includeDescendants,
+                deserializeLinkedTemplate)
         {
         }
 
-        public DsDbItem(ID id, string serializationFolderName, bool includeDescendants = false)
-            : this(new FileInfo(id.FindFilePath(serializationFolderName)), includeDescendants)
+        public DsDbItem(ID id, string serializationFolderName, bool includeDescendants = false, bool deserializeLinkedTemplate = true)
+            : this(
+                serializationFolderName,
+                new FileInfo(id.FindFilePath(serializationFolderName)),
+                includeDescendants,
+                deserializeLinkedTemplate)
         {
         }
 
-        public DsDbItem(FileInfo file, bool includeDescendants = false)
-            : this(file.Deserialize(), file, includeDescendants)
+        internal DsDbItem(string serializationFolderName, FileInfo file, bool includeDescendants = false, bool deserializeLinkedTemplate = true)
+            : this(serializationFolderName, file.Deserialize(), file, includeDescendants, deserializeLinkedTemplate)
         {
         }
 
 
-        private DsDbItem(SyncItem syncItem, FileInfo file, bool includeDescendants)
+        private DsDbItem(string serializationFolderName, SyncItem syncItem, FileInfo file, bool includeDescendants, bool deserializeLinkedTemplate = true)
             : base(syncItem.Name, ID.Parse(syncItem.ID), ID.Parse(syncItem.TemplateID))
         {
+            this.SerializationFolderName = serializationFolderName;
             this.SyncItem = syncItem;
             this.File = file;
             this.IncludeDescendants = includeDescendants;
+            this.DeserializeLinkedTemplate = deserializeLinkedTemplate;
         }
     }
 }
