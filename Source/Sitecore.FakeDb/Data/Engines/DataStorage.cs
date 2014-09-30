@@ -86,36 +86,6 @@ namespace Sitecore.FakeDb.Data.Engines
       return this.FakeTemplates.ContainsKey(templateId) ? this.FakeTemplates[templateId] : null;
     }
 
-    public virtual FieldList GetFieldList(ID templateId)
-    {
-      return GetFieldList(templateId, null);
-    }
-
-    /// <summary>
-    /// Returns all fields defined on the template with the provided ID. 
-    /// 
-    /// Does not (and should not) return a superset of fields across all base templates. 
-    /// Sitecore does all necessary lookups when it needs to
-    /// </summary>
-    /// <param name="templateId"></param>
-    /// <param name="itemName"></param>
-    /// <returns></returns>
-    public virtual FieldList GetFieldList(ID templateId, string itemName)
-    {
-      Assert.ArgumentCondition(!ID.IsNullOrEmpty(templateId), "templateId", "Value cannot be null.");
-
-      var template = this.GetFakeTemplate(templateId);
-      Assert.IsNotNull(template, "Template '{0}' not found.", templateId);
-
-      var fields = new FieldList();
-      foreach (var field in template.Fields)
-      {
-        fields.Add(field.ID, string.Empty);
-      }
-
-      return fields;
-    }
-
     public virtual Item GetSitecoreItem(ID itemId, Language language)
     {
       return this.GetSitecoreItem(itemId, language, Version.First);
@@ -140,12 +110,11 @@ namespace Sitecore.FakeDb.Data.Engines
 
       var fields = BuildItemFieldList(fakeItem, fakeItem.TemplateID, language, itemVersion);
 
-      var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);
-
-      return item;
+      return ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);
     }
 
-    protected FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
+
+    protected virtual FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
     {
       // build a sequence of templates that the item inherits from
       var templates = ExpandTemplatesSequence(templateId);
@@ -166,7 +135,12 @@ namespace Sitecore.FakeDb.Data.Engines
       return fields;
     }
 
-    internal List<DbTemplate> ExpandTemplatesSequence(ID templateId)
+    /// <summary>
+    /// Similar to Template.GetBaseTemplates() the method expands the template inheritance hierarchy
+    /// </summary>
+    /// <param name="templateId"></param>
+    /// <returns></returns>
+    protected List<DbTemplate> ExpandTemplatesSequence(ID templateId)
     {
       var fakeTemplate = this.GetFakeTemplate(templateId);
       if (fakeTemplate == null)
@@ -224,7 +198,7 @@ namespace Sitecore.FakeDb.Data.Engines
         return fakeItem.Fields[templateField.ID];
       }
 
-      return null;
+      return fakeItem.Fields.InnerFields.Values.SingleOrDefault(f => string.Equals(f.Name, templateField.Name));
     }
 
     protected void FillDefaultFakeTemplates()

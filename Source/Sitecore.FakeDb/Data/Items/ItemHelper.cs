@@ -52,7 +52,16 @@
       Assert.ArgumentNotNull(language, "language");
       Assert.ArgumentNotNull(version, "version");
 
-      return new ItemWrapper(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), language, version, fields), database);
+      var item =  new ItemWrapper(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), language, version, fields), database);
+
+      EnsureItemFields(item);
+
+      return item;
+    }
+
+    internal static void EnsureItemFields(Item item)
+    {
+        item.Fields.ReadAll();
     }
   }
 }

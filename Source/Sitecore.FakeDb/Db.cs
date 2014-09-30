@@ -180,12 +180,12 @@
     {
       var date = DateUtil.IsoNow;
       var user = Context.User.Name;
-
-      item.Fields.Add("__Created", date);
-      item.Fields.Add("__Created by", user);
-      item.Fields.Add("__Revision", ID.NewID.ToString());
-      item.Fields.Add("__Updated", date);
-      item.Fields.Add("__Updated by", user);
+      
+      item.Fields.Add(new DbField("__Created", FieldIDs.Created) {Value = date});
+      item.Fields.Add(new DbField("__Created by", FieldIDs.CreatedBy) {Value = user});
+      item.Fields.Add(new DbField("__Revision", FieldIDs.Revision) {Value = ID.NewID.ToString()});
+      item.Fields.Add(new DbField("__Updated", FieldIDs.Updated) {Value = date});
+      item.Fields.Add(new DbField("__Updated by", FieldIDs.UpdatedBy) {Value = user});
     }
 
     protected virtual void CreateTemplate(DbItem item)
@@ -226,8 +226,6 @@
 
       if (this.dataStorage.FakeTemplates.ContainsKey(item.TemplateID))
       {
-        MapFieldsFromInheritedTemplatesToItem(item);
-
         return true;
       }
 
@@ -236,6 +234,7 @@
         return false;
       }
 
+      // find the most recently added sibling
       var sourceItem = this.DataStorage.FakeItems.Values.LastOrDefault(si => si.ParentID == item.ParentID);
       if (sourceItem == null)
       {
@@ -255,46 +254,10 @@
         return false;
       }
 
+      // reuse the template
       item.TemplateID = sourceItem.TemplateID;
 
-      // TODO:[High] review and redesign.
-      MapFieldsFromInheritedTemplatesToItem(item);
-
       return true;
-    }
-
-    /// <summary>
-    /// Find all fields defined on the item directly and make sure the fields' IDs match the ones
-    /// defined on the templates the item inherits from
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="target"></param>
-    private void MapFieldsFromInheritedTemplatesToItem(DbItem target)
-    {
-      var templates = this.dataStorage.ExpandTemplatesSequence(target.TemplateID);
-
-      foreach (var template in templates)
-      {
-        MapFieldsFromTemplateToItem(target, template);
-      }
-    }
-
-    protected void MapFieldsFromTemplateToItem(DbItem target, DbTemplate source)
-    {
-      foreach (var field in source.Fields)
-      {
-        var oldField = target.Fields.InnerFields.Values.SingleOrDefault(v => v.Name == field.Name);
-        if (oldField == null)
-        {
-          continue;
-        }
-
-        target.Fields.InnerFields.Remove(oldField.ID);
-
-        var renewedField = oldField;
-        renewedField.ID = field.ID;
-        target.Fields.InnerFields.Add(field.ID, renewedField);
-      }
     }
 
     protected virtual void SetParent(DbItem item)
@@ -368,7 +331,7 @@
       }
       else
       {
-        fakeItem.Fields.Add("__Security", serializer.Serialize(rules));
+        fakeItem.Fields.Add(new DbField("__Security", FieldIDs.Security) {Value = serializer.Serialize(rules)});
       }
     }
 

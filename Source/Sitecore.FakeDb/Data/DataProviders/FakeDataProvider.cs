@@ -39,6 +39,11 @@
 
     public override IdCollection GetTemplateItemIds(CallContext context)
     {
+      if (this.DataStorage == null)
+      {
+        return new IdCollection();  
+      }
+
       var ids = this.DataStorage.FakeTemplates.Select(t => t.Key).ToArray();
 
       return new IdCollection { ids };
@@ -93,6 +98,11 @@
     public override TemplateCollection GetTemplates(CallContext context)
     {
       var templates = new TemplateCollection();
+
+      if (this.DataStorage == null)
+      {
+        return templates;
+      }
 
       foreach (var ft in this.DataStorage.FakeTemplates.Values)
       {

@@ -93,39 +93,6 @@
     }
 
     [Fact]
-    public void ShouldGetFieldListByTemplateId()
-    {
-      // arrange
-      var templateId = ID.NewID;
-      var field1 = new DbField("Title");
-      var field2 = new DbField("Title");
-
-      var template = new DbTemplate(templateId) { Fields = { field1, field2 } };
-
-      this.dataStorage.FakeTemplates.Add(templateId, template);
-
-      // act
-      var fieldList = this.dataStorage.GetFieldList(template.ID);
-
-      // assert
-      fieldList[field1.ID].Should().BeEmpty();
-      fieldList[field2.ID].Should().BeEmpty();
-    }
-
-    [Fact]
-    public void ShouldThrowExceptionIfNoTemplateFound()
-    {
-      // arrange
-      var missingTemplateId = new ID("{C4520D42-33CA-48C7-972D-6CEE1BC4B9A6}");
-
-      // act
-      Action a = () => this.dataStorage.GetFieldList(missingTemplateId);
-
-      // assert
-      a.ShouldThrow<InvalidOperationException>().WithMessage("Template \'{C4520D42-33CA-48C7-972D-6CEE1BC4B9A6}\' not found.");
-    }
-
-    [Fact]
     public void ShouldGetSitecoreItemFieldIdsFromTemplateAndValuesFromItems()
     {
       // arrange
