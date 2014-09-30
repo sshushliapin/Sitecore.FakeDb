@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {DE9CD073-B504-45AD-A661-7A6479FC01AB}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 95/Auto Item 4695
+parent: {2F4C1BCE-E90E-4C57-AA31-7CE2D6D7DCCF}
+name: Auto Item 4695
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 12
+
+bottle does.
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 9
+
+what this

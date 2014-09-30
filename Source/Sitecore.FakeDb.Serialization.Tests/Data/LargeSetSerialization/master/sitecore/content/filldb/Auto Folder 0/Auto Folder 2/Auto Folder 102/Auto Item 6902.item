@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {B799D990-7D66-4CDD-BA04-ACC61458FFA4}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 2/Auto Folder 102/Auto Item 6902
+parent: {49DD150E-CB9C-46F9-86BC-4D1E43A8F37A}
+name: Auto Item 6902
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 4
+
+into
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 3
+
+out

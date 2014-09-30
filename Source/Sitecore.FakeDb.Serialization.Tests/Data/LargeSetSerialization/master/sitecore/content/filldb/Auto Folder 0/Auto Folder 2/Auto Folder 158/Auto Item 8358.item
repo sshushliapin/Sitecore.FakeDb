@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {FECD6C3C-01B0-4B06-8A6C-45EC286837C1}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 2/Auto Folder 158/Auto Item 8358
+parent: {9945B30A-C8CD-4D1C-9283-119E7A5A0AF7}
+name: Auto Item 8358
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 7
+
+to do!"
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 14
+
+A dismal thing

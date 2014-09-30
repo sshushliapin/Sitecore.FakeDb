@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {7B5A3594-3A88-4605-8001-A969A15C54CA}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 2/Auto Folder 18/Auto Item 1618
+parent: {9983274C-D315-4021-9B21-389E6E3C011B}
+name: Auto Item 1618
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 10
+
+end to the
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 14
+
+smoke from one

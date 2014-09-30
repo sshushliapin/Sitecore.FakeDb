@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {D6FBCA40-8B97-40C4-9717-A2D11CB2514D}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 159/Auto Item 9159
+parent: {ECCA0CBB-5E0D-4B48-8D74-56C343CF420C}
+name: Auto Item 9159
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 31
+
+Project Gutenberg-tm trademark,
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 12
+
+owner of the

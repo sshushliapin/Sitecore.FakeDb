@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {6F4EF0DA-B329-46E9-8C82-7282623F4517}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 2/Auto Folder 38/Auto Item 4038
+parent: {8C23C40F-7CA2-4CA2-B1C6-7ADE156B3AA4}
+name: Auto Item 4038
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 9
+
+the glass
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 12
+
+was lying on

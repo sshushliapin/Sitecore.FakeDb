@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {58EA34B3-01F1-42A2-9C72-35DEA24D28EC}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 0/Auto Folder 56/Auto Item 5656
+parent: {C515229F-D9A7-434C-A3DC-83100CF644A7}
+name: Auto Item 5656
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 18
+
+unlocking the door
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 8
+
+key, and

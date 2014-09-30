@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {5DEBF3AC-3537-47AC-9358-8E041FD64E0F}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 1/Auto Folder 89/Auto Item 6089
+parent: {4F5E7E88-DF8A-4415-9C54-ECD3458002D5}
+name: Auto Item 6089
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 5
+
+lady"
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 16
+
+"This here young

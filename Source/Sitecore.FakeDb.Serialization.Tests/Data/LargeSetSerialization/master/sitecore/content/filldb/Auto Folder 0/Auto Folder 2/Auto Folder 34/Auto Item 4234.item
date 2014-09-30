@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {FB68C9D6-763A-469B-9A63-9A24D1001C7F}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 2/Auto Folder 34/Auto Item 4234
+parent: {B352AFFC-2E7A-42CA-9A13-1D4E77B6E3FA}
+name: Auto Item 4234
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 2
+
+It
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 10
+
+and dogs."

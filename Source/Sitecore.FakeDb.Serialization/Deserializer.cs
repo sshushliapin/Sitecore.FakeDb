@@ -118,21 +118,7 @@ namespace Sitecore.FakeDb.Serialization
         /// <returns></returns>
         internal static FileInfo ResolveSerializationPath(string path, string serializationFolderName)
         {
-            Assert.IsNotNullOrEmpty(
-                serializationFolderName,
-                "Please specify a serialization folder when you instantiate a FakeDb or individual DsDbItem/DsDbTemplate");
-
-            XmlNode folderNode = Factory.GetConfigNode(
-                string.Format("szfolders/folder[@name='{0}']", serializationFolderName));
-
-            Assert.IsNotNull(
-                folderNode,
-                string.Format("Configuration for serialization folder name '{0}' could not be found; please check the <szfolders /> configuration in the app.config", serializationFolderName));
-
-            DirectoryInfo serializationFolder = new DirectoryInfo(folderNode.Attributes["value"].Value);
-            Assert.IsTrue(
-                serializationFolder.Exists,
-                string.Format("Path '{0}', as configured in the app.config could not be found; please check the <szfolders /> configuration in the app.config", serializationFolder.FullName));
+            DirectoryInfo serializationFolder = GetSerializationFolder(serializationFolderName);
 
             FileInfo itemLocation = new FileInfo(
                 string.Format(
@@ -147,6 +133,30 @@ namespace Sitecore.FakeDb.Serialization
                 itemLocation.FullName));
 
             return itemLocation;
+        }
+
+        public static DirectoryInfo GetSerializationFolder(string serializationFolderName)
+        {
+            Assert.IsNotNullOrEmpty(
+                serializationFolderName,
+                "Please specify a serialization folder when you instantiate a FakeDb or individual DsDbItem/DsDbTemplate");
+
+            XmlNode folderNode = Factory.GetConfigNode(
+                string.Format("szfolders/folder[@name='{0}']", serializationFolderName));
+
+            Assert.IsNotNull(
+                folderNode,
+                string.Format(
+                    "Configuration for serialization folder name '{0}' could not be found; please check the <szfolders /> configuration in the app.config",
+                    serializationFolderName));
+
+            DirectoryInfo serializationFolder = new DirectoryInfo(folderNode.Attributes["value"].Value);
+            Assert.IsTrue(
+                serializationFolder.Exists,
+                string.Format(
+                    "Path '{0}', as configured in the app.config could not be found; please check the <szfolders /> configuration in the app.config",
+                    serializationFolder.FullName));
+            return serializationFolder;
         }
     }
 }

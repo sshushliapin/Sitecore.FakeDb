@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {18D56898-0664-4A4E-888E-4221E6814C39}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 1/Auto Folder 145/Auto Item 6145
+parent: {3CB58F21-C4AC-4862-A762-EF41AB593D4E}
+name: Auto Item 6145
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 16
+
+very dull!" "You
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 3
+
+are

@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {A7BD59B8-336E-4784-BF6A-A5F23AA78C0D}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 155/Auto Item 6955
+parent: {CF67EF60-AC54-4DB8-98E5-4001A62AC92C}
+name: Auto Item 6955
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 17
+
+must childlike be
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 10
+
+the hearts

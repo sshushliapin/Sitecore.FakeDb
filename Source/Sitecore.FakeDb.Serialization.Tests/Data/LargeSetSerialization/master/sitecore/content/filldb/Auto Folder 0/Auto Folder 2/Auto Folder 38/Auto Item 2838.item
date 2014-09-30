@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {0FADD2BF-4DA7-4A0E-BDAD-8D5F46D1D133}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 2/Auto Folder 38/Auto Item 2838
+parent: {8C23C40F-7CA2-4CA2-B1C6-7ADE156B3AA4}
+name: Auto Item 2838
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 22
+
+your applicable taxes.
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 12
+
+to calculate

@@ -66,6 +66,7 @@
     <Compile Include="DsDbItemTest.cs" />
     <Compile Include="DsDbTemplateTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerializedIdToPathResolverTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -86,6 +87,7 @@
   <ItemGroup>
     <Folder Include="Data\CoreSerialization\" />
     <Folder Include="Data\CustomSerialization\" />
+    <Folder Include="Data\LargeSetSerialization\" />
     <Folder Include="Data\Serialization\" />
   </ItemGroup>
   <ItemGroup>

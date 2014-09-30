@@ -78,5 +78,17 @@ namespace Sitecore.FakeDb.Serialization.Tests
                 template.Fields[titleFieldId].Should().NotBeNull();
             }
         }
+
+        [Fact]
+        public void ShouldLookupById()
+        {
+            ID templateId = ID.Parse("{76036F5E-CBCE-46D1-AF0A-4143F9B557AA}");
+
+            DsDbTemplate template = new DsDbTemplate(templateId);
+
+            template.Should().NotBeNull();
+            template.Name.Should().BeEquivalentTo("Sample Item");
+            template.TemplateID.ShouldBeEquivalentTo(TemplateIDs.Template);
+        }
     }
 }

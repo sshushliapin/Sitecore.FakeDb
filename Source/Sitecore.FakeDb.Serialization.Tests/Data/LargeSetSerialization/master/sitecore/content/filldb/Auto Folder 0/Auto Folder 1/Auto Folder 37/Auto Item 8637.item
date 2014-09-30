@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {6390BFC5-E389-49BD-BADE-A43EDF2F1661}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 1/Auto Folder 37/Auto Item 8637
+parent: {F168283E-C475-4511-A00D-1F61CC1FC0AD}
+name: Auto Item 8637
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 18
+
+"Oh, Looking-Glass
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 24
+
+with thirty-times-three!

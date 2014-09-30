@@ -1,0 +1,16 @@
+----item----
+version: 1
+id: {21FA2742-DA0D-4859-9DB3-1FBBF71C0C0C}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 0/Auto Folder 148
+parent: {071CCC51-7D79-471F-A648-D7DA6DA84952}
+name: Auto Folder 148
+master: {00000000-0000-0000-0000-000000000000}
+template: {A87A00B1-E6DB-45AB-8B54-636FEC3B5523}
+templatekey: Folder
+
+----version----
+language: en
+version: 1
+revision: 
+

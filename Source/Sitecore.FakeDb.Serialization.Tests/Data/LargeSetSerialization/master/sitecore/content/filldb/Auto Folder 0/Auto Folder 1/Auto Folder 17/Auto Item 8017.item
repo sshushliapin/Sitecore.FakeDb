@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {B75C13A8-587F-4665-A97D-CF2C95FD2EFD}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 1/Auto Folder 17/Auto Item 8017
+parent: {C6C6052E-C2FD-49B6-80A8-69D2A172FBC8}
+name: Auto Item 8017
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 32
+
+[Illustration: Twinkle, twinkle,
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 14
+
+[Illustration]

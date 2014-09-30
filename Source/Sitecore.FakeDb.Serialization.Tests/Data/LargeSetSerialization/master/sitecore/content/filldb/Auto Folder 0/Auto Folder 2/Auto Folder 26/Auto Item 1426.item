@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {C98E72B3-5792-4B26-9385-A163C68F2253}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 2/Auto Folder 26/Auto Item 1426
+parent: {775B3361-9EFE-4179-8817-2F3F1EA32CEA}
+name: Auto Item 1426
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 8
+
+that lay
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 12
+
+green leaves

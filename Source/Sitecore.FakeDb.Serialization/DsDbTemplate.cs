@@ -18,8 +18,20 @@ namespace Sitecore.FakeDb.Serialization
         {
         }
 
+        public DsDbTemplate(ID id)
+            : this(
+                id,
+                Context.Database != null ? Context.Database.Name : "master")
+        {
+        }
+
         public DsDbTemplate(string path, string serializationFolderName)
             : this(Deserializer.ResolveSerializationPath(path, serializationFolderName))
+        {
+        }
+
+        public DsDbTemplate(ID id, string serializationFolderName)
+            : this(new FileInfo(id.FindFilePath(serializationFolderName)))
         {
         }
 

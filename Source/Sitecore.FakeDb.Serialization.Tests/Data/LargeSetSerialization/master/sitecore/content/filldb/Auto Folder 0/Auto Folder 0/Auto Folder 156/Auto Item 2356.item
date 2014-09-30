@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {A8B37C34-1C85-4F3A-A19A-FA958B7B4856}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 0/Auto Folder 156/Auto Item 2356
+parent: {E9E70E3E-6537-47C8-92B1-6541EE5E01D8}
+name: Auto Item 2356
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 4
+
+over
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 13
+
+as he fumbled

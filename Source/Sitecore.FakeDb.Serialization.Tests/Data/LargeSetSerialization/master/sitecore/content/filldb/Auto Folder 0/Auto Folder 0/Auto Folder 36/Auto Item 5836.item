@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {8843F6B0-9B48-4388-8316-CE9A9423B965}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 0/Auto Folder 36/Auto Item 5836
+parent: {88B95B62-C2F0-431D-912E-27260486D45D}
+name: Auto Item 5836
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 17
+
+child!" The Queen
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 1
+
+a

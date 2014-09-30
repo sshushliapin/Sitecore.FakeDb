@@ -1,0 +1,16 @@
+----item----
+version: 1
+id: {88C148E1-EFEF-47E2-BA43-D6C55549CE3C}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 119
+parent: {210A0E32-46A9-4EC4-BEE5-3A3918DE7F8F}
+name: Auto Folder 119
+master: {00000000-0000-0000-0000-000000000000}
+template: {A87A00B1-E6DB-45AB-8B54-636FEC3B5523}
+templatekey: Folder
+
+----version----
+language: en
+version: 1
+revision: 
+
