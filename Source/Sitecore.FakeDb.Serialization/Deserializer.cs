@@ -72,13 +72,14 @@ namespace Sitecore.FakeDb.Serialization
         /// <param name="dsDbItem">FakeDb item to copy values to</param>
         internal static void CopyVersionedFieldsTo(this SyncItem item, IDsDbItem dsDbItem)
         {
+            List<DbField> fields = new List<DbField>();
             foreach (SyncVersion version in item.Versions)
             {
                 foreach (SyncField field in version.Fields)
                 {
                     Assert.IsTrue(ID.IsID(field.FieldID), string.Format("Field id '{0}' is not a valid guid", field.FieldID));
                     ID fieldId = ID.Parse(field.FieldID);
-                    DbField dbField = dsDbItem.Fields.FirstOrDefault(f => f.ID == fieldId);
+                    DbField dbField = fields.FirstOrDefault(f => f.ID == fieldId);
 
                     if (dbField == null)
                     {
@@ -87,6 +88,7 @@ namespace Sitecore.FakeDb.Serialization
                             Shared = false
                         };
                         dsDbItem.Add(dbField);
+                        fields.Add(dbField);
                     }
                     int versionNumber;
                     if (int.TryParse(version.Version, out versionNumber))

@@ -45,20 +45,26 @@ namespace Sitecore.FakeDb.Serialization.Tests
         {
             DsDbItem item = new DsDbItem("/sitecore/content/home");
 
-            item.Should().NotBeNull();
-
-            ID titleFieldId = ID.Parse("{75577384-3C97-45DA-A847-81B00500E250}");
-            ID sharedFieldId = ID.Parse("{8F0BDC2B-1A78-4C29-BF83-C1C318186AA6}");
-            
-            item.Fields[titleFieldId].Value.Should().BeEquivalentTo("Sitecore");
-            item.Fields[sharedFieldId].Value.Should()
-                .BeEquivalentTo("This value should be the same in all languages");
-            
-            using (new LanguageSwitcher("de-DE"))
+            using (new Db()
+                {
+                    item
+                })
             {
-                item.Fields[titleFieldId].Value.Should().BeEquivalentTo("Sitekern");
+                item.Should().NotBeNull();
+
+                ID titleFieldId = ID.Parse("{75577384-3C97-45DA-A847-81B00500E250}");
+                ID sharedFieldId = ID.Parse("{8F0BDC2B-1A78-4C29-BF83-C1C318186AA6}");
+
+                item.Fields[titleFieldId].Value.Should().BeEquivalentTo("Sitecore");
                 item.Fields[sharedFieldId].Value.Should()
                     .BeEquivalentTo("This value should be the same in all languages");
+
+                using (new LanguageSwitcher("de-DE"))
+                {
+                    item.Fields[titleFieldId].Value.Should().BeEquivalentTo("Sitekern");
+                    item.Fields[sharedFieldId].Value.Should()
+                        .BeEquivalentTo("This value should be the same in all languages");
+                }
             }
         }
 
@@ -66,16 +72,21 @@ namespace Sitecore.FakeDb.Serialization.Tests
         public void ShouldDeserializeDescendants()
         {
             DsDbItem item = new DsDbItem("/sitecore/content/home", true);
+            using (new Db()
+                {
+                    item
+                })
+            {
+                item.Should().NotBeNull();
 
-            item.Should().NotBeNull();
+                DbItem child = item.Children.FirstOrDefault(c => c.Name == "Child Item");
+                child.Should().NotBeNull();
+                child.Name.Should().BeEquivalentTo("Child Item");
 
-            DbItem child = item.Children.FirstOrDefault(c => c.Name == "Child Item");
-            child.Should().NotBeNull();
-            child.Name.Should().BeEquivalentTo("Child Item");
-
-            DbItem grandChild = child.Children.FirstOrDefault(c => c.Name == "Grandchild Item");
-            grandChild.Should().NotBeNull();
-            grandChild.Name.Should().BeEquivalentTo("Grandchild Item");
+                DbItem grandChild = child.Children.FirstOrDefault(c => c.Name == "Grandchild Item");
+                grandChild.Should().NotBeNull();
+                grandChild.Name.Should().BeEquivalentTo("Grandchild Item");
+            }
         }
 
         [Fact]

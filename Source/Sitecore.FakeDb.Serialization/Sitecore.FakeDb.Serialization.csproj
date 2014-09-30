@@ -49,7 +49,10 @@
     <Compile Include="Deserializer.cs" />
     <Compile Include="DsDbItem.cs" />
     <Compile Include="DsDbTemplate.cs" />
-    <Compile Include="IDsDbItem.cs" />
+    <Compile Include="Pipelines\CopySharedFields.cs" />
+    <Compile Include="Pipelines\CopyVersionedFields.cs" />
+    <Compile Include="Pipelines\DeserializeDescendants.cs" />
+    <Compile Include="Pipelines\LoadTemplateFields.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializedIdToPathDictionary.cs" />
     <Compile Include="SerializedIdToPathSet.cs" />
@@ -60,6 +63,7 @@
       <Name>Sitecore.FakeDb</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

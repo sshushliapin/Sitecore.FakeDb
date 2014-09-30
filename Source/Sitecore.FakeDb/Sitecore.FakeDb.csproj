@@ -62,6 +62,7 @@
     <Compile Include="Configuration\DbConfiguration.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />
+    <Compile Include="IDsDbItem.cs" />
     <Compile Include="IThreadLocalProvider.cs" />
     <Compile Include="Links\FakeLinkDatabase.cs" />
     <Compile Include="Links\LinkDatabaseSwitcher.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Pipelines\InitFakeDb\InitDataProviders.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbArgs.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbProcessor.cs" />
+    <Compile Include="Pipelines\ItemLoadingArgs.cs" />
     <Compile Include="Pipelines\PipelineRunEventArgs.cs" />
     <Compile Include="Pipelines\PipelineWatcherProcessor.cs" />
     <Compile Include="Pipelines\PipelineWatcher.cs" />

@@ -43,20 +43,26 @@ namespace Sitecore.FakeDb.Serialization.Tests
         {
             DsDbTemplate template = new DsDbTemplate("/sitecore/templates/Sample/Sample Item");
 
-            template.Should().NotBeNull();
+            using (new Db()
+                {
+                    template
+                })
+            {
+                template.Should().NotBeNull();
 
-            ID titleFieldId = ID.Parse("{75577384-3C97-45DA-A847-81B00500E250}");
-            ID textFieldId = ID.Parse("{A60ACD61-A6DB-4182-8329-C957982CEC74}");
-            ID sharedFieldId = ID.Parse("{8F0BDC2B-1A78-4C29-BF83-C1C318186AA6}");
-            
-            template.Fields[titleFieldId].Name.Should().BeEquivalentTo("Title");
-            template.Fields[titleFieldId].Shared.ShouldBeEquivalentTo(false);
+                ID titleFieldId = ID.Parse("{75577384-3C97-45DA-A847-81B00500E250}");
+                ID textFieldId = ID.Parse("{A60ACD61-A6DB-4182-8329-C957982CEC74}");
+                ID sharedFieldId = ID.Parse("{8F0BDC2B-1A78-4C29-BF83-C1C318186AA6}");
 
-            template.Fields[textFieldId].Name.Should().BeEquivalentTo("Text");
-            template.Fields[textFieldId].Shared.ShouldBeEquivalentTo(false);
+                template.Fields[titleFieldId].Name.Should().BeEquivalentTo("Title");
+                template.Fields[titleFieldId].Shared.ShouldBeEquivalentTo(false);
 
-            template.Fields[sharedFieldId].Name.Should().BeEquivalentTo("Some shared field");
-            template.Fields[sharedFieldId].Shared.ShouldBeEquivalentTo(true);
+                template.Fields[textFieldId].Name.Should().BeEquivalentTo("Text");
+                template.Fields[textFieldId].Shared.ShouldBeEquivalentTo(false);
+
+                template.Fields[sharedFieldId].Name.Should().BeEquivalentTo("Some shared field");
+                template.Fields[sharedFieldId].Shared.ShouldBeEquivalentTo(true);
+            }
         }
 
         [Fact]
