@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {95E76C5E-3C21-40E9-A465-DDD0EB98B2E7}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 2/Auto Folder 118/Auto Item 8318
+parent: {422183AE-F79E-4E9C-B1DE-B16B1A955DF5}
+name: Auto Item 8318
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 3
+
+and
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 15
+
+four; And thick

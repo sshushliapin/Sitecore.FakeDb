@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {0DCFD60D-EFB8-4E98-9FCA-3BDD900FF26C}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 183/Auto Item 4783
+parent: {6CD7D8F3-FAD6-4790-8F34-3E6C621C8C15}
+name: Auto Item 4783
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 7
+
+foolish
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 8
+
+"Oh, you

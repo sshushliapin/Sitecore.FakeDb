@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {98B6CFD1-79E6-4F26-91D0-01B24C9CA000}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 1/Auto Folder 33/Auto Item 1433
+parent: {B54A42E3-2B40-416C-9350-2BE783DD1785}
+name: Auto Item 1433
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 12
+
+to find that
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 13
+
+was delighted

@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {7607D381-1AF3-40AB-84CA-93D0A682FFD5}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 135/Auto Item 2535
+parent: {D09FB6AA-853B-4CA0-BED4-ABC83FB8F0B3}
+name: Auto Item 2535
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 7
+
+concept
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 20
+
+PROJECT GUTENBERG-tm

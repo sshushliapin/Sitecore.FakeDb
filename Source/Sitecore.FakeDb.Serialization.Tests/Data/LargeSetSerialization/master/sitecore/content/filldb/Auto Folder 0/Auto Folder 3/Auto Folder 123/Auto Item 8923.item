@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {52D2F748-A3D5-444F-BA68-599711524F90}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 123/Auto Item 8923
+parent: {E35CEE86-ED87-46B1-BED2-9C96073F2162}
+name: Auto Item 8923
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 23
+
+distributed: This eBook
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 2
+
+or

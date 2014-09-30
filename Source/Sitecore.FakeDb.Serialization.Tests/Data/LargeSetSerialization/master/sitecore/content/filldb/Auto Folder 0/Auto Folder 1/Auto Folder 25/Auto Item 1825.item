@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {C6726A6F-7294-49D0-98A3-DC9DB8A09892}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 1/Auto Folder 25/Auto Item 1825
+parent: {088EE042-6649-49A1-B18E-F2C627ADD3AC}
+name: Auto Item 1825
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 16
+
+"that 'I breathe
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 10
+
+its sleep,

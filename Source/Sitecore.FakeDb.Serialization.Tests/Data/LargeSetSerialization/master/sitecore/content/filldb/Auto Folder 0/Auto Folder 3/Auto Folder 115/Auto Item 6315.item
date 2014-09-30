@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {C0708D0E-8660-4769-B538-70B91C206789}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 115/Auto Item 6315
+parent: {65D436D7-B343-48B2-8665-EB3ABD283D12}
+name: Auto Item 6315
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 24
+
+e--e--evening, Beautiful
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 6
+
+of the

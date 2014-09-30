@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {CD6CE44B-8C0E-44C0-9B1E-05B2CD822A39}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 0/Auto Folder 60/Auto Item 2860
+parent: {9084AF2E-A670-423C-9D64-883360D34DF1}
+name: Auto Item 2860
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 5
+
+- You
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 29
+
+Literary Archive Foundation."

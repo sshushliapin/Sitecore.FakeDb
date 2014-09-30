@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {84DE70E8-4BFC-46DD-9BA7-3BDD4A83EBFD}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 23/Auto Item 8223
+parent: {008F9666-3A44-4243-BFB7-A4E20B3B000F}
+name: Auto Item 8223
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 16
+
+brillig, and the
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 14
+
+his joy. 'Twas

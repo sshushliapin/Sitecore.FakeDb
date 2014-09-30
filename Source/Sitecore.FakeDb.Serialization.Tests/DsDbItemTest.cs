@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Sitecore.Data;
+using Sitecore.Data.Items;
 using Sitecore.Globalization;
 using Xunit;
 
@@ -104,6 +105,39 @@ namespace Sitecore.FakeDb.Serialization.Tests
 
                 item.Should().NotBeNull();
                 item.Name.ShouldBeEquivalentTo("Applications");
+            }
+        }
+
+        [Fact]
+        public void ShouldLookupById()
+        {
+            ID id = ID.Parse("{110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9}");
+
+            DsDbItem item = new DsDbItem(id);
+
+            item.Should().NotBeNull();
+            item.Name.Should().BeEquivalentTo("Home");
+            item.ID.ShouldBeEquivalentTo(id);
+        }
+
+        [Fact]
+        public void ShouldAutoDeserializeLinkedTemplate()
+        {
+            DsDbItem item = new DsDbItem("/sitecore/content/home");
+            using (Db db = new Db()
+                {
+                    item
+                })
+            {
+                ID templateId = ID.Parse("{AE76A034-9491-4B83-99F5-39F227D6FB59}");
+
+                item.Should().NotBeNull();
+                item.TemplateID.ShouldBeEquivalentTo(templateId);
+
+                Item templateItem = db.GetItem(item.TemplateID);
+
+                templateItem.Should().NotBeNull();
+                templateItem.Name.ShouldBeEquivalentTo("Sample Item");
             }
         }
     }

@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {BE9950B2-C84C-4354-BD1F-029F02D563BA}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 2/Auto Folder 174/Auto Item 1374
+parent: {65DE606D-F3A8-4104-BF71-FE32F66181D9}
+name: Auto Item 1374
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 22
+
+_what_?" thought Alice
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 2
+
+of

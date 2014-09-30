@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {B4B57EC4-6178-4A4C-AD81-5260D1CD3DEA}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 2/Auto Folder 70/Auto Item 1070
+parent: {2C16A193-9BE0-457C-9751-37668E8AEB85}
+name: Auto Item 1070
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 8
+
+said the
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 15
+
+Ann! Mary Ann!"

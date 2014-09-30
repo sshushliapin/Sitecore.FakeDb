@@ -1,0 +1,16 @@
+----item----
+version: 1
+id: {C53E541A-9143-4296-B6B6-29293C2FD568}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 2/Auto Folder 90
+parent: {5A4DA804-78FC-4833-8F75-C01E86933AB1}
+name: Auto Folder 90
+master: {00000000-0000-0000-0000-000000000000}
+template: {A87A00B1-E6DB-45AB-8B54-636FEC3B5523}
+templatekey: Folder
+
+----version----
+language: en
+version: 1
+revision: 
+

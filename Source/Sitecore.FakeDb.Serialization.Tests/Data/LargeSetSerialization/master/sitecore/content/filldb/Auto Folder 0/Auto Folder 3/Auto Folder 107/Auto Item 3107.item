@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {CAB67C2E-F314-458B-A1A7-2F5F584F0B65}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 107/Auto Item 3107
+parent: {1CB1D505-D4F4-4B7F-AC43-D07A91484122}
+name: Auto Item 3107
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 12
+
+Foundation's
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 9
+
+laws. The
