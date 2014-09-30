@@ -89,6 +89,11 @@
     {
       Assert.ArgumentNotNull(item, "item");
 
+      if (item is IDsDbItem)
+      {
+          CorePipeline.Run("loadDsDbItem", new DsItemLoadingArgs(this, item as IDsDbItem));
+      }
+
       this.SetStatistics(item);
       this.SetParent(item);
       this.CreateTemplate(item);
@@ -103,6 +108,11 @@
     {
       Assert.ArgumentNotNull(template, "template");
       Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A template with the same id has already been added.");
+
+      if (template is IDsDbItem)
+      {
+          CorePipeline.Run("loadDsDbTemplate", new DsItemLoadingArgs(this, template as IDsDbItem));
+      }
 
       this.DataStorage.AddFakeTemplate(template);
       this.Add(template as DbItem);
