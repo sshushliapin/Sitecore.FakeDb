@@ -69,6 +69,9 @@ file using the `LicenseFile` setting if necessary. By default the license file p
   ``` xml
   <setting name="LicenseFile" value="..\..\license.xml" />
   ```
+5. [Optional] If you are using [NCrunch](http://www.ncrunch.net/), please ensure you have [included](http://www.ncrunch.net/documentation/reference_project-configuration_additional-files-to-include)
+the `license.xml` file in the [NCrunch Configuration](http://www.ncrunch.net/documentation/reference_project-configuration_overview).
+If you are using the `FakeDb.Serialization` library, please ensure you have included the `Data` folder as well.
 
 To upgrade the framework run the following command in the NuGet Package Manager Console:
 
