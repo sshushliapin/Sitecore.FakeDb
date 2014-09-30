@@ -11,6 +11,7 @@ namespace Sitecore.FakeDb.Serialization
     /// </summary>
     public class DsDbTemplate : DbTemplate, IDsDbItem
     {
+        public string SerializationFolderName { get; private set; }
         public SyncItem SyncItem { get; private set; }
         public FileInfo File { get; private set; }
 
@@ -29,26 +30,27 @@ namespace Sitecore.FakeDb.Serialization
         }
 
         public DsDbTemplate(string path, string serializationFolderName)
-            : this(Deserializer.ResolveSerializationPath(path, serializationFolderName))
+            : this(Deserializer.ResolveSerializationPath(path, serializationFolderName), serializationFolderName)
         {
         }
 
         public DsDbTemplate(ID id, string serializationFolderName)
-            : this(new FileInfo(id.FindFilePath(serializationFolderName)))
+            : this(new FileInfo(id.FindFilePath(serializationFolderName)), serializationFolderName)
         {
         }
 
-        public DsDbTemplate(FileInfo file)
-            : this(file.Deserialize(), file)
+        private DsDbTemplate(FileInfo file, string serializationFolderName)
+            : this(serializationFolderName, file.Deserialize(), file)
         {
         }
 
-        private DsDbTemplate(SyncItem syncItem, FileInfo file)
+        private DsDbTemplate(string serializationFolderName, SyncItem syncItem, FileInfo file)
             : base(syncItem.Name, ID.Parse(syncItem.ID))
         {
             Assert.IsTrue(syncItem.TemplateID == TemplateIDs.Template.ToString(),
                 string.Format("File '{0}' is a correct item file, but does not represent a template; use DsDbItem instead to deserialize this", file.FullName));
 
+            this.SerializationFolderName = serializationFolderName;
             this.SyncItem = syncItem;
             this.File = file;
         }
