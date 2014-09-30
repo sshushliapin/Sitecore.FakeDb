@@ -1,4 +1,6 @@
-﻿namespace Sitecore.FakeDb.Data.Engines
+﻿using System.Linq;
+
+namespace Sitecore.FakeDb.Data.Engines
 {
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -33,7 +35,7 @@
       // Item's InnerData should only have the fields from the item's template, not the base templates.
       // This is unlike GetItemCommand that has to actually spider base templates to 
       // set field values on the item for all fields defines across all templates the item inherits from.
-      var fieldList = this.DataStorage.GetFieldList(templateId, itemName);
+      var fieldList = new FieldList(); // this.DataStorage.GetFieldList(templateId, itemName);
       var item = ItemHelper.CreateInstance(itemName, itemId, templateId, fieldList, database, language);
 
       var parentItem = this.DataStorage.GetFakeItem(destination.ID);
@@ -41,14 +43,15 @@
 
       var dbitem = new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath };
 
-      if (this.dataStorage.GetFakeTemplate(templateId) != null)
-      {
-        foreach (var field in this.dataStorage.GetFakeTemplate(templateId).Fields)
-        {
-          // TODO: Introduce field clonning.
-          dbitem.Fields.Add(new DbField(field.Name, field.ID));
-        }
-      }
+//      if (this.dataStorage.GetFakeTemplate(templateId) != null)
+//      {
+//        var templates = this.dataStorage.ExpandTemplatesSequence(templateId);
+//        foreach (var field in templates.SelectMany(template => template.Fields))
+//        {
+//          // TODO: Introduce field clonning.
+//          dbitem.Fields.Add(new DbField(field.Name, field.ID));
+//        }
+//      }
 
       this.DataStorage.FakeItems.Add(itemId, dbitem);
       this.DataStorage.GetFakeItem(destination.ID).Children.Add(dbitem);

@@ -66,6 +66,8 @@
 
       foreach (var field in source.Fields)
       {
+        copy.Fields.Add(new DbField(field.Name, field.ID));
+
         foreach (var fieldValue in field.Values)
         {
           var language = fieldValue.Key;

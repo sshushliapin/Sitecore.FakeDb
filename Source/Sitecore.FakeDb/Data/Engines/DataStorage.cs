@@ -136,24 +136,19 @@ namespace Sitecore.FakeDb.Data.Engines
       this.Database.Engines.TemplateEngine.Reset();
 
       var fakeItem = this.FakeItems[itemId];
-      var fakeTemplate = this.GetFakeTemplate(fakeItem.TemplateID);
       var itemVersion = version == Version.Latest ? Version.First : version;
 
-      var fields = BuildItemFieldList(fakeItem, fakeTemplate, language, itemVersion);
+      var fields = BuildItemFieldList(fakeItem, fakeItem.TemplateID, language, itemVersion);
 
       var item = ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);
 
       return item;
     }
 
-    protected FieldList BuildItemFieldList(DbItem fakeItem, DbTemplate fakeTemplate, Language language, Version version)
+    protected FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
     {
       // build a sequence of templates that the item inherits from
-      var templates = new List<DbTemplate>();
-      ExpandTemplatesSequence(fakeTemplate, templates);
-
-      // has to be reversed so that standard values defined in the templates "closer" to the item took precedence
-      templates.Reverse();
+      var templates = ExpandTemplatesSequence(templateId);
 
       var fields = new FieldList();
       foreach (var template in templates)
@@ -171,27 +166,32 @@ namespace Sitecore.FakeDb.Data.Engines
       return fields;
     }
 
-    protected void ExpandTemplatesSequence(DbTemplate fakeTemplate, List<DbTemplate> seqeunce)
+    internal List<DbTemplate> ExpandTemplatesSequence(ID templateId)
     {
+      var fakeTemplate = this.GetFakeTemplate(templateId);
       if (fakeTemplate == null)
       {
-        return;
+        return new List<DbTemplate>();
       }
 
-      seqeunce.Add(fakeTemplate);
+      var sequence = new List<DbTemplate>() {fakeTemplate};
 
-      if (fakeTemplate.BaseIDs != null && fakeTemplate.BaseIDs.Length > 0)
+      if (fakeTemplate.BaseIDs != null)
       {
         foreach (var baseId in fakeTemplate.BaseIDs)
         {
-          ExpandTemplatesSequence(this.GetFakeTemplate(baseId), seqeunce);
+          sequence.AddRange(ExpandTemplatesSequence(baseId));
         }
       }
+
+      sequence.Reverse();
+
+      return sequence;
     }
 
     protected void AddFieldsFromTemplate(FieldList allFields, DbItem fakeItem, DbTemplate fakeTemplate, Language language, Version version)
     {
-      var fields = this.GetFieldList(fakeTemplate.ID, fakeItem.Name);
+      var fields = new FieldList(); // this.GetFieldList(fakeTemplate.ID, fakeItem.Name);
       foreach (var templateField in fakeTemplate.Fields)
       {
         var fieldId = templateField.ID;
@@ -201,19 +201,9 @@ namespace Sitecore.FakeDb.Data.Engines
 
         if (itemField != null)
         {
-          value = itemField.GetValue(language.Name, version.Number);          
+          value = itemField.GetValue(language.Name, version.Number);
+          fields.Add(fieldId, value);
         }
-
-        if (string.IsNullOrEmpty(value) && fakeTemplate.StandardValues.InnerFields.ContainsKey(fieldId))
-        {
-          value = fakeTemplate.StandardValues[fieldId].Value;
-          if (value == "$name")
-          {
-            value = fakeItem.Name;
-          }
-        }
-
-        fields.Add(fieldId, value);
       }
 
       foreach (KeyValuePair<ID, string> field in fields)
@@ -234,10 +224,7 @@ namespace Sitecore.FakeDb.Data.Engines
         return fakeItem.Fields[templateField.ID];
       }
 
-      // Field values defined on the item for the fields from up the template inheritance chain
-      // can only be found by name
-
-      return fakeItem.Fields.SingleOrDefault(f => string.Equals(f.Name, templateField.Name));
+      return null;
     }
 
     protected void FillDefaultFakeTemplates()

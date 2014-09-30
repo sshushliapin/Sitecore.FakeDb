@@ -1,4 +1,7 @@
-﻿namespace Sitecore.FakeDb.Tests
+﻿using Sitecore.Data.Items;
+using Sitecore.Data.Serialization.Exceptions;
+
+namespace Sitecore.FakeDb.Tests
 {
   using FluentAssertions;
   using Xunit;
@@ -21,9 +24,14 @@
         var root = db.GetItem(ItemIDs.ContentRoot);
 
         // act
-        var item = ItemManager.CreateItem("Home", root, templateId);
+        Item item = ItemManager.CreateItem("Home", root, templateId);
 
         // assert
+        var fieldId = TemplateManager.GetFieldId("Title", templateId, db.Database);
+        fieldId.Should().NotBeNull();
+        item.Fields["Title"].Should().NotBeNull();
+        item.InnerData.Fields[fieldId].Should().BeNull();
+
         item["Title"].Should().Be(expectedValue);
       }
     }
@@ -73,6 +81,39 @@
         // assert
         home["Title"].Should().Be("New Default");
       }
+    }
+
+    [Fact]
+    public void ShouldBeAbleToAskForTheItemValueAndTheStandardValue()
+    {
+      // arrange
+      var templateId = ID.NewID;
+
+      using (var db = new Db
+      {
+        new DbTemplate(templateId) {{"Title", "Value"}},
+        new DbItem("home", ID.NewID, templateId)
+      })
+      {
+        // act
+        var home = db.GetItem("/sitecore/content/home");
+        var title = home.Fields["Title"];
+        ID fieldId = TemplateManager.GetFieldId("Title", templateId, db.Database);
+        
+
+        //assert
+        fieldId.Should().NotBeNull();
+        home.Fields[fieldId].Should().NotBeNull();
+        home.Fields["Title"].Should().NotBeNull();
+
+        home.InnerData.Fields[fieldId].Should().BeNull();
+
+        home.Fields["Title"].Value.Should().Be("Value");
+        home["Title"].Should().Be("Value");
+
+        title.GetValue(false, false).Should().BeNull();
+        title.GetValue(true, true).Should().Be("Value");
+      } 
     }
   }
 

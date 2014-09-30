@@ -1,4 +1,8 @@
-﻿namespace Sitecore.FakeDb.Data
+﻿using System.Web.UI;
+using System.Xml.Schema;
+using Sitecore.Data.Items;
+
+namespace Sitecore.FakeDb.Data
 {
   using Sitecore.Data;
   using Sitecore.Data.Fields;
@@ -19,6 +23,7 @@
       var templateId = field.Item.TemplateID;
 
       Assert.IsNotNull(this.storage, "DataStorage cannot be null.");
+
       var template = this.storage.GetFakeTemplate(templateId);
 
       if (template == null)
@@ -28,12 +33,41 @@
         return string.Empty;
       }
 
-      if (!template.StandardValues.InnerFields.ContainsKey(field.ID))
+      var standardValue = FindStandardValueInTheTemplate(template, field.ID) ?? string.Empty;
+
+      return ReplaceTokens(standardValue, field.Item);
+    }
+
+    protected string ReplaceTokens(string standardValue, Item item)
+    {
+      Assert.IsNotNull(standardValue, "standardValue");
+      Assert.IsNotNull(item, "item");
+
+      return standardValue.Replace("$name", item.Name);
+    }
+
+    protected string FindStandardValueInTheTemplate(DbTemplate template, ID fieldId)
+    {
+      if (template.StandardValues.InnerFields.ContainsKey(fieldId))
       {
-        return string.Empty;
+        return template.StandardValues[fieldId].Value; 
       }
 
-      return template.StandardValues[field.ID].Value;
+      if (template.BaseIDs != null && template.BaseIDs.Length > 0)
+      {
+        foreach (var baseId in template.BaseIDs)
+        {
+          var baseTemplate = this.storage.GetFakeTemplate(baseId);
+          var value = FindStandardValueInTheTemplate(baseTemplate, fieldId);
+
+          if (value != null)
+          {
+            return value;
+          }
+        }
+      }
+
+      return null;
     }
 
     void IRequireDataStorage.SetDataStorage(DataStorage dataStorage)

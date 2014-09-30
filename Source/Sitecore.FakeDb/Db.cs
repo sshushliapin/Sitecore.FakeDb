@@ -226,8 +226,7 @@
 
       if (this.dataStorage.FakeTemplates.ContainsKey(item.TemplateID))
       {
-        var template = this.dataStorage.FakeTemplates[item.TemplateID];
-        MapFields(template.Fields, item);
+        MapFieldsFromInheritedTemplatesToItem(item);
 
         return true;
       }
@@ -259,14 +258,30 @@
       item.TemplateID = sourceItem.TemplateID;
 
       // TODO:[High] review and redesign.
-      MapFields(sourceItem.Fields, item);
+      MapFieldsFromInheritedTemplatesToItem(item);
 
       return true;
     }
 
-    private static void MapFields(IEnumerable<DbField> source, DbItem target)
+    /// <summary>
+    /// Find all fields defined on the item directly and make sure the fields' IDs match the ones
+    /// defined on the templates the item inherits from
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
+    private void MapFieldsFromInheritedTemplatesToItem(DbItem target)
     {
-      foreach (var field in source)
+      var templates = this.dataStorage.ExpandTemplatesSequence(target.TemplateID);
+
+      foreach (var template in templates)
+      {
+        MapFieldsFromTemplateToItem(target, template);
+      }
+    }
+
+    protected void MapFieldsFromTemplateToItem(DbItem target, DbTemplate source)
+    {
+      foreach (var field in source.Fields)
       {
         var oldField = target.Fields.InnerFields.Values.SingleOrDefault(v => v.Name == field.Name);
         if (oldField == null)
