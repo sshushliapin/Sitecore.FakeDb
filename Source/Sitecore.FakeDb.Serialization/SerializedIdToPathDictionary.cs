@@ -15,61 +15,64 @@ namespace Sitecore.FakeDb.Serialization
 
         public static string FindFilePath(this ID id, string serializationFolderName)
         {
-            // find or create the set of paths for the serialization folder
-            SerializedIdToPathSet pathSet;
-            if (_pathSets.ContainsKey(serializationFolderName))
+            lock (_pathSets)
             {
-                pathSet = _pathSets[serializationFolderName];
-            }
-            else
-            {
-                pathSet = new SerializedIdToPathSet();
-                pathSet.FilePaths.Push(Deserializer.GetSerializationFolder(serializationFolderName).FullName);
-                _pathSets.Add(serializationFolderName, pathSet);
-            }
-
-            // get the individual item if already found
-            if (pathSet.Paths.ContainsKey(id))
-            {
-                return pathSet.Paths[id];
-            }
-
-            
-            while (pathSet.FilePaths.Any())
-            {
-                string filePath = pathSet.FilePaths.Pop();
-                foreach (string subdirectory in Directory.GetDirectories(filePath))
+                // find or create the set of paths for the serialization folder
+                SerializedIdToPathSet pathSet;
+                if (_pathSets.ContainsKey(serializationFolderName))
                 {
-                    pathSet.FilePaths.Push(subdirectory);
+                    pathSet = _pathSets[serializationFolderName];
+                }
+                else
+                {
+                    pathSet = new SerializedIdToPathSet();
+                    pathSet.FilePaths.Push(Deserializer.GetSerializationFolder(serializationFolderName).FullName);
+                    _pathSets.Add(serializationFolderName, pathSet);
                 }
 
-                string foundFile = null;
-                foreach (string file in Directory.GetFiles(filePath, "*.item"))
+                // get the individual item if already found
+                if (pathSet.Paths.ContainsKey(id))
                 {
-                    using (StreamReader sr = new StreamReader(file))
+                    return pathSet.Paths[id];
+                }
+
+
+                while (pathSet.FilePaths.Any())
+                {
+                    string filePath = pathSet.FilePaths.Pop();
+                    foreach (string subdirectory in Directory.GetDirectories(filePath))
                     {
-                        sr.ReadLine();
-                        sr.ReadLine();
-                        string itemIdStr = sr.ReadLine().Substring(4);
-                        if (ID.IsID(itemIdStr))
+                        pathSet.FilePaths.Push(subdirectory);
+                    }
+
+                    string foundFile = null;
+                    foreach (string file in Directory.GetFiles(filePath, "*.item"))
+                    {
+                        using (StreamReader sr = new StreamReader(file))
                         {
-                            ID itemId = ID.Parse(itemIdStr);
-                            pathSet.Paths.Add(itemId, file);
-                            if (itemId == id)
+                            sr.ReadLine();
+                            sr.ReadLine();
+                            string itemIdStr = sr.ReadLine().Substring(4);
+                            if (ID.IsID(itemIdStr))
                             {
-                                foundFile = file;
+                                ID itemId = ID.Parse(itemIdStr);
+                                pathSet.Paths.Add(itemId, file);
+                                if (itemId == id)
+                                {
+                                    foundFile = file;
+                                }
                             }
                         }
                     }
+
+                    if (foundFile != null)
+                    {
+                        return foundFile;
+                    }
                 }
 
-                if (foundFile != null)
-                {
-                    return foundFile;
-                }
+                return null;
             }
-
-            return null;
         }
     }
 }
