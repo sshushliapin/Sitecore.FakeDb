@@ -1,5 +1,6 @@
 ﻿0.19.0
-* [NEW] Added DsDbItem and DsDbTemplate for using deserialized data in tests (thanks to [Robin Hermanussen](https://github.com/hermanussen))
+* [NEW] #21: Added DsDbItem and DsDbTemplate for using deserialized data in tests (thanks to [Robin Hermanussen](https://github.com/hermanussen))
+* [NEW] #22: Add field propagation from all inherited templates and refactor the way FakeDb works with fields (thanks to [Pavel Veller](https://github.com/pveller))
 
 0.18.1
 * [FIX] Added Link Manager registration
