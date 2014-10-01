@@ -33,11 +33,26 @@ namespace Sitecore.FakeDb.Data.Engines
 
         var dbitem = new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath };
 
+        // ToDo [HIGH]: move it out of here and consolidate with the processing that happens in the Db
+        SetStatistics(dbitem);
+
         this.DataStorage.FakeItems.Add(itemId, dbitem);
         this.DataStorage.GetFakeItem(destination.ID).Children.Add(dbitem);
       }
 
       return this.DataStorage.GetSitecoreItem(itemId, language);
+    }
+
+    protected void SetStatistics(DbItem item)
+    {
+      var date = DateUtil.IsoNow;
+      var user = Context.User.Name;
+
+      item.Fields.Add(new DbField("__Created", FieldIDs.Created) { Value = date });
+      item.Fields.Add(new DbField("__Created by", FieldIDs.CreatedBy) { Value = user });
+      item.Fields.Add(new DbField("__Revision", FieldIDs.Revision) { Value = ID.NewID.ToString() });
+      item.Fields.Add(new DbField("__Updated", FieldIDs.Updated) { Value = date });
+      item.Fields.Add(new DbField("__Updated by", FieldIDs.UpdatedBy) { Value = user });
     }
   }
 }

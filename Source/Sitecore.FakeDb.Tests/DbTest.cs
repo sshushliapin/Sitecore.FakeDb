@@ -924,7 +924,7 @@
       }
     }
 
-    // ToDo: Creating an item via the ItemManager doesn't set statistic and item access
+    [Fact]
     public void ShouldCreateItemWithStatisticsUsingItemManager()
     {
       // arrange

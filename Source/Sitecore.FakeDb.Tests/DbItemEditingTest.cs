@@ -85,26 +85,34 @@
       }
     }
 
-    [Fact]
+
     public void ShouldEditAnItemCreatedUsingItemManager()
     {
       // arrange
-      using (var db = new Db { new DbTemplate("Sample", this.templateId) { "Title" } })
+      using (var db = new Db
+      {
+        new DbTemplate("Sample", this.templateId) { "Title" },
+        new DbItem("main", ID.NewID, this.templateId)
+      })
       {
         var root = db.Database.GetItem("/sitecore/content");
 
         // act
-        var item = ItemManager.CreateItem("Home", root, this.templateId, this.itemId);
+        var home = ItemManager.CreateItem("Home", root, this.templateId, this.itemId);
+        var main = db.GetItem("/sitecore/content/main");
 
-        item = db.GetItem(item.ID);
+        var fakeHome = db.DataStorage.FakeItems[home.ID];
+        var fakeMain = db.DataStorage.FakeItems[main.ID];
 
-        using (new EditContext(item))
+        home.Fields.Count.Should().Be(main.Fields.Count);
+
+        using (new EditContext(home))
         {
-          item["Title"] = "Welcome!";
+          home["Title"] = "Welcome!";
         }
 
         // assert
-        item["Title"].Should().Be("Welcome!");
+        home["Title"].Should().Be("Welcome!");
       }
     }
   }

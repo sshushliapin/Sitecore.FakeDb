@@ -165,7 +165,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
     protected void AddFieldsFromTemplate(FieldList allFields, DbItem fakeItem, DbTemplate fakeTemplate, Language language, Version version)
     {
-      var fields = new FieldList(); // this.GetFieldList(fakeTemplate.ID, fakeItem.Name);
+      var fields = new FieldList();
       foreach (var templateField in fakeTemplate.Fields)
       {
         var fieldId = templateField.ID;
