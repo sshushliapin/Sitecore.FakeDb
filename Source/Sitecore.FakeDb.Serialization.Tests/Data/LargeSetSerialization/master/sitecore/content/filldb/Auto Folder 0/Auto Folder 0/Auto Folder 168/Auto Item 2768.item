@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {24D5774F-7515-4000-91F5-046D9D4D3472}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 0/Auto Folder 168/Auto Item 2768
+parent: {5D7F723F-2F8B-4948-B565-3CB5DCB43309}
+name: Auto Item 2768
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 3
+
+not
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 9
+
+1.E.4. Do

@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {8C61FF03-0134-4D05-A421-A8A5514017A4}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 1/Auto Folder 121/Auto Item 5721
+parent: {EF1812C3-0C27-495B-B78E-AEDE300563A5}
+name: Auto Item 5721
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 3
+
+you
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 4
+
+"why

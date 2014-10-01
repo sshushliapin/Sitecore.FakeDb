@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {B210845A-F1DF-4B91-979C-A5A472372AAE}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 1/Auto Folder 109/Auto Item 709
+parent: {D60DF73D-C8D7-4C58-9409-0947D155B757}
+name: Auto Item 709
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 11
+
+Silence all
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 13
+
+thing I know.

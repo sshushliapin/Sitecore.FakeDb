@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {05EB3F8E-498A-4375-9CC8-9307F83F8512}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 155/Auto Item 5955
+parent: {CF67EF60-AC54-4DB8-98E5-4001A62AC92C}
+name: Auto Item 5955
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 7
+
+the act
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 10
+
+and was in

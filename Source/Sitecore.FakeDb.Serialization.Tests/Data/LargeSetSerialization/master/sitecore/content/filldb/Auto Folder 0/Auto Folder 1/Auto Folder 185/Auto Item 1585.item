@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {6048B44D-1FB1-4559-A7B5-6FB2EC33026A}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 1/Auto Folder 185/Auto Item 1585
+parent: {7443172F-32F0-4A5F-8EC1-96D2F171FBD8}
+name: Auto Item 1585
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 7
+
+up into
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 16
+
+staring stupidly

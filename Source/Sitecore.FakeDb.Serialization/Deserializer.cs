@@ -72,13 +72,14 @@ namespace Sitecore.FakeDb.Serialization
         /// <param name="dsDbItem">FakeDb item to copy values to</param>
         internal static void CopyVersionedFieldsTo(this SyncItem item, IDsDbItem dsDbItem)
         {
+            List<DbField> fields = new List<DbField>();
             foreach (SyncVersion version in item.Versions)
             {
                 foreach (SyncField field in version.Fields)
                 {
                     Assert.IsTrue(ID.IsID(field.FieldID), string.Format("Field id '{0}' is not a valid guid", field.FieldID));
                     ID fieldId = ID.Parse(field.FieldID);
-                    DbField dbField = dsDbItem.Fields.FirstOrDefault(f => f.ID == fieldId);
+                    DbField dbField = fields.FirstOrDefault(f => f.ID == fieldId);
 
                     if (dbField == null)
                     {
@@ -87,6 +88,7 @@ namespace Sitecore.FakeDb.Serialization
                             Shared = false
                         };
                         dsDbItem.Add(dbField);
+                        fields.Add(dbField);
                     }
                     int versionNumber;
                     if (int.TryParse(version.Version, out versionNumber))
@@ -118,21 +120,7 @@ namespace Sitecore.FakeDb.Serialization
         /// <returns></returns>
         internal static FileInfo ResolveSerializationPath(string path, string serializationFolderName)
         {
-            Assert.IsNotNullOrEmpty(
-                serializationFolderName,
-                "Please specify a serialization folder when you instantiate a FakeDb or individual DsDbItem/DsDbTemplate");
-
-            XmlNode folderNode = Factory.GetConfigNode(
-                string.Format("szfolders/folder[@name='{0}']", serializationFolderName));
-
-            Assert.IsNotNull(
-                folderNode,
-                string.Format("Configuration for serialization folder name '{0}' could not be found; please check the <szfolders /> configuration in the app.config", serializationFolderName));
-
-            DirectoryInfo serializationFolder = new DirectoryInfo(folderNode.Attributes["value"].Value);
-            Assert.IsTrue(
-                serializationFolder.Exists,
-                string.Format("Path '{0}', as configured in the app.config could not be found; please check the <szfolders /> configuration in the app.config", serializationFolder.FullName));
+            DirectoryInfo serializationFolder = GetSerializationFolder(serializationFolderName);
 
             FileInfo itemLocation = new FileInfo(
                 string.Format(
@@ -147,6 +135,30 @@ namespace Sitecore.FakeDb.Serialization
                 itemLocation.FullName));
 
             return itemLocation;
+        }
+
+        public static DirectoryInfo GetSerializationFolder(string serializationFolderName)
+        {
+            Assert.IsNotNullOrEmpty(
+                serializationFolderName,
+                "Please specify a serialization folder when you instantiate a FakeDb or individual DsDbItem/DsDbTemplate");
+
+            XmlNode folderNode = Factory.GetConfigNode(
+                string.Format("szfolders/folder[@name='{0}']", serializationFolderName));
+
+            Assert.IsNotNull(
+                folderNode,
+                string.Format(
+                    "Configuration for serialization folder name '{0}' could not be found; please check the <szfolders /> configuration in the app.config",
+                    serializationFolderName));
+
+            DirectoryInfo serializationFolder = new DirectoryInfo(folderNode.Attributes["value"].Value);
+            Assert.IsTrue(
+                serializationFolder.Exists,
+                string.Format(
+                    "Path '{0}', as configured in the app.config could not be found; please check the <szfolders /> configuration in the app.config",
+                    serializationFolder.FullName));
+            return serializationFolder;
         }
     }
 }

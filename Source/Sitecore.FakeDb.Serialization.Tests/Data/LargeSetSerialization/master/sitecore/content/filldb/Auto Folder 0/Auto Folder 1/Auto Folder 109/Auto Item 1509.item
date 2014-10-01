@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {6A52E971-6EEF-4AE7-974C-38315D21B472}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 1/Auto Folder 109/Auto Item 1509
+parent: {D60DF73D-C8D7-4C58-9409-0947D155B757}
+name: Auto Item 1509
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 3
+
+her
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 14
+
+she could, for

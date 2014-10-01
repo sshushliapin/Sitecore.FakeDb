@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {304230C2-2349-48C9-A485-5798EE90FD2E}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 0/Auto Folder 84/Auto Item 6684
+parent: {EA52FE5E-CCD3-4D55-96CD-FDFDDCB4F408}
+name: Auto Item 6684
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 14
+
+when they have
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 17
+
+generally only do

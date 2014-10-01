@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {066F693F-977F-4D19-9021-89B5E78EBC97}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 0/Auto Folder 88/Auto Item 1088
+parent: {C6E75766-89D1-4C52-813C-42B9C8F9C69C}
+name: Auto Item 1088
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 15
+
+the Rabbit came
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 16
+
+of it. Presently

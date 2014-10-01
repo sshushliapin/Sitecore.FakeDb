@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {E27890F6-A0EC-4CAA-91C3-51CD0F51D555}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 59/Auto Item 6859
+parent: {02DCA549-90D5-459D-9CF2-5720D5B2B9A6}
+name: Auto Item 6859
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 12
+
+and to think
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 15
+
+face on Sunday,

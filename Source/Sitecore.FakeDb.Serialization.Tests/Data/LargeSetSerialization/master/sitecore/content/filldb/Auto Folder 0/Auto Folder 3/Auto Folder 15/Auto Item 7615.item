@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {859B1CCB-FA2A-4DCF-8C3B-D8526447F116}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 3/Auto Folder 15/Auto Item 7615
+parent: {91FEDF8F-F1D1-4C10-BCEC-5587A6D1AF53}
+name: Auto Item 7615
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 5
+
+- You
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 28
+
+provisions. 1.F.6. INDEMNITY

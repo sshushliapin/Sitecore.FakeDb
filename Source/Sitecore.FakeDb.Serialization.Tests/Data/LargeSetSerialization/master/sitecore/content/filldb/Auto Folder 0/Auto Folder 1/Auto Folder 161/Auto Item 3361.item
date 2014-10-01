@@ -1,0 +1,30 @@
+----item----
+version: 1
+id: {0E114F56-5698-4A78-8237-1FA8E48F84E0}
+database: master
+path: /sitecore/content/filldb/Auto Folder 0/Auto Folder 1/Auto Folder 161/Auto Item 3361
+parent: {B8FAE816-1F72-41BB-886B-CD636430639C}
+name: Auto Item 3361
+master: {00000000-0000-0000-0000-000000000000}
+template: {76036F5E-CBCE-46D1-AF0A-4143F9B557AA}
+templatekey: Sample Item
+
+----version----
+language: en
+version: 1
+revision: 
+
+----field----
+field: {75577384-3C97-45DA-A847-81B00500E250}
+name: Title
+key: title
+content-length: 16
+
+pictures hung on
+----field----
+field: {A60ACD61-A6DB-4182-8329-C957982CEC74}
+name: Text
+key: text
+content-length: 8
+
+maps and
