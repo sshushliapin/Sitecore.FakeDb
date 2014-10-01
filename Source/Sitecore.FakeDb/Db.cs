@@ -190,12 +190,12 @@
     {
       var date = DateUtil.IsoNow;
       var user = Context.User.Name;
-
-      item.Fields.Add("__Created", date);
-      item.Fields.Add("__Created by", user);
-      item.Fields.Add("__Revision", ID.NewID.ToString());
-      item.Fields.Add("__Updated", date);
-      item.Fields.Add("__Updated by", user);
+      
+      item.Fields.Add(new DbField("__Created", FieldIDs.Created) {Value = date});
+      item.Fields.Add(new DbField("__Created by", FieldIDs.CreatedBy) {Value = user});
+      item.Fields.Add(new DbField("__Revision", FieldIDs.Revision) {Value = ID.NewID.ToString()});
+      item.Fields.Add(new DbField("__Updated", FieldIDs.Updated) {Value = date});
+      item.Fields.Add(new DbField("__Updated by", FieldIDs.UpdatedBy) {Value = user});
     }
 
     protected virtual void CreateTemplate(DbItem item)
@@ -236,9 +236,6 @@
 
       if (this.dataStorage.FakeTemplates.ContainsKey(item.TemplateID))
       {
-        var template = this.dataStorage.FakeTemplates[item.TemplateID];
-        MapFields(template.Fields, item);
-
         return true;
       }
 
@@ -247,6 +244,7 @@
         return false;
       }
 
+      // find the most recently added sibling
       var sourceItem = this.DataStorage.FakeItems.Values.LastOrDefault(si => si.ParentID == item.ParentID);
       if (sourceItem == null)
       {
@@ -266,30 +264,10 @@
         return false;
       }
 
+      // reuse the template
       item.TemplateID = sourceItem.TemplateID;
 
-      // TODO:[High] review and redesign.
-      MapFields(sourceItem.Fields, item);
-
       return true;
-    }
-
-    private static void MapFields(IEnumerable<DbField> source, DbItem target)
-    {
-      foreach (var field in source)
-      {
-        var oldField = target.Fields.InnerFields.Values.SingleOrDefault(v => v.Name == field.Name);
-        if (oldField == null)
-        {
-          continue;
-        }
-
-        target.Fields.InnerFields.Remove(oldField.ID);
-
-        var renewedField = oldField;
-        renewedField.ID = field.ID;
-        target.Fields.InnerFields.Add(field.ID, renewedField);
-      }
     }
 
     protected virtual void SetParent(DbItem item)
@@ -337,9 +315,6 @@
 
     protected virtual void SetAccess(DbItem item)
     {
-      var fakeItem = this.DataStorage.GetFakeItem(item.ID);
-      fakeItem.Access = item.Access;
-
       var rules = new AccessRuleCollection();
 
       this.FillAccessRules(rules, item.Access, AccessRight.ItemRead, a => a.CanRead);
@@ -357,13 +332,13 @@
       var serializer = new AccessRuleSerializer();
 
       // TODO: Should not require to check if Security field is exists
-      if (fakeItem.Fields.Any(f => f.ID == FieldIDs.Security))
+      if (item.Fields.Any(f => f.ID == FieldIDs.Security))
       {
-        fakeItem.Fields[FieldIDs.Security].Value = serializer.Serialize(rules);
+        item.Fields[FieldIDs.Security].Value = serializer.Serialize(rules);
       }
       else
       {
-        fakeItem.Fields.Add("__Security", serializer.Serialize(rules));
+        item.Fields.Add(new DbField("__Security", FieldIDs.Security) {Value = serializer.Serialize(rules)});
       }
     }
 

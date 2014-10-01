@@ -13,6 +13,11 @@
       {
         rds.SetDataStorage(dataStorage);
       }
+      else
+      {
+        // we should know if it happens
+        throw new System.Exception(obj.GetType().FullName);
+      }
     }
   }
 }

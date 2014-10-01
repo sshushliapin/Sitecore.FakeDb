@@ -114,26 +114,6 @@
     }
 
     [Fact]
-    public void ShouldCreateAndEditItemOfPredefinedTemplate()
-    {
-      // arrange
-      using (var db = new Db
-                        {
-                          new DbTemplate("Sample", this.templateId) { "Title" },
-                          new DbItem("Home", this.itemId, this.templateId)
-                        })
-      {
-        var item = db.GetItem(this.itemId);
-
-        // act
-        using (new EditContext(item))
-        {
-          item.Fields["Title"].Value = "Welcome!";
-        }
-      }
-    }
-
-    [Fact]
     public void ShouldCreateItemOfVersionOne()
     {
       // arrange & act
@@ -260,25 +240,6 @@
 
         // assert
         action.ShouldThrow<UnauthorizedAccessException>();
-      }
-    }
-
-    [Fact]
-    public void ShouldEditItem()
-    {
-      // arrange
-      using (var db = new Db { new DbItem("home") { { "Title", "Hello!" } } })
-      {
-        var item = db.Database.GetItem("/sitecore/content/home");
-
-        // act
-        using (new EditContext(item))
-        {
-          item["Title"] = "Welcome!";
-        }
-
-        // assert
-        item["Title"].Should().Be("Welcome!");
       }
     }
 
@@ -941,24 +902,6 @@
       }
     }
 
-    [Theory]
-    [InlineData("$name", "Home")]
-    [InlineData("static-text", "static-text")]
-    public void ShouldCreateTemplateWithStandardValues(string standardValue, string expectedValue)
-    {
-      // arrange
-      using (var db = new Db { new DbTemplate("sample", templateId) { { "Title", standardValue } } })
-      {
-        var root = db.GetItem(ItemIDs.ContentRoot);
-
-        // act
-        var item = ItemManager.CreateItem("Home", root, templateId);
-
-        // assert
-        item["Title"].Should().Be(expectedValue);
-      }
-    }
-
     [Fact]
     public void ShouldCreateItemOfFolderTemplate()
     {
@@ -982,22 +925,22 @@
     }
 
     [Fact]
-    public void ShouldCreateItemUsingItemManager()
+    public void ShouldCreateItemWithStatisticsUsingItemManager()
     {
       // arrange
-      using (var db = new Db { new DbTemplate("Sample", this.templateId) { "Title" } })
+      using (var db = new Db { new DbTemplate("Sample", this.templateId) })
       {
         var root = db.Database.GetItem("/sitecore/content");
 
         // act
         var item = ItemManager.CreateItem("Home", root, this.templateId, this.itemId);
-        using (new EditContext(item))
-        {
-          item["Title"] = "Welcome!";
-        }
 
         // assert
-        item["Title"].Should().Be("Welcome!");
+        item[FieldIDs.Created].Should().NotBeEmpty();
+        item[FieldIDs.CreatedBy].Should().NotBeEmpty();
+        item[FieldIDs.Updated].Should().NotBeEmpty();
+        item[FieldIDs.UpdatedBy].Should().NotBeEmpty();
+        item[FieldIDs.Revision].Should().NotBeEmpty();
       }
     }
 
@@ -1176,35 +1119,6 @@
         child.ParentID.Should().Be(copy.ID);
         child.Name.Should().Be("child");
         child.Paths.FullPath.Should().Be("/sitecore/content/copy/child");
-      }
-    }
-
-    [Fact]
-    public void ShouldNotUpdateOriginalItemOnEditing()
-    {
-      // arrange
-      using (var db = new Db
-                        {
-                          new DbItem("old root")
-                            {
-                              new DbItem("item") { new DbField("Title") { { "en", 1, "Hi!" } }, }
-                            },
-                          new DbItem("new root")
-                        })
-      {
-        var item = db.GetItem("/sitecore/content/old root/item");
-        var newRoot = db.GetItem("/sitecore/content/new root");
-        var copy = item.CopyTo(newRoot, "new item");
-
-        // act
-        using (new EditContext(copy))
-        {
-          copy["Title"] = "Welcome!";
-        }
-
-        // assert
-        db.GetItem(copy.ID)["Title"].Should().Be("Welcome!");
-        db.GetItem(item.ID)["Title"].Should().Be("Hi!");
       }
     }
 

@@ -115,6 +115,9 @@
     <Compile Include="Data\Items\ItemWrapperTest.cs" />
     <Compile Include="DbFieldCollectionTest.cs" />
     <Compile Include="DbFieldTest.cs" />
+    <Compile Include="DbItemEditingTest.cs" />
+    <Compile Include="DbStandardValuesTest.cs" />
+    <Compile Include="DbTemplateInheritanceTest.cs" />
     <Compile Include="DbTemplateTest.cs" />
     <Compile Include="DbTest.cs" />
     <Compile Include="DbItemTest.cs" />
@@ -142,7 +145,6 @@
     <Compile Include="Pipelines\PipelineWatcherProcessorTests.cs" />
     <Compile Include="Pipelines\PipelineWatcherTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommandsTest.cs" />
-    <Compile Include="Pipelines\InitFakeDb\InitDataProvidersTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbArgsTest.cs" />
     <Compile Include="Pipelines\ReleaseDb\ReleasePipelineWatcherTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

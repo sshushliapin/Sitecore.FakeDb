@@ -6,6 +6,7 @@
   using NSubstitute;
   using Sitecore.Configuration;
   using Sitecore.Data;
+  using Sitecore.Globalization;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
@@ -33,7 +34,7 @@
       this.destination = ItemHelper.CreateInstance(this.database);
 
       this.dataStorage.GetFakeItem(this.destination.ID).Returns(new DbItem("destination"));
-      this.dataStorage.GetFieldList(this.templateId, Arg.Any<string>()).Returns(new FieldList());
+      this.dataStorage.GetSitecoreItem(this.itemId, Language.Current).Returns(ItemHelper.CreateInstance("home", itemId, templateId, new FieldList(), this.database));
 
       this.itemCreator = new ItemCreator(this.dataStorage);
     }
@@ -79,32 +80,17 @@
     public void ShouldReturnItemIfAlreadyExists()
     {
       // arrange
-      var item = new DbItem("home");
-      this.dataStorage.GetFakeItem(this.itemId).Returns(item);
+      var fakeItem = new DbItem("home", this.templateId);
+      this.dataStorage.GetFakeItem(this.itemId).Returns(fakeItem);
 
       // act
       var item1 = this.itemCreator.Create("home", this.itemId, this.templateId, this.database, this.destination);
       var item2 = this.itemCreator.Create("home", this.itemId, this.templateId, this.database, this.destination);
 
       // assert
+      item1.Should().NotBeNull();
+      item2.Should().NotBeNull();
       item1.Should().Be(item2);
-    }
-
-    [Fact]
-    public void ShouldAddTemplateFieldsIntoDataStorage()
-    {
-      // arrange  
-      var fieldId = ID.NewID;
-      var fieldList = new FieldList { { fieldId, string.Empty } };
-
-      this.dataStorage.GetFieldList(this.templateId).Returns(fieldList);
-      this.dataStorage.GetFakeTemplate(this.templateId).Returns(new DbTemplate("sample", this.templateId) { Fields = { new DbField("Title", fieldId) } });
-
-      // act
-      this.itemCreator.Create("home", this.itemId, this.templateId, this.database, this.destination);
-
-      // assert
-      this.dataStorage.FakeItems[this.itemId].Fields.InnerFields.ContainsKey(fieldId).Should().BeTrue();
     }
 
     public void Dispose()
