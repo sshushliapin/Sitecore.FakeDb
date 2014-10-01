@@ -305,9 +305,6 @@
 
     protected virtual void SetAccess(DbItem item)
     {
-      var fakeItem = this.DataStorage.GetFakeItem(item.ID);
-      fakeItem.Access = item.Access;
-
       var rules = new AccessRuleCollection();
 
       this.FillAccessRules(rules, item.Access, AccessRight.ItemRead, a => a.CanRead);
@@ -325,13 +322,13 @@
       var serializer = new AccessRuleSerializer();
 
       // TODO: Should not require to check if Security field is exists
-      if (fakeItem.Fields.Any(f => f.ID == FieldIDs.Security))
+      if (item.Fields.Any(f => f.ID == FieldIDs.Security))
       {
-        fakeItem.Fields[FieldIDs.Security].Value = serializer.Serialize(rules);
+        item.Fields[FieldIDs.Security].Value = serializer.Serialize(rules);
       }
       else
       {
-        fakeItem.Fields.Add(new DbField("__Security", FieldIDs.Security) {Value = serializer.Serialize(rules)});
+        item.Fields.Add(new DbField("__Security", FieldIDs.Security) {Value = serializer.Serialize(rules)});
       }
     }
 

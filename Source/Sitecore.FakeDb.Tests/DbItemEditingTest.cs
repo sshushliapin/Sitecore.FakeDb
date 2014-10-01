@@ -85,7 +85,7 @@
       }
     }
 
-
+    [Fact]
     public void ShouldEditAnItemCreatedUsingItemManager()
     {
       // arrange
@@ -101,17 +101,13 @@
         var home = ItemManager.CreateItem("Home", root, this.templateId, this.itemId);
         var main = db.GetItem("/sitecore/content/main");
 
-        var fakeHome = db.DataStorage.FakeItems[home.ID];
-        var fakeMain = db.DataStorage.FakeItems[main.ID];
-
-        home.Fields.Count.Should().Be(main.Fields.Count);
-
         using (new EditContext(home))
         {
           home["Title"] = "Welcome!";
         }
 
         // assert
+        home.Fields.Count.Should().Be(main.Fields.Count); // make sure we properly created both - these two should look the same
         home["Title"].Should().Be("Welcome!");
       }
     }

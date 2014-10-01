@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Sitecore.FakeDb.Data.Engines
+﻿namespace Sitecore.FakeDb.Data.Engines
 {
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -33,7 +31,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
         var dbitem = new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath };
 
-        // ToDo [HIGH]: move it out of here and consolidate with the processing that happens in the Db
+        // ToDo:[HIGH] move it out of here and consolidate with the processing that happens in the Db
         SetStatistics(dbitem);
 
         this.DataStorage.FakeItems.Add(itemId, dbitem);
@@ -42,6 +40,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
       return this.DataStorage.GetSitecoreItem(itemId, language);
     }
+
 
     protected void SetStatistics(DbItem item)
     {
