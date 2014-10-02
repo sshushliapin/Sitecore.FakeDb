@@ -24,32 +24,34 @@
     {
       var language = Language.Current;
 
-      if (this.DataStorage.GetFakeItem(itemId) != null)
+      if (this.DataStorage.GetFakeItem(itemId) == null)
       {
-        return this.DataStorage.GetSitecoreItem(itemId, language);
+        var parentItem = this.DataStorage.GetFakeItem(destination.ID);
+        var fullPath = parentItem.FullPath + "/" + itemName;
+
+        var dbitem = new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath };
+
+        // ToDo:[HIGH] move it out of here and consolidate with the processing that happens in the Db
+        SetStatistics(dbitem);
+
+        this.DataStorage.FakeItems.Add(itemId, dbitem);
+        this.DataStorage.GetFakeItem(destination.ID).Children.Add(dbitem);
       }
 
-      var fieldList = this.DataStorage.GetFieldList(templateId, itemName);
-      var item = ItemHelper.CreateInstance(itemName, itemId, templateId, fieldList, database, language);
+      return this.DataStorage.GetSitecoreItem(itemId, language);
+    }
 
-      var parentItem = this.DataStorage.GetFakeItem(destination.ID);
-      var fullPath = parentItem.FullPath + "/" + itemName;
 
-      var dbitem = new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath };
+    protected void SetStatistics(DbItem item)
+    {
+      var date = DateUtil.IsoNow;
+      var user = Context.User.Name;
 
-      if (this.dataStorage.GetFakeTemplate(templateId) != null)
-      {
-        foreach (var field in this.dataStorage.GetFakeTemplate(templateId).Fields)
-        {
-          // TODO: Introduce field clonning.
-          dbitem.Fields.Add(new DbField(field.Name, field.ID));
-        }
-      }
-
-      this.DataStorage.FakeItems.Add(itemId, dbitem);
-      this.DataStorage.GetFakeItem(destination.ID).Children.Add(dbitem);
-
-      return item;
+      item.Fields.Add(new DbField("__Created", FieldIDs.Created) { Value = date });
+      item.Fields.Add(new DbField("__Created by", FieldIDs.CreatedBy) { Value = user });
+      item.Fields.Add(new DbField("__Revision", FieldIDs.Revision) { Value = ID.NewID.ToString() });
+      item.Fields.Add(new DbField("__Updated", FieldIDs.Updated) { Value = date });
+      item.Fields.Add(new DbField("__Updated by", FieldIDs.UpdatedBy) { Value = user });
     }
   }
 }

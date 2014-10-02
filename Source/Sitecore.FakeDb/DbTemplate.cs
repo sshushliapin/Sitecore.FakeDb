@@ -30,8 +30,15 @@
       this.StandardValues = new DbFieldCollection();
 
       this.Add(new DbField(FieldIDs.BaseTemplate) { Shared = true });
+
+      // ToDo: we can move these out into the standard template. we have tempalte inheritance now
       this.Add(new DbField(FieldIDs.Lock) { Shared = true });
       this.Add(new DbField(FieldIDs.Security) { Shared = true });
+      this.Add(new DbField(FieldIDs.Created));
+      this.Add(new DbField(FieldIDs.CreatedBy));
+      this.Add(new DbField(FieldIDs.Updated));
+      this.Add(new DbField(FieldIDs.UpdatedBy));
+      this.Add(new DbField(FieldIDs.Revision));
     }
 
     public void Add(string fieldName)

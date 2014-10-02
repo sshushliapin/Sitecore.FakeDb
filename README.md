@@ -50,6 +50,8 @@ testing.
   - [How to work with the Fast Query API](#how-to-work-with-the-fast-query-api)
   - [How to mock the content search logic](#how-to-mock-the-content-search-logic)
 - [FakeDb NSubstitute](#fakedb-nsubstitute)
+- [FakeDb Serialization](#fakedb-serialization)
+  - [How to deserialize an item](#how-to-deserialize-an-item)
 
 ## <a id="installation"></a>Installation
 
@@ -962,3 +964,34 @@ BucketProvider class.
 > BucketManager is a static class. It means that the mocked BucketProvider 
 > instance can be shared between different unit tests, which may lead to 
 > unstable behavior in tests.
+
+## <a id="fakedb-serialization"></a>FakeDb Serialization
+Extension for the FakeDb framework that allows to deserialize data in tests.
+Suggested and implemented by [Robin Hermanussen](https://github.com/hermanussen),
+See more at [Unit testing with Sitecore.FakeDb and deserialized data](http://hermanussen.eu/sitecore/wordpress/2014/09/unit-testing-with-sitecore-fakedb-and-deserialized-data/).
+
+In order to install the FakeDb.Serialization package run the following command 
+in the NuGet Package Manager Console:
+
+```
+Install-Package Sitecore.FakeDb.Serialization
+```
+
+### <a id="how-to-deserialize-an-item">How to deserialize an item
+```csharp
+[Fact]
+public void HowToDeserializeItem()
+{
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+    {
+      new Sitecore.FakeDb.Serialization.DsDbTemplate(
+        "/sitecore/templates/Sample/Sample Item"),
+      new Sitecore.FakeDb.Serialization.DsDbItem(
+        "/sitecore/content/home", true)
+    })
+  {
+    var home = db.GetItem("/sitecore/content/home");
+    Assert.Equal("Sitecore", home["Title"]);
+  }
+}
+```

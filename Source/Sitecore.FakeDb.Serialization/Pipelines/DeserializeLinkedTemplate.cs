@@ -31,6 +31,7 @@ namespace Sitecore.FakeDb.Serialization.Pipelines
         private static void DeserializeTemplate(Db db, ID templateId, string serializationFolderName)
         {
             string filePath = templateId.FindFilePath(serializationFolderName);
+
             if (string.IsNullOrWhiteSpace(filePath)
                 || ! File.Exists(filePath))
             {

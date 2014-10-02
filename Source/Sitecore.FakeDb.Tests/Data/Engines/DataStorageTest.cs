@@ -93,39 +93,6 @@
     }
 
     [Fact]
-    public void ShouldGetFieldListByTemplateId()
-    {
-      // arrange
-      var templateId = ID.NewID;
-      var field1 = new DbField("Title");
-      var field2 = new DbField("Title");
-
-      var template = new DbTemplate(templateId) { Fields = { field1, field2 } };
-
-      this.dataStorage.FakeTemplates.Add(templateId, template);
-
-      // act
-      var fieldList = this.dataStorage.GetFieldList(template.ID);
-
-      // assert
-      fieldList[field1.ID].Should().BeEmpty();
-      fieldList[field2.ID].Should().BeEmpty();
-    }
-
-    [Fact]
-    public void ShouldThrowExceptionIfNoTemplateFound()
-    {
-      // arrange
-      var missingTemplateId = new ID("{C4520D42-33CA-48C7-972D-6CEE1BC4B9A6}");
-
-      // act
-      Action a = () => this.dataStorage.GetFieldList(missingTemplateId);
-
-      // assert
-      a.ShouldThrow<InvalidOperationException>().WithMessage("Template \'{C4520D42-33CA-48C7-972D-6CEE1BC4B9A6}\' not found.");
-    }
-
-    [Fact]
     public void ShouldGetSitecoreItemFieldIdsFromTemplateAndValuesFromItems()
     {
       // arrange
@@ -158,31 +125,17 @@
       var item = this.dataStorage.GetSitecoreItem(itemId, Language.Current);
 
       // assert
-      item[fieldId].Should().BeEmpty();
+      item.InnerData.Fields[fieldId].Should().BeNull();
+
+      // We have changed the way we create ItemData to give more control to Sitecore
+      // and in order for the default string.Empty to come back from Field.Value
+      // Sitecore needs to be able to make a trip up the templates path 
+      // and it in turn requires the Db context
+
+//      item[fieldId].Should().BeEmpty();
     }
 
     [Fact]
-    public void ShouldGetSitecoreItemFieldIdFromStandardValuesIfNoItemValueFound()
-    {
-      // arrange
-      var itemId = ID.NewID;
-      var templateId = ID.NewID;
-      var fieldId = ID.NewID;
-
-      this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId)
-                                                       {
-                                                         Fields = { new DbField("Title", fieldId) },
-                                                         StandardValues = { new DbField("Title", fieldId) { Value = "$name" } }
-                                                       });
-      this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId));
-
-      // act
-      var item = this.dataStorage.GetSitecoreItem(itemId, Language.Current);
-
-      // assert
-      item[fieldId].Should().Be("Sample");
-    }
-
     public void ShouldSetSecurityFieldForRootItem()
     {
       // assert

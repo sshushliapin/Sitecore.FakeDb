@@ -1,5 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System;
+  using Sitecore.Data.Events;
   using System.Threading;
   using Sitecore.Data.Items;
 
@@ -18,6 +20,11 @@
     public virtual void Initialize(DataEngineCommand command)
     {
       this.innerCommand.Value = command;
+    }
+
+    public override Sitecore.Data.Engines.DataCommands.CreateItemCommand Clone(EventHandler<ExecutingEventArgs<Sitecore.Data.Engines.DataCommands.CreateItemCommand>> executingEvent, EventHandler<ExecutedEventArgs<Sitecore.Data.Engines.DataCommands.CreateItemCommand>> executedEvent)
+    {
+      return base.Clone();
     }
 
     public ItemCreator ItemCreator
