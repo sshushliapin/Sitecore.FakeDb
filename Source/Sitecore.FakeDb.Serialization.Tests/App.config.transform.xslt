@@ -7,10 +7,20 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- SERIALIZATION FOLDERS -->
   <xsl:template match="/configuration/sitecore">
     <xsl:copy>
       <xsl:apply-templates select="node()|@*"/>
-      <xsl:copy-of select="document('App.config')/configuration/sitecore/*" />
+      <xsl:copy-of select="document('App.config')/configuration/sitecore/szfolders" />
     </xsl:copy>
   </xsl:template>
+
+  <!-- PIPELINES -->
+  <xsl:template match="/configuration/sitecore/pipelines">
+    <xsl:copy>
+      <xsl:apply-templates select="node()|@*"/>
+      <xsl:copy-of select="document('App.config')/configuration/sitecore/pipelines/*" />
+    </xsl:copy>
+  </xsl:template>
+
 </xsl:transform>
