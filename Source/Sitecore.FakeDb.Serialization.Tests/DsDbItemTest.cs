@@ -167,5 +167,34 @@ namespace Sitecore.FakeDb.Serialization.Tests
                 templateItem.Name.Should().NotBe("Sample Item");
             }
         }
+
+        [Fact]
+        public void ShouldAutoDeserializeIncludingBaseTemplates()
+        {
+            DsDbItem item = new DsDbItem("/sitecore/content/Home/Some item");
+            using (Db db = new Db()
+                {
+                    item
+                })
+            {
+                ID templateId = ID.Parse("{F6A72DBF-558F-40E5-8033-EE4ACF027FE2}");
+                ID baseTemplateId = ID.Parse("{C4F448EB-7CA3-4A27-BA5E-99E8B9022803}");
+
+                item.Should().NotBeNull();
+                item.TemplateID.ShouldBeEquivalentTo(templateId);
+
+                Item templateItem = db.GetItem(item.TemplateID);
+
+                templateItem.Should().NotBeNull();
+                templateItem.Name.ShouldBeEquivalentTo("Some template");
+                templateItem[FieldIDs.BaseTemplate].ShouldBeEquivalentTo(baseTemplateId.ToString());
+
+                Item baseTemplateItem = db.GetItem(baseTemplateId);
+
+                baseTemplateItem.Should().NotBeNull();
+                baseTemplateItem.Name.ShouldBeEquivalentTo("Some base template");
+                baseTemplateItem.ID.ShouldBeEquivalentTo(baseTemplateId);
+            }
+        }
     }
 }
