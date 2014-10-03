@@ -66,6 +66,15 @@
     <Compile Include="IThreadLocalProvider.cs" />
     <Compile Include="Links\FakeLinkDatabase.cs" />
     <Compile Include="Links\LinkDatabaseSwitcher.cs" />
+    <Compile Include="Pipelines\AddDbItem\SetAccess.cs" />
+    <Compile Include="Pipelines\AddDbItem\AddDbItemArgs.cs" />
+    <Compile Include="Pipelines\AddDbItem\SetStatistics.cs" />
+    <Compile Include="Pipelines\AddDbItem\SetParent.cs" />
+    <Compile Include="Pipelines\AddDbItem\CreateTemplate.cs" />
+    <Compile Include="Pipelines\AddDbItem\EnsureIsChild.cs" />
+    <Compile Include="Pipelines\AddDbItem\SetFullPath.cs" />
+    <Compile Include="Pipelines\AddDbItem\CreateItem.cs" />
+    <Compile Include="Pipelines\AddDbItem\CreateChildren.cs" />
     <Compile Include="Pipelines\DbArgs.cs" />
     <Compile Include="Pipelines\GetTranslation\GetFakeTranslation.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitGlobals.cs" />

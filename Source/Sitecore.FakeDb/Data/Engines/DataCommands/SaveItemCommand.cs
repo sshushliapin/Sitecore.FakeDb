@@ -56,6 +56,9 @@
       var template = this.innerCommand.Value.DataStorage.GetFakeTemplate(fakeItem.TemplateID);
       Assert.IsNotNull(template, "Item template not found. Item: '{0}', '{1}'; template: '{2}'.", Item.Name, Item.ID, Item.TemplateID);
 
+      // TODO: Looks strange. Should be removed.
+      this.Item.Fields.ReadAll();
+
       foreach (Field field in this.Item.Fields)
       {
         if (!fakeItem.Fields.InnerFields.ContainsKey(field.ID) && template.Fields.InnerFields.ContainsKey(field.ID))

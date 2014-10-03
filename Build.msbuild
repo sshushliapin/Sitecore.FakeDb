@@ -23,6 +23,11 @@
     <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.Tests\bin\Release\Sitecore.FakeDb.Tests.dll" />
     <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.NSubstitute.Tests\bin\Release\Sitecore.FakeDb.NSubstitute.Tests.dll" />
     <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\bin\Release\Sitecore.FakeDb.Serialization.Tests.dll" />
+
+    <!-- main tests with serialization configs -->
+    <Copy SourceFiles="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\bin\Release\Sitecore.FakeDb.Serialization.Tests.dll.config"
+          DestinationFiles="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\bin\Release\Sitecore.FakeDb.Tests.dll.config" />
+    <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\bin\Release\Sitecore.FakeDb.Tests.dll" />
   </Target>
 
   <Target Name="ReleaseFolder" DependsOnTargets="Test">

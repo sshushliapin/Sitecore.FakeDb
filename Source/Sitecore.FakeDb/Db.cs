@@ -2,8 +2,6 @@
 {
   using System;
   using System.Collections;
-  using System.Collections.Generic;
-  using System.Linq;
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -14,16 +12,9 @@
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
   using Sitecore.Globalization;
   using Sitecore.Pipelines;
-  using Sitecore.Security.AccessControl;
-  using Sitecore.FakeDb.Data.Items;
-  using Sitecore.FakeDb.Security.AccessControl;
 
   public class Db : IDisposable, IEnumerable
   {
-    private static readonly ID DefaultItemRoot = ItemIDs.ContentRoot;
-
-    private static readonly ID DefaultTemplateRoot = ItemIDs.TemplateRoot;
-
     private readonly Database database;
 
     private readonly DataStorage dataStorage;
@@ -89,19 +80,7 @@
     {
       Assert.ArgumentNotNull(item, "item");
 
-      if (item is IDsDbItem)
-      {
-          CorePipeline.Run("loadDsDbItem", new DsItemLoadingArgs(this, item as IDsDbItem));
-      }
-
-      this.SetStatistics(item);
-      this.SetParent(item);
-      this.CreateTemplate(item);
-      this.EnsureIsChild(item);
-      this.SetFullPath(item);
-      this.CreateItem(item);
-      this.CreateChildren(item);
-      this.SetAccess(item);
+      this.DataStorage.AddFakeItem(item);
     }
 
     public void Add(DbTemplate template)
@@ -109,13 +88,7 @@
       Assert.ArgumentNotNull(template, "template");
       Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A template with the same id has already been added.");
 
-      if (template is IDsDbItem)
-      {
-          CorePipeline.Run("loadDsDbTemplate", new DsItemLoadingArgs(this, template as IDsDbItem));
-      }
-
       this.DataStorage.AddFakeTemplate(template);
-      this.Add(template as DbItem);
     }
 
     public Item GetItem(ID id)
@@ -184,174 +157,6 @@
       CorePipeline.Run("releaseFakeDb", new DbArgs(this));
 
       this.disposed = true;
-    }
-
-    protected virtual void SetStatistics(DbItem item)
-    {
-      var date = DateUtil.IsoNow;
-      var user = Context.User.Name;
-      
-      item.Fields.Add(new DbField("__Created", FieldIDs.Created) {Value = date});
-      item.Fields.Add(new DbField("__Created by", FieldIDs.CreatedBy) {Value = user});
-      item.Fields.Add(new DbField("__Revision", FieldIDs.Revision) {Value = ID.NewID.ToString()});
-      item.Fields.Add(new DbField("__Updated", FieldIDs.Updated) {Value = date});
-      item.Fields.Add(new DbField("__Updated by", FieldIDs.UpdatedBy) {Value = user});
-    }
-
-    protected virtual void CreateTemplate(DbItem item)
-    {
-      var isResolved = this.ResolveTemplate(item);
-      if (isResolved)
-      {
-        return;
-      }
-
-      if (!ID.IsNullOrEmpty(item.TemplateID) && this.DataStorage.GetFakeTemplate(item.TemplateID) != null)
-      {
-        return;
-      }
-
-      if (item.TemplateID == ID.Null)
-      {
-        item.TemplateID = ID.NewID;
-      }
-
-      var template = new DbTemplate(item.Name, item.TemplateID);
-
-      foreach (var itemField in item.Fields)
-      {
-        var templatefield = new DbField(itemField.Name, itemField.ID) { Type = itemField.Type };
-        template.Add(templatefield);
-      }
-
-      this.Add(template);
-    }
-
-    protected virtual bool ResolveTemplate(DbItem item)
-    {
-      if (item.TemplateID == TemplateIDs.Template)
-      {
-        return true;
-      }
-
-      if (this.dataStorage.FakeTemplates.ContainsKey(item.TemplateID))
-      {
-        return true;
-      }
-
-      if (!ID.IsNullOrEmpty(item.TemplateID))
-      {
-        return false;
-      }
-
-      // find the most recently added sibling
-      var sourceItem = this.DataStorage.FakeItems.Values.LastOrDefault(si => si.ParentID == item.ParentID);
-      if (sourceItem == null)
-      {
-        return false;
-      }
-
-      if (sourceItem.TemplateID == TemplateIDs.Template)
-      {
-        return false;
-      }
-
-      var lastItemTemplateKeys = string.Concat(sourceItem.Fields.InnerFields.Values.Select(f => f.Name));
-      var itemTemplateKeys = string.Concat(item.Fields.InnerFields.Values.Select(f => f.Name));
-
-      if (lastItemTemplateKeys != itemTemplateKeys)
-      {
-        return false;
-      }
-
-      // reuse the template
-      item.TemplateID = sourceItem.TemplateID;
-
-      return true;
-    }
-
-    protected virtual void SetParent(DbItem item)
-    {
-      if (ID.IsNullOrEmpty(item.ParentID))
-      {
-        item.ParentID = item is DbTemplate ? DefaultTemplateRoot : DefaultItemRoot;
-      }
-    }
-
-    protected virtual void EnsureIsChild(DbItem item)
-    {
-      if (!this.DataStorage.GetFakeItem(item.ParentID).Children.Contains(item))
-      {
-        this.DataStorage.GetFakeItem(item.ParentID).Children.Add(item);
-      }
-    }
-
-    protected virtual void SetFullPath(DbItem item)
-    {
-      if (item.ParentID == DefaultItemRoot)
-      {
-        item.FullPath = Constants.ContentPath + "/" + item.Name;
-        return;
-      }
-
-      var parent = this.DataStorage.GetFakeItem(item.ParentID);
-      item.FullPath = parent.FullPath + "/" + item.Name;
-    }
-
-    protected virtual void CreateItem(DbItem item)
-    {
-      this.DataStorage.FakeItems.Add(item.ID, item);
-    }
-
-    protected virtual void CreateChildren(DbItem item)
-    {
-      foreach (var child in item.Children)
-      {
-        child.ParentID = item.ID;
-        child.FullPath = item.FullPath + "/" + child.Name;
-        this.Add(child);
-      }
-    }
-
-    protected virtual void SetAccess(DbItem item)
-    {
-      var rules = new AccessRuleCollection();
-
-      this.FillAccessRules(rules, item.Access, AccessRight.ItemRead, a => a.CanRead);
-      this.FillAccessRules(rules, item.Access, AccessRight.ItemWrite, a => a.CanWrite);
-      this.FillAccessRules(rules, item.Access, AccessRight.ItemRename, a => a.CanRename);
-      this.FillAccessRules(rules, item.Access, AccessRight.ItemCreate, a => a.CanCreate);
-      this.FillAccessRules(rules, item.Access, AccessRight.ItemDelete, a => a.CanDelete);
-      this.FillAccessRules(rules, item.Access, AccessRight.ItemAdmin, a => a.CanAdmin);
-
-      if (!rules.Any())
-      {
-        return;
-      }
-
-      var serializer = new AccessRuleSerializer();
-
-      // TODO: Should not require to check if Security field is exists
-      if (item.Fields.Any(f => f.ID == FieldIDs.Security))
-      {
-        item.Fields[FieldIDs.Security].Value = serializer.Serialize(rules);
-      }
-      else
-      {
-        item.Fields.Add(new DbField("__Security", FieldIDs.Security) {Value = serializer.Serialize(rules)});
-      }
-    }
-
-    protected virtual void FillAccessRules(AccessRuleCollection rules, DbItemAccess itemAccess, AccessRight accessRight, Func<DbItemAccess, bool?> canAct)
-    {
-      var canActRest = canAct(itemAccess);
-      if (canActRest == null)
-      {
-        return;
-      }
-
-      var permission = (bool)canActRest ? SecurityPermission.AllowAccess : SecurityPermission.DenyAccess;
-      rules.Add(AccessRule.Create(Context.User, accessRight, PropagationType.Entity, permission));
     }
   }
 }

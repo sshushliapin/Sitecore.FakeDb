@@ -1,27 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sitecore.Diagnostics;
-
-namespace Sitecore.FakeDb.Pipelines
+﻿namespace Sitecore.FakeDb.Pipelines
 {
-    public class DsItemLoadingArgs : DbArgs
+  using Sitecore.Diagnostics;
+  using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.Pipelines;
+
+  public class DsItemLoadingArgs : PipelineArgs
+  {
+    private readonly IDsDbItem dsDbItem;
+
+    private readonly DataStorage dataStorage;
+
+    public DsItemLoadingArgs(IDsDbItem dsDbItem, DataStorage dataStorage)
     {
-        private readonly IDsDbItem dsDbItem;
+      Assert.ArgumentNotNull(dsDbItem, "dsDbItem");
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-        public DsItemLoadingArgs(Db db, IDsDbItem dsDbItem)
-            : base(db)
-        {
-            Assert.ArgumentNotNull(dsDbItem, "dbItem");
-
-            this.dsDbItem = dsDbItem;
-        }
-
-        public IDsDbItem DsDbItem
-        {
-            get { return this.dsDbItem; }
-        }
+      this.dsDbItem = dsDbItem;
+      this.dataStorage = dataStorage;
     }
+
+    public IDsDbItem DsDbItem
+    {
+      get { return this.dsDbItem; }
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
+    }
+  }
 }

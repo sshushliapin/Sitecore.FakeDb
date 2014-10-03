@@ -6,7 +6,10 @@ namespace Sitecore.FakeDb.Data.Engines
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Items;
+  using Sitecore.FakeDb.Pipelines;
+  using Sitecore.FakeDb.Pipelines.AddDbItem;
   using Sitecore.Globalization;
+  using Sitecore.Pipelines;
   using Version = Sitecore.Data.Version;
 
   public class DataStorage
@@ -65,11 +68,29 @@ namespace Sitecore.FakeDb.Data.Engines
       get { return this.fakeTemplates; }
     }
 
+    public virtual void AddFakeItem(DbItem item)
+    {
+      // TODO: Consider including into the 'addDbItem' pipeline
+      if (item is IDsDbItem)
+      {
+        CorePipeline.Run("loadDsDbItem", new DsItemLoadingArgs(item as IDsDbItem, this));
+      }
+
+      CorePipeline.Run("addDbItem", new AddDbItemArgs(item, this));
+    }
+
     public virtual void AddFakeTemplate(DbTemplate template)
     {
+      if (template is IDsDbItem)
+      {
+        CorePipeline.Run("loadDsDbTemplate", new DsItemLoadingArgs(template as IDsDbItem, this));
+      }
+
       this.FakeTemplates.Add(template.ID, template);
 
       this.Database.Engines.TemplateEngine.Reset();
+
+      this.AddFakeItem(template);
     }
 
     public virtual DbItem GetFakeItem(ID itemId)
@@ -108,21 +129,21 @@ namespace Sitecore.FakeDb.Data.Engines
       var fakeItem = this.FakeItems[itemId];
       var itemVersion = version == Version.Latest ? Version.First : version;
 
-      var fields = BuildItemFieldList(fakeItem, fakeItem.TemplateID, language, itemVersion);
+      var fields = this.BuildItemFieldList(fakeItem, fakeItem.TemplateID, language, itemVersion);
 
       return ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);
     }
 
 
-    protected virtual FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
+    protected FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
     {
       // build a sequence of templates that the item inherits from
-      var templates = ExpandTemplatesSequence(templateId);
+      var templates = this.ExpandTemplatesSequence(templateId);
 
       var fields = new FieldList();
       foreach (var template in templates)
       {
-        AddFieldsFromTemplate(fields, fakeItem, template, language, version);
+        this.AddFieldsFromTemplate(fields, fakeItem, template, language, version);
       }
 
       // If the item is a Template item we also need to add the BaseTemplate field
@@ -148,7 +169,7 @@ namespace Sitecore.FakeDb.Data.Engines
         return new List<DbTemplate>();
       }
 
-      var sequence = new List<DbTemplate>() {fakeTemplate};
+      var sequence = new List<DbTemplate>() { fakeTemplate };
 
       if (fakeTemplate.BaseIDs != null)
       {
@@ -171,7 +192,7 @@ namespace Sitecore.FakeDb.Data.Engines
         var fieldId = templateField.ID;
         var value = string.Empty;
 
-        DbField itemField = FindItemDbField(fakeItem, templateField);
+        DbField itemField = this.FindItemDbField(fakeItem, templateField);
 
         if (itemField != null)
         {

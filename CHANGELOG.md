@@ -1,5 +1,7 @@
 ﻿0.19.1
 * [FIX] Serialization pipeline configuration moved to the Serialization nuget package
+* [FIX] Fixed field value loosing when creating an item via ItemManager
+* [NEW] Introduced 'addDbItem' pipeline
 
 0.19.0
 * [NEW] #21: Added DsDbItem and DsDbTemplate for using deserialized data in tests (thanks to [Robin Hermanussen](https://github.com/hermanussen))

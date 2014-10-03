@@ -83,6 +83,10 @@
       <Project>{8958B567-7955-4714-B3A8-BCFB43B0A588}</Project>
       <Name>Sitecore.FakeDb.Serialization</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Sitecore.FakeDb.Tests\Sitecore.FakeDb.Tests.csproj">
+      <Project>{d7ee44ee-1306-4eb6-9514-471905aaa493}</Project>
+      <Name>Sitecore.FakeDb.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sitecore.FakeDb\Sitecore.FakeDb.csproj">
       <Project>{B1B3C599-9284-4653-9F22-FD0F726984BB}</Project>
       <Name>Sitecore.FakeDb</Name>

@@ -1,63 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sitecore.Data;
-using Sitecore.Diagnostics;
-using Sitecore.FakeDb.Pipelines;
-
-namespace Sitecore.FakeDb.Serialization.Pipelines
+﻿namespace Sitecore.FakeDb.Serialization.Pipelines
 {
-    public class DeserializeLinkedTemplate
+  using System;
+  using System.IO;
+  using System.Linq;
+  using Sitecore.Data;
+  using Sitecore.Diagnostics;
+  using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.FakeDb.Pipelines;
+
+  public class DeserializeLinkedTemplate
+  {
+    public void Process(DsItemLoadingArgs args)
     {
-        public void Process(DsItemLoadingArgs args)
-        {
-            Assert.ArgumentNotNull(args, "args");
+      Assert.ArgumentNotNull(args, "args");
 
-            DsDbItem dsDbItem = args.DsDbItem as DsDbItem;
+      DsDbItem dsDbItem = args.DsDbItem as DsDbItem;
 
-            if (dsDbItem == null
-                || ! dsDbItem.DeserializeLinkedTemplate
-                || args.Db.GetItem(dsDbItem.TemplateID) != null)
-            {
-                return;
-            }
+      if (dsDbItem == null
+          || !dsDbItem.DeserializeLinkedTemplate
+          || args.DataStorage.GetFakeItem(dsDbItem.TemplateID) != null)
+      {
+        return;
+      }
 
-            DeserializeTemplate(args.Db, dsDbItem.TemplateID, dsDbItem.SerializationFolderName);
-        }
-
-        private static void DeserializeTemplate(Db db, ID templateId, string serializationFolderName)
-        {
-            string filePath = templateId.FindFilePath(serializationFolderName);
-
-            if (string.IsNullOrWhiteSpace(filePath)
-                || ! File.Exists(filePath))
-            {
-                return;
-            }
-
-            DsDbTemplate dsDbTemplate = new DsDbTemplate(templateId, serializationFolderName);
-
-            db.Add(dsDbTemplate);
-
-            // Deserialize base templates
-            DbField baseTemplatesField = dsDbTemplate.Fields
-                                            .FirstOrDefault(f => f.ID == FieldIDs.BaseTemplate);
-            if (! string.IsNullOrWhiteSpace(baseTemplatesField.Value))
-            {
-                foreach (ID baseTemplateId in baseTemplatesField.Value
-                            .Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries)
-                            .Where(ID.IsID)
-                            .Select(ID.Parse))
-                {
-                    if (db.GetItem(baseTemplateId) == null)
-                    {
-                        DeserializeTemplate(db, baseTemplateId, dsDbTemplate.SerializationFolderName);
-                    }
-                }
-            }
-        }
+      DeserializeTemplate(args.DataStorage, dsDbItem.TemplateID, dsDbItem.SerializationFolderName);
     }
+
+    private static void DeserializeTemplate(DataStorage dataStorage, ID templateId, string serializationFolderName)
+    {
+      string filePath = templateId.FindFilePath(serializationFolderName);
+
+      if (string.IsNullOrWhiteSpace(filePath)
+          || !File.Exists(filePath))
+      {
+        return;
+      }
+
+      DsDbTemplate dsDbTemplate = new DsDbTemplate(templateId, serializationFolderName);
+
+      dataStorage.AddFakeTemplate(dsDbTemplate);
+
+      // Deserialize base templates
+      DbField baseTemplatesField = dsDbTemplate.Fields
+                                      .FirstOrDefault(f => f.ID == FieldIDs.BaseTemplate);
+      if (!string.IsNullOrWhiteSpace(baseTemplatesField.Value))
+      {
+        foreach (ID baseTemplateId in baseTemplatesField.Value
+                    .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Where(ID.IsID)
+                    .Select(ID.Parse))
+        {
+          if (dataStorage.GetFakeItem(baseTemplateId) == null)
+          {
+            DeserializeTemplate(dataStorage, baseTemplateId, dsDbTemplate.SerializationFolderName);
+          }
+        }
+      }
+    }
+  }
 }
