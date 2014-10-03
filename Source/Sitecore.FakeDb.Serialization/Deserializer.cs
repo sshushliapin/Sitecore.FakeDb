@@ -57,11 +57,21 @@ namespace Sitecore.FakeDb.Serialization
             foreach (SyncField sharedField in item.SharedFields)
             {
                 Assert.IsTrue(ID.IsID(sharedField.FieldID), string.Format("Shared field id '{0}' is not a valid guid", sharedField.FieldID));
-                dsDbItem.Add(new DbField(sharedField.FieldName, ID.Parse(sharedField.FieldID))
+
+                DbField field = dsDbItem.Fields
+                    .FirstOrDefault(f => f.ID.ToString() == sharedField.FieldID);
+                if (field != null)
                 {
-                    Value = sharedField.FieldValue,
-                    Shared = true
-                });
+                    field.Value = sharedField.FieldValue;
+                }
+                else
+                {
+                    dsDbItem.Add(new DbField(sharedField.FieldName, ID.Parse(sharedField.FieldID))
+                        {
+                            Value = sharedField.FieldValue,
+                            Shared = true
+                        });
+                }
             }
         }
 
