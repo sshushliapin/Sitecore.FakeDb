@@ -944,27 +944,6 @@ in the NuGet Package Manager Console:
 Install-Package Sitecore.FakeDb.NSubstitute
 ```
 
-To instantiate a mock object, NSubstitute Factory should be used:
-
-``` xml
-<bucketManager enabled="true">
-  <providers>
-    <add name="mock" factory="nsubstitute"
-      ref="Sitecore.Buckets.Managers.BucketProvider, Sitecore.Buckets" />
-  </providers>
-</bucketManager>
-```
-
-This configuration allows BucketManager to create a new mocked instance of the 
-BucketProvider class.
-
-
-> **Important:**
-
-> BucketManager is a static class. It means that the mocked BucketProvider 
-> instance can be shared between different unit tests, which may lead to 
-> unstable behavior in tests.
-
 ## <a id="fakedb-serialization"></a>FakeDb Serialization
 Extension for the FakeDb framework that allows to deserialize data in tests.
 Suggested and implemented by [Robin Hermanussen](https://github.com/hermanussen),

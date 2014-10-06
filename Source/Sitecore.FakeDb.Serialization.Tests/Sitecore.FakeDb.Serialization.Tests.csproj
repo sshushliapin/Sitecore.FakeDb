@@ -114,7 +114,6 @@
     </PostBuildEvent>
   </PropertyGroup>
   <Target Name="BeforeBuild">
-    <!--<XslTransformation XslInputPath="transform.xsl" XmlInputPaths="in.xml" OutputPaths="out.xml" />-->
   </Target>
   <Target Name="AfterBuild">
     <XslTransformation XslInputPath="App.config.transform.xslt" XmlInputPaths="$(SolutionDir)\Sitecore.FakeDb.Tests\App.config" OutputPaths="$(OutDir)\$(TargetFileName).config" />

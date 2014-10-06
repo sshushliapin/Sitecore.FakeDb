@@ -24,6 +24,11 @@
     <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.NSubstitute.Tests\bin\Release\Sitecore.FakeDb.NSubstitute.Tests.dll" />
     <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\bin\Release\Sitecore.FakeDb.Serialization.Tests.dll" />
 
+    <!-- main tests with nsubstitute configs -->
+    <Copy SourceFiles="$(SourceFolder)\Sitecore.FakeDb.NSubstitute.Tests\bin\Release\Sitecore.FakeDb.NSubstitute.Tests.dll.config"
+          DestinationFiles="$(SourceFolder)\Sitecore.FakeDb.NSubstitute.Tests\bin\Release\Sitecore.FakeDb.Tests.dll.config" />
+    <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.NSubstitute.Tests\bin\Release\Sitecore.FakeDb.Tests.dll" />
+    
     <!-- main tests with serialization configs -->
     <Copy SourceFiles="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\bin\Release\Sitecore.FakeDb.Serialization.Tests.dll.config"
           DestinationFiles="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\bin\Release\Sitecore.FakeDb.Tests.dll.config" />
