@@ -69,6 +69,31 @@
       versionCollection.Should().BeEquivalentTo(new[] { new Version(1), new Version(2) });
     }
 
+    [Fact]
+    public void ShouldGetItemVersionsCount()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var versionedItem = new DbItem("item");
+      versionedItem.VersionsCount.Add("en", 2);
+
+      this.dataStorage.GetFakeItem(itemId).Returns(versionedItem);
+
+      var item = ItemHelper.CreateInstance(itemId, this.database);
+      var language = Language.Parse("en");
+
+      var command = new OpenGetVersionsCommand();
+      command.Initialize(item, language);
+      command.Initialize(this.innerCommand);
+
+      // act
+      var versionCollection = command.DoExecute();
+
+      // assert
+      versionCollection.Count.Should().Be(2);
+      versionCollection.Should().BeEquivalentTo(new[] { new Version(1), new Version(2) });
+    }
+
     private class OpenGetVersionsCommand : GetVersionsCommand
     {
       public new Sitecore.Data.Engines.DataCommands.GetVersionsCommand CreateInstance()

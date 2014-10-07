@@ -94,6 +94,27 @@
       dbitem.Fields.Single().Values["en"][1].Should().BeEmpty();
     }
 
+    [Fact]
+    public void ShouldIncreaseFakeItemVersionCount()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var dbitem = new DbItem("item");
+      this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
+
+      var item = ItemHelper.CreateInstance(itemId, this.database);
+
+      var command = new OpenAddVersionCommand();
+      command.Initialize(item);
+      command.Initialize(this.innerCommand);
+
+      // act
+      command.DoExecute();
+
+      // assert
+      dbitem.VersionsCount["en"].Should().Be(2);
+    }
+
     private class OpenAddVersionCommand : AddVersionCommand
     {
       public new Sitecore.Data.Engines.DataCommands.AddVersionCommand CreateInstance()

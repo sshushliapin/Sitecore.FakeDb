@@ -39,7 +39,12 @@
         var langValues = field.Values[language];
         var lastVersion = langValues.Last();
 
-        langValues.Remove(lastVersion);
+        removed = langValues.Remove(lastVersion);
+      }
+
+      if (dbitem.VersionsCount.ContainsKey(language))
+      {
+        dbitem.VersionsCount[language] -= 1;
         removed = true;
       }
 

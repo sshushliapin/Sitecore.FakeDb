@@ -27,11 +27,17 @@
     protected override VersionCollection DoExecute()
     {
       var dbitem = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
-      int versionsCount = 1;
+      var language = this.Language.Name;
+      var versionsCount = 1;
 
+      if (dbitem.VersionsCount.ContainsKey(language))
+      {
+        versionsCount = dbitem.VersionsCount[language];
+      }
+
+      // TODO:[Minor] Should be moved to independent 'addDbItem' processor.
       foreach (var field in dbitem.Fields)
       {
-        var language = this.Language.Name;
         if (field.Values.ContainsKey(language))
         {
           var maxVersion = field.Values[language].Keys.OrderBy(k => k).LastOrDefault();

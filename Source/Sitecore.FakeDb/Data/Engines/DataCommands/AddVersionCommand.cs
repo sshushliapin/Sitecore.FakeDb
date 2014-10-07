@@ -36,6 +36,8 @@
         field.Add(language, value);
       }
 
+      dbitem.VersionsCount[language] = nextVersion.Number;
+
       return this.innerCommand.Value.DataStorage.GetSitecoreItem(this.Item.ID, this.Item.Language, nextVersion);
     }
   }

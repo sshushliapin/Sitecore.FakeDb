@@ -28,6 +28,7 @@ namespace Sitecore.FakeDb
       this.Access = new DbItemAccess();
       this.Fields = new DbFieldCollection();
       this.Children = new Collection<DbItem>();
+      this.VersionsCount = new Dictionary<string, int>();
     }
 
     public string Name { get; set; }
@@ -45,6 +46,8 @@ namespace Sitecore.FakeDb
     public ICollection<DbItem> Children { get; private set; }
 
     public DbItemAccess Access { get; set; }
+
+    public IDictionary<string, int> VersionsCount { get; private set; }
 
     public void Add(string fieldName, string fieldValue)
     {

@@ -67,6 +67,29 @@
       result.Should().BeFalse();
     }
 
+    [Fact]
+    public void ShouldDecreaseFakeItemVersionCount()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var dbitem = new DbItem("item");
+      dbitem.VersionsCount.Add("en", 2);
+
+      this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
+
+      var item = ItemHelper.CreateInstance(itemId, this.database);
+
+      var command = new OpenRemoveVersionCommand();
+      command.Initialize(item);
+      command.Initialize(this.innerCommand);
+
+      // act
+      var result = command.DoExecute();
+
+      // assert
+      result.Should().BeTrue();
+      dbitem.VersionsCount["en"].Should().Be(1);
+    }
 
     private class OpenRemoveVersionCommand : RemoveVersionCommand
     {

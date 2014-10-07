@@ -87,6 +87,7 @@
     <Compile Include="Data\Engines\DataCommands\RemoveVersionCommandTest.cs" />
     <Compile Include="Data\Fields\StatisticsFieldsTest.cs" />
     <Compile Include="Data\Fields\SecurityFieldTest.cs" />
+    <Compile Include="Data\Items\ItemVersionsTest.cs" />
     <Compile Include="Data\Locking\ItemLockingTest.cs" />
     <Compile Include="Data\Managers\ItemManagerTest.cs" />
     <Compile Include="DbConcurrencyTest.cs" />
