@@ -3,7 +3,10 @@
   using System;
   using System.Xml;
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Configuration;
+  using Sitecore.Data;
+  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.Pipelines;
   using Xunit;
@@ -11,11 +14,14 @@
 
   public class PipelineWatcherTest : IDisposable
   {
+    private readonly DataStorage dataStorage;
+
     private readonly PipelineWatcher watcher;
 
     public PipelineWatcherTest()
     {
-      this.watcher = new PipelineWatcher(Factory.GetConfiguration());
+      this.dataStorage = new DataStorage();
+      this.watcher = new PipelineWatcher(Factory.GetConfiguration(), this.dataStorage);
     }
 
     [Fact]
@@ -23,7 +29,7 @@
     {
       // arrange
       var config = CreateSimpleConfig();
-      using (var w = new PipelineWatcher(config))
+      using (var w = new PipelineWatcher(config, this.dataStorage))
       {
         // act
         w.Expects("mypipeline");
@@ -250,6 +256,20 @@
       args.CustomData["Value"].Should().Be("1");
     }
 
+    [Fact]
+    public void ShouldRegisterProcessorInDataStorageAndConfig()
+    {
+      // arrange
+      var processor = Substitute.For<IPipelineProcessor>();
+
+      // act
+      this.watcher.Register("mypipeline", processor);
+
+      // assert
+      this.dataStorage.Pipelines["mypipeline"].Should().BeSameAs(processor);
+      this.watcher.ConfigSection.SelectSingleNode("/sitecore/pipelines/mypipeline").Should().NotBeNull();
+    }
+
     public void Dispose()
     {
       this.watcher.Dispose();
@@ -267,7 +287,7 @@
     private class ThrowablePipelineWatcher : PipelineWatcher
     {
       public ThrowablePipelineWatcher()
-        : base(CreateSimpleConfig())
+        : base(CreateSimpleConfig(), new DataStorage())
       {
       }
 

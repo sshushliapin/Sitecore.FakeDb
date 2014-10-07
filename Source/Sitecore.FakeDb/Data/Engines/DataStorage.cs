@@ -26,10 +26,6 @@ namespace Sitecore.FakeDb.Data.Engines
 
     private const string MediaLibraryItemName = "media library";
 
-    private readonly IDictionary<ID, DbItem> fakeItems;
-
-    private readonly IDictionary<ID, DbTemplate> fakeTemplates;
-
     public const string TemplateItemName = "Template";
 
     public const string TemplateSectionItemName = "Template section";
@@ -42,12 +38,23 @@ namespace Sitecore.FakeDb.Data.Engines
 
     private readonly Database database;
 
-    public DataStorage(Database database)
-    {
-      this.database = database;
+    private readonly IDictionary<ID, DbItem> fakeItems;
 
+    private readonly IDictionary<ID, DbTemplate> fakeTemplates;
+
+    private readonly IDictionary<string, IPipelineProcessor> processors;
+
+    internal DataStorage()
+    {
       this.fakeItems = new Dictionary<ID, DbItem>();
       this.fakeTemplates = new Dictionary<ID, DbTemplate>();
+      this.processors = new Dictionary<string, IPipelineProcessor>();
+    }
+
+    public DataStorage(Database database)
+      : this()
+    {
+      this.database = database;
 
       this.FillDefaultFakeTemplates();
       this.FillDefaultFakeItems();
@@ -66,6 +73,11 @@ namespace Sitecore.FakeDb.Data.Engines
     public IDictionary<ID, DbTemplate> FakeTemplates
     {
       get { return this.fakeTemplates; }
+    }
+
+    public IDictionary<string, IPipelineProcessor> Pipelines
+    {
+      get { return this.processors; }
     }
 
     public virtual void AddFakeItem(DbItem item)
@@ -133,7 +145,6 @@ namespace Sitecore.FakeDb.Data.Engines
 
       return ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);
     }
-
 
     protected FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
     {

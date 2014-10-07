@@ -2,9 +2,9 @@ namespace Sitecore.FakeDb.Pipelines
 {
   using System;
   using System.Collections.Generic;
-  using System.Linq;
   using System.Xml;
   using Sitecore.Diagnostics;
+  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Pipelines;
   using Sitecore.StringExtensions;
   using Sitecore.Xml;
@@ -12,6 +12,8 @@ namespace Sitecore.FakeDb.Pipelines
   public class PipelineWatcher : IDisposable
   {
     private readonly XmlDocument config;
+
+    private readonly DataStorage dataStorage;
 
     private readonly IDictionary<string, PipelineArgs> expectedCalls = new Dictionary<string, PipelineArgs>();
 
@@ -27,11 +29,12 @@ namespace Sitecore.FakeDb.Pipelines
 
     private bool disposed;
 
-    public PipelineWatcher(XmlDocument config)
+    public PipelineWatcher(XmlDocument config, DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(config, "config");
 
       this.config = config;
+      this.dataStorage = dataStorage;
 
       PipelineWatcherProcessor.PipelineRun += this.PipelineRun;
     }
@@ -168,6 +171,12 @@ namespace Sitecore.FakeDb.Pipelines
 
       PipelineWatcherProcessor.PipelineRun -= this.PipelineRun;
       this.disposed = true;
+    }
+
+    public void Register(string pipelineName, IPipelineProcessor processorMock)
+    {
+      this.dataStorage.Pipelines.Add(pipelineName, processorMock);
+      this.Expects(pipelineName, delegate { return true; });
     }
   }
 }

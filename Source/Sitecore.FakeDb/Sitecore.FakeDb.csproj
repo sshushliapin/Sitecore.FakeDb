@@ -85,6 +85,7 @@
     <Compile Include="Pipelines\InitFakeDb\InitDataProviders.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbArgs.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbProcessor.cs" />
+    <Compile Include="Pipelines\IPipelineProcessor.cs" />
     <Compile Include="Pipelines\ItemLoadingArgs.cs" />
     <Compile Include="Pipelines\PipelineRunEventArgs.cs" />
     <Compile Include="Pipelines\PipelineWatcherProcessor.cs" />

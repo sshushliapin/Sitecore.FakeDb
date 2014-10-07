@@ -39,7 +39,7 @@
 
       var config = Factory.GetConfiguration();
       this.configuration = new DbConfiguration(config);
-      this.pipelineWatcher = new PipelineWatcher(config);
+      this.pipelineWatcher = new PipelineWatcher(config, this.dataStorage);
 
       var args = new InitDbArgs(this.database, this.dataStorage);
       CorePipeline.Run("initFakeDb", args);

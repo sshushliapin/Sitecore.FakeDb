@@ -388,6 +388,48 @@
 
     #region Pipelines
 
+    [Fact]
+    public void HowToUnitTestPipelineCallWithMockedProcessor()
+    {
+      var args = new Sitecore.Pipelines.PipelineArgs();
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+      {
+        // create pipeline processor mock and register it in the Pipeline Watcher
+        var processor = Substitute.For<Sitecore.FakeDb.Pipelines.IPipelineProcessor>();
+        db.PipelineWatcher.Register("mypipeline", processor);
+
+        // call the pipeline
+        Sitecore.Pipelines.CorePipeline.Run("mypipeline", args);
+
+        // and check the mocked processor received the Process method call with proper arguments
+        processor.Received().Process(args);
+      }
+    }
+
+    [Fact]
+    public void HowToUnitTestAdvancedPipelineCallWithMockedProcessor()
+    {
+      var args = new Sitecore.Pipelines.PipelineArgs();
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+      {
+        // create pipeline processor mock and register it in the Pipeline Watcher
+        var processor = Substitute.For<Sitecore.FakeDb.Pipelines.IPipelineProcessor>();
+        processor
+          .When(p => p.Process(args))
+          .Do(ci => ci.Arg<Sitecore.Pipelines.PipelineArgs>().CustomData["Result"] = "Ok");
+
+        db.PipelineWatcher.Register("mypipeline", processor);
+
+        // call the pipeline
+        Sitecore.Pipelines.CorePipeline.Run("mypipeline", args);
+
+        // and check the result
+        Assert.Equal("Ok", args.CustomData["Result"]);
+      }
+    }
+
     /// <summary>
     /// Imagine you have a product repository. The repository should be able to get a 
     /// product by id. The implementation of the repository is 'thin' and does nothing 

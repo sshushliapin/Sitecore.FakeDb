@@ -37,6 +37,8 @@ testing.
   - [How to switch Context User](#how-to-switch-context-user)
   - [How to configure Item Access](#how-to-configure-item-access)
 - [Pipelines](#pipelines)
+  - [How to unit test a pipeline call with mocked processor](#how-to-unit-test-a-pipeline-call-with-mocked-processor)
+  - [How to unit test an advanced pipeline call with mocked processor](#how-to-unit-test-an-advanced-pipeline-call-with-mocked-processor)
   - [How to unit test a pipeline call](#how-to-unit-test-a-pipeline-call)
   - [How to configure a pipeline behaviour](#how-to-configure-a-pipeline-behaviour)
 - [Configuration](#configuration)
@@ -555,6 +557,56 @@ public void HowToConfigureItemAccess()
 
 
 ## <a id="pipelines"></a>Pipelines
+
+### <a id="how-to-unit-test-a-pipeline-call-with-mocked-processor"></a>How to unit test a pipeline call with mocked processor
+
+``` csharp
+[Fact]
+public void HowToUnitTestPipelineCallWithMockedProcessor()
+{
+  var args = new Sitecore.Pipelines.PipelineArgs();
+
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+  {
+    // create pipeline processor mock and register it in the Pipeline Watcher
+    var processor = Substitute.For<Sitecore.FakeDb.Pipelines.IPipelineProcessor>();
+    db.PipelineWatcher.Register("mypipeline", processor);
+
+    // call the pipeline
+    Sitecore.Pipelines.CorePipeline.Run("mypipeline", args);
+
+    // and check the mocked processor received the Process method call with proper arguments
+    processor.Received().Process(args);
+  }
+}
+```
+
+### <a id="how-to-unit-test-an-advanced-pipeline-call-with-mocked-processor"></a>How to unit test an advanced pipeline call with mocked processor
+
+``` csharp
+[Fact]
+public void HowToUnitTestAdvancedPipelineCallWithMockedProcessor()
+{
+  var args = new Sitecore.Pipelines.PipelineArgs();
+
+  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+  {
+    // create pipeline processor mock and register it in the Pipeline Watcher
+    var processor = Substitute.For<Sitecore.FakeDb.Pipelines.IPipelineProcessor>();
+    processor
+      .When(p => p.Process(args))
+      .Do(ci => ci.Arg<Sitecore.Pipelines.PipelineArgs>().CustomData["Result"] = "Ok");
+
+    db.PipelineWatcher.Register("mypipeline", processor);
+
+    // call the pipeline
+    Sitecore.Pipelines.CorePipeline.Run("mypipeline", args);
+
+    // and check the result
+    Assert.Equal("Ok", args.CustomData["Result"]);
+  }
+}
+```
 
 ### <a id="how-to-unit-test-a-pipeline-call"></a>How to unit test a pipeline call
 
