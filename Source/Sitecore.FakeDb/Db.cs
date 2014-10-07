@@ -10,6 +10,7 @@
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
+  using Sitecore.FakeDb.Pipelines.ReleaseFakeDb;
   using Sitecore.Globalization;
   using Sitecore.Pipelines;
 
@@ -154,7 +155,7 @@
         return;
       }
 
-      CorePipeline.Run("releaseFakeDb", new DbArgs(this));
+      CorePipeline.Run("releaseFakeDb", new ReleaseDbArgs(this));
 
       this.disposed = true;
     }

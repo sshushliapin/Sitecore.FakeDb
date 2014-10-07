@@ -2,7 +2,7 @@
 {
   public class ResetTemplateEngine
   {
-    public void Process(DbArgs args)
+    public void Process(ReleaseDbArgs args)
     {
       args.Db.Database.Engines.TemplateEngine.Reset();
     }

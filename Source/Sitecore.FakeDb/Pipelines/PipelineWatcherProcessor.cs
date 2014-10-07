@@ -13,22 +13,34 @@ namespace Sitecore.FakeDb.Pipelines
 
     private readonly string pipelineName;
 
+    private readonly string databaseName;
+
     public PipelineWatcherProcessor(string pipelineName)
     {
       Assert.ArgumentNotNullOrEmpty(pipelineName, "pipelineName");
 
       this.pipelineName = pipelineName;
+    }
 
-      // TODO:[High] Open question: how to pass the DataStorage to this class?
-      if (this.DataStorage == null)
-      {
-        this.DataStorage = ((FakeDataProvider)Database.GetDatabase("master").GetDataProviders()[0]).DataStorage;
-      }
+    public PipelineWatcherProcessor(string pipelineName, string databaseName)
+      : this(pipelineName)
+    {
+      Assert.ArgumentNotNullOrEmpty(databaseName, "databaseName");
+
+      this.databaseName = databaseName;
+
+      // TODO:[Medium] Review.
+      this.DataStorage = ((FakeDataProvider)Database.GetDatabase(this.databaseName).GetDataProviders()[0]).DataStorage;
     }
 
     public string PipelineName
     {
       get { return this.pipelineName; }
+    }
+
+    public string DatabaseName
+    {
+      get { return this.databaseName; }
     }
 
     public DataStorage DataStorage { get; set; }

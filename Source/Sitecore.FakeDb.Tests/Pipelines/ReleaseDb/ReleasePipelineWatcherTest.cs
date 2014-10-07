@@ -19,7 +19,7 @@
         var processor = new ReleasePipelineWatcher();
 
         // act
-        processor.Process(new DbArgs(db));
+        processor.Process(new ReleaseDbArgs(db));
 
         // assert
         watcher.Received().Dispose();

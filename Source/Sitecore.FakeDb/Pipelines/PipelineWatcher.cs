@@ -88,8 +88,12 @@ namespace Sitecore.FakeDb.Pipelines
       var value = type + ", " + type.Assembly.GetName().Name;
       XmlUtil.AddAttribute("type", value, processorNode);
 
-      var paramXml = "<param desc=\"expectedName\">{0}</param>".FormatWith(pipelineName);
-      XmlUtil.AddXml(paramXml, processorNode);
+      var expectedName = "<param desc=\"expectedName\">{0}</param>".FormatWith(pipelineName);
+      XmlUtil.AddXml(expectedName, processorNode);
+
+      var database = this.dataStorage.Database.Name;
+      var databaseName = "<param desc=\"databaseName\">{0}</param>".FormatWith(database);
+      XmlUtil.AddXml(databaseName, processorNode);
     }
 
     public virtual void EnsureExpectations()

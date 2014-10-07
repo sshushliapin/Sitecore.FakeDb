@@ -6,6 +6,7 @@
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.Pipelines;
   using Xunit;
+  using Xunit.Extensions;
 
   public class PipelineWatcherProcessorTests
   {
@@ -56,14 +57,16 @@
       processor.Received().Process(args);
     }
 
-    [Fact]
-    public void ShouldRetrieveDataStorageFromDataProvider()
+    [Theory]
+    [InlineData("master")]
+    [InlineData("web")]
+    public void ShouldRetrieveDataStorageFromDataProvider(string database)
     {
       // arrange
-      using (var db = new Db())
+      using (var db = new Db(database))
       {
         // act
-        var processor = new PipelineWatcherProcessor("mypipeline");
+        var processor = new PipelineWatcherProcessor("mypipeline", database);
 
         // assert
         processor.DataStorage.Should().BeSameAs(db.DataStorage);

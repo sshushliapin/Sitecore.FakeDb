@@ -4,7 +4,7 @@
 
   public class ReleasePipelineWatcher
   {
-    public virtual void Process(DbArgs args)
+    public virtual void Process(ReleaseDbArgs args)
     {
       args.Db.PipelineWatcher.Dispose();
       CorePipelineFactory.ClearCache();

@@ -75,7 +75,7 @@
     <Compile Include="Pipelines\AddDbItem\SetFullPath.cs" />
     <Compile Include="Pipelines\AddDbItem\CreateItem.cs" />
     <Compile Include="Pipelines\AddDbItem\CreateChildren.cs" />
-    <Compile Include="Pipelines\DbArgs.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ReleaseDbArgs.cs" />
     <Compile Include="Pipelines\GetTranslation\GetFakeTranslation.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitGlobals.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitStandardValuesProvider.cs" />
@@ -90,6 +90,7 @@
     <Compile Include="Pipelines\PipelineRunEventArgs.cs" />
     <Compile Include="Pipelines\PipelineWatcherProcessor.cs" />
     <Compile Include="Pipelines\PipelineWatcher.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ResetDataProviders.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ReleasePipelineWatcher.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ResetFactory.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ResetSettings.cs" />

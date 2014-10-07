@@ -20,7 +20,7 @@
 
     public PipelineWatcherTest()
     {
-      this.dataStorage = new DataStorage();
+      this.dataStorage = new DataStorage(Database.GetDatabase("master"));
       this.watcher = new PipelineWatcher(Factory.GetConfiguration(), this.dataStorage);
     }
 
