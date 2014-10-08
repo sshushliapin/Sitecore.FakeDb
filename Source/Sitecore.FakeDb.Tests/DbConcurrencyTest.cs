@@ -1,14 +1,12 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
-  using System;
   using System.Threading;
   using System.Threading.Tasks;
   using FluentAssertions;
-  using Xunit;
-  using Sitecore.Xml;
   using Sitecore.Configuration;
-  using Sitecore.Pipelines;
   using Sitecore.Data;
+  using Sitecore.Pipelines;
+  using Xunit;
 
   public class DbConcurrencyTest
   {
@@ -62,8 +60,8 @@
       t2.Wait();
     }
 
-    [Fact(Skip = "To be implemented.")]
-    public void ShouldBeThreadLocalPipelines()
+    [Fact]
+    public void ShouldBeThreadSafePipelines()
     {
       var t1 = Task.Factory.StartNew(() =>
       {
@@ -78,16 +76,18 @@
         }
       });
 
-      var t2 = Task.Factory.StartNew(() =>
+      Task.Factory.StartNew(() =>
       {
-        using (var db = new Db()) { }
+        using (new Db())
+        {
+        }
       });
 
       t1.Wait();
     }
 
-    [Fact(Skip = "To be implemented.")]
-    public void ShouldBeThreadLocalSettings()
+    [Fact]
+    public void ShouldBeThreadSafeSettings()
     {
       var t1 = Task.Factory.StartNew(() =>
       {
@@ -101,7 +101,7 @@
         }
       });
 
-      var t2 = Task.Factory.StartNew(() =>
+      Task.Factory.StartNew(() =>
       {
         using (var db = new Db())
         {
@@ -109,6 +109,27 @@
           Settings.GetSetting("mysetting").Should().Be("abc");
         }
       });
+
+      t1.Wait();
+    }
+
+    [Fact(Skip = "To be implemented.")]
+    public void ShouldBeThreadSafeFactoryConfiguration()
+    {
+      var t1 = Task.Factory.StartNew(() =>
+      {
+        using (var db = new Db())
+        {
+          db.PipelineWatcher.Expects("mypipeline");
+
+          Thread.Sleep(1000);
+
+          CorePipeline.Run("mypipeline", new PipelineArgs());
+          db.PipelineWatcher.EnsureExpectations();
+        }
+      });
+
+      Task.Factory.StartNew(Factory.Reset);
 
       t1.Wait();
     }

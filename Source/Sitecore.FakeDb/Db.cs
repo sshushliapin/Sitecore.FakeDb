@@ -2,6 +2,8 @@
 {
   using System;
   using System.Collections;
+  using System.Threading;
+  using System.Xml;
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -16,13 +18,17 @@
 
   public class Db : IDisposable, IEnumerable
   {
+    private static readonly object @lock = new object();
+
     private readonly Database database;
 
     private readonly DataStorage dataStorage;
 
-    private readonly DbConfiguration configuration;
+    private DbConfiguration configuration;
 
-    private readonly PipelineWatcher pipelineWatcher;
+    private PipelineWatcher pipelineWatcher;
+
+    private XmlDocument config;
 
     private bool disposed;
 
@@ -37,10 +43,6 @@
 
       this.database = Database.GetDatabase(databaseName);
       this.dataStorage = new DataStorage(this.database);
-
-      var config = Factory.GetConfiguration();
-      this.configuration = new DbConfiguration(config);
-      this.pipelineWatcher = new PipelineWatcher(config, this.dataStorage);
 
       var args = new InitDbArgs(this.database, this.dataStorage);
       CorePipeline.Run("initFakeDb", args);
@@ -59,17 +61,35 @@
 
     public DbConfiguration Configuration
     {
-      get { return this.configuration; }
+      get
+      {
+        if (this.configuration == null)
+        {
+          this.config = this.GetConfiguration();
+          this.configuration = new DbConfiguration(this.config);
+        }
+
+        return this.configuration;
+      }
+    }
+
+    public PipelineWatcher PipelineWatcher
+    {
+      get
+      {
+        if (this.pipelineWatcher == null)
+        {
+          this.config = this.GetConfiguration();
+          this.pipelineWatcher = new PipelineWatcher(this.config, this.DataStorage);
+        }
+
+        return this.pipelineWatcher;
+      }
     }
 
     protected internal DataStorage DataStorage
     {
       get { return this.dataStorage; }
-    }
-
-    public PipelineWatcher PipelineWatcher
-    {
-      get { return this.pipelineWatcher; }
     }
 
     public IEnumerator GetEnumerator()
@@ -157,7 +177,25 @@
 
       CorePipeline.Run("releaseFakeDb", new ReleaseDbArgs(this));
 
+      if (Monitor.IsEntered(@lock))
+      {
+        Monitor.Exit(@lock);
+      }
+
       this.disposed = true;
+    }
+
+    private XmlDocument GetConfiguration()
+    {
+      if (this.config != null)
+      {
+        return this.config;
+      }
+
+      Monitor.Enter(@lock);
+      this.config = Factory.GetConfiguration();
+
+      return this.config;
     }
   }
 }
