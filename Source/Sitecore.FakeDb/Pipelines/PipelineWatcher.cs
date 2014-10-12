@@ -51,7 +51,8 @@ namespace Sitecore.FakeDb.Pipelines
 
     public virtual void Expects(string pipelineName, Func<PipelineArgs, bool> checkThisArgs)
     {
-      this.checkThisArgs.Add(pipelineName, checkThisArgs);
+      this.checkThisArgs[pipelineName] = checkThisArgs;
+
       this.Expects(pipelineName);
     }
 
@@ -78,11 +79,13 @@ namespace Sitecore.FakeDb.Pipelines
     {
       Assert.ArgumentNotNullOrEmpty(pipelineName, "pipelineName");
 
-      this.expectedCalls.Add(pipelineName, pipelineArgs);
+      this.expectedCalls[pipelineName] = pipelineArgs;
       this.lastUsedPipelineName = pipelineName;
 
       var path = "/sitecore/pipelines/" + pipelineName + "/processor";
       var processorNode = XmlUtil.EnsurePath(path, this.config);
+
+      processorNode.RemoveAll();
 
       var type = typeof(PipelineWatcherProcessor);
       var value = type + ", " + type.Assembly.GetName().Name;
@@ -118,19 +121,18 @@ namespace Sitecore.FakeDb.Pipelines
       }
     }
 
+    public virtual void Register(string pipelineName, IPipelineProcessor processorMock)
+    {
+      this.dataStorage.Pipelines[pipelineName] = processorMock;
+
+      this.Expects(pipelineName, delegate { return true; });
+    }
+
     protected virtual void OnPipelineRun(PipelineRunEventArgs e)
     {
       var pipelineName = e.PipelineName;
 
-      // TODO:[High] Sometimes actualCalls might contain the key. Concurrency issue.
-      if (actualCalls.ContainsKey(pipelineName))
-      {
-        this.actualCalls[pipelineName] = e.PipelineArgs;
-      }
-      else
-      {
-        this.actualCalls.Add(pipelineName, e.PipelineArgs);
-      }
+      this.actualCalls[pipelineName] = e.PipelineArgs;
 
       if (this.filterThisArgs == null || !this.processThisArgs.ContainsKey(pipelineName))
       {
@@ -175,12 +177,6 @@ namespace Sitecore.FakeDb.Pipelines
 
       PipelineWatcherProcessor.PipelineRun -= this.PipelineRun;
       this.disposed = true;
-    }
-
-    public void Register(string pipelineName, IPipelineProcessor processorMock)
-    {
-      this.dataStorage.Pipelines.Add(pipelineName, processorMock);
-      this.Expects(pipelineName, delegate { return true; });
     }
   }
 }

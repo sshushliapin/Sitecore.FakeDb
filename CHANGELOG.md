@@ -1,6 +1,7 @@
 ﻿0.20.1
 * [FIX] Locked config to avoid race conditions when deals with in-memory settings or pipelines
 * [NEW] Switching database when initializing new Db context
+* [FIX] Fixed error when regestering the same pipeline twice
 
 0.20.0
 * [NEW] Added possibility to register and call mocked pipeline processor
