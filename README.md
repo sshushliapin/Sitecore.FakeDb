@@ -891,16 +891,13 @@ public void HowToWorkWithQueryApi()
 {
   const string Query = "/sitecore/content/*[@@key = 'home']";
 
-  using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db 
+  using (new Sitecore.FakeDb.Db 
     {
       new Sitecore.FakeDb.DbItem("home")
     })
   {
-    Sitecore.Data.Items.Item[] result;
-    using (new Sitecore.Data.DatabaseSwitcher(db.Database))
-    {
-      result = Sitecore.Data.Query.Query.SelectItems(Query);
-    }
+    Sitecore.Data.Items.Item[] result =
+      Sitecore.Data.Query.Query.SelectItems(Query);
 
     Xunit.Assert.Equal(result.Count(), 1);
     Xunit.Assert.Equal(result[0].Key, "home");

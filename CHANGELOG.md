@@ -1,4 +1,8 @@
-﻿0.20.0
+﻿0.20.1
+* [FIX] Locked config to avoid race conditions when deals with in-memory settings or pipelines
+* [NEW] Switching database when initializing new Db context
+
+0.20.0
 * [NEW] Added possibility to register and call mocked pipeline processor
 * [NEW] Introduced 'addDbItem' pipeline
 * [FIX] Serialization pipeline configuration moved to the Serialization nuget package

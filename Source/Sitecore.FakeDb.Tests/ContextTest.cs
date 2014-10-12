@@ -18,5 +18,18 @@
       // act & assert
       Context.User.Name.Should().Be("default\\Anonymous");
     }
+
+    [Fact]
+    public void ShouldSwitchContextDatabase()
+    {
+      // arrange & act
+      using (var db = new Db())
+      {
+        // assert
+        Context.Database.Should().BeSameAs(db.Database);
+      }
+
+      Context.Database.Should().BeNull();
+    }
   }
 }

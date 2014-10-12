@@ -24,6 +24,8 @@
 
     private readonly DataStorage dataStorage;
 
+    private readonly DatabaseSwitcher databaseSwitcher;
+
     private DbConfiguration configuration;
 
     private PipelineWatcher pipelineWatcher;
@@ -43,6 +45,8 @@
 
       this.database = Database.GetDatabase(databaseName);
       this.dataStorage = new DataStorage(this.database);
+
+      this.databaseSwitcher = new DatabaseSwitcher(this.database);
 
       var args = new InitDbArgs(this.database, this.dataStorage);
       CorePipeline.Run("initFakeDb", args);
@@ -176,6 +180,8 @@
       }
 
       CorePipeline.Run("releaseFakeDb", new ReleaseDbArgs(this));
+
+      this.databaseSwitcher.Dispose();
 
       if (Monitor.IsEntered(@lock))
       {

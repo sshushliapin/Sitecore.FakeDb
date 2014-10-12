@@ -23,10 +23,7 @@
         Item[] result;
 
         // act
-        using (new DatabaseSwitcher(db.Database))
-        {
-          result = Query.SelectItems(query);
-        }
+        result = Query.SelectItems(query);
 
         // assert 
         result.Should().HaveCount(1);
@@ -51,10 +48,7 @@
         Item[] result;
 
         // act
-        using (new DatabaseSwitcher(db.Database))
-        {
-          result = Query.SelectItems(query);
-        }
+        result = Query.SelectItems(query);
 
         // assert
         result.Should().NotBeNull();
