@@ -42,13 +42,13 @@
   <Target Name="NuGetPackage" DependsOnTargets="ReleaseFolder">
     <Copy SourceFiles="README.md" DestinationFiles="$(ReleaseFolder)\Readme.txt" />
 
-    <Exec Command="$(NuGet) pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\$(ReleaseFolder) -Build" WorkingDirectory="$(SourceFolder)" />
+    <Exec Command="$(NuGet) pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\$(ReleaseFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
 
     <Copy SourceFiles="Source/Sitecore.FakeDb.NSubstitute.Tests/App.config" DestinationFiles="Source/Sitecore.FakeDb.NSubstitute.Tests/App.config.transform" />
-    <Exec Command="$(NuGet) pack Sitecore.FakeDb.NSubstitute/Sitecore.FakeDb.NSubstitute.csproj -Properties Configuration=Release -OutputDirectory ..\$(ReleaseFolder) -Build" WorkingDirectory="$(SourceFolder)" />
+    <Exec Command="$(NuGet) pack Sitecore.FakeDb.NSubstitute/Sitecore.FakeDb.NSubstitute.csproj -Properties Configuration=Release -OutputDirectory ..\$(ReleaseFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
 
     <Copy SourceFiles="Source/Sitecore.FakeDb.Serialization.Tests/App.config" DestinationFiles="Source/Sitecore.FakeDb.Serialization.Tests/App.config.transform" />
-    <Exec Command="$(NuGet) pack Sitecore.FakeDb.Serialization/Sitecore.FakeDb.Serialization.csproj -Properties Configuration=Release -OutputDirectory ..\$(ReleaseFolder) -Build" WorkingDirectory="$(SourceFolder)" />
+    <Exec Command="$(NuGet) pack Sitecore.FakeDb.Serialization/Sitecore.FakeDb.Serialization.csproj -Properties Configuration=Release -OutputDirectory ..\$(ReleaseFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
 
     <Delete Files="$(ReleaseFolder)/Readme.txt" />
     <Delete Files="Source/Sitecore.FakeDb.NSubstitute.Tests/App.config.transform"/>
