@@ -1,6 +1,7 @@
-﻿0.20.1
-* [FIX] Locked config to avoid race conditions when deals with in-memory settings or pipelines
+﻿0.21.0
 * [NEW] Switching database when initializing new Db context
+* [NEW] Introduced simple FakeSiteContext
+* [FIX] Locked config to avoid race conditions when deals with in-memory settings or pipelines
 * [FIX] Fixed error when regestering the same pipeline twice
 
 0.20.0
