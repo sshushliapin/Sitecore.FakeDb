@@ -122,7 +122,31 @@
         var copy = home.CopyTo(home.Parent, "copy");
 
         // assert
+        copy.Fields["Title"].Shared.Should().BeTrue();
         copy["Title"].Should().Be("Me");
+      }
+    }
+
+    [Fact]
+    public void ShouldCopyFieldType()
+    {
+      using (var db = new Db()
+      {
+        new DbItem("home") {new DbField("Active")
+        {
+          Value = "1", 
+          Type = "Checkbox"
+        }}
+      })
+      {
+        var home = db.GetItem("/sitecore/content/home");
+
+        // act
+        var copy = home.CopyTo(home.Parent, "copy");
+
+        // assert
+        copy["Active"].Should().Be("1");
+        copy.Fields["Active"].Type.Should().Be("Checkbox");
       }
     }
   }

@@ -66,8 +66,24 @@
 
       foreach (var field in source.Fields)
       {
-        copy.Fields.Add(new DbField(field.Name, field.ID));
+        CopyField(field, copy);
+      }
+    }
 
+    protected virtual void CopyField(DbField field, DbItem copy)
+    {
+      copy.Fields.Add(new DbField(field.Name, field.ID)
+      {
+        Shared = field.Shared,
+        Type = field.Type
+      });
+
+      if (field.Shared)
+      {
+        copy.Fields[field.ID].Value = field.Value;
+      }
+      else
+      {
         foreach (var fieldValue in field.Values)
         {
           var language = fieldValue.Key;
@@ -76,6 +92,7 @@
           copy.Fields[field.ID].Values.Add(language, versions);
         }
       }
+
     }
   }
 }

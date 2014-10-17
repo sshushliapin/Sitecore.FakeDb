@@ -30,7 +30,7 @@
 
       foreach (var itemField in item.Fields)
       {
-        var templatefield = new DbField(itemField.Name, itemField.ID) { Type = itemField.Type };
+        var templatefield = new DbField(itemField.Name, itemField.ID) { Shared = itemField.Shared, Type = itemField.Type };
         template.Add(templatefield);
       }
 
