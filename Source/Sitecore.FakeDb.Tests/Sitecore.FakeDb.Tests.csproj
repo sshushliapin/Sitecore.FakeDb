@@ -120,6 +120,7 @@
     <Compile Include="Data\Items\ItemWrapperTest.cs" />
     <Compile Include="DbFieldCollectionTest.cs" />
     <Compile Include="DbFieldTest.cs" />
+    <Compile Include="DbItemCopyingTest.cs" />
     <Compile Include="DbItemEditingTest.cs" />
     <Compile Include="DbStandardValuesTest.cs" />
     <Compile Include="DbTemplateInheritanceTest.cs" />
