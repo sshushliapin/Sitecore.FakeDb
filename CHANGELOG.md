@@ -3,6 +3,7 @@
 * [NEW] Introduced simple FakeSiteContext
 * [FIX] Locked config to avoid race conditions when deals with in-memory settings or pipelines
 * [FIX] Fixed error when regestering the same pipeline twice
+* [FIX] #25: Ensure Shared property of a field is properly propagated when FakeDb generates a template and also ensure copying an item carries it over (along with the Type property). Thanks to [Pavel Veller](https://github.com/pveller)
 
 0.20.0
 * [NEW] Added possibility to register and call mocked pipeline processor
