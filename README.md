@@ -560,6 +560,10 @@ public void HowToConfigureItemAccess()
 
 ### <a id="how-to-unit-test-a-pipeline-call-with-mocked-processor"></a>How to unit test a pipeline call with mocked processor
 
+> **Important:**
+
+> If you are running Sitecore 7.5 or higher, consider using `Sitecore.Abstractions.ICorePipeline` interface from the `Sitecore.Abstractions` assembly.
+
 ``` csharp
 [Fact]
 public void HowToUnitTestPipelineCallWithMockedProcessor()
@@ -701,6 +705,10 @@ private partial class ProductRepository
 
 ### <a id="how-to-configure-settings"></a>How to configure Settings
 
+> **Important:**
+
+> If you are running Sitecore 7.5 or higher, consider using `Sitecore.Abstractions.ISettings` interface from the `Sitecore.Abstractions` assembly.
+
 In some cases you may prefer to use a setting instead of a dependency injected 
 in your code via a constructor or property. The code below instantiates the new Db 
 context and sets "MySetting" setting value to "1234". Please note that the 
@@ -765,6 +773,10 @@ allowing developers to choose between usability or isolation.
 ## <a id="miscellaneous"></a>Miscellaneous    
 
 ### <a id="how-to-unit-test-localization"></a>How to unit test localization
+
+> **Important:**
+
+> If you are running Sitecore 7.5 or higher, consider using `Sitecore.Abstractions.ITranslate` interface from the `Sitecore.Abstractions` assembly.
 
 FakeDb supports a simple localization mechanism. You can call the Translate.Text() or
 Translate.TextByLanguage() method to get a 'translated' version of the original text.
