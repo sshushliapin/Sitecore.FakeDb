@@ -561,6 +561,25 @@
 
     #region Miscellaneous
 
+    [Fact]
+    public void HowToSwitchContextSite()
+    {
+      // Create a fake Site Context and configure the required parameters.
+      // Please note that there is no registration in the App.config file required.
+      var fakeSite = new Sitecore.FakeDb.Sites.FakeSiteContext(
+        new Sitecore.Collections.StringDictionary
+          {
+            { "name", "website" }, { "database", "web" }
+          });
+
+      // switch the context site
+      using (new Sitecore.Sites.SiteContextSwitcher(fakeSite))
+      {
+        Xunit.Assert.Equal("website", Sitecore.Context.Site.Name);
+        Xunit.Assert.Equal("web", Sitecore.Context.Site.Database.Name);
+      }
+    }
+
     /// <summary>
     /// FakeDb supports simple localization mechanism. You can call Translate.Text() or
     /// Translate.TextByLanguage() method to get a 'translated' version of the original text.
