@@ -1,6 +1,7 @@
 # Required Files
 
 Copy the following DLLs from your Sitecore's `Website\bin`:
+
 * Lucene.Net.dll
 * Sitecore.Analytics.dll
 * Sitecore.ContentSearch.dll
