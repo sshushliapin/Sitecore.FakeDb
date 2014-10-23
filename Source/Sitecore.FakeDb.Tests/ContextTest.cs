@@ -28,8 +28,6 @@
         // assert
         Context.Database.Should().BeSameAs(db.Database);
       }
-
-      Context.Database.Should().BeNull();
     }
   }
 }

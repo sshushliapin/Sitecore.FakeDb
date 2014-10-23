@@ -538,10 +538,11 @@
     public void ShouldResolveDatabaseByName(string name)
     {
       // arrange
-      var db = new Db(name);
-
-      // act & assert
-      db.Database.Name.Should().Be(name);
+      using (var db = new Db(name))
+      {
+        // act & assert
+        db.Database.Name.Should().Be(name);
+      }
     }
 
     [Fact]

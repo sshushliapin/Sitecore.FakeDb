@@ -1,6 +1,8 @@
 namespace Sitecore.FakeDb.Data.Engines
 {
+  using System;
   using System.Collections.Generic;
+  using System.IO;
   using System.Linq;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -42,12 +44,15 @@ namespace Sitecore.FakeDb.Data.Engines
 
     private readonly IDictionary<ID, DbTemplate> fakeTemplates;
 
+    private readonly IDictionary<Guid, Stream> blobs;
+
     private readonly IDictionary<string, IPipelineProcessor> processors;
 
     internal DataStorage()
     {
       this.fakeItems = new Dictionary<ID, DbItem>();
       this.fakeTemplates = new Dictionary<ID, DbTemplate>();
+      this.blobs = new Dictionary<Guid, Stream>();
       this.processors = new Dictionary<string, IPipelineProcessor>();
     }
 
@@ -73,6 +78,11 @@ namespace Sitecore.FakeDb.Data.Engines
     public IDictionary<ID, DbTemplate> FakeTemplates
     {
       get { return this.fakeTemplates; }
+    }
+
+    public IDictionary<Guid, Stream> Blobs
+    {
+      get { return this.blobs; }
     }
 
     public IDictionary<string, IPipelineProcessor> Pipelines

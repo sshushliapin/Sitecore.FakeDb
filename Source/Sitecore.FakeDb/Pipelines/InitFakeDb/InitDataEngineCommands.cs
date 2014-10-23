@@ -11,9 +11,11 @@
 
       this.InitializeCommand(commands.AddFromTemplatePrototype, innerCommand);
       this.InitializeCommand(commands.AddVersionPrototype, innerCommand);
+      this.InitializeCommand(commands.BlobStreamExistsPrototype, innerCommand);
       this.InitializeCommand(commands.CopyItemPrototype, innerCommand);
       this.InitializeCommand(commands.CreateItemPrototype, innerCommand);
       this.InitializeCommand(commands.DeletePrototype, innerCommand);
+      this.InitializeCommand(commands.GetBlobStreamPrototype, innerCommand);
       this.InitializeCommand(commands.GetChildrenPrototype, innerCommand);
       this.InitializeCommand(commands.GetItemPrototype, innerCommand);
       this.InitializeCommand(commands.GetParentPrototype, innerCommand);
@@ -24,6 +26,7 @@
       this.InitializeCommand(commands.RemoveVersionPrototype, innerCommand);
       this.InitializeCommand(commands.ResolvePathPrototype, innerCommand);
       this.InitializeCommand(commands.SaveItemPrototype, innerCommand);
+      this.InitializeCommand(commands.SetBlobStreamPrototype, innerCommand);
     }
 
     protected virtual void InitializeCommand(object command, DataEngineCommand innerCommand)
