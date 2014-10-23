@@ -1,6 +1,7 @@
 # Required Files
 
 Copy the following DLLs from your Sitecore's `Website\bin`:
+
 * Lucene.Net.dll
 * Sitecore.Analytics.dll
 * Sitecore.ContentSearch.dll
@@ -8,3 +9,4 @@ Copy the following DLLs from your Sitecore's `Website\bin`:
 * Sitecore.Kernel.dll
 * Sitecore.Logging.dll
 * sitecore.nexus.dll
+* Sitecore.Buckets.dll
