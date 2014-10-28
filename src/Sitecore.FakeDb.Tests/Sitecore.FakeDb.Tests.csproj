@@ -160,6 +160,7 @@
     <Compile Include="Pipelines\AddDbItem\SetParentTest.cs" />
     <Compile Include="Pipelines\CorePipelineFactoryTest.cs" />
     <Compile Include="Pipelines\CorePipelineTest.cs" />
+    <Compile Include="Pipelines\InitFakeDb\SetContextIsUnitTestingTest.cs" />
     <Compile Include="Profile\UserProfileTest.cs" />
     <Compile Include="Security\AccessControl\AllowAccessResultTest.cs" />
     <Compile Include="Security\AccessControl\AuthorizationSwitcherTest.cs" />
@@ -207,6 +208,9 @@
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="App_Config\Include\Sitecore.FakeDb.AutoIncludeSample.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
