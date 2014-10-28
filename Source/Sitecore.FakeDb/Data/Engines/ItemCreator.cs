@@ -2,7 +2,6 @@
 {
   using Sitecore.Data;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
 
   // TODO: To think aboud better name.
@@ -20,7 +19,7 @@
       get { return this.dataStorage; }
     }
 
-    public virtual Item Create(string itemName, ID itemId, ID templateId, Database database, Item destination)
+    public virtual Item Create(string itemName, ID itemId, ID templateId, Database database, Item destination, bool addFirstVersion = false)
     {
       var language = Language.Current;
 
@@ -30,9 +29,13 @@
         var fullPath = parentItem.FullPath + "/" + itemName;
 
         var dbitem = new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath };
+        if (addFirstVersion)
+        {
+          dbitem.VersionsCount.Add(language.Name, 1);
+        }
 
         // ToDo:[HIGH] move it out of here and consolidate with the processing that happens in the Db
-        SetStatistics(dbitem);
+        this.SetStatistics(dbitem);
 
         this.DataStorage.FakeItems.Add(itemId, dbitem);
         this.DataStorage.GetFakeItem(destination.ID).Children.Add(dbitem);

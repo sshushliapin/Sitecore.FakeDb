@@ -33,7 +33,7 @@
 
     protected override Item DoExecute()
     {
-      return this.ItemCreator.Create(this.ItemName, this.NewId, this.TemplateId, this.Database, this.Destination);
+      return this.ItemCreator.Create(this.ItemName, this.NewId, this.TemplateId, this.Database, this.Destination, true);
     }
   }
 }

@@ -1,5 +1,6 @@
 ﻿0.22.0
 * [NEW] Implemented blob streams
+* [FIX] Fixed "Item Versions #28". Method ItemManager.AddFromTemplate() should create an item with a single version while ItemManager.CreateItem() just creates an item with no versions
 
 0.21.0
 * [NEW] Switching database when initializing new Db context
