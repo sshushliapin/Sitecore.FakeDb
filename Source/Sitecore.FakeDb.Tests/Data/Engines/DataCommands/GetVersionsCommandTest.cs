@@ -26,7 +26,7 @@
     }
 
     [Fact]
-    public void ShouldGetVersionCollectionWinthSingleVersion()
+    public void ShouldGetEmptyVersionCollection()
     {
       // arrange
       var itemId = ID.NewID;
@@ -43,7 +43,7 @@
       var versionCollection = command.DoExecute();
 
       // assert
-      versionCollection.Should().ContainSingle(v => v.Number == 1);
+      versionCollection.Should().BeEmpty();
     }
 
     [Fact]

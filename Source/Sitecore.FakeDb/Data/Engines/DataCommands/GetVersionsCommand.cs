@@ -28,7 +28,7 @@
     {
       var dbitem = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
       var language = this.Language.Name;
-      var versionsCount = 1;
+      var versionsCount = 0;
 
       if (dbitem.VersionsCount.ContainsKey(language))
       {

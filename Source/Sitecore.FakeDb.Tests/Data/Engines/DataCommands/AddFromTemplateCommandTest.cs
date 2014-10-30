@@ -49,7 +49,7 @@
       var destination = ItemHelper.CreateInstance(this.database);
 
       var itemCreator = Substitute.For<ItemCreator>(this.dataStorage);
-      itemCreator.Create("home", itemId, templateId, database, destination).Returns(item);
+      itemCreator.Create("home", itemId, templateId, database, destination, true).Returns(item);
 
       var command = new OpenAddFromTemplateCommand { Engine = new DataEngine(database), ItemCreator = itemCreator };
       command.Initialize("home", templateId, destination, itemId);

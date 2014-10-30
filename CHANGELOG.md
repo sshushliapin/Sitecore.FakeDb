@@ -1,6 +1,11 @@
-﻿0.21.0
+﻿0.22.0
+* [NEW] Implemented blob streams
+* [FIX] Fixed "Item Versions #28". Method ItemManager.AddFromTemplate() should create an item with a single version while ItemManager.CreateItem() just creates an item with no versions
+
+0.21.0
 * [NEW] Switching database when initializing new Db context
 * [NEW] Introduced simple FakeSiteContext
+* [NEW] Published Symbol Packages
 * [FIX] Locked config to avoid race conditions when deals with in-memory settings or pipelines
 * [FIX] Fixed error when regestering the same pipeline twice
 * [FIX] #25: Ensure Shared property of a field is properly propagated when FakeDb generates a template and also ensure copying an item carries it over (along with the Type property). Thanks to [Pavel Veller](https://github.com/pveller)

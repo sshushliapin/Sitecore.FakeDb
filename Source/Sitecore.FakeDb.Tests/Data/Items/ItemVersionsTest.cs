@@ -37,5 +37,22 @@
         db.GetItem("/sitecore/content/home").Versions.Count.Should().Be(1);
       }
     }
+
+    [Fact]
+    public void ShouldReturnEmptyVersionsCollectionIfNoVersionsFound()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField("Title") { { "en", 1, "value" } } }
+                        })
+      {
+        // act
+        var target = db.GetItem("/sitecore/content/home", "af-ZA");
+
+        // assert
+        target.Versions.Count.Should().Be(0);
+      }
+    }
   }
 }
