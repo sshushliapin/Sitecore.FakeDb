@@ -763,5 +763,38 @@
     }
 
     #endregion
+
+    #region Blobs
+
+    [Fact]
+    public void HowToSetAndGetBlobStream()
+    {
+      // arrange
+      var stream = new System.IO.MemoryStream();
+
+      using (
+        Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+          {
+            new Sitecore.FakeDb.DbItem("home")
+              {
+                new Sitecore.FakeDb.DbField("field")
+              }
+          })
+      {
+        Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/home");
+        Sitecore.Data.Fields.Field field = item.Fields["field"];
+
+        using (new Sitecore.Data.Items.EditContext(item))
+        {
+          // act
+          field.SetBlobStream(stream);
+        }
+
+        // assert
+        Xunit.Assert.Same(stream, field.GetBlobStream());
+      }
+    }
+
+    #endregion
   }
 }
