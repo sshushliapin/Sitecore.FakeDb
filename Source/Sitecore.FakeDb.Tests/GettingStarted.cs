@@ -1,5 +1,6 @@
 ﻿namespace Examples
 {
+  using System.Collections.Generic;
   using System.Linq;
   using NSubstitute;
   using Xunit;
@@ -722,43 +723,37 @@
     [Fact]
     public void HowToMockContentSearchLogic()
     {
-      try
-      {
-        var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
-        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes
-          .Add("my_index", index);
+      var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
 
-        using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-          {
-            new Sitecore.FakeDb.DbItem("home")
-          })
+      // don't forget to clean up.
+      Sitecore.ContentSearch
+        .ContentSearchManager.SearchConfiguration.Indexes["my_index"] = index;
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
         {
-          var searchResultItem =
-            Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
+          new Sitecore.FakeDb.DbItem("home")
+        })
+      {
+        // configure a search result item behavior.
+        var searchResultItem =
+          Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
 
-          searchResultItem
-            .GetItem()
-            .Returns(db.GetItem("/sitecore/content/home"));
+        var expectedItem = db.GetItem("/sitecore/content/home");
+        searchResultItem.GetItem().Returns(expectedItem);
 
-          index
-            .CreateSearchContext()
-            .GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>()
-            .Returns((new[] { searchResultItem }).AsQueryable());
+        // configure a search ndex behavior.
+        index.CreateSearchContext()
+          .GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>()
+          .Returns((new[] { searchResultItem }).AsQueryable());
 
-          Sitecore.Data.Items.Item result =
-            index
-            .CreateSearchContext()
+        // get the item from the search index and check the expectations.
+        Sitecore.Data.Items.Item actualItem =
+          index.CreateSearchContext()
             .GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>()
             .Single()
             .GetItem();
 
-          Xunit.Assert.Equal("/sitecore/content/home", result.Paths.FullPath);
-        }
-      }
-      finally
-      {
-        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes
-          .Remove("my_index");
+        Xunit.Assert.Equal(expectedItem, actualItem);
       }
     }
 
