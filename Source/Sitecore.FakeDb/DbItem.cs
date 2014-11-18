@@ -37,6 +37,8 @@ namespace Sitecore.FakeDb
 
     public ID TemplateID { get; set; }
 
+    public ID BranchId { get; set; }
+
     public DbFieldCollection Fields { get; private set; }
 
     public ID ParentID { get; set; }

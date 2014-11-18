@@ -2,6 +2,7 @@
 {
   using System.Linq;
   using Sitecore.Data;
+  using Sitecore.FakeDb.Data.Engines;
 
   public class CreateTemplate
   {
@@ -10,7 +11,7 @@
       var item = args.DbItem;
       var dataStorage = args.DataStorage;
 
-      var isResolved = this.ResolveTemplate(args);
+      var isResolved = this.ResolveTemplate(item, dataStorage);
       if (isResolved)
       {
         return;
@@ -30,19 +31,25 @@
 
       foreach (var itemField in item.Fields)
       {
-        var templatefield = new DbField(itemField.Name, itemField.ID) { Shared = itemField.Shared, Type = itemField.Type };
+        var templatefield = new DbField(itemField.Name, itemField.ID)
+                              {
+                                Shared = itemField.Shared,
+                                Type = itemField.Type
+                              };
         template.Add(templatefield);
       }
 
       dataStorage.AddFakeTemplate(template);
     }
 
-    protected virtual bool ResolveTemplate(AddDbItemArgs args)
+    protected virtual bool ResolveTemplate(DbItem item, DataStorage dataStorage)
     {
-      var item = args.DbItem;
-      var dataStorage = args.DataStorage;
-
       if (item.TemplateID == TemplateIDs.Template)
+      {
+        return true;
+      }
+
+      if (this.ResolveBranch(item, dataStorage))
       {
         return true;
       }
@@ -79,6 +86,30 @@
 
       // reuse the template
       item.TemplateID = sourceItem.TemplateID;
+
+      return true;
+    }
+
+    protected virtual bool ResolveBranch(DbItem item, DataStorage dataStorage)
+    {
+      if (ID.IsNullOrEmpty(item.TemplateID))
+      {
+        return false;
+      }
+
+      var branchItem = dataStorage.GetFakeItem(item.TemplateID);
+      if (branchItem == null)
+      {
+        return false;
+      }
+
+      if (branchItem.TemplateID != TemplateIDs.BranchTemplate)
+      {
+        return false;
+      }
+
+      item.BranchId = branchItem.ID;
+      item.TemplateID = ID.NewID;
 
       return true;
     }
