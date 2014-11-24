@@ -32,7 +32,7 @@
       var dbitem = new DbItem("item") { Fields = { new DbField("Title") { { "en", "Hello!" } } } };
       this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
 
-      var item = ItemHelper.CreateInstance(itemId, this.database);
+      var item = ItemHelper.CreateInstance(this.database, itemId);
 
       var command = new OpenRemoveVersionCommand();
       command.Initialize(item);
@@ -54,7 +54,7 @@
       var dbitem = new DbItem("item") { Fields = { new DbField("Title") } };
       this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
 
-      var item = ItemHelper.CreateInstance(itemId, this.database);
+      var item = ItemHelper.CreateInstance(this.database, itemId);
 
       var command = new OpenRemoveVersionCommand();
       command.Initialize(item);
@@ -77,7 +77,7 @@
 
       this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
 
-      var item = ItemHelper.CreateInstance(itemId, this.database);
+      var item = ItemHelper.CreateInstance(this.database, itemId);
 
       var command = new OpenRemoveVersionCommand();
       command.Initialize(item);

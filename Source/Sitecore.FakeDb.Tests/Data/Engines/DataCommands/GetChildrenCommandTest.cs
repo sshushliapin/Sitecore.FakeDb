@@ -34,7 +34,7 @@
 
       var child1 = ItemHelper.CreateInstance(this.database);
       var child2 = ItemHelper.CreateInstance(this.database);
-      var item = ItemHelper.CreateInstance(dbitem.ID, this.database);
+      var item = ItemHelper.CreateInstance(this.database, dbitem.ID);
 
       this.dataStorage.GetFakeItem(dbitem.ID).Returns(dbitem);
       this.dataStorage.GetSitecoreItem(dbchild1.ID, item.Language).Returns(child1);

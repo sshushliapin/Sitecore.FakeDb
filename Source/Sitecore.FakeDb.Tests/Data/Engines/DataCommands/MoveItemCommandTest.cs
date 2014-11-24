@@ -32,8 +32,8 @@
       var parentId = ID.NewID;
       var destinationId = ID.Null;
 
-      var item = ItemHelper.CreateInstance("item", itemId, this.database);
-      var destination = ItemHelper.CreateInstance(destinationId, this.database);
+      var item = ItemHelper.CreateInstance(this.database, "item", itemId);
+      var destination = ItemHelper.CreateInstance(this.database, destinationId);
 
       var getParentCommand = new FakeGetParentCommand();
       this.database.Engines.DataEngine.Commands.GetParentPrototype = getParentCommand;

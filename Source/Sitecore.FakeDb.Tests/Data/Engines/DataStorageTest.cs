@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines
 {
-  using System;
   using FluentAssertions;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -8,7 +7,6 @@
   using Sitecore.Globalization;
   using Xunit;
   using Xunit.Extensions;
-  using Sitecore.Security.AccessControl;
 
   public class DataStorageTest
   {
@@ -19,6 +17,8 @@
     private const string ItemIdsContentRoot = "{0DE95AE4-41AB-4D01-9EB0-67441B7C2450}";
 
     private const string ItemIdsTemplateRoot = "{3C1715FE-6A13-4FCF-845F-DE308BA9741D}";
+
+    private const string ItemIdsBranchesRoot = "{BAD98E0E-C1B5-4598-AC13-21B06218B30C}";
 
     private const string ItemIdsSystemRoot = "{13D6D6C6-C50B-4BBD-B331-2B04F1A58F21}";
 
@@ -38,6 +38,8 @@
 
     public const string TemplateIdMainSection = "{E3E2D58C-DF95-4230-ADC9-279924CECE84}";
 
+    public const string TemplateIdBranchFolder = "{85ADBF5B-E836-4932-A333-FE0F9FA1ED1E}";
+
     public DataStorageTest()
     {
       this.dataStorage = new DataStorage(Database.GetDatabase("master"));
@@ -47,6 +49,7 @@
     [InlineData(ItemIdsRootId, "sitecore", TemplateIdSitecore, RootParentId, "/sitecore")]
     [InlineData(ItemIdsContentRoot, "content", TemplateIdMainSection, ItemIdsRootId, "/sitecore/content")]
     [InlineData(ItemIdsTemplateRoot, "templates", TemplateIdMainSection, ItemIdsRootId, "/sitecore/templates")]
+    [InlineData(ItemIdsBranchesRoot, "Branches", TemplateIdBranchFolder, ItemIdsTemplateRoot, "/sitecore/templates/Branches")]
     [InlineData(ItemIdsSystemRoot, "system", TemplateIdMainSection, ItemIdsRootId, "/sitecore/system")]
     [InlineData(ItemIdsMediaLibraryRoot, "media library", TemplateIdMainSection, ItemIdsRootId, "/sitecore/media library")]
     [InlineData(TemplateIdsTemplate, "Template", TemplateIdsTemplate, ItemIdsTemplateRoot, "/sitecore/templates/template")]
@@ -132,7 +135,7 @@
       // Sitecore needs to be able to make a trip up the templates path 
       // and it in turn requires the Db context
 
-//      item[fieldId].Should().BeEmpty();
+      //      item[fieldId].Should().BeEmpty();
     }
 
     [Fact]

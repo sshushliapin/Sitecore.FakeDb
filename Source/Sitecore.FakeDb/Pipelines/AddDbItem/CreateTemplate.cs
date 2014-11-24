@@ -49,6 +49,11 @@
         return true;
       }
 
+      if (item.TemplateID == TemplateIDs.BranchTemplate)
+      {
+        return true;
+      }
+
       if (this.ResolveBranch(item, dataStorage))
       {
         return true;
@@ -92,6 +97,12 @@
 
     protected virtual bool ResolveBranch(DbItem item, DataStorage dataStorage)
     {
+      if (item.ParentID == ItemIDs.BranchesRoot && ID.IsNullOrEmpty(item.TemplateID))
+      {
+        item.TemplateID = TemplateIDs.BranchTemplate;
+        return true;
+      }
+
       if (ID.IsNullOrEmpty(item.TemplateID))
       {
         return false;
@@ -111,7 +122,7 @@
       item.BranchId = branchItem.ID;
       item.TemplateID = ID.NewID;
 
-      return true;
+      return false;
     }
   }
 }

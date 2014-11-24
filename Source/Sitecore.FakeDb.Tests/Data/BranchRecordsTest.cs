@@ -7,21 +7,6 @@
   public class BranchRecordsTest
   {
     [Fact]
-    public void ShouldCreateItemOfBranchTemplateUnderBranchesFolder()
-    {
-      // arrange
-      var branchId = ID.NewID;
-      using (var db = new Db
-                        {
-                          new DbItem("Sample Branch", branchId, TemplateIDs.BranchTemplate)
-                        })
-      {
-        // act & assert
-        db.GetItem(branchId).Paths.FullPath.Should().Be("/sitecore/templates/branches/sample branch");
-      }
-    }
-
-    [Fact]
     public void ShouldSetItemBranchIfExists()
     {
       // arrange
@@ -38,10 +23,11 @@
 
         // assert
         item.BranchId.Should().Be(branchItemId);
+        item.TemplateID.Should().NotBe(branchItemId);
       }
     }
 
-    [Fact]
+    [Fact(Skip = "To be implemented.")]
     public void ShouldCreateItemFromBranch()
     {
       // arrange

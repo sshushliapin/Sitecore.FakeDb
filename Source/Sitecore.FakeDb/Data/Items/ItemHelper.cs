@@ -14,45 +14,55 @@
 
     public static Item CreateInstance(Database database)
     {
-      return CreateInstance(ID.NewID.ToString(), database);
+      return CreateInstance(database, ID.NewID.ToString());
     }
 
-    public static Item CreateInstance(ID itemId, Database database)
+    public static Item CreateInstance(Database database, ID itemId)
     {
-      return CreateInstance(ID.NewID.ToString(), itemId, ID.NewID, new FieldList(), database);
+      return CreateInstance(database, ID.NewID.ToString(), itemId);
     }
 
-    public static Item CreateInstance(string itemName, Database database)
+    public static Item CreateInstance(Database database, string itemName)
     {
-      return CreateInstance(itemName, ID.NewID, ID.NewID, new FieldList(), database);
+      return CreateInstance(database, itemName, ID.NewID);
     }
 
-    public static Item CreateInstance(string itemName, ID itemId, Database database)
+    public static Item CreateInstance(Database database, string itemName, ID itemId)
     {
-      return CreateInstance(itemName, itemId, ID.NewID, new FieldList(), database);
+      return CreateInstance(database, itemName, itemId, ID.NewID);
     }
 
-    public static Item CreateInstance(string itemName, ID itemId, ID templateId, FieldList fields, Database database)
+    public static Item CreateInstance(Database database, string itemName, ID itemId, ID templateId)
     {
-      return CreateInstance(itemName, itemId, templateId, fields, database, Language.Current);
+      return CreateInstance(database, itemName, itemId, templateId, ID.Null);
     }
 
-    public static Item CreateInstance(string itemName, ID itemId, ID templateId, FieldList fields, Database database, Language language)
+    public static Item CreateInstance(Database database, string itemName, ID itemId, ID templateId, ID branchId)
     {
-      return CreateInstance(itemName, itemId, templateId, fields, database, language, Version.First);
+      return CreateInstance(database, itemName, itemId, templateId, branchId, new FieldList());
     }
 
-    public static Item CreateInstance(string itemName, ID itemId, ID templateId, FieldList fields, Database database, Language language, Version version)
+    public static Item CreateInstance(Database database, string itemName, ID itemId, ID templateId, ID branchId, FieldList fields)
     {
+      return CreateInstance(database, itemName, itemId, templateId, branchId, fields, Language.Current);
+    }
+
+    public static Item CreateInstance(Database database, string itemName, ID itemId, ID templateId, ID branchId, FieldList fields, Language language)
+    {
+      return CreateInstance(database, itemName, itemId, templateId, branchId, fields, language, Version.First);
+    }
+
+    public static Item CreateInstance(Database database, string itemName, ID itemId, ID templateId, ID branchId, FieldList fields, Language language, Version version)
+    {
+      Assert.ArgumentNotNull(database, "database");
       Assert.ArgumentNotNullOrEmpty(itemName, "itemName");
       Assert.ArgumentNotNull(itemId, "itemId");
       Assert.ArgumentNotNull(templateId, "templateId");
       Assert.ArgumentNotNull(fields, "fields");
-      Assert.ArgumentNotNull(database, "database");
       Assert.ArgumentNotNull(language, "language");
       Assert.ArgumentNotNull(version, "version");
 
-      var item =  new ItemWrapper(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, ID.Null), language, version, fields), database);
+      var item = new ItemWrapper(itemId, new ItemData(new ItemDefinition(itemId, itemName, templateId, branchId ?? ID.Null), language, version, fields), database);
 
       EnsureItemFields(item);
 
@@ -61,7 +71,7 @@
 
     internal static void EnsureItemFields(Item item)
     {
-        item.Fields.ReadAll();
+      item.Fields.ReadAll();
     }
   }
 }
