@@ -27,6 +27,24 @@
       }
     }
 
+    [Fact]
+    public void ShouldReadDatabaseBranches()
+    {
+      // arrange
+      var branchItemId = ID.NewID;
+
+      // act
+      using (var db = new Db
+                        {
+                          new DbItem("Sample Branch", branchItemId, TemplateIDs.BranchTemplate),
+                        })
+      {
+        // assert
+        db.Database.Branches["/sitecore/templates/branches/Sample Branch"].Should().NotBeNull();
+        db.Database.Branches[branchItemId].Should().NotBeNull();
+      }
+    }
+
     [Fact(Skip = "To be implemented.")]
     public void ShouldCreateItemFromBranch()
     {
