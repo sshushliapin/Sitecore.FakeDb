@@ -1,6 +1,5 @@
 ﻿namespace Examples
 {
-  using System.Collections.Generic;
   using System.Linq;
   using NSubstitute;
   using Xunit;
@@ -383,6 +382,28 @@
         // item is null because read is denied
         Xunit.Assert.Null(item);
       }
+    }
+
+    [Fact]
+    public void HowToSetUserIsAdministrator()
+    {
+      var user = Substitute.For<Sitecore.Security.Accounts.User>(@"extranet\John", true);
+      user.IsAdministrator.Returns(true);
+
+      Xunit.Assert.True(user.IsAdministrator);
+    }
+
+    [Fact]
+    public void HowToMockUserProfile()
+    {
+      var user = Substitute.For<Sitecore.Security.Accounts.User>(@"extranet\John", true);
+      user.Profile.Returns(Substitute.For<Sitecore.Security.UserProfile>());
+
+      user.Profile.ClientLanguage.Returns("da");
+      user.Profile.Email.Returns("john@mail.com");
+
+      Xunit.Assert.Equal("da", user.Profile.ClientLanguage);
+      Xunit.Assert.Equal("john@mail.com", user.Profile.Email);
     }
 
     #endregion
