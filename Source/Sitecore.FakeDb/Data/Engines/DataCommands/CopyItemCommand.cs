@@ -52,7 +52,7 @@
       {
         foreach (Item child in this.Source.Children)
         {
-          ItemManager.Provider.CopyItem(child, copy, this.Deep, child.Name, ID.NewID);
+          ItemManager.CopyItem(child, copy, this.Deep, child.Name, ID.NewID);
         }
       }
 
