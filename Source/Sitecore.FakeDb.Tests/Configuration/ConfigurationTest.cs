@@ -55,6 +55,13 @@
     }
 
     [Fact]
+    public void ShouldGetIDTableProvider()
+    {
+      // assert
+      Factory.GetIDTable().Should().BeOfType<FakeIDTableProvider>();
+    }
+
+    [Fact]
     public void ShouldGetFakeStandardValuesProvider()
     {
       // assert
