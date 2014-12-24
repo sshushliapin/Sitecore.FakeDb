@@ -11,11 +11,11 @@
   public class IDTableProviderSwithcerTest
   {
     [Fact]
-    public void ShouldSwitchIdTable()
+    public void ShouldSwitchIdTableProvider()
     {
       // arrange
       var switchedProvider = Substitute.For<IDTableProvider>();
-      
+
       var fixture = new Fixture();
       var entry = fixture.Create<IDTableEntry>();
 
@@ -25,7 +25,7 @@
       using (new IDTableProviderSwithcer(switchedProvider))
       {
         // assert
-        Factory.GetIDTable().GetID("profix", "key").Should().BeSameAs(entry);
+        Factory.GetIDTable().GetID("prefix", "key").Should().BeSameAs(entry);
       }
     }
   }

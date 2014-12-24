@@ -1,18 +1,13 @@
 ﻿namespace Sitecore.FakeDb.Data
 {
-  using System;
+  using Sitecore.Configuration;
   using Sitecore.Data.IDTables;
 
-  public class IDTableProviderSwithcer : IDisposable
+  public class IDTableProviderSwithcer : ThreadLocalProviderSwitcher<IDTableProvider>
   {
-    public IDTableProviderSwithcer(IDTableProvider switchedProvider)
+    public IDTableProviderSwithcer(IDTableProvider localProvider)
+      : base((IThreadLocalProvider<IDTableProvider>)Factory.GetIDTable(), localProvider)
     {
-      throw new System.NotImplementedException();
-    }
-
-    public void Dispose()
-    {
-      throw new NotImplementedException();
     }
   }
 }

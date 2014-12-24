@@ -93,7 +93,7 @@
     <Compile Include="Data\Fields\StatisticsFieldsTest.cs" />
     <Compile Include="Data\Fields\SecurityFieldTest.cs" />
     <Compile Include="Data\IDTableProviderSwithcerTest.cs" />
-    <Compile Include="Data\SwitchingIDTableProviderTest.cs" />
+    <Compile Include="Data\FakeIDTableProviderTest.cs" />
     <Compile Include="Data\Items\ItemVersionsTest.cs" />
     <Compile Include="Data\Locking\ItemLockingTest.cs" />
     <Compile Include="Data\Managers\ItemManagerTest.cs" />
