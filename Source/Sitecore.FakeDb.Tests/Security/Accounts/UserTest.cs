@@ -65,7 +65,7 @@
     public void ShouldReturnFalseIfUserDoesNotExist()
     {
       // arrange
-      this.provider.GetUser(UserName, true).ReturnsForAnyArgs(Arg.Any<MembershipUser>());
+      this.provider.GetUser(UserName, true).ReturnsForAnyArgs(x => null);
 
       // act
       using (new MembershipSwitcher(this.provider))

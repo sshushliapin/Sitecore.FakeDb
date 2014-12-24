@@ -69,12 +69,11 @@
     public void ShouldThrowExceptionIfNoTemplateFound()
     {
       // arrange
-      var originalItem = new DbItem("original item", itemId, this.templateId);
-      this.dataStorage.GetFakeItem(itemId).Returns(originalItem);
+      var originalItem = new DbItem("original item", this.itemId, this.templateId);
+      this.dataStorage.GetFakeItem(this.itemId).Returns(originalItem);
+      this.dataStorage.GetFakeTemplate(this.templateId).Returns(x => null);
 
-      this.dataStorage.GetFakeTemplate(this.templateId).Returns(Arg.Any<DbTemplate>());
-
-      var updatedItem = ItemHelper.CreateInstance("updated item", itemId, this.templateId, new FieldList(), database);
+      var updatedItem = ItemHelper.CreateInstance("updated item", this.itemId, this.templateId, new FieldList(), database);
 
       this.command.Initialize(updatedItem);
 
@@ -82,18 +81,18 @@
       Action action = () => this.command.DoExecute();
 
       // assert
-      action.ShouldThrow<InvalidOperationException>().WithMessage("Item template not found. Item: 'updated item', '{0}'; template: '{1}'.".FormatWith(itemId, this.templateId));
+      action.ShouldThrow<InvalidOperationException>().WithMessage("Item template not found. Item: 'updated item', '{0}'; template: '{1}'.".FormatWith(this.itemId, this.templateId));
     }
 
     [Fact]
     public void ShouldThrowExceptionIfNoFieldFoundInOriginalItem()
     {
       // arrange
-      var originalItem = new DbItem("original item", itemId) { new DbField("Title") };
-      this.dataStorage.GetFakeItem(itemId).Returns(originalItem);
+      var originalItem = new DbItem("original item", this.itemId) { new DbField("Title") };
+      this.dataStorage.GetFakeItem(this.itemId).Returns(originalItem);
 
-      var fields = new FieldList { { fieldId, "updated title" } };
-      var updatedItem = ItemHelper.CreateInstance("updated item", itemId, ID.NewID, fields, database);
+      var fields = new FieldList { { this.fieldId, "updated title" } };
+      var updatedItem = ItemHelper.CreateInstance("updated item", this.itemId, ID.NewID, fields, database);
 
       this.command.Initialize(updatedItem);
 
@@ -111,10 +110,10 @@
     {
       // arrange
       var originalItem = new DbItem("original item") { FullPath = originalPath };
-      this.dataStorage.GetFakeItem(itemId).Returns(originalItem);
-      this.dataStorage.FakeItems.Add(itemId, originalItem);
+      this.dataStorage.GetFakeItem(this.itemId).Returns(originalItem);
+      this.dataStorage.FakeItems.Add(this.itemId, originalItem);
 
-      var updatedItem = ItemHelper.CreateInstance("updated item", itemId, this.database);
+      var updatedItem = ItemHelper.CreateInstance("updated item", this.itemId, this.database);
 
       this.command.Initialize(updatedItem);
 
@@ -122,7 +121,7 @@
       this.command.DoExecute();
 
       // assertt
-      dataStorage.FakeItems[itemId].FullPath.Should().Be(expectedPath);
+      dataStorage.FakeItems[this.itemId].FullPath.Should().Be(expectedPath);
     }
 
     [Fact]

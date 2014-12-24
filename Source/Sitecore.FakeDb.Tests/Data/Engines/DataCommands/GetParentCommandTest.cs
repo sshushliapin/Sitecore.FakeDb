@@ -58,7 +58,7 @@
     {
       // arrange
       var item = ItemHelper.CreateInstance(this.database);
-      this.dataStorage.GetFakeItem(item.ID).Returns(Arg.Any<DbItem>());
+      this.dataStorage.GetFakeItem(item.ID).Returns(x => null);
       this.command.Initialize(item);
 
       // act
