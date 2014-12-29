@@ -54,20 +54,20 @@
     public void ShouldCopyItem()
     {
       // arrange
-      var item = ItemHelper.CreateInstance("home", itemId, templateId, new FieldList(), this.database);
+      var item = ItemHelper.CreateInstance(this.database, "home", this.itemId, this.templateId, ID.Null, new FieldList());
       var copy = ItemHelper.CreateInstance(this.database);
       var destination = ItemHelper.CreateInstance(this.database);
 
-      this.dataStorage.GetFakeItem(itemId).Returns(new DbItem("home"));
-      this.dataStorage.GetFakeItem(copyId).Returns(new DbItem("copy"));
-      this.dataStorage.GetSitecoreItem(copyId, Language.Current).Returns(copy);
+      this.dataStorage.GetFakeItem(this.itemId).Returns(new DbItem("home"));
+      this.dataStorage.GetFakeItem(this.copyId).Returns(new DbItem("copy"));
+      this.dataStorage.GetSitecoreItem(this.copyId, Language.Current).Returns(copy);
 
       this.command.ItemCreator = Substitute.For<ItemCreator>(this.dataStorage);
 
       this.command.Initialize(item, destination, "copy of home", this.copyId, false);
 
       // act
-      var result = command.DoExecute();
+      var result = this.command.DoExecute();
 
       // assert
       result.Should().Be(copy);

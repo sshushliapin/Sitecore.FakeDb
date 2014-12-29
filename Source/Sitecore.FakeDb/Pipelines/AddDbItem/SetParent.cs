@@ -8,10 +8,24 @@
     {
       var item = args.DbItem;
 
-      if (ID.IsNullOrEmpty(item.ParentID))
+      if (!ID.IsNullOrEmpty(item.ParentID))
       {
-        item.ParentID = item is DbTemplate ? args.DefaultTemplateRoot : args.DefaultItemRoot;
+        return;
       }
+
+      if (item.TemplateID == TemplateIDs.Template)
+      {
+        item.ParentID = ItemIDs.TemplateRoot;
+        return;
+      }
+
+      if (item.TemplateID == TemplateIDs.BranchTemplate)
+      {
+        item.ParentID = ItemIDs.BranchesRoot;
+        return;
+      }
+
+      item.ParentID = item is DbTemplate ? args.DefaultTemplateRoot : args.DefaultItemRoot;
     }
   }
 }
