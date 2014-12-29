@@ -2,7 +2,6 @@
 {
   using System.Linq;
   using NSubstitute;
-  using Sitecore.FakeDb.Data.IDTables;
   using Xunit;
 
   public class GettingStarted
@@ -784,26 +783,23 @@
     {
       // arrange
       var id = Sitecore.Data.ID.NewID;
-      var parendId = Sitecore.Data.ID.NewID;
+      var parentId = Sitecore.Data.ID.NewID;
       var data = "{ }";
-
-      var expectedEntry =
-        new Sitecore.Data.IDTables.IDTableEntry("my_pref", "my_key", id, parendId, data);
 
       var provider = Substitute.For<Sitecore.Data.IDTables.IDTableProvider>();
 
-      using (new IDTableProviderSwitcher(provider))
+      using (new Sitecore.FakeDb.Data.IDTables.IDTableProviderSwitcher(provider))
       {
         // act
         var actualEntry
-          = Sitecore.Data.IDTables.IDTable.Add("my_pref", "my_key", id, parendId, data);
+          = Sitecore.Data.IDTables.IDTable.Add("my_pref", "my_key", id, parentId, data);
 
         // assert
-        Xunit.Assert.Equal(expectedEntry.Prefix, actualEntry.Prefix);
-        Xunit.Assert.Equal(expectedEntry.Key, actualEntry.Key);
-        Xunit.Assert.Equal(expectedEntry.ID, actualEntry.ID);
-        Xunit.Assert.Equal(expectedEntry.ParentID, actualEntry.ParentID);
-        Xunit.Assert.Equal(expectedEntry.CustomData, actualEntry.CustomData);
+        Xunit.Assert.Equal("my_pref", actualEntry.Prefix);
+        Xunit.Assert.Equal("my_key", actualEntry.Key);
+        Xunit.Assert.Equal(id, actualEntry.ID);
+        Xunit.Assert.Equal(parentId, actualEntry.ParentID);
+        Xunit.Assert.Equal(data, actualEntry.CustomData);
       }
     }
 
