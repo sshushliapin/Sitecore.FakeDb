@@ -1,14 +1,13 @@
-﻿namespace Sitecore.FakeDb.Tests.Data
+﻿namespace Sitecore.FakeDb.Tests.Data.IDTables
 {
   using FluentAssertions;
   using NSubstitute;
   using Ploeh.AutoFixture;
-  using Sitecore.Configuration;
   using Sitecore.Data.IDTables;
-  using Sitecore.FakeDb.Data;
+  using Sitecore.FakeDb.Data.IDTables;
   using Xunit;
 
-  public class IDTableProviderSwithcerTest
+  public class IDTableProviderSwitcherTest
   {
     [Fact]
     public void ShouldSwitchIdTableProvider()
@@ -22,10 +21,10 @@
       switchedProvider.GetID("prefix", "key").Returns(entry);
 
       // act
-      using (new IDTableProviderSwithcer(switchedProvider))
+      using (new IDTableProviderSwitcher(switchedProvider))
       {
         // assert
-        Factory.GetIDTable().GetID("prefix", "key").Should().BeSameAs(entry);
+        IDTable.GetID("prefix", "key").Should().BeSameAs(entry);
       }
     }
   }

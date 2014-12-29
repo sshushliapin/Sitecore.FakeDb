@@ -61,9 +61,9 @@
     <Compile Include="Data\Engines\DataCommands\DataEngineCommand.cs" />
     <Compile Include="Configuration\DbConfiguration.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
-    <Compile Include="Data\IDTableProviderSwithcer.cs" />
+    <Compile Include="Data\IDTables\IDTableProviderSwitcher.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />
-    <Compile Include="Data\FakeIDTableProvider.cs" />
+    <Compile Include="Data\IDTables\FakeIDTableProvider.cs" />
     <Compile Include="IDsDbItem.cs" />
     <Compile Include="IThreadLocalProvider.cs" />
     <Compile Include="Links\FakeLinkDatabase.cs" />

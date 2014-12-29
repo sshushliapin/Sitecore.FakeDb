@@ -1,11 +1,11 @@
-﻿namespace Sitecore.FakeDb.Tests.Data
+﻿namespace Sitecore.FakeDb.Tests.Data.IDTables
 {
   using FluentAssertions;
   using NSubstitute;
   using Ploeh.AutoFixture;
   using Sitecore.Data;
   using Sitecore.Data.IDTables;
-  using Sitecore.FakeDb.Data;
+  using Sitecore.FakeDb.Data.IDTables;
   using Xunit;
 
   public class FakeIDTableProviderTest

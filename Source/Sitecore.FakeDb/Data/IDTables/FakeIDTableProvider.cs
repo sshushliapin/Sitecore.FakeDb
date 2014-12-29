@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Data
+﻿namespace Sitecore.FakeDb.Data.IDTables
 {
   using System.Threading;
   using Sitecore.Data;

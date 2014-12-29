@@ -5,6 +5,7 @@
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data;
+  using Sitecore.FakeDb.Data.IDTables;
   using Xunit;
   using Xunit.Extensions;
 
