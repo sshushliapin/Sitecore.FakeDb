@@ -5,6 +5,7 @@
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data;
+  using Sitecore.FakeDb.Data.IDTables;
   using Xunit;
   using Xunit.Extensions;
 
@@ -52,6 +53,13 @@
     {
       // assert
       Settings.Caching.Enabled.Should().BeFalse();
+    }
+
+    [Fact]
+    public void ShouldGetIDTableProvider()
+    {
+      // assert
+      Factory.GetIDTable().Should().BeOfType<FakeIDTableProvider>();
     }
 
     [Fact]

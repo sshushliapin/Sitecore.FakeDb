@@ -5,7 +5,6 @@
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
@@ -58,7 +57,6 @@
     {
       // arrange
       var item = ItemHelper.CreateInstance(this.database);
-      this.dataStorage.GetFakeItem(item.ID).Returns(x => null);
       this.command.Initialize(item);
 
       // act

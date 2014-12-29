@@ -13,6 +13,8 @@
       Assert.ArgumentNotNull(localProvider, "localProvider");
 
       this.provider = provider;
+
+      Assert.IsNotNull(this.provider.LocalProvider, "provider.LocalProvider is not set.");
       this.provider.LocalProvider.Value = localProvider;
     }
 

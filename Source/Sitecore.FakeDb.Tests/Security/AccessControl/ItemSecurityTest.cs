@@ -1,8 +1,7 @@
-﻿namespace Sitecore.FakeDb.Security.AccessControl
+﻿namespace Sitecore.FakeDb.Tests.Security.AccessControl
 {
   using FluentAssertions;
   using Sitecore.Security.AccessControl;
-  using Sitecore.Security.Accounts;
   using Xunit;
 
   public class ItemSecurityTest

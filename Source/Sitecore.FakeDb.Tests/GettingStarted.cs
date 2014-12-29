@@ -778,6 +778,31 @@
       }
     }
 
+    [Fact]
+    public void HowToMockIdTable()
+    {
+      // arrange
+      var id = Sitecore.Data.ID.NewID;
+      var parentId = Sitecore.Data.ID.NewID;
+      var data = "{ }";
+
+      var provider = Substitute.For<Sitecore.Data.IDTables.IDTableProvider>();
+
+      using (new Sitecore.FakeDb.Data.IDTables.IDTableProviderSwitcher(provider))
+      {
+        // act
+        var actualEntry
+          = Sitecore.Data.IDTables.IDTable.Add("my_pref", "my_key", id, parentId, data);
+
+        // assert
+        Xunit.Assert.Equal("my_pref", actualEntry.Prefix);
+        Xunit.Assert.Equal("my_key", actualEntry.Key);
+        Xunit.Assert.Equal(id, actualEntry.ID);
+        Xunit.Assert.Equal(parentId, actualEntry.ParentID);
+        Xunit.Assert.Equal(data, actualEntry.CustomData);
+      }
+    }
+
     #endregion
 
     #region Blobs
