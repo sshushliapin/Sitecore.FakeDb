@@ -1,11 +1,11 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Items
 {
+  using System;
   using FluentAssertions;
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
-  using System;
   using Xunit;
 
   public class ItemHelperTest : IDisposable
@@ -17,7 +17,7 @@
     {
       // arrange
       var database = Database.GetDatabase("master");
-      var item = ItemHelper.CreateInstance(Name, database);
+      var item = ItemHelper.CreateInstance(database, Name);
 
       // assert
       item.Name.Should().Be(Name);
@@ -36,7 +36,7 @@
       var language = Language.Parse("uk-UA");
 
       // arrange
-      var item = ItemHelper.CreateInstance(Name, id, templateId, new FieldList(), database, language);
+      var item = ItemHelper.CreateInstance(database, Name, id, templateId, ID.NewID, new FieldList(), language);
 
       // assert
       item.Name.Should().Be(Name, "name");

@@ -34,7 +34,7 @@
       var dbitem = new DbItem("item") { Fields = { new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } } } };
       this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
 
-      var item = ItemHelper.CreateInstance(itemId, this.database);
+      var item = ItemHelper.CreateInstance(this.database, itemId);
 
       var command = new OpenAddVersionCommand();
       command.Initialize(item);
@@ -58,8 +58,8 @@
       var dbitem = new DbItem("home") { { "Title", "Hello!" } };
       this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
 
-      var originalItem = ItemHelper.CreateInstance(itemId, this.database);
-      var itemWithNewVersion = ItemHelper.CreateInstance(itemId, this.database);
+      var originalItem = ItemHelper.CreateInstance(this.database, itemId);
+      var itemWithNewVersion = ItemHelper.CreateInstance(this.database, itemId);
       this.dataStorage.GetSitecoreItem(itemId, Language.Parse("en"), Version.Parse(2)).Returns(itemWithNewVersion);
 
       var command = new OpenAddVersionCommand();
@@ -81,7 +81,7 @@
       var dbitem = new DbItem("item") { Fields = { new DbField("Title") } };
       this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
 
-      var item = ItemHelper.CreateInstance(itemId, this.database);
+      var item = ItemHelper.CreateInstance(this.database, itemId);
 
       var command = new OpenAddVersionCommand();
       command.Initialize(item);
@@ -102,7 +102,7 @@
       var dbitem = new DbItem("item");
       this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
 
-      var item = ItemHelper.CreateInstance(itemId, this.database);
+      var item = ItemHelper.CreateInstance(this.database, itemId);
 
       var command = new OpenAddVersionCommand();
       command.Initialize(item);

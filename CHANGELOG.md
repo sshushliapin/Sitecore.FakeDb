@@ -1,4 +1,9 @@
-﻿0.22.0
+﻿0.23.0
+* [NEW] #32: Introduce IDTable provider switching
+* [NEW] #33: Specify item branch id
+* [FIX] #31: Use a higher level ItemManager.CopyItem() instead of ItemManager.Provider
+
+0.22.0
 * [NEW] Implemented blob streams
 * [FIX] Fixed "Item Versions #28". Method ItemManager.AddFromTemplate() should create an item with a single version while ItemManager.CreateItem() just creates an item with no versions
 

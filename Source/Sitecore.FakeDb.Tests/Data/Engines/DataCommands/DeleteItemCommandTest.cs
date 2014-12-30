@@ -36,7 +36,7 @@
       var itemId = ID.NewID;
 
       this.dataStorage.FakeItems.Add(itemId, new DbItem("item"));
-      this.command.Initialize(ItemHelper.CreateInstance(itemId, this.database), ID.NewID);
+      this.command.Initialize(ItemHelper.CreateInstance(this.database, itemId), ID.NewID);
 
       // act
       var result = this.command.DoExecute();
@@ -65,7 +65,7 @@
       this.dataStorage.FakeItems.Add(desc1Id, desc1);
       this.dataStorage.FakeItems.Add(desc2Id, desc2);
 
-      this.command.Initialize(ItemHelper.CreateInstance(itemId, this.database), ID.NewID);
+      this.command.Initialize(ItemHelper.CreateInstance(this.database, itemId), ID.NewID);
 
       // act
       this.command.DoExecute();
@@ -103,7 +103,7 @@
       this.dataStorage.FakeItems.Add(itemId, item);
       this.dataStorage.FakeItems.Add(parentId, parent);
 
-      this.command.Initialize(ItemHelper.CreateInstance(itemId, this.database), ID.NewID);
+      this.command.Initialize(ItemHelper.CreateInstance(this.database, itemId), ID.NewID);
 
       // act
       this.command.DoExecute();

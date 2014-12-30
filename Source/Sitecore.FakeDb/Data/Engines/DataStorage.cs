@@ -24,6 +24,8 @@ namespace Sitecore.FakeDb.Data.Engines
 
     private const string TemplatesItemName = "templates";
 
+    private const string BranchesItemName = "Branches";
+
     private const string SystemItemName = "system";
 
     private const string MediaLibraryItemName = "media library";
@@ -153,7 +155,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
       var fields = this.BuildItemFieldList(fakeItem, fakeItem.TemplateID, language, itemVersion);
 
-      return ItemHelper.CreateInstance(fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fields, this.database, language, itemVersion);
+      return ItemHelper.CreateInstance(this.database, fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fakeItem.BranchId, fields, language, itemVersion);
     }
 
     protected FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
@@ -259,6 +261,7 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems.Add(ItemIDs.RootID, new DbItem(SitecoreItemName, ItemIDs.RootID, TemplateIdSitecore) { ParentID = ID.Null, FullPath = "/sitecore", Fields = { field } });
       this.FakeItems.Add(ItemIDs.ContentRoot, new DbItem(ContentItemName, ItemIDs.ContentRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/content" });
       this.FakeItems.Add(ItemIDs.TemplateRoot, new DbItem(TemplatesItemName, ItemIDs.TemplateRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/templates" });
+      this.FakeItems.Add(ItemIDs.BranchesRoot, new DbItem(BranchesItemName, ItemIDs.BranchesRoot, TemplateIDs.BranchTemplateFolder) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/Branches" });
       this.FakeItems.Add(ItemIDs.SystemRoot, new DbItem(SystemItemName, ItemIDs.SystemRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/system" });
       this.FakeItems.Add(ItemIDs.MediaLibraryRoot, new DbItem(MediaLibraryItemName, ItemIDs.MediaLibraryRoot, TemplateIDs.MainSection) { ParentID = ItemIDs.RootID, FullPath = "/sitecore/media library" });
 

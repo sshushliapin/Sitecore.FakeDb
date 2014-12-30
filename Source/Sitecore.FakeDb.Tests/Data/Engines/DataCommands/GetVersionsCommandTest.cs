@@ -32,7 +32,7 @@
       var itemId = ID.NewID;
       this.dataStorage.GetFakeItem(itemId).Returns(new DbItem("item"));
 
-      var item = ItemHelper.CreateInstance(itemId, this.database);
+      var item = ItemHelper.CreateInstance(this.database, itemId);
       var language = Language.Parse("en");
 
       var command = new OpenGetVersionsCommand();
@@ -54,7 +54,7 @@
       var versionedItem = new DbItem("item") { Fields = { new DbField("Title") { { "en", 1, "value1" }, { "en", 2, "value2" } } } };
       this.dataStorage.GetFakeItem(itemId).Returns(versionedItem);
 
-      var item = ItemHelper.CreateInstance(itemId, this.database);
+      var item = ItemHelper.CreateInstance(this.database, itemId);
       var language = Language.Parse("en");
 
       var command = new OpenGetVersionsCommand();
@@ -79,7 +79,7 @@
 
       this.dataStorage.GetFakeItem(itemId).Returns(versionedItem);
 
-      var item = ItemHelper.CreateInstance(itemId, this.database);
+      var item = ItemHelper.CreateInstance(this.database, itemId);
       var language = Language.Parse("en");
 
       var command = new OpenGetVersionsCommand();

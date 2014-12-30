@@ -30,7 +30,7 @@
     {
       // arrange
       var itemId = ID.NewID;
-      var item = ItemHelper.CreateInstance(itemId, this.database);
+      var item = ItemHelper.CreateInstance(this.database, itemId);
       var fakeItemWithChildren = new DbItem("parent", itemId) { new DbItem("child") };
 
       this.dataStorage.GetSitecoreItem(itemId, item.Language).Returns(item);
@@ -52,7 +52,7 @@
     {
       // arrange
       var itemId = ID.NewID;
-      var sitecoreItem = ItemHelper.CreateInstance(itemId, this.database);
+      var sitecoreItem = ItemHelper.CreateInstance(this.database, itemId);
       var fakeItemWithoutChildren = new DbItem("item", itemId);
 
       this.dataStorage.GetSitecoreItem(itemId, sitecoreItem.Language).Returns(sitecoreItem);

@@ -3,35 +3,31 @@
   using System.Web.Security;
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.FakeDb.Security.Web;
-  using Xunit;
-  using Sitecore.Security.Accounts;
-  using Xunit.Extensions;
-  using System;
   using Sitecore.FakeDb.Security.Accounts;
+  using Sitecore.FakeDb.Security.Web;
+  using Sitecore.Security.Accounts;
+  using Xunit;
+  using Xunit.Extensions;
 
   public class UserTest
   {
     private const string UserName = "John";
 
-    private MembershipProvider localProvider = Substitute.For<MembershipProvider, IThreadLocalProvider<MembershipProvider>>();
+    private readonly MembershipProvider provider = Substitute.For<MembershipProvider, IThreadLocalProvider<MembershipProvider>>();
 
     [Fact]
     public void ShouldCreateUser()
     {
       // arrange
-      var status = MembershipCreateStatus.Success;
+      MembershipCreateStatus status;
 
       // act
-      using (new MembershipSwitcher(localProvider))
+      using (new MembershipSwitcher(this.provider))
       {
         User.Create(UserName, "******");
       }
 
-      localProvider
-        .Received()
-        .CreateUser(UserName, "******", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-          Arg.Any<bool>(), Arg.Any<object>(), out status);
+      this.provider.Received().CreateUser(UserName, "******", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<object>(), out status);
     }
 
     [Fact]
@@ -39,13 +35,14 @@
     {
       // arrange
       var user = User.FromName(UserName, false);
-      using (new MembershipSwitcher(this.localProvider))
+
+      using (new MembershipSwitcher(this.provider))
       {
         // act
         user.Delete();
 
         // assert
-        this.localProvider.Received().DeleteUser(UserName, true);
+        this.provider.Received().DeleteUser(UserName, true);
       }
     }
 
@@ -54,10 +51,10 @@
     {
       // arrange
       var user = new FakeMembershipUser();
-      localProvider.GetUser(UserName, true).Returns(user);
+      this.provider.GetUser(UserName, true).Returns(user);
 
       // act
-      using (new MembershipSwitcher(localProvider))
+      using (new MembershipSwitcher(this.provider))
       {
         // assert
         User.Exists(UserName).Should().BeTrue();
@@ -68,10 +65,10 @@
     public void ShouldReturnFalseIfUserDoesNotExist()
     {
       // arrange
-      localProvider.GetUser(UserName, true).ReturnsForAnyArgs(Arg.Any<MembershipUser>());
+      this.provider.GetUser(UserName, true).ReturnsForAnyArgs(x => null);
 
       // act
-      using (new MembershipSwitcher(localProvider))
+      using (new MembershipSwitcher(this.provider))
       {
         // assert
         User.Exists(UserName).Should().BeFalse();
@@ -92,9 +89,17 @@
 
       using (new RolesInRolesSwitcher(rolesProvider))
       {
-        //act & assert
+        // act & assert
         user.IsInRole(@"sitecore\Editor").Should().Be(isInRole);
       }
+    }
+
+    [Fact]
+    public void ShouldNotBeAdministratorByDefault()
+    {
+      var user = User.FromName(UserName, true);
+
+      user.IsAdministrator.Should().BeFalse();
     }
   }
 }

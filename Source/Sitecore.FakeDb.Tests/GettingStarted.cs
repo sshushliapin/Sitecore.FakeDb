@@ -384,6 +384,28 @@
       }
     }
 
+    [Fact]
+    public void HowToSetUserIsAdministrator()
+    {
+      var user = Substitute.For<Sitecore.Security.Accounts.User>(@"extranet\John", true);
+      user.IsAdministrator.Returns(true);
+
+      Xunit.Assert.True(user.IsAdministrator);
+    }
+
+    [Fact]
+    public void HowToMockUserProfile()
+    {
+      var user = Substitute.For<Sitecore.Security.Accounts.User>(@"extranet\John", true);
+      user.Profile.Returns(Substitute.For<Sitecore.Security.UserProfile>());
+
+      user.Profile.ClientLanguage.Returns("da");
+      user.Profile.Email.Returns("john@mail.com");
+
+      Xunit.Assert.Equal("da", user.Profile.ClientLanguage);
+      Xunit.Assert.Equal("john@mail.com", user.Profile.Email);
+    }
+
     #endregion
 
     #region Pipelines
@@ -722,43 +744,95 @@
     [Fact]
     public void HowToMockContentSearchLogic()
     {
-      try
-      {
-        var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
-        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes
-          .Add("my_index", index);
+      var index = Substitute.For<Sitecore.ContentSearch.ISearchIndex>();
 
-        using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-          {
-            new Sitecore.FakeDb.DbItem("home")
-          })
+      // don't forget to clean up.
+      Sitecore.ContentSearch
+        .ContentSearchManager.SearchConfiguration.Indexes["my_index"] = index;
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
         {
-          var searchResultItem =
-            Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
+          new Sitecore.FakeDb.DbItem("home")
+        })
+      {
+        // configure a search result item behavior.
+        var searchResultItem =
+          Substitute.For<Sitecore.ContentSearch.SearchTypes.SearchResultItem>();
 
-          searchResultItem
-            .GetItem()
-            .Returns(db.GetItem("/sitecore/content/home"));
+        var expectedItem = db.GetItem("/sitecore/content/home");
+        searchResultItem.GetItem().Returns(expectedItem);
 
-          index
-            .CreateSearchContext()
-            .GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>()
-            .Returns((new[] { searchResultItem }).AsQueryable());
+        // configure a search ndex behavior.
+        index.CreateSearchContext()
+          .GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>()
+          .Returns((new[] { searchResultItem }).AsQueryable());
 
-          Sitecore.Data.Items.Item result =
-            index
-            .CreateSearchContext()
+        // get the item from the search index and check the expectations.
+        Sitecore.Data.Items.Item actualItem =
+          index.CreateSearchContext()
             .GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>()
             .Single()
             .GetItem();
 
-          Xunit.Assert.Equal("/sitecore/content/home", result.Paths.FullPath);
-        }
+        Xunit.Assert.Equal(expectedItem, actualItem);
       }
-      finally
+    }
+
+    [Fact]
+    public void HowToMockIdTable()
+    {
+      // arrange
+      var id = Sitecore.Data.ID.NewID;
+      var parentId = Sitecore.Data.ID.NewID;
+      var data = "{ }";
+
+      var provider = Substitute.For<Sitecore.Data.IDTables.IDTableProvider>();
+
+      using (new Sitecore.FakeDb.Data.IDTables.IDTableProviderSwitcher(provider))
       {
-        Sitecore.ContentSearch.ContentSearchManager.SearchConfiguration.Indexes
-          .Remove("my_index");
+        // act
+        var actualEntry
+          = Sitecore.Data.IDTables.IDTable.Add("my_pref", "my_key", id, parentId, data);
+
+        // assert
+        Xunit.Assert.Equal("my_pref", actualEntry.Prefix);
+        Xunit.Assert.Equal("my_key", actualEntry.Key);
+        Xunit.Assert.Equal(id, actualEntry.ID);
+        Xunit.Assert.Equal(parentId, actualEntry.ParentID);
+        Xunit.Assert.Equal(data, actualEntry.CustomData);
+      }
+    }
+
+    #endregion
+
+    #region Blobs
+
+    [Fact]
+    public void HowToSetAndGetBlobStream()
+    {
+      // arrange
+      var stream = new System.IO.MemoryStream();
+
+      using (
+        Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+          {
+            new Sitecore.FakeDb.DbItem("home")
+              {
+                new Sitecore.FakeDb.DbField("field")
+              }
+          })
+      {
+        Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/home");
+        Sitecore.Data.Fields.Field field = item.Fields["field"];
+
+        using (new Sitecore.Data.Items.EditContext(item))
+        {
+          // act
+          field.SetBlobStream(stream);
+        }
+
+        // assert
+        Xunit.Assert.Same(stream, field.GetBlobStream());
       }
     }
 
