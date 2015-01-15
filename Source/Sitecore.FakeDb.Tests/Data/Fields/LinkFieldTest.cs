@@ -7,26 +7,26 @@
 
   public class LinkFieldTest
   {
+    private const string FieldName = "External Url";
+
     [Fact]
     public void ShouldGetEmptyInternalLinkFieldByDefault()
     {
       // arrange
-      const string fieldName = "External Url";
-
       using (var db = new Db
                         {
-                          new DbItem("home") { { fieldName, "" } }
+                          new DbItem("home") { { FieldName, "" } }
                         })
       {
         var item = db.GetItem("/sitecore/content/home");
 
         // act
-        var linkField = (LinkField)item.Fields[fieldName];
+        var linkField = (LinkField)item.Fields[FieldName];
 
         // assert
         linkField.Anchor.Should().BeEmpty("Anchor");
         linkField.Class.Should().BeEmpty("Class");
-        linkField.InnerField.Name.Should().Be(fieldName);
+        linkField.InnerField.Name.Should().Be(FieldName);
         linkField.InternalPath.Should().BeEmpty("InternalPath");
         linkField.IsInternal.Should().BeTrue("IsInternal");
         linkField.IsMediaLink.Should().BeFalse("IsMediaLink");
@@ -42,6 +42,29 @@
         linkField.Url.Should().BeEmpty("Url");
         linkField.Value.Should().BeEmpty("Value");
         linkField.Xml.Should().BeNull("Xml");
+      }
+    }
+
+    [Fact]
+    public void ShouldSetLinkFieldPropertiesUsingRawValue()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home")
+                            {
+                              { FieldName, "<l linktype=\"external\" url=\"http://google.com\" />" }
+                            }
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // act
+        var linkField = (LinkField)item.Fields[FieldName];
+
+        // assert
+        linkField.LinkType.Should().Be("external");
+        linkField.Url.Should().Be("http://google.com");
       }
     }
   }
