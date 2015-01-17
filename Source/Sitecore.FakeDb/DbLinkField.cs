@@ -1,13 +1,13 @@
 namespace Sitecore.FakeDb
 {
+  using System.Collections.Generic;
   using System.Xml.Linq;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
-  using Sitecore.Extensions.XElementExtensions;
 
   public class DbLinkField : DbField
   {
-    private readonly XElement link = new XElement("link");
+    private readonly IDictionary<string, string> attributes = new SortedDictionary<string, string>();
 
     public DbLinkField(ID id)
       : base(id)
@@ -28,13 +28,13 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.GetAttributeValue("anchor");
+        return this.GetAttribute("anchor");
       }
 
       set
       {
         Assert.ArgumentNotNull(value, "anchor");
-        this.link.SetAttributeValue("anchor", value);
+        this.attributes["anchor"] = value;
       }
     }
 
@@ -42,13 +42,13 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.GetAttributeValue("url");
+        return this.GetAttribute("url");
       }
 
       set
       {
         Assert.ArgumentNotNull(value, "url");
-        this.link.SetAttributeValue("url", value);
+        this.attributes["url"] = value;
       }
     }
 
@@ -56,13 +56,13 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.GetAttributeValue("text");
+        return this.GetAttribute("text");
       }
 
       set
       {
         Assert.ArgumentNotNull(value, "text");
-        this.link.SetAttributeValue("text", value);
+        this.attributes["text"] = value;
       }
     }
 
@@ -70,13 +70,13 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.GetAttributeValue("linktype");
+        return this.GetAttribute("linktype");
       }
 
       set
       {
         Assert.ArgumentNotNull(value, "linktype");
-        this.link.SetAttributeValue("linktype", value);
+        this.attributes["linktype"] = value;
       }
     }
 
@@ -84,13 +84,13 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.GetAttributeValue("class");
+        return this.GetAttribute("class");
       }
 
       set
       {
         Assert.ArgumentNotNull(value, "class");
-        this.link.SetAttributeValue("class", value);
+        this.attributes["class"] = value;
       }
     }
 
@@ -98,13 +98,13 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.GetAttributeValue("title");
+        return this.GetAttribute("title");
       }
 
       set
       {
         Assert.ArgumentNotNull(value, "title");
-        this.link.SetAttributeValue("title", value);
+        this.attributes["title"] = value;
       }
     }
 
@@ -112,13 +112,13 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.GetAttributeValue("target");
+        return this.GetAttribute("target");
       }
 
       set
       {
         Assert.ArgumentNotNull(value, "target");
-        this.link.SetAttributeValue("target", value);
+        this.attributes["target"] = value;
       }
     }
 
@@ -126,13 +126,13 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.GetAttributeValue("querystring");
+        return this.GetAttribute("querystring");
       }
 
       set
       {
         Assert.ArgumentNotNull(value, "querystring");
-        this.link.SetAttributeValue("querystring", value);
+        this.attributes["querystring"] = value;
       }
     }
 
@@ -140,20 +140,37 @@ namespace Sitecore.FakeDb
     {
       get
       {
+        if (!this.attributes.ContainsKey("id"))
+        {
+          return ID.Null;
+        }
+
         ID id;
-        return ID.TryParse(this.link.GetAttributeValue("id"), out id) ? id : ID.Null;
+        return ID.TryParse(this.attributes["id"], out id) ? id : ID.Null;
       }
 
       set
       {
         Assert.ArgumentNotNull(value, "id");
-        this.link.SetAttributeValue("id", value);
+        this.attributes["id"] = value.ToString();
       }
     }
 
     public override string GetValue(string language, int version)
     {
-      return this.link.ToString();
+      var link = new XElement("link");
+
+      foreach (var de in this.attributes)
+      {
+        link.SetAttributeValue(de.Key, de.Value);
+      }
+
+      return link.ToString();
+    }
+
+    private string GetAttribute(string attribute)
+    {
+      return this.attributes.ContainsKey(attribute) ? this.attributes[attribute] : string.Empty;
     }
   }
 }

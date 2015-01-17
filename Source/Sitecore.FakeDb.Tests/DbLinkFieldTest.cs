@@ -10,7 +10,7 @@
     public void ShouldBeDbField()
     {
       // arrange
-      var field = new DbLinkField("Link");
+      var field = new DbLinkField("link");
 
       // assert
       field.Should().BeAssignableTo<DbField>();
@@ -20,7 +20,7 @@
     public void ShouldCreateEmptyDbLink()
     {
       // arrange
-      var linkField = new DbLinkField("Link");
+      var linkField = new DbLinkField("link");
 
       // assert
       linkField.Anchor.Should().BeEmpty();
@@ -41,7 +41,7 @@
       var targetId = ID.NewID;
 
       // act
-      var linkField = new DbLinkField("Link")
+      var linkField = new DbLinkField("link")
                         {
                           Anchor = "anchor",
                           Class = "class",
@@ -73,7 +73,7 @@
       var targetId = new ID("{AA011160-CE64-4F24-A389-22CE5C3A5935}");
 
       // act
-      var field = new DbLinkField("Link")
+      var field = new DbLinkField("link")
                     {
                       Anchor = "anchor",
                       Class = "class",
@@ -87,7 +87,18 @@
                     };
 
       // assert
-      field.Value.Should().Be("<link anchor=\"anchor\" class=\"class\" linktype=\"linktype\" querystring=\"querystring\" target=\"target\" id=\"{AA011160-CE64-4F24-A389-22CE5C3A5935}\" text=\"text\" title=\"title\" url=\"url\" />");
+      field.Value.Should().Be("<link anchor=\"anchor\" class=\"class\" id=\"{AA011160-CE64-4F24-A389-22CE5C3A5935}\" linktype=\"linktype\" querystring=\"querystring\" target=\"target\" text=\"text\" title=\"title\" url=\"url\" />");
+    }
+
+    [Fact]
+    public void ShouldGetTheSameValueIgnoringAttributeSettingOrder()
+    {
+      // arrange
+      var link1 = new DbLinkField("link") { LinkType = "external", Url = "http://gmail.com" };
+      var link2 = new DbLinkField("link") { Url = "http://gmail.com", LinkType = "external" };
+
+      // assert
+      link1.Value.Should().Be(link2.Value);
     }
   }
 }
