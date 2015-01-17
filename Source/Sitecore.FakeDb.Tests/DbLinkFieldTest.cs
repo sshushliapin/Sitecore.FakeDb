@@ -17,6 +17,33 @@
     }
 
     [Fact]
+    public void ShouldSetId()
+    {
+      // arrange
+      var id = ID.NewID;
+
+      // act
+      var field = new DbLinkField(id);
+
+      // assert
+      field.ID.Should().BeSameAs(id);
+    }
+
+    [Fact]
+    public void ShouldSetNameAndId()
+    {
+      // arrange
+      var id = ID.NewID;
+
+      // act
+      var field = new DbLinkField("link", id);
+
+      // assert
+      field.Name.Should().Be("link");
+      field.ID.Should().BeSameAs(id);
+    }
+
+    [Fact]
     public void ShouldCreateEmptyDbLink()
     {
       // arrange
