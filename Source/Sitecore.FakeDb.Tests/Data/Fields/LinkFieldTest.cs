@@ -11,8 +11,6 @@
   /// </summary>
   public class LinkFieldTest
   {
-    private const string FieldName = "Link";
-
     [Fact]
     public void ShouldSetLinkFieldPropertiesUsingRawValue()
     {
@@ -21,14 +19,14 @@
                         {
                           new DbItem("home")
                             {
-                              { FieldName, "<link linktype=\"external\" url=\"http://google.com\" />" }
+                              { "link", "<link linktype=\"external\" url=\"http://google.com\" />" }
                             }
                         })
       {
         var item = db.GetItem("/sitecore/content/home");
 
         // act
-        var linkField = (LinkField)item.Fields[FieldName];
+        var linkField = (LinkField)item.Fields["link"];
 
         // assert
         linkField.LinkType.Should().Be("external");
@@ -46,7 +44,7 @@
                         {
                           new DbItem("home")
                             {
-                              new DbLinkField(FieldName)
+                              new DbLinkField("link")
                                 {
                                   LinkType = "internal", 
                                   QueryString = "sc_lang=en",
@@ -58,7 +56,7 @@
         var item = db.GetItem("/sitecore/content/home");
 
         // act
-        var linkField = (LinkField)item.Fields[FieldName];
+        var linkField = (LinkField)item.Fields["link"];
 
         // assert
         linkField.LinkType.Should().Be("internal");

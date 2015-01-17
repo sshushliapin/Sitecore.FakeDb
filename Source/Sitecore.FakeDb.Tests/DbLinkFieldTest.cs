@@ -127,5 +127,15 @@
       // assert
       link1.Value.Should().Be(link2.Value);
     }
+
+    [Fact]
+    public void ShouldGetValueIfSetExplicitly()
+    {
+      // arrange & act
+      var field = new DbLinkField("link") { Value = "my custom link field value" };
+
+      // assert
+      field.Value.Should().Be("my custom link field value");
+    }
   }
 }

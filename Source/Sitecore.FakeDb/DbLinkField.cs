@@ -158,8 +158,13 @@ namespace Sitecore.FakeDb
 
     public override string GetValue(string language, int version)
     {
-      var link = new XElement("link");
+      var value = base.GetValue(language, version);
+      if (!string.IsNullOrEmpty(value))
+      {
+        return value;
+      }
 
+      var link = new XElement("link");
       foreach (var de in this.attributes)
       {
         link.SetAttributeValue(de.Key, de.Value);
