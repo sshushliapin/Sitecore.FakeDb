@@ -48,7 +48,7 @@
                                 {
                                   LinkType = "internal", 
                                   QueryString = "sc_lang=en",
-                                  TargetID = targetId
+                                  TargetID = targetId,
                                 }
                             }
                         })

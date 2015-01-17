@@ -131,11 +131,27 @@
     [Fact]
     public void ShouldGetValueIfSetExplicitly()
     {
-      // arrange & act
-      var field = new DbLinkField("link") { Value = "my custom link field value" };
+      // arrange
+      var field = new DbLinkField("link");
+
+      // act
+      field.Value = "my custom link field value";
 
       // assert
       field.Value.Should().Be("my custom link field value");
+    }
+
+    [Fact]
+    public void ShouldGetAttributeBasedValueIfSomeAttributesSet()
+    {
+      // arrange
+      var field = new DbLinkField("link") { Value = "my custom link field value" };
+
+      // act
+      field.Url = "http://gmail.com";
+
+      // assert
+      field.Value.Should().Be("<link url=\"http://gmail.com\" />");
     }
   }
 }

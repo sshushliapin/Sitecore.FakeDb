@@ -1,6 +1,7 @@
 namespace Sitecore.FakeDb
 {
   using System.Collections.Generic;
+  using System.Linq;
   using System.Xml.Linq;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
@@ -159,7 +160,7 @@ namespace Sitecore.FakeDb
     public override string GetValue(string language, int version)
     {
       var value = base.GetValue(language, version);
-      if (!string.IsNullOrEmpty(value))
+      if (!string.IsNullOrEmpty(value) && !this.attributes.Any())
       {
         return value;
       }
