@@ -131,6 +131,7 @@
     <Compile Include="DbFieldTest.cs" />
     <Compile Include="DbItemCopyingTest.cs" />
     <Compile Include="DbItemEditingTest.cs" />
+    <Compile Include="DbLinkFieldTest.cs" />
     <Compile Include="DbStandardValuesTest.cs" />
     <Compile Include="DbTemplateInheritanceTest.cs" />
     <Compile Include="DbTemplateTest.cs" />
