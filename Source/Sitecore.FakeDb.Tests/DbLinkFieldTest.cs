@@ -10,54 +10,84 @@
     public void ShouldBeDbField()
     {
       // arrange
-      var field = new DbLinkField("Extrnal Url");
+      var field = new DbLinkField("Link");
 
       // assert
       field.Should().BeAssignableTo<DbField>();
     }
 
-    /// <summary>
-    /// Example: <link text="Link to Home item" linktype="internal" class="default" title="Home" target='Active Browser' querystring="sc_lang=en" id="{110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9}" />
-    /// </summary>
     [Fact]
-    public void ShouldSetInternalLinkAttributes()
+    public void ShouldCreateEmptyDbLink()
     {
-      // arrange & act
-      var field = new DbLinkField("Internal Link")
-                    {
-                      Text = "Link to Home item",
-                      LinkType = "internal",
-                      Class = "default",
-                      Title = "Home",
-                      Target = "Active Browser",
-                      QueryString = "sc_lang=en",
-                      TargetID = new ID("{110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9}")
-                    };
+      // arrange
+      var linkField = new DbLinkField("Link");
 
       // assert
-      field.Value.Should().Be("<link text=\"Link to Home item\" linktype=\"internal\" class=\"default\" title=\"Home\" target=\"Active Browser\" querystring=\"sc_lang=en\" id=\"{110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9}\" />");
+      linkField.Anchor.Should().BeEmpty();
+      linkField.Class.Should().BeEmpty();
+      linkField.LinkType.Should().BeEmpty();
+      linkField.QueryString.Should().BeEmpty();
+      linkField.Target.Should().BeEmpty();
+      linkField.TargetID.Should().Be(ID.Null);
+      linkField.Text.Should().BeEmpty();
+      linkField.Title.Should().BeEmpty();
+      linkField.Url.Should().BeEmpty();
     }
 
-    /// <summary>
-    /// Example: <link text="Gmail" linktype="external" url="http://gmail.com" anchor="" title="Google mail" class="link" target="Active Browser" />
-    /// </summary>
     [Fact]
-    public void ShouldSetExternalLinkAttributes()
+    public void ShouldSetAndGetLinkFieldAttributes()
     {
-      // arrange & act
-      var field = new DbLinkField("External Link")
+      // arrange
+      var targetId = ID.NewID;
+
+      // act
+      var linkField = new DbLinkField("Link")
+                        {
+                          Anchor = "anchor",
+                          Class = "class",
+                          LinkType = "linktype",
+                          QueryString = "querystring",
+                          Target = "target",
+                          TargetID = targetId,
+                          Text = "text",
+                          Title = "title",
+                          Url = "url",
+                        };
+
+      // assert
+      linkField.Anchor.Should().Be("anchor");
+      linkField.Class.Should().Be("class");
+      linkField.LinkType.Should().Be("linktype");
+      linkField.QueryString.Should().Be("querystring");
+      linkField.Target.Should().Be("target");
+      linkField.TargetID.Should().Be(targetId);
+      linkField.Text.Should().Be("text");
+      linkField.Title.Should().Be("title");
+      linkField.Url.Should().Be("url");
+    }
+
+    [Fact]
+    public void ShouldStoreInternalLinkAttributesIntoValue()
+    {
+      // arrange
+      var targetId = new ID("{AA011160-CE64-4F24-A389-22CE5C3A5935}");
+
+      // act
+      var field = new DbLinkField("Link")
                     {
-                      Text = "Gmail",
-                      LinkType = "external",
-                      Url = "http://gmail.com",
-                      Anchor = string.Empty,
-                      Title = "Google mail",
-                      Class = "link",
-                      Target = "Active Browser"
+                      Anchor = "anchor",
+                      Class = "class",
+                      LinkType = "linktype",
+                      QueryString = "querystring",
+                      Target = "target",
+                      TargetID = targetId,
+                      Text = "text",
+                      Title = "title",
+                      Url = "url",
                     };
 
       // assert
-      field.Value.Should().Be("<link text=\"Gmail\" linktype=\"external\" url=\"http://gmail.com\" anchor=\"\" title=\"Google mail\" class=\"link\" target=\"Active Browser\" />");
+      field.Value.Should().Be("<link anchor=\"anchor\" class=\"class\" linktype=\"linktype\" querystring=\"querystring\" target=\"target\" id=\"{AA011160-CE64-4F24-A389-22CE5C3A5935}\" text=\"text\" title=\"title\" url=\"url\" />");
     }
   }
 }

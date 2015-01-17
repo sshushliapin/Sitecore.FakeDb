@@ -3,6 +3,7 @@ namespace Sitecore.FakeDb
   using System.Xml.Linq;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
+  using Sitecore.Extensions.XElementExtensions;
 
   public class DbLinkField : DbField
   {
@@ -27,7 +28,7 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.ToString();
+        return this.link.GetAttributeValue("anchor");
       }
 
       set
@@ -41,7 +42,7 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.ToString();
+        return this.link.GetAttributeValue("url");
       }
 
       set
@@ -55,7 +56,7 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.ToString();
+        return this.link.GetAttributeValue("text");
       }
 
       set
@@ -69,7 +70,7 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.ToString();
+        return this.link.GetAttributeValue("linktype");
       }
 
       set
@@ -83,7 +84,7 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.ToString();
+        return this.link.GetAttributeValue("class");
       }
 
       set
@@ -97,7 +98,7 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.ToString();
+        return this.link.GetAttributeValue("title");
       }
 
       set
@@ -111,7 +112,7 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.ToString();
+        return this.link.GetAttributeValue("target");
       }
 
       set
@@ -125,7 +126,7 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return this.link.ToString();
+        return this.link.GetAttributeValue("querystring");
       }
 
       set
@@ -139,7 +140,8 @@ namespace Sitecore.FakeDb
     {
       get
       {
-        return ID.Null;
+        ID id;
+        return ID.TryParse(this.link.GetAttributeValue("id"), out id) ? id : ID.Null;
       }
 
       set
