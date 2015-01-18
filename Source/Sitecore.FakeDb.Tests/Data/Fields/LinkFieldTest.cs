@@ -4,6 +4,7 @@
   using Sitecore.Data;
   using Sitecore.Data.Fields;
   using Xunit;
+  using Xunit.Extensions;
 
   /// <summary>
   /// Internal link: <link text="Link to Home item" linktype="internal" class="default" title="Home" target='Active Browser' querystring="sc_lang=en" id="{110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9}" />
@@ -62,6 +63,61 @@
         linkField.LinkType.Should().Be("internal");
         linkField.QueryString.Should().Be("sc_lang=en");
         linkField.TargetID.Should().Be(targetId);
+      }
+    }
+
+    [Fact]
+    public void ShouldGetTargetItem()
+    {
+      // arrange
+      var targetId = ID.NewID;
+
+      using (var db = new Db
+                        {
+                          new DbItem("home")
+                            {
+                              new DbLinkField("link")
+                                {
+                                  TargetID = targetId,
+                                }
+                            },
+                          new DbItem("target", targetId)
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // act
+        var linkField = (LinkField)item.Fields["link"];
+
+        // assert
+        linkField.TargetItem.Name.Should().Be("target");
+      }
+    }
+
+    [Theory]
+    [InlineData("internal", true)]
+    [InlineData("media", false)]
+    public void ShouldCheckIfInternal(string linkType, bool isinternal)
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home")
+                            {
+                              new DbLinkField("link")
+                                {
+                                  LinkType = linkType,
+                                }
+                            },
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // act
+        var linkField = (LinkField)item.Fields["link"];
+
+        // assert
+        linkField.IsInternal.Should().Be(isinternal);
       }
     }
   }
