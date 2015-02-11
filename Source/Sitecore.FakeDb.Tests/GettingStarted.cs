@@ -165,6 +165,49 @@
       }
     }
 
+    [Fact]
+    public void HowToCreateLinkFieldUsingRawValue()
+    {
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home")
+            {
+              { "link", "<link linktype=\"external\" url=\"http://google.com\" />" }
+            }
+        })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        var linkField = (Sitecore.Data.Fields.LinkField)item.Fields["link"];
+
+        Xunit.Assert.Equal("external", linkField.LinkType);
+        Xunit.Assert.Equal("http://google.com", linkField.Url);
+      }
+    }
+
+    [Fact]
+    public void HowToCreateLinkFieldUsingDbLinkField()
+    {
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home")
+            {
+              new Sitecore.FakeDb.DbLinkField("link")
+                {
+                  LinkType = "external", Url = "http://google.com"
+                }
+            }
+        })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        var linkField = (Sitecore.Data.Fields.LinkField)item.Fields["link"];
+
+        Xunit.Assert.Equal("external", linkField.LinkType);
+        Xunit.Assert.Equal("http://google.com", linkField.Url);
+      }
+    }
+
     #endregion
 
     #region Security
