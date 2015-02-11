@@ -28,6 +28,11 @@
       var item = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
       var itemList = new ItemList();
 
+      if (item == null)
+      {
+        return itemList;
+      }
+
       var children = item.Children.Select(child => this.innerCommand.Value.DataStorage.GetSitecoreItem(child.ID, this.Item.Language));
       itemList.AddRange(children);
 

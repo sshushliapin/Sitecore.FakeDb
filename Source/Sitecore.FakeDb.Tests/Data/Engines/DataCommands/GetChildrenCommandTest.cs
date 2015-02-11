@@ -52,6 +52,23 @@
       children[1].Should().Be(child2);
     }
 
+    [Fact]
+    public void ShouldReturnEmptyListIfNoItemFound()
+    {
+      // arrange
+      var item = ItemHelper.CreateInstance(this.database);
+
+      var command = new OpenGetChildrenCommand { Engine = new DataEngine(this.database) };
+      command.Initialize(item);
+      command.Initialize(this.innerCommand);
+
+      // act
+      var children = command.DoExecute();
+
+      // assert
+      children.Should().BeEmpty();
+    }
+
     private class OpenGetChildrenCommand : GetChildrenCommand
     {
       public new Sitecore.Data.Engines.DataCommands.GetChildrenCommand CreateInstance()
