@@ -132,16 +132,18 @@ namespace Sitecore.FakeDb.Serialization
         {
             DirectoryInfo serializationFolder = GetSerializationFolder(serializationFolderName);
 
+            string truePath = ShortenedPathsDictionary.FindTruePath(serializationFolder, path);
+
             FileInfo itemLocation = new FileInfo(
                 string.Format(
                     "{0}.item",
                     Path.Combine(
                         serializationFolder.FullName.Trim(new[] { Path.DirectorySeparatorChar }),
-                        path.Replace('/', Path.DirectorySeparatorChar).Trim(new[] { Path.DirectorySeparatorChar }))));
+                        truePath.Replace('/', Path.DirectorySeparatorChar).Trim(new[] { Path.DirectorySeparatorChar }))));
             
             Assert.IsTrue(itemLocation.Exists,
                 string.Format("Serialized item '{0}' could not be found in the path '{1}'; please check the path and if the item is serialized correctly",
-                path,
+                truePath,
                 itemLocation.FullName));
 
             return itemLocation;

@@ -57,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializedIdToPathDictionary.cs" />
     <Compile Include="SerializedIdToPathSet.cs" />
+    <Compile Include="ShortenedPathsDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sitecore.FakeDb\Sitecore.FakeDb.csproj">

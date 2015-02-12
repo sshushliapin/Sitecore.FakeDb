@@ -196,5 +196,33 @@ namespace Sitecore.FakeDb.Serialization.Tests
                 baseTemplateItem.ID.ShouldBeEquivalentTo(baseTemplateId);
             }
         }
+
+        [Fact]
+        public void ShouldDeserializeShortenedPath()
+        {
+            DsDbItem item = new DsDbItem("/sitecore/content/this/path must be very deep/so that it will be shortened/on the filesystem/abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz/still deeper");
+
+            item.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ShouldDeserializeShortenedPathOneDirectoryHigher()
+        {
+            DsDbItem item = new DsDbItem("/sitecore/content/this/path must be very deep/so that it will be shortened/on the filesystem/abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz");
+
+            item.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ShouldLookupByIdInShortenedPath()
+        {
+            ID id = ID.Parse("{9897418C-9D6A-4AC9-B08A-15064C9582A9}");
+
+            DsDbItem item = new DsDbItem(id);
+
+            item.Should().NotBeNull();
+            item.Name.Should().BeEquivalentTo("still deeper");
+            item.ID.ShouldBeEquivalentTo(id);
+        }
     }
 }
