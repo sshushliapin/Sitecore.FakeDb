@@ -1,0 +1,58 @@
+----item----
+version: 1
+id: {90DE36F0-7239-497D-AB36-5587DF34F669}
+database: master
+path: /sitecore/templates/Sample/much deeper path needed/for testing deserialization of/fields from shortened paths/correctly/Some deep template/Some deep section/Some deep field
+parent: {0D5DD3F4-B162-4AD2-A9DC-75422C96B996}
+name: Some deep field
+master: {00000000-0000-0000-0000-000000000000}
+template: {455A3E98-A627-4B40-8035-E683A0331AC7}
+templatekey: Template field
+
+----field----
+field: {AB162CC0-DC80-4ABF-8871-998EE5D7BA32}
+name: Type
+key: type
+content-length: 16
+
+Single-Line Text
+----field----
+field: {BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}
+name: __Sortorder
+key: __sortorder
+content-length: 3
+
+100
+----version----
+language: en
+version: 1
+revision: c4ace4eb-ecc7-4472-9bec-abb5c206fd76
+
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 16
+
+20150214T112714Z
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+c4ace4eb-ecc7-4472-9bec-abb5c206fd76
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 35
+
+20150214T112714:635595100347652512Z
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 14
+
+sitecore\admin

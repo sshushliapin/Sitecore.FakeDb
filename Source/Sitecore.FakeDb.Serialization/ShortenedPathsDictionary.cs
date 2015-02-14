@@ -17,56 +17,50 @@ namespace Sitecore.FakeDb.Serialization
 
         public static string FindTruePath(DirectoryInfo serializationFolder, string path)
         {
-            lock (_shortenedPaths)
+            var folderPaths = GetLocationsFromLinkFiles(serializationFolder);
+
+            string parentPath = path.TrimEnd(new [] { '/' });
+            parentPath = parentPath.Substring(0, parentPath.LastIndexOf('/'));
+            if (folderPaths.ContainsKey(parentPath))
             {
-                Dictionary<string, string> folderPaths;
-                if (_shortenedPaths.ContainsKey(serializationFolder.FullName))
-                {
-                    folderPaths = _shortenedPaths[serializationFolder.FullName];
-                }
-                else
-                {
-                    folderPaths = new Dictionary<string, string>();
-
-                    // populate the shortened paths for this serialization folder
-                    var locationsFromLinkFiles = GetLocationsFromLinkFiles(serializationFolder);
-
-                    foreach (var fromLinkFile in locationsFromLinkFiles)
-                    {
-                        folderPaths.Add(fromLinkFile.Key, fromLinkFile.Value);
-                    }
-
-                    _shortenedPaths.Add(serializationFolder.FullName, folderPaths);
-                }
-
-                string parentPath = path.TrimEnd(new [] { '/' });
-                parentPath = parentPath.Substring(0, parentPath.LastIndexOf('/'));
-                if (folderPaths.ContainsKey(parentPath))
-                {
-                    return string.Format("/../{0}{1}", Path.GetFileName(folderPaths[parentPath]), path.Substring(parentPath.Length));
-                }
-                return path;
+                return string.Format(
+                    "/../{0}{1}",
+                    Path.GetFileName(folderPaths[parentPath]),
+                    path.Substring(parentPath.Length));
             }
+            return path;
         }
 
         internal static Dictionary<string, string> GetLocationsFromLinkFiles(DirectoryInfo serializationFolder)
         {
-            var linkFiles = serializationFolder.Parent.GetDirectories()
-                                               .SelectMany(d => d.GetFiles("link"));
-
-            Dictionary<string, string> locationsFromLinkFiles = new Dictionary<string, string>();
-
-            foreach (FileInfo linkFile in linkFiles)
+            lock (_shortenedPaths)
             {
-                string fullPath = File.ReadAllText(linkFile.FullName);
-                string dbName = fullPath.Substring(0, fullPath.IndexOf('\\'));
-                fullPath = fullPath.Substring(fullPath.IndexOf('\\')).Replace('\\', '/');
-                if (dbName.Equals(serializationFolder.Name, StringComparison.InvariantCultureIgnoreCase))
+                if (_shortenedPaths.ContainsKey(serializationFolder.FullName))
                 {
-                    locationsFromLinkFiles.Add(fullPath, linkFile.Directory.FullName);
+                    return _shortenedPaths[serializationFolder.FullName];
                 }
+
+                // populate the shortened paths for this serialization folder
+                var linkFiles = serializationFolder.Parent.GetDirectories()
+                                                   .SelectMany(d => d.GetFiles("link"));
+
+                Dictionary<string, string> locationsFromLinkFiles = new Dictionary<string, string>();
+
+                foreach (FileInfo linkFile in linkFiles)
+                {
+                    string fullPath = File.ReadAllText(linkFile.FullName);
+                    string dbName = fullPath.Substring(0, fullPath.IndexOf('\\'));
+                    fullPath = fullPath.Substring(fullPath.IndexOf('\\')).Replace('\\', '/');
+                    if (dbName.Equals(serializationFolder.Name, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        locationsFromLinkFiles.Add(fullPath, linkFile.Directory.FullName);
+                    }
+                }
+
+                _shortenedPaths.Add(serializationFolder.FullName, locationsFromLinkFiles);
+
+                return locationsFromLinkFiles;
             }
-            return locationsFromLinkFiles;
         }
     }
 }
