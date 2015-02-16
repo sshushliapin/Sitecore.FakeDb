@@ -23,7 +23,9 @@ namespace Sitecore.FakeDb.Pipelines
 
     private readonly IDictionary<string, Func<PipelineArgs, bool>> filterThisArgs = new Dictionary<string, Func<PipelineArgs, bool>>();
 
-    private IDictionary<string, Action<PipelineArgs>> processThisArgs = new Dictionary<string, Action<PipelineArgs>>();
+    private readonly IDictionary<string, Action<PipelineArgs>> processThisArgs = new Dictionary<string, Action<PipelineArgs>>();
+
+    private readonly IDictionary<string, IPipelineProcessor> processors = new Dictionary<string, IPipelineProcessor>();
 
     private string lastUsedPipelineName;
 
@@ -37,6 +39,11 @@ namespace Sitecore.FakeDb.Pipelines
       this.dataStorage = dataStorage;
 
       PipelineWatcherProcessor.PipelineRun += this.PipelineRun;
+    }
+
+    public IDictionary<string, IPipelineProcessor> Pipelines
+    {
+      get { return this.processors; }
     }
 
     protected internal XmlDocument ConfigSection
@@ -123,9 +130,15 @@ namespace Sitecore.FakeDb.Pipelines
 
     public virtual void Register(string pipelineName, IPipelineProcessor processorMock)
     {
-      this.dataStorage.Pipelines[pipelineName] = processorMock;
+      this.Pipelines[pipelineName] = processorMock;
 
       this.Expects(pipelineName, delegate { return true; });
+    }
+
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
     }
 
     protected virtual void OnPipelineRun(PipelineRunEventArgs e)
@@ -144,23 +157,12 @@ namespace Sitecore.FakeDb.Pipelines
         this.filterThisArgs.Add(pipelineName, a => true);
       }
 
-      if (this.filterThisArgs[pipelineName](e.PipelineArgs))
+      if (!this.filterThisArgs[pipelineName](e.PipelineArgs))
       {
-        {
-          this.processThisArgs[pipelineName](e.PipelineArgs);
-        }
+        return;
       }
-    }
 
-    private void PipelineRun(object sender, PipelineRunEventArgs e)
-    {
-      this.OnPipelineRun(e);
-    }
-
-    public void Dispose()
-    {
-      this.Dispose(true);
-      GC.SuppressFinalize(this);
+      this.processThisArgs[pipelineName](e.PipelineArgs);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -177,6 +179,16 @@ namespace Sitecore.FakeDb.Pipelines
 
       PipelineWatcherProcessor.PipelineRun -= this.PipelineRun;
       this.disposed = true;
+    }
+
+    private void PipelineRun(object sender, PipelineRunEventArgs e)
+    {
+      this.OnPipelineRun(e);
+
+      if (this.Pipelines.ContainsKey(e.PipelineName))
+      {
+        this.Pipelines[e.PipelineName].Process(e.PipelineArgs);
+      }
     }
   }
 }

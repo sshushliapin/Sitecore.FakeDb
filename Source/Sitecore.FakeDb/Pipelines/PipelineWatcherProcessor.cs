@@ -1,10 +1,7 @@
 namespace Sitecore.FakeDb.Pipelines
 {
   using System;
-  using Sitecore.Data;
   using Sitecore.Diagnostics;
-  using Sitecore.FakeDb.Data.DataProviders;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Pipelines;
 
   public class PipelineWatcherProcessor
@@ -28,9 +25,6 @@ namespace Sitecore.FakeDb.Pipelines
       Assert.ArgumentNotNullOrEmpty(databaseName, "databaseName");
 
       this.databaseName = databaseName;
-
-      // TODO:[Medium] Review.
-      this.DataStorage = ((FakeDataProvider)Database.GetDatabase(this.databaseName).GetDataProviders()[0]).DataStorage;
     }
 
     public string PipelineName
@@ -43,8 +37,6 @@ namespace Sitecore.FakeDb.Pipelines
       get { return this.databaseName; }
     }
 
-    public DataStorage DataStorage { get; set; }
-
     public virtual void Process(PipelineArgs args)
     {
       Assert.ArgumentNotNull(args, "args");
@@ -52,11 +44,6 @@ namespace Sitecore.FakeDb.Pipelines
       if (PipelineRun != null)
       {
         PipelineRun(this, new PipelineRunEventArgs(this.PipelineName, args));
-      }
-
-      if (this.DataStorage != null && this.DataStorage.Pipelines.ContainsKey(this.PipelineName))
-      {
-        this.DataStorage.Pipelines[this.PipelineName].Process(args);
       }
     }
   }

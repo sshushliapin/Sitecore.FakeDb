@@ -16,8 +16,6 @@ namespace Sitecore.FakeDb.Data.Engines
 
   public class DataStorage
   {
-    private static readonly ID TemplateIdSitecore = new ID("{C6576836-910C-4A3D-BA03-C277DBD3B827}");
-
     private const string SitecoreItemName = "sitecore";
 
     private const string ContentItemName = "content";
@@ -30,15 +28,17 @@ namespace Sitecore.FakeDb.Data.Engines
 
     private const string MediaLibraryItemName = "media library";
 
-    public const string TemplateItemName = "Template";
+    private const string TemplateItemName = "Template";
 
-    public const string TemplateSectionItemName = "Template section";
+    private const string TemplateSectionItemName = "Template section";
 
-    public const string TemplateFieldItemName = "Template field";
+    private const string TemplateFieldItemName = "Template field";
 
-    public const string BranchItemName = "Branch";
+    private const string BranchItemName = "Branch";
 
-    public const string FolderItemName = "Folder";
+    private const string FolderItemName = "Folder";
+
+    private static readonly ID TemplateIdSitecore = new ID("{C6576836-910C-4A3D-BA03-C277DBD3B827}");
 
     private readonly Database database;
 
@@ -48,16 +48,6 @@ namespace Sitecore.FakeDb.Data.Engines
 
     private readonly IDictionary<Guid, Stream> blobs;
 
-    private readonly IDictionary<string, IPipelineProcessor> processors;
-
-    internal DataStorage()
-    {
-      this.fakeItems = new Dictionary<ID, DbItem>();
-      this.fakeTemplates = new Dictionary<ID, DbTemplate>();
-      this.blobs = new Dictionary<Guid, Stream>();
-      this.processors = new Dictionary<string, IPipelineProcessor>();
-    }
-
     public DataStorage(Database database)
       : this()
     {
@@ -65,6 +55,13 @@ namespace Sitecore.FakeDb.Data.Engines
 
       this.FillDefaultFakeTemplates();
       this.FillDefaultFakeItems();
+    }
+
+    internal DataStorage()
+    {
+      this.fakeItems = new Dictionary<ID, DbItem>();
+      this.fakeTemplates = new Dictionary<ID, DbTemplate>();
+      this.blobs = new Dictionary<Guid, Stream>();
     }
 
     public Database Database
@@ -85,11 +82,6 @@ namespace Sitecore.FakeDb.Data.Engines
     public IDictionary<Guid, Stream> Blobs
     {
       get { return this.blobs; }
-    }
-
-    public IDictionary<string, IPipelineProcessor> Pipelines
-    {
-      get { return this.processors; }
     }
 
     public virtual void AddFakeItem(DbItem item)
@@ -182,8 +174,8 @@ namespace Sitecore.FakeDb.Data.Engines
     /// <summary>
     /// Similar to Template.GetBaseTemplates() the method expands the template inheritance hierarchy
     /// </summary>
-    /// <param name="templateId"></param>
-    /// <returns></returns>
+    /// <param name="templateId">The template id.</param>
+    /// <returns>The list of tempaltes.</returns>
     protected List<DbTemplate> ExpandTemplatesSequence(ID templateId)
     {
       var fakeTemplate = this.GetFakeTemplate(templateId);
@@ -192,13 +184,13 @@ namespace Sitecore.FakeDb.Data.Engines
         return new List<DbTemplate>();
       }
 
-      var sequence = new List<DbTemplate>() { fakeTemplate };
+      var sequence = new List<DbTemplate> { fakeTemplate };
 
       if (fakeTemplate.BaseIDs != null)
       {
         foreach (var baseId in fakeTemplate.BaseIDs)
         {
-          sequence.AddRange(ExpandTemplatesSequence(baseId));
+          sequence.AddRange(this.ExpandTemplatesSequence(baseId));
         }
       }
 
@@ -213,15 +205,16 @@ namespace Sitecore.FakeDb.Data.Engines
       foreach (var templateField in fakeTemplate.Fields)
       {
         var fieldId = templateField.ID;
-        var value = string.Empty;
 
-        DbField itemField = this.FindItemDbField(fakeItem, templateField);
+        var itemField = this.FindItemDbField(fakeItem, templateField);
 
-        if (itemField != null)
+        if (itemField == null)
         {
-          value = itemField.GetValue(language.Name, version.Number);
-          fields.Add(fieldId, value);
+          continue;
         }
+
+        var value = itemField.GetValue(language.Name, version.Number);
+        fields.Add(fieldId, value);
       }
 
       foreach (KeyValuePair<ID, string> field in fields)
@@ -236,7 +229,6 @@ namespace Sitecore.FakeDb.Data.Engines
       Assert.IsNotNull(templateField, "templateField");
 
       // The item has fields with the IDs matching the fields in the template it directly inherits from
-
       if (fakeItem.Fields.InnerFields.ContainsKey(templateField.ID))
       {
         return fakeItem.Fields[templateField.ID];

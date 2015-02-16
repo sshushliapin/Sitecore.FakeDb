@@ -266,8 +266,26 @@
       this.watcher.Register("mypipeline", processor);
 
       // assert
-      this.dataStorage.Pipelines["mypipeline"].Should().BeSameAs(processor);
+      this.watcher.Pipelines["mypipeline"].Should().BeSameAs(processor);
       this.watcher.ConfigSection.SelectSingleNode("/sitecore/pipelines/mypipeline").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void ShouldExecuteProcessorIfSet()
+    {
+      // arrange
+      var processor = Substitute.For<IPipelineProcessor>();
+      var args = new PipelineArgs();
+
+      this.watcher.Pipelines.Add("mypipeline", processor);
+
+      var watcherProcessor = new PipelineWatcherProcessor("mypipeline");
+
+      // act
+      watcherProcessor.Process(args);
+
+      // assert
+      processor.Received().Process(args);
     }
 
     public void Dispose()
