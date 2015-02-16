@@ -5,7 +5,6 @@
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
   using Xunit;
@@ -43,14 +42,6 @@
     }
 
     [Fact]
-    public void ShouldCreateDefaultCreator()
-    {
-      // act & assert
-      this.command.ItemCreator.Should().NotBeNull();
-      this.command.ItemCreator.DataStorage.Should().Be(this.dataStorage);
-    }
-
-    [Fact]
     public void ShouldCopyItem()
     {
       // arrange
@@ -61,8 +52,6 @@
       this.dataStorage.GetFakeItem(this.itemId).Returns(new DbItem("home"));
       this.dataStorage.GetFakeItem(this.copyId).Returns(new DbItem("copy"));
       this.dataStorage.GetSitecoreItem(this.copyId, Language.Current).Returns(copy);
-
-      this.command.ItemCreator = Substitute.For<ItemCreator>(this.dataStorage);
 
       this.command.Initialize(item, destination, "copy of home", this.copyId, false);
 

@@ -11,23 +11,14 @@
   {
     private readonly ThreadLocal<DataEngineCommand> innerCommand;
 
-    private readonly ThreadLocal<ItemCreator> itemCreator;
-
     public CopyItemCommand()
     {
       this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
-      this.itemCreator = new ThreadLocal<ItemCreator>();
     }
 
     public virtual void Initialize(DataEngineCommand command)
     {
       this.innerCommand.Value = command;
-    }
-
-    public ItemCreator ItemCreator
-    {
-      get { return this.itemCreator.Value ?? (this.itemCreator.Value = new ItemCreator(this.innerCommand.Value.DataStorage)); }
-      set { this.itemCreator.Value = value; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.CopyItemCommand CreateInstance()
@@ -37,7 +28,7 @@
 
     protected override Item DoExecute()
     {
-      ItemCreator.Create(this.CopyName, this.CopyId, this.Source.TemplateID, this.Database, this.Destination);
+      this.innerCommand.Value.DataStorage.Create(this.CopyName, this.CopyId, this.Source.TemplateID, this.Destination);
 
       var dataStorage = this.innerCommand.Value.DataStorage;
 
@@ -48,12 +39,14 @@
 
       var copy = dataStorage.GetSitecoreItem(this.CopyId, this.Source.Language);
 
-      if (this.Deep)
+      if (!this.Deep)
       {
-        foreach (Item child in this.Source.Children)
-        {
-          ItemManager.CopyItem(child, copy, this.Deep, child.Name, ID.NewID);
-        }
+        return copy;
+      }
+
+      foreach (Item child in this.Source.Children)
+      {
+        ItemManager.CopyItem(child, copy, this.Deep, child.Name, ID.NewID);
       }
 
       return copy;
@@ -66,7 +59,7 @@
 
       foreach (var field in source.Fields)
       {
-        CopyField(field, copy);
+        this.CopyField(field, copy);
       }
     }
 
@@ -92,7 +85,6 @@
           copy.Fields[field.ID].Values.Add(language, versions);
         }
       }
-
     }
   }
 }

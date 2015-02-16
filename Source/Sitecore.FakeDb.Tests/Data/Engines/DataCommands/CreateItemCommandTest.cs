@@ -5,7 +5,6 @@
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
@@ -27,18 +26,6 @@
     }
 
     [Fact]
-    public void ShouldCreateDefaultCreator()
-    {
-      // arrange
-      var command = new CreateItemCommand();
-      command.Initialize(this.innerCommand);
-
-      // act & assert
-      command.ItemCreator.Should().NotBeNull();
-      command.ItemCreator.DataStorage.Should().Be(this.dataStorage);
-    }
-
-    [Fact]
     public void ShouldCreateItem()
     {
       // arrange
@@ -48,10 +35,9 @@
       var item = ItemHelper.CreateInstance(this.database);
       var destination = ItemHelper.CreateInstance(this.database);
 
-      var itemCreator = Substitute.For<ItemCreator>(this.dataStorage);
-      itemCreator.Create("home", itemId, templateId, database, destination).Returns(item);
+      this.dataStorage.GetSitecoreItem(itemId).Returns(item);
 
-      var command = new OpenCreateItemCommand { Engine = new DataEngine(this.database), ItemCreator = itemCreator };
+      var command = new OpenCreateItemCommand { Engine = new DataEngine(this.database) };
       command.Initialize(itemId, "home", templateId, destination);
       command.Initialize(this.innerCommand);
 
@@ -60,6 +46,7 @@
 
       // assert
       result.Should().Be(item);
+      this.dataStorage.Received().Create("home", itemId, templateId, destination);
     }
 
     private class OpenCreateItemCommand : CreateItemCommand

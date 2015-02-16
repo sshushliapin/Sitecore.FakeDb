@@ -7,23 +7,14 @@
   {
     private readonly ThreadLocal<DataEngineCommand> innerCommand;
 
-    private ThreadLocal<ItemCreator> itemCreator;
-
     public AddFromTemplateCommand()
     {
       this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
-      this.itemCreator = new ThreadLocal<ItemCreator>();
     }
 
     public virtual void Initialize(DataEngineCommand command)
     {
       this.innerCommand.Value = command;
-    }
-
-    public ItemCreator ItemCreator
-    {
-      get { return this.itemCreator.Value ?? (this.itemCreator.Value = new ItemCreator(this.innerCommand.Value.DataStorage)); }
-      set { this.itemCreator.Value = value; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand CreateInstance()
@@ -33,7 +24,10 @@
 
     protected override Item DoExecute()
     {
-      return this.ItemCreator.Create(this.ItemName, this.NewId, this.TemplateId, this.Database, this.Destination, true);
+      var dataStorage = this.innerCommand.Value.DataStorage;
+      dataStorage.Create(this.ItemName, this.NewId, this.TemplateId, this.Destination, true);
+      
+      return dataStorage.GetSitecoreItem(this.NewId);
     }
   }
 }

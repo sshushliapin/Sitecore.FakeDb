@@ -109,6 +109,35 @@ namespace Sitecore.FakeDb.Data.Engines
       this.AddFakeItem(template);
     }
 
+    public virtual void Create(string itemName, ID itemId, ID templateId, Item destination, bool addFirstVersion = false)
+    {
+      Assert.ArgumentNotNullOrEmpty(itemName, "itemName");
+      Assert.ArgumentNotNull(destination, "destination");
+
+      if (this.GetFakeItem(itemId) != null)
+      {
+        return;
+      }
+
+      var parentItem = this.GetFakeItem(destination.ID);
+      Assert.IsNotNull(parentItem, "Parent item \"{0}\" not found.", destination.ID);
+
+      var fullPath = parentItem.FullPath + "/" + itemName;
+
+      var dbitem = new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath };
+      if (addFirstVersion)
+      {
+        var language = Language.Current;
+        dbitem.VersionsCount.Add(language.Name, 1);
+      }
+
+      // ToDo:[HIGH] move it out of here and consolidate with the processing that happens in the Db
+      this.SetStatistics(dbitem);
+
+      this.FakeItems.Add(itemId, dbitem);
+      this.GetFakeItem(destination.ID).Children.Add(dbitem);
+    }
+
     public virtual DbItem GetFakeItem(ID itemId)
     {
       Assert.ArgumentCondition(!ID.IsNullOrEmpty(itemId), "itemId", "Value cannot be null.");
@@ -121,6 +150,11 @@ namespace Sitecore.FakeDb.Data.Engines
       Assert.ArgumentCondition(!ID.IsNullOrEmpty(templateId), "templateId", "Value cannot be null.");
 
       return this.FakeTemplates.ContainsKey(templateId) ? this.FakeTemplates[templateId] : null;
+    }
+
+    public virtual Item GetSitecoreItem(ID itemId)
+    {
+      return this.GetSitecoreItem(itemId, Language.Current);
     }
 
     public virtual Item GetSitecoreItem(ID itemId, Language language)
@@ -267,6 +301,18 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems.Add(TemplateIDs.TemplateSection, new DbItem(TemplateSectionItemName, TemplateIDs.TemplateSection, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
       this.FakeItems.Add(TemplateIDs.TemplateField, new DbItem(TemplateFieldItemName, TemplateIDs.TemplateField, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
       this.FakeItems.Add(TemplateIDs.BranchTemplate, new DbItem(BranchItemName, TemplateIDs.BranchTemplate, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
+    }
+
+    protected void SetStatistics(DbItem item)
+    {
+      var date = DateUtil.IsoNow;
+      var user = Context.User.Name;
+
+      item.Fields.Add(new DbField("__Created", FieldIDs.Created) { Value = date });
+      item.Fields.Add(new DbField("__Created by", FieldIDs.CreatedBy) { Value = user });
+      item.Fields.Add(new DbField("__Revision", FieldIDs.Revision) { Value = ID.NewID.ToString() });
+      item.Fields.Add(new DbField("__Updated", FieldIDs.Updated) { Value = date });
+      item.Fields.Add(new DbField("__Updated by", FieldIDs.UpdatedBy) { Value = user });
     }
   }
 }
