@@ -5,7 +5,6 @@
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Configuration;
-  using Sitecore.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.Pipelines;
@@ -14,14 +13,11 @@
 
   public class PipelineWatcherTest : IDisposable
   {
-    private readonly DataStorage dataStorage;
-
     private readonly PipelineWatcher watcher;
 
     public PipelineWatcherTest()
     {
-      this.dataStorage = new DataStorage(Database.GetDatabase("master"));
-      this.watcher = new PipelineWatcher(Factory.GetConfiguration(), this.dataStorage);
+      this.watcher = new PipelineWatcher(Factory.GetConfiguration());
     }
 
     [Fact]
@@ -29,7 +25,7 @@
     {
       // arrange
       var config = CreateSimpleConfig();
-      using (var w = new PipelineWatcher(config, this.dataStorage))
+      using (var w = new PipelineWatcher(config))
       {
         // act
         w.Expects("mypipeline");
@@ -257,7 +253,7 @@
     }
 
     [Fact]
-    public void ShouldRegisterProcessorInDataStorageAndConfig()
+    public void ShouldRegisterProcessorInConfig()
     {
       // arrange
       var processor = Substitute.For<IPipelineProcessor>();
@@ -305,7 +301,7 @@
     private class ThrowablePipelineWatcher : PipelineWatcher
     {
       public ThrowablePipelineWatcher()
-        : base(CreateSimpleConfig(), new DataStorage())
+        : base(CreateSimpleConfig())
       {
       }
 

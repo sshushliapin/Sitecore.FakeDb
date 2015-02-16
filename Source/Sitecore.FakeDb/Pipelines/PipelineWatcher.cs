@@ -4,7 +4,6 @@ namespace Sitecore.FakeDb.Pipelines
   using System.Collections.Generic;
   using System.Xml;
   using Sitecore.Diagnostics;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Pipelines;
   using Sitecore.StringExtensions;
   using Sitecore.Xml;
@@ -12,8 +11,6 @@ namespace Sitecore.FakeDb.Pipelines
   public class PipelineWatcher : IDisposable
   {
     private readonly XmlDocument config;
-
-    private readonly DataStorage dataStorage;
 
     private readonly IDictionary<string, PipelineArgs> expectedCalls = new Dictionary<string, PipelineArgs>();
 
@@ -31,12 +28,11 @@ namespace Sitecore.FakeDb.Pipelines
 
     private bool disposed;
 
-    public PipelineWatcher(XmlDocument config, DataStorage dataStorage)
+    public PipelineWatcher(XmlDocument config)
     {
       Assert.ArgumentNotNull(config, "config");
 
       this.config = config;
-      this.dataStorage = dataStorage;
 
       PipelineWatcherProcessor.PipelineRun += this.PipelineRun;
     }
@@ -100,10 +96,6 @@ namespace Sitecore.FakeDb.Pipelines
 
       var expectedName = "<param desc=\"expectedName\">{0}</param>".FormatWith(pipelineName);
       XmlUtil.AddXml(expectedName, processorNode);
-
-      var database = this.dataStorage.Database.Name;
-      var databaseName = "<param desc=\"databaseName\">{0}</param>".FormatWith(database);
-      XmlUtil.AddXml(databaseName, processorNode);
     }
 
     public virtual void EnsureExpectations()
