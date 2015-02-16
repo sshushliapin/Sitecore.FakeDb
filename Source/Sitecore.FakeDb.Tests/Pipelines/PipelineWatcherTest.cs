@@ -5,7 +5,6 @@
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Configuration;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.Pipelines;
   using Xunit;
@@ -262,18 +261,17 @@
       this.watcher.Register("mypipeline", processor);
 
       // assert
-      this.watcher.Pipelines["mypipeline"].Should().BeSameAs(processor);
       this.watcher.ConfigSection.SelectSingleNode("/sitecore/pipelines/mypipeline").Should().NotBeNull();
     }
 
     [Fact]
-    public void ShouldExecuteProcessorIfSet()
+    public void ShouldExecuteRegisteredProcessor()
     {
       // arrange
       var processor = Substitute.For<IPipelineProcessor>();
       var args = new PipelineArgs();
 
-      this.watcher.Pipelines.Add("mypipeline", processor);
+      this.watcher.Register("mypipeline", processor);
 
       var watcherProcessor = new PipelineWatcherProcessor("mypipeline");
 

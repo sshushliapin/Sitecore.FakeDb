@@ -22,7 +22,7 @@ namespace Sitecore.FakeDb.Pipelines
 
     private readonly IDictionary<string, Action<PipelineArgs>> processThisArgs = new Dictionary<string, Action<PipelineArgs>>();
 
-    private readonly IDictionary<string, IPipelineProcessor> processors = new Dictionary<string, IPipelineProcessor>();
+    private readonly IDictionary<string, IPipelineProcessor> pipelines = new Dictionary<string, IPipelineProcessor>();
 
     private string lastUsedPipelineName;
 
@@ -37,14 +37,14 @@ namespace Sitecore.FakeDb.Pipelines
       PipelineWatcherProcessor.PipelineRun += this.PipelineRun;
     }
 
-    public IDictionary<string, IPipelineProcessor> Pipelines
-    {
-      get { return this.processors; }
-    }
-
     protected internal XmlDocument ConfigSection
     {
       get { return this.config; }
+    }
+
+    protected IDictionary<string, IPipelineProcessor> Pipelines
+    {
+      get { return this.pipelines; }
     }
 
     public virtual void Expects(string pipelineName)
