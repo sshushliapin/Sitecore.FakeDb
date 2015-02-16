@@ -6,10 +6,6 @@
   {
     private const string ExceptionText = "Sitecore.FakeDb.Db instance has not been initialized.";
 
-    internal NotInitializedDataEngineCommand()
-    {
-    }
-
     public override DataStorage DataStorage
     {
       get { throw new InvalidOperationException(ExceptionText); }

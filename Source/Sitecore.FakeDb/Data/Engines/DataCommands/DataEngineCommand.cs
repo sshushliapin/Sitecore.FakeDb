@@ -1,19 +1,28 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using Sitecore.Diagnostics;
+
   public class DataEngineCommand
   {
     public static readonly DataEngineCommand NotInitialized = new NotInitializedDataEngineCommand();
 
-    internal DataEngineCommand()
-    {
-    }
+    private readonly DataStorage dataStorage;
 
     public DataEngineCommand(DataStorage dataStorage)
     {
-      this.DataStorage = dataStorage;
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
+
+      this.dataStorage = dataStorage;
     }
 
-    public virtual DataStorage DataStorage { get; private set; }
+    protected DataEngineCommand()
+    {
+    }
+
+    public virtual DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
+    }
 
     public virtual TBaseCommand CreateInstance<TBaseCommand, TCommand>() where TCommand : TBaseCommand, IDataEngineCommand, new()
     {
