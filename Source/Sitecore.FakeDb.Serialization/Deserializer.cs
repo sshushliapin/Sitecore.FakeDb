@@ -37,14 +37,61 @@ namespace Sitecore.FakeDb.Serialization
         }
 
         /// <summary>
-        /// The same as deserializes all .item files within a directory and all deeper directories.
+        /// Deserializes all .item files below the item's children folder and all deeper directories.
+        /// Also traverses shortened paths.
         /// </summary>
-        /// <param name="directory"></param>
+        /// <param name="itemFile"></param>
+        /// <param name="syncItem"></param>
+        /// <param name="serializationFolder"></param>
+        /// <param name="maxDepth"></param>
         /// <returns></returns>
-        internal static List<SyncItem> DeserializeAll(this DirectoryInfo directory)
+        internal static List<SyncItem> DeserializeAll(this FileInfo itemFile, SyncItem syncItem, DirectoryInfo serializationFolder, int maxDepth)
         {
-            Assert.ArgumentNotNull(directory, "directory");
-            return directory.GetFiles("*.item", SearchOption.AllDirectories).Select(i => i.Deserialize()).ToList();
+            if (maxDepth <= 0)
+            {
+                return new List<SyncItem>();
+            }
+            Assert.ArgumentNotNull(itemFile, "itemFile");
+
+            List<SyncItem> result = new List<SyncItem>();
+
+            // Find descendants in direct subfolder
+            if (itemFile.Directory != null)
+            {
+                DirectoryInfo childItemsFolder = new DirectoryInfo(
+                    itemFile.Directory.FullName
+                    + Path.DirectorySeparatorChar
+                    + Path.GetFileNameWithoutExtension(itemFile.Name));
+                if (childItemsFolder.Exists)
+                {
+                    foreach (FileInfo childItemFile
+                        in childItemsFolder.GetFiles("*.item", SearchOption.AllDirectories))
+                    {
+                        SyncItem childSyncItem = childItemFile.Deserialize();
+                        result.AddRange(childItemFile.DeserializeAll(childSyncItem, serializationFolder, maxDepth - 1));
+                        result.Add(childSyncItem);
+                    }
+                }
+            }
+
+            // Find descendants in shortened paths
+            var linkFiles = ShortenedPathsDictionary.GetLocationsFromLinkFiles(serializationFolder);
+            if (linkFiles.ContainsKey(syncItem.ItemPath))
+            {
+                DirectoryInfo truePath = new DirectoryInfo(linkFiles[syncItem.ItemPath]);
+                if (truePath.Exists)
+                {
+                    foreach (FileInfo childItemFile
+                        in truePath.GetFiles("*.item", SearchOption.AllDirectories))
+                    {
+                        SyncItem childSyncItem = childItemFile.Deserialize();
+                        result.AddRange(childItemFile.DeserializeAll(childSyncItem, serializationFolder, maxDepth - 1));
+                        result.Add(childSyncItem);
+                    }
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -115,6 +162,18 @@ namespace Sitecore.FakeDb.Serialization
 
         /// <summary>
         /// Resolves a sitecore path to the filesystem where it is serialized.
+        /// </summary>
+        /// <param name="path">A valid sitecore item path</param>
+        /// <param name="serializationFolderName">Name of serialization folder as configured in app.config</param>
+        /// <returns></returns>
+        internal static FileInfo ResolveSerializationPath(string path, string serializationFolderName)
+        {
+            DirectoryInfo serializationFolder = GetSerializationFolder(serializationFolderName);
+            return ResolveSerializationPath(path, serializationFolder);
+        }
+
+        /// <summary>
+        /// Resolves a sitecore path to the filesystem where it is serialized.
         /// For example, path=/sitecore/content/item1 and serializationFolderName=master 
         /// Will be resolved to c:\site\data\serialization\master\sitecore\content\item1.item
         /// 
@@ -126,22 +185,22 @@ namespace Sitecore.FakeDb.Serialization
         /// </szfolders>
         /// </summary>
         /// <param name="path">A valid sitecore item path</param>
-        /// <param name="serializationFolderName">Name of serialization folder as configured in app.config</param>
+        /// <param name="serializationFolder">Folder in which serialized items are available</param>
         /// <returns></returns>
-        internal static FileInfo ResolveSerializationPath(string path, string serializationFolderName)
+        internal static FileInfo ResolveSerializationPath(string path, DirectoryInfo serializationFolder)
         {
-            DirectoryInfo serializationFolder = GetSerializationFolder(serializationFolderName);
+            string truePath = ShortenedPathsDictionary.FindTruePath(serializationFolder, path);
 
             FileInfo itemLocation = new FileInfo(
                 string.Format(
                     "{0}.item",
                     Path.Combine(
                         serializationFolder.FullName.Trim(new[] { Path.DirectorySeparatorChar }),
-                        path.Replace('/', Path.DirectorySeparatorChar).Trim(new[] { Path.DirectorySeparatorChar }))));
+                        truePath.Replace('/', Path.DirectorySeparatorChar).Trim(new[] { Path.DirectorySeparatorChar }))));
             
             Assert.IsTrue(itemLocation.Exists,
                 string.Format("Serialized item '{0}' could not be found in the path '{1}'; please check the path and if the item is serialized correctly",
-                path,
+                truePath,
                 itemLocation.FullName));
 
             return itemLocation;

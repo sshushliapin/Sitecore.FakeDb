@@ -96,5 +96,25 @@ namespace Sitecore.FakeDb.Serialization.Tests
             template.Name.Should().BeEquivalentTo("Sample Item");
             template.TemplateID.ShouldBeEquivalentTo(TemplateIDs.Template);
         }
+
+        [Fact]
+        public void ShouldLoadFieldFromShortenedPath()
+        {
+            DsDbTemplate template = new DsDbTemplate(
+                "/sitecore/templates/Sample/much deeper path needed/for testing deserialization of/fields from shortened paths/correctly/Some deep template");
+
+            using (new Db()
+                {
+                    template
+                })
+            {
+                template.Should().NotBeNull();
+
+                ID someDeepFieldId = ID.Parse("{90DE36F0-7239-497D-AB36-5587DF34F669}");
+                template.Fields.Count(f => f.ID == someDeepFieldId).ShouldBeEquivalentTo(1);
+                template.Fields[someDeepFieldId].Name.Should().BeEquivalentTo("Some deep field");
+                template.Fields[someDeepFieldId].Shared.Should().BeFalse();
+            }
+        }
     }
 }

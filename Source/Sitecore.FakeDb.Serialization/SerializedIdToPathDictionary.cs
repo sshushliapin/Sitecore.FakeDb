@@ -26,7 +26,19 @@ namespace Sitecore.FakeDb.Serialization
                 else
                 {
                     pathSet = new SerializedIdToPathSet();
-                    pathSet.FilePaths.Push(Deserializer.GetSerializationFolder(serializationFolderName).FullName);
+                    DirectoryInfo serializationFolder
+                        = Deserializer.GetSerializationFolder(serializationFolderName);
+
+                    // Add filepaths for shortened paths
+                    foreach (string shortenedItemsFolder in ShortenedPathsDictionary
+                        .GetLocationsFromLinkFiles(serializationFolder).Values)
+                    {
+                        pathSet.FilePaths.Push(shortenedItemsFolder);
+                    }
+
+                    // Add filepath for root of regular content
+                    pathSet.FilePaths.Push(serializationFolder.FullName);
+                    
                     _pathSets.Add(serializationFolderName, pathSet);
                 }
 
@@ -35,7 +47,6 @@ namespace Sitecore.FakeDb.Serialization
                 {
                     return pathSet.Paths[id];
                 }
-
 
                 while (pathSet.FilePaths.Any())
                 {

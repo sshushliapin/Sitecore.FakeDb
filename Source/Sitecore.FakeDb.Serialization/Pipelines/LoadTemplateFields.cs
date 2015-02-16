@@ -20,30 +20,23 @@ namespace Sitecore.FakeDb.Serialization.Pipelines
             DsDbTemplate template = args.DsDbItem as DsDbTemplate;
             Assert.ArgumentNotNull(template, "Item was not a DsDbTemplate, which is required here");
 
-            if (template.File.Directory != null)
+            foreach (SyncItem descendantItem in template.File
+                .DeserializeAll(
+                    template.SyncItem,
+                    Deserializer.GetSerializationFolder(template.SerializationFolderName),
+                    3)
+                .Where(i => ID.IsID(i.TemplateID) && ID.Parse(i.TemplateID) == TemplateIDs.TemplateField))
             {
-                DirectoryInfo childItemsFolder = new DirectoryInfo(
-                    template.File.Directory.FullName
-                    + Path.DirectorySeparatorChar
-                    + Path.GetFileNameWithoutExtension(template.File.Name));
-                if (childItemsFolder.Exists)
+                SyncField isSharedField = descendantItem.SharedFields.FirstOrDefault(f => "Shared".Equals(f.FieldName));
+                SyncField typeField = descendantItem.SharedFields.FirstOrDefault(f => "Type".Equals(f.FieldName));
+
+                bool isShared = isSharedField != null && "1".Equals(isSharedField.FieldValue);
+
+                template.Fields.Add(new DbField(descendantItem.Name, ID.Parse(descendantItem.ID))
                 {
-                    foreach (SyncItem childItem in childItemsFolder
-                        .DeserializeAll()
-                        .Where(i => ID.IsID(i.TemplateID) && ID.Parse(i.TemplateID) == TemplateIDs.TemplateField))
-                    {
-                        SyncField isSharedField = childItem.SharedFields.FirstOrDefault(f => "Shared".Equals(f.FieldName));
-                        SyncField typeField = childItem.SharedFields.FirstOrDefault(f => "Type".Equals(f.FieldName));
-
-                        bool isShared = isSharedField != null && "1".Equals(isSharedField.FieldValue);
-
-                        template.Fields.Add(new DbField(childItem.Name, ID.Parse(childItem.ID))
-                        {
-                            Shared = isShared,
-                            Type = typeField != null ? typeField.FieldValue : string.Empty
-                        });
-                    }
-                }
+                    Shared = isShared,
+                    Type = typeField != null ? typeField.FieldValue : string.Empty
+                });
             }
         }
     }
