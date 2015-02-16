@@ -1,12 +1,9 @@
 ﻿namespace Sitecore.FakeDb.Tests.Pipelines
 {
   using FluentAssertions;
-  using NSubstitute;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.Pipelines;
   using Xunit;
-  using Xunit.Extensions;
 
   public class PipelineWatcherProcessorTests
   {
