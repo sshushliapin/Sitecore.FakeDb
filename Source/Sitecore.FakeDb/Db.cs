@@ -18,7 +18,7 @@
 
   public class Db : IDisposable, IEnumerable
   {
-    private static readonly object @lock = new object();
+    private static readonly object Lock = new object();
 
     private readonly Database database;
 
@@ -67,11 +67,13 @@
     {
       get
       {
-        if (this.configuration == null)
+        if (this.configuration != null)
         {
-          this.config = this.GetConfiguration();
-          this.configuration = new DbConfiguration(this.config);
+          return this.configuration;
         }
+
+        this.config = this.GetConfiguration();
+        this.configuration = new DbConfiguration(this.config);
 
         return this.configuration;
       }
@@ -81,11 +83,13 @@
     {
       get
       {
-        if (this.pipelineWatcher == null)
+        if (this.pipelineWatcher != null)
         {
-          this.config = this.GetConfiguration();
-          this.pipelineWatcher = new PipelineWatcher(this.config, this.DataStorage);
+          return this.pipelineWatcher;
         }
+
+        this.config = this.GetConfiguration();
+        this.pipelineWatcher = new PipelineWatcher(this.config);
 
         return this.pipelineWatcher;
       }
@@ -183,9 +187,9 @@
 
       this.databaseSwitcher.Dispose();
 
-      if (Monitor.IsEntered(@lock))
+      if (Monitor.IsEntered(Lock))
       {
-        Monitor.Exit(@lock);
+        Monitor.Exit(Lock);
       }
 
       this.disposed = true;
@@ -198,7 +202,7 @@
         return this.config;
       }
 
-      Monitor.Enter(@lock);
+      Monitor.Enter(Lock);
       this.config = Factory.GetConfiguration();
 
       return this.config;

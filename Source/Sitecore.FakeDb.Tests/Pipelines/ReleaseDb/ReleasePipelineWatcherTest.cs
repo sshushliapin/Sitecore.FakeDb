@@ -13,7 +13,7 @@
     public void ShoudDisposePipelineWatcher()
     {
       // arrange
-      var watcher = Substitute.For<PipelineWatcher, IDisposable>(new XmlDocument(), null);
+      var watcher = Substitute.For<PipelineWatcher, IDisposable>(new XmlDocument());
       using (var db = new Db(watcher))
       {
         var processor = new ReleasePipelineWatcher();

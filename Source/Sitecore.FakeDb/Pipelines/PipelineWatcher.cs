@@ -4,7 +4,6 @@ namespace Sitecore.FakeDb.Pipelines
   using System.Collections.Generic;
   using System.Xml;
   using Sitecore.Diagnostics;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Pipelines;
   using Sitecore.StringExtensions;
   using Sitecore.Xml;
@@ -12,8 +11,6 @@ namespace Sitecore.FakeDb.Pipelines
   public class PipelineWatcher : IDisposable
   {
     private readonly XmlDocument config;
-
-    private readonly DataStorage dataStorage;
 
     private readonly IDictionary<string, PipelineArgs> expectedCalls = new Dictionary<string, PipelineArgs>();
 
@@ -23,18 +20,19 @@ namespace Sitecore.FakeDb.Pipelines
 
     private readonly IDictionary<string, Func<PipelineArgs, bool>> filterThisArgs = new Dictionary<string, Func<PipelineArgs, bool>>();
 
-    private IDictionary<string, Action<PipelineArgs>> processThisArgs = new Dictionary<string, Action<PipelineArgs>>();
+    private readonly IDictionary<string, Action<PipelineArgs>> processThisArgs = new Dictionary<string, Action<PipelineArgs>>();
+
+    private readonly IDictionary<string, IPipelineProcessor> pipelines = new Dictionary<string, IPipelineProcessor>();
 
     private string lastUsedPipelineName;
 
     private bool disposed;
 
-    public PipelineWatcher(XmlDocument config, DataStorage dataStorage)
+    public PipelineWatcher(XmlDocument config)
     {
       Assert.ArgumentNotNull(config, "config");
 
       this.config = config;
-      this.dataStorage = dataStorage;
 
       PipelineWatcherProcessor.PipelineRun += this.PipelineRun;
     }
@@ -42,6 +40,11 @@ namespace Sitecore.FakeDb.Pipelines
     protected internal XmlDocument ConfigSection
     {
       get { return this.config; }
+    }
+
+    protected IDictionary<string, IPipelineProcessor> Pipelines
+    {
+      get { return this.pipelines; }
     }
 
     public virtual void Expects(string pipelineName)
@@ -93,10 +96,6 @@ namespace Sitecore.FakeDb.Pipelines
 
       var expectedName = "<param desc=\"expectedName\">{0}</param>".FormatWith(pipelineName);
       XmlUtil.AddXml(expectedName, processorNode);
-
-      var database = this.dataStorage.Database.Name;
-      var databaseName = "<param desc=\"databaseName\">{0}</param>".FormatWith(database);
-      XmlUtil.AddXml(databaseName, processorNode);
     }
 
     public virtual void EnsureExpectations()
@@ -123,9 +122,15 @@ namespace Sitecore.FakeDb.Pipelines
 
     public virtual void Register(string pipelineName, IPipelineProcessor processorMock)
     {
-      this.dataStorage.Pipelines[pipelineName] = processorMock;
+      this.Pipelines[pipelineName] = processorMock;
 
       this.Expects(pipelineName, delegate { return true; });
+    }
+
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
     }
 
     protected virtual void OnPipelineRun(PipelineRunEventArgs e)
@@ -144,23 +149,12 @@ namespace Sitecore.FakeDb.Pipelines
         this.filterThisArgs.Add(pipelineName, a => true);
       }
 
-      if (this.filterThisArgs[pipelineName](e.PipelineArgs))
+      if (!this.filterThisArgs[pipelineName](e.PipelineArgs))
       {
-        {
-          this.processThisArgs[pipelineName](e.PipelineArgs);
-        }
+        return;
       }
-    }
 
-    private void PipelineRun(object sender, PipelineRunEventArgs e)
-    {
-      this.OnPipelineRun(e);
-    }
-
-    public void Dispose()
-    {
-      this.Dispose(true);
-      GC.SuppressFinalize(this);
+      this.processThisArgs[pipelineName](e.PipelineArgs);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -177,6 +171,16 @@ namespace Sitecore.FakeDb.Pipelines
 
       PipelineWatcherProcessor.PipelineRun -= this.PipelineRun;
       this.disposed = true;
+    }
+
+    private void PipelineRun(object sender, PipelineRunEventArgs e)
+    {
+      this.OnPipelineRun(e);
+
+      if (this.Pipelines.ContainsKey(e.PipelineName))
+      {
+        this.Pipelines[e.PipelineName].Process(e.PipelineArgs);
+      }
     }
   }
 }

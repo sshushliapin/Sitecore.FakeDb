@@ -5,8 +5,6 @@
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Configuration;
-  using Sitecore.Data;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.Pipelines;
   using Xunit;
@@ -14,14 +12,11 @@
 
   public class PipelineWatcherTest : IDisposable
   {
-    private readonly DataStorage dataStorage;
-
     private readonly PipelineWatcher watcher;
 
     public PipelineWatcherTest()
     {
-      this.dataStorage = new DataStorage(Database.GetDatabase("master"));
-      this.watcher = new PipelineWatcher(Factory.GetConfiguration(), this.dataStorage);
+      this.watcher = new PipelineWatcher(Factory.GetConfiguration());
     }
 
     [Fact]
@@ -29,7 +24,7 @@
     {
       // arrange
       var config = CreateSimpleConfig();
-      using (var w = new PipelineWatcher(config, this.dataStorage))
+      using (var w = new PipelineWatcher(config))
       {
         // act
         w.Expects("mypipeline");
@@ -257,7 +252,7 @@
     }
 
     [Fact]
-    public void ShouldRegisterProcessorInDataStorageAndConfig()
+    public void ShouldRegisterProcessorInConfig()
     {
       // arrange
       var processor = Substitute.For<IPipelineProcessor>();
@@ -266,8 +261,25 @@
       this.watcher.Register("mypipeline", processor);
 
       // assert
-      this.dataStorage.Pipelines["mypipeline"].Should().BeSameAs(processor);
       this.watcher.ConfigSection.SelectSingleNode("/sitecore/pipelines/mypipeline").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void ShouldExecuteRegisteredProcessor()
+    {
+      // arrange
+      var processor = Substitute.For<IPipelineProcessor>();
+      var args = new PipelineArgs();
+
+      this.watcher.Register("mypipeline", processor);
+
+      var watcherProcessor = new PipelineWatcherProcessor("mypipeline");
+
+      // act
+      watcherProcessor.Process(args);
+
+      // assert
+      processor.Received().Process(args);
     }
 
     public void Dispose()
@@ -287,7 +299,7 @@
     private class ThrowablePipelineWatcher : PipelineWatcher
     {
       public ThrowablePipelineWatcher()
-        : base(CreateSimpleConfig(), new DataStorage())
+        : base(CreateSimpleConfig())
       {
       }
 
