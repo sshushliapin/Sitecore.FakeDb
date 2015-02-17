@@ -28,24 +28,9 @@
 
     public DbField(string name, ID id)
     {
-      if (!string.IsNullOrEmpty(name))
-      {
-        this.Name = name;
-      }
-      else
-      {
-        this.Name = WellknownFields.FieldIdToNameMapping.ContainsKey(id) ? WellknownFields.FieldIdToNameMapping[id] : this.Name = id.ToShortID().ToString();
-      }
-
-      if (!ID.IsNullOrEmpty(id))
-      {
-        this.ID = id;
-      }
-      else
-      {
-        var keyValuePair = WellknownFields.FieldIdToNameMapping.FirstOrDefault(kvp => kvp.Value == name);
-        this.ID = !ID.IsNullOrEmpty(keyValuePair.Key) ? keyValuePair.Key : ID.NewID;
-      }
+      var idNamePair = new FieldNamingHelper().GetFieldIdNamePair(id, name);
+      this.ID = idNamePair.Key;
+      this.Name = idNamePair.Value;
 
       if (this.Name.StartsWith("__"))
       {
