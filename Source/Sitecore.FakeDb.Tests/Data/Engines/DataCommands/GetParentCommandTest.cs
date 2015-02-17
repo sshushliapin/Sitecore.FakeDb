@@ -16,18 +16,14 @@
     public GetParentCommandTest()
     {
       this.command = new OpenGetParentCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.innerCommand);
+      this.command.Initialize(this.dataStorage);
     }
 
     [Fact]
     public void ShouldCreateInstance()
     {
-      // arrange
-      var createdCommand = Substitute.For<GetParentCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetParentCommand, GetParentCommand>().Returns(createdCommand);
-
       // act & assert
-      this.command.CreateInstance().Should().Be(createdCommand);
+      this.command.CreateInstance().Should().BeOfType<GetParentCommand>();
     }
 
     [Fact]

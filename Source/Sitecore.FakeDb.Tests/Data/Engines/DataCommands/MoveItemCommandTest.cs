@@ -14,14 +14,11 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var createdCommand = Substitute.For<MoveItemCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.MoveItemCommand, MoveItemCommand>().Returns(createdCommand);
-
       var command = new OpenMoveItemCommand();
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act & assert
-      command.CreateInstance().Should().Be(createdCommand);
+      command.CreateInstance().Should().BeOfType<MoveItemCommand>();
     }
 
     [Fact]
@@ -48,7 +45,7 @@
 
       var command = new OpenMoveItemCommand();
       command.Initialize(item, destination);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var result = command.DoExecute();

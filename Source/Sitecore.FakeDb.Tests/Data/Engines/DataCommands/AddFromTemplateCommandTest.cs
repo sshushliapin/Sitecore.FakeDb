@@ -5,7 +5,6 @@
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
@@ -16,26 +15,11 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var createdCommand = Substitute.For<AddFromTemplateCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand, AddFromTemplateCommand>().Returns(createdCommand);
-
       var command = new OpenAddFromTemplateCommand();
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act & assert
-      command.CreateInstance().Should().Be(createdCommand);
-    }
-
-    [Fact]
-    public void ShouldCreateDefaultCreator()
-    {
-      // arrange
-      var command = new AddFromTemplateCommand();
-      command.Initialize(this.innerCommand);
-
-      // act & assert
-      command.ItemCreator.Should().NotBeNull();
-      command.ItemCreator.DataStorage.Should().Be(this.dataStorage);
+      command.CreateInstance().Should().BeOfType<AddFromTemplateCommand>();
     }
 
     [Fact]
@@ -48,18 +32,18 @@
       var item = ItemHelper.CreateInstance(this.database);
       var destination = ItemHelper.CreateInstance(this.database);
 
-      var itemCreator = Substitute.For<ItemCreator>(this.dataStorage);
-      itemCreator.Create("home", itemId, templateId, database, destination, true).Returns(item);
+      this.dataStorage.GetSitecoreItem(itemId).Returns(item);
 
-      var command = new OpenAddFromTemplateCommand { Engine = new DataEngine(database), ItemCreator = itemCreator };
+      var command = new OpenAddFromTemplateCommand { Engine = new DataEngine(database) };
       command.Initialize("home", templateId, destination, itemId);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var result = command.DoExecute();
 
       // assert
       result.Should().Be(item);
+      this.dataStorage.Received().Create("home", itemId, templateId, destination, true);
     }
 
     private class OpenAddFromTemplateCommand : AddFromTemplateCommand

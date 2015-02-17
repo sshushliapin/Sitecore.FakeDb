@@ -1,24 +1,36 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System;
+  using System.Threading;
+  using Sitecore.Diagnostics;
+
   public class DataEngineCommand
   {
-    public static readonly DataEngineCommand NotInitialized = new NotInitializedDataEngineCommand();
+    private const string ExceptionText = "Sitecore.FakeDb.Db instance has not been initialized.";
 
-    internal DataEngineCommand()
+    private readonly ThreadLocal<DataStorage> dataStorageScope = new ThreadLocal<DataStorage>();
+
+    public void Initialize(DataStorage dataStorage)
     {
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
+
+      this.dataStorageScope.Value = dataStorage;
     }
 
-    public DataEngineCommand(DataStorage dataStorage)
+    public virtual DataStorage DataStorage
     {
-      this.DataStorage = dataStorage;
+      get { return this.dataStorageScope.Value; }
     }
-
-    public virtual DataStorage DataStorage { get; private set; }
 
     public virtual TBaseCommand CreateInstance<TBaseCommand, TCommand>() where TCommand : TBaseCommand, IDataEngineCommand, new()
     {
+      if (this.DataStorage == null)
+      {
+        throw new InvalidOperationException(ExceptionText);
+      }
+
       var command = new TCommand();
-      command.Initialize(this);
+      command.Initialize(this.DataStorage);
 
       return command;
     }

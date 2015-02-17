@@ -1,29 +1,26 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using System.Threading;
+  using Sitecore.Diagnostics;
 
   public class SetBlobStreamCommand : Sitecore.Data.Engines.DataCommands.SetBlobStreamCommand, IDataEngineCommand
   {
-    private readonly ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
 
-    public SetBlobStreamCommand()
+    public virtual void Initialize(DataStorage dataStorage)
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
-    }
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-    public virtual void Initialize(DataEngineCommand command)
-    {
-      this.innerCommand.Value = command;
+      this.innerCommand.Initialize(dataStorage);
     }
 
     protected override Sitecore.Data.Engines.DataCommands.SetBlobStreamCommand CreateInstance()
     {
-      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.SetBlobStreamCommand, SetBlobStreamCommand>();
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.SetBlobStreamCommand, SetBlobStreamCommand>();
     }
 
     protected override bool DoExecute()
     {
-      this.innerCommand.Value.DataStorage.Blobs[this.BlobId] = this.Stream;
+      this.innerCommand.DataStorage.Blobs[this.BlobId] = this.Stream;
 
       return true;
     }

@@ -16,14 +16,11 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var createdCommand = Substitute.For<GetRootItemCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetRootItemCommand, GetRootItemCommand>().Returns(createdCommand);
-
       var command = new OpenGetRootItemCommand();
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act & assert
-      command.CreateInstance().Should().Be(createdCommand);
+      command.CreateInstance().Should().BeOfType<GetRootItemCommand>();
     }
 
     [Fact]
@@ -36,7 +33,7 @@
 
       var command = new OpenGetRootItemCommand { Engine = new DataEngine(this.database) };
       command.Initialize(LanguageManager.DefaultLanguage, Version.Latest);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var result = command.DoExecute();

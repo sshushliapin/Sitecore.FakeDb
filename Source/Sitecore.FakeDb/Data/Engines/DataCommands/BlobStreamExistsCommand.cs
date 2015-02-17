@@ -1,17 +1,19 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System;
-  using System.Threading;
+  using Sitecore.Diagnostics;
 
   public class BlobStreamExistsCommand : Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand, IDataEngineCommand
   {
-    private readonly ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
 
     private Guid blobId;
 
-    public BlobStreamExistsCommand()
+    public virtual void Initialize(DataStorage dataStorage)
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
+
+      this.innerCommand.Initialize(dataStorage);
     }
 
     // TODO: CMS issue. The base.BlobId property should not be private.
@@ -20,20 +22,15 @@
       this.blobId = id;
     }
 
-    public virtual void Initialize(DataEngineCommand command)
-    {
-      this.innerCommand.Value = command;
-    }
-
     protected override Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand CreateInstance()
     {
-      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand, BlobStreamExistsCommand>();
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand, BlobStreamExistsCommand>();
     }
 
     protected override bool DoExecute()
     {
       // TODO:[Minor] Check what should be returned if there is a blobId exists, but the stream is null.
-      return this.innerCommand.Value.DataStorage.Blobs.ContainsKey(this.blobId);
+      return this.innerCommand.DataStorage.Blobs.ContainsKey(this.blobId);
     }
   }
 }

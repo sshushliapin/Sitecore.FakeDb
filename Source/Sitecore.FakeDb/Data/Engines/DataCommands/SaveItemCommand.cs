@@ -1,31 +1,27 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using System.Threading;
   using Sitecore.Data.Fields;
   using Sitecore.Diagnostics;
 
   public class SaveItemCommand : Sitecore.Data.Engines.DataCommands.SaveItemCommand, IDataEngineCommand
   {
-    private readonly ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
 
-    public SaveItemCommand()
+    public virtual void Initialize(DataStorage dataStorage)
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
-    }
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-    public virtual void Initialize(DataEngineCommand command)
-    {
-      this.innerCommand.Value = command;
+      this.innerCommand.Initialize(dataStorage);
     }
 
     protected override Sitecore.Data.Engines.DataCommands.SaveItemCommand CreateInstance()
     {
-      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.SaveItemCommand, SaveItemCommand>();
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.SaveItemCommand, SaveItemCommand>();
     }
 
     protected override bool DoExecute()
     {
-      var fakeItem = this.innerCommand.Value.DataStorage.GetFakeItem(Item.ID);
+      var fakeItem = this.innerCommand.DataStorage.GetFakeItem(Item.ID);
 
       this.UpdateBasicData(fakeItem);
       this.UpdateFields(fakeItem);
@@ -53,7 +49,7 @@
 
     protected virtual void UpdateFields(DbItem fakeItem)
     {
-      var template = this.innerCommand.Value.DataStorage.GetFakeTemplate(fakeItem.TemplateID);
+      var template = this.innerCommand.DataStorage.GetFakeTemplate(fakeItem.TemplateID);
       Assert.IsNotNull(template, "Item template not found. Item: '{0}', '{1}'; template: '{2}'.", Item.Name, Item.ID, Item.TemplateID);
 
       // TODO: Looks strange. Should be removed.

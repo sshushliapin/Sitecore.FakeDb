@@ -14,14 +14,11 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var createdCommand = Substitute.For<RemoveVersionCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, RemoveVersionCommand>().Returns(createdCommand);
-
       var command = new OpenRemoveVersionCommand();
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act & assert
-      command.CreateInstance().Should().Be(createdCommand);
+      command.CreateInstance().Should().BeOfType<RemoveVersionCommand>();
     }
 
     [Fact]
@@ -36,7 +33,7 @@
 
       var command = new OpenRemoveVersionCommand();
       command.Initialize(item);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var result = command.DoExecute();
@@ -58,7 +55,7 @@
 
       var command = new OpenRemoveVersionCommand();
       command.Initialize(item);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var result = command.DoExecute();
@@ -81,7 +78,7 @@
 
       var command = new OpenRemoveVersionCommand();
       command.Initialize(item);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var result = command.DoExecute();

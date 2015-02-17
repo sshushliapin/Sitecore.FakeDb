@@ -5,7 +5,6 @@
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
   using Xunit;
@@ -28,26 +27,14 @@
       this.copyId = ID.NewID;
 
       this.command = new OpenCopyItemCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.innerCommand);
+      this.command.Initialize(this.dataStorage);
     }
 
     [Fact]
     public void ShouldCreateInstance()
     {
-      // arrange
-      var createdCommand = Substitute.For<CopyItemCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.CopyItemCommand, CopyItemCommand>().Returns(createdCommand);
-
       // act & assert
-      this.command.CreateInstance().Should().Be(createdCommand);
-    }
-
-    [Fact]
-    public void ShouldCreateDefaultCreator()
-    {
-      // act & assert
-      this.command.ItemCreator.Should().NotBeNull();
-      this.command.ItemCreator.DataStorage.Should().Be(this.dataStorage);
+      this.command.CreateInstance().Should().BeOfType<CopyItemCommand>();
     }
 
     [Fact]
@@ -61,8 +48,6 @@
       this.dataStorage.GetFakeItem(this.itemId).Returns(new DbItem("home"));
       this.dataStorage.GetFakeItem(this.copyId).Returns(new DbItem("copy"));
       this.dataStorage.GetSitecoreItem(this.copyId, Language.Current).Returns(copy);
-
-      this.command.ItemCreator = Substitute.For<ItemCreator>(this.dataStorage);
 
       this.command.Initialize(item, destination, "copy of home", this.copyId, false);
 

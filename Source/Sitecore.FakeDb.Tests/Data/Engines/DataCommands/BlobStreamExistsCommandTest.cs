@@ -3,7 +3,6 @@
   using System;
   using System.IO;
   using FluentAssertions;
-  using NSubstitute;
   using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Xunit;
@@ -15,18 +14,14 @@
     public BlobStreamExistsCommandTest()
     {
       this.command = new OpenBlobStreamExistsCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.innerCommand);
+      this.command.Initialize(this.dataStorage);
     }
 
     [Fact]
     public void ShouldCreateInstance()
     {
-      // arrange
-      var createdCommand = Substitute.For<BlobStreamExistsCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand, BlobStreamExistsCommand>().Returns(createdCommand);
-
       // act & assert
-      this.command.CreateInstance().Should().Be(createdCommand);
+      this.command.CreateInstance().Should().BeOfType<BlobStreamExistsCommand>();
     }
 
     [Fact]

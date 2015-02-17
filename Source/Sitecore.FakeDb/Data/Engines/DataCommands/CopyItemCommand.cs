@@ -1,7 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Linq;
-  using System.Threading;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
@@ -9,37 +8,25 @@
 
   public class CopyItemCommand : Sitecore.Data.Engines.DataCommands.CopyItemCommand, IDataEngineCommand
   {
-    private readonly ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
 
-    private readonly ThreadLocal<ItemCreator> itemCreator;
-
-    public CopyItemCommand()
+    public virtual void Initialize(DataStorage dataStorage)
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
-      this.itemCreator = new ThreadLocal<ItemCreator>();
-    }
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-    public virtual void Initialize(DataEngineCommand command)
-    {
-      this.innerCommand.Value = command;
-    }
-
-    public ItemCreator ItemCreator
-    {
-      get { return this.itemCreator.Value ?? (this.itemCreator.Value = new ItemCreator(this.innerCommand.Value.DataStorage)); }
-      set { this.itemCreator.Value = value; }
+      this.innerCommand.Initialize(dataStorage);
     }
 
     protected override Sitecore.Data.Engines.DataCommands.CopyItemCommand CreateInstance()
     {
-      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.CopyItemCommand, CopyItemCommand>();
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.CopyItemCommand, CopyItemCommand>();
     }
 
     protected override Item DoExecute()
     {
-      ItemCreator.Create(this.CopyName, this.CopyId, this.Source.TemplateID, this.Database, this.Destination);
+      this.innerCommand.DataStorage.Create(this.CopyName, this.CopyId, this.Source.TemplateID, this.Destination);
 
-      var dataStorage = this.innerCommand.Value.DataStorage;
+      var dataStorage = this.innerCommand.DataStorage;
 
       var fakeItem = dataStorage.GetFakeItem(this.Source.ID);
       var fakeCopy = dataStorage.GetFakeItem(this.CopyId);
@@ -48,12 +35,14 @@
 
       var copy = dataStorage.GetSitecoreItem(this.CopyId, this.Source.Language);
 
-      if (this.Deep)
+      if (!this.Deep)
       {
-        foreach (Item child in this.Source.Children)
-        {
-          ItemManager.CopyItem(child, copy, this.Deep, child.Name, ID.NewID);
-        }
+        return copy;
+      }
+
+      foreach (Item child in this.Source.Children)
+      {
+        ItemManager.CopyItem(child, copy, this.Deep, child.Name, ID.NewID);
       }
 
       return copy;
@@ -66,7 +55,7 @@
 
       foreach (var field in source.Fields)
       {
-        CopyField(field, copy);
+        this.CopyField(field, copy);
       }
     }
 
@@ -92,7 +81,6 @@
           copy.Fields[field.ID].Values.Add(language, versions);
         }
       }
-
     }
   }
 }

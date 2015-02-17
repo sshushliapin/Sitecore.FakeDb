@@ -1,31 +1,28 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Linq;
-  using System.Threading;
   using Sitecore.Collections;
+  using Sitecore.Diagnostics;
 
   public class GetChildrenCommand : Sitecore.Data.Engines.DataCommands.GetChildrenCommand, IDataEngineCommand
   {
-    private readonly ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
 
-    public GetChildrenCommand()
+    public virtual void Initialize(DataStorage dataStorage)
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
-    }
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-    public virtual void Initialize(DataEngineCommand command)
-    {
-      this.innerCommand.Value = command;
+      this.innerCommand.Initialize(dataStorage);
     }
 
     protected override Sitecore.Data.Engines.DataCommands.GetChildrenCommand CreateInstance()
     {
-      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.GetChildrenCommand, GetChildrenCommand>();
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetChildrenCommand, GetChildrenCommand>();
     }
 
     protected override ItemList DoExecute()
     {
-      var item = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
+      var item = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
       var itemList = new ItemList();
 
       if (item == null)
@@ -33,7 +30,7 @@
         return itemList;
       }
 
-      var children = item.Children.Select(child => this.innerCommand.Value.DataStorage.GetSitecoreItem(child.ID, this.Item.Language));
+      var children = item.Children.Select(child => this.innerCommand.DataStorage.GetSitecoreItem(child.ID, this.Item.Language));
       itemList.AddRange(children);
 
       return itemList;

@@ -14,14 +14,11 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var createdCommand = Substitute.For<GetChildrenCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetChildrenCommand, GetChildrenCommand>().Returns(createdCommand);
-
       var command = new OpenGetChildrenCommand();
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act & assert
-      command.CreateInstance().Should().Be(createdCommand);
+      command.CreateInstance().Should().BeOfType<GetChildrenCommand>();
     }
 
     [Fact]
@@ -42,7 +39,7 @@
 
       var command = new OpenGetChildrenCommand { Engine = new DataEngine(this.database) };
       command.Initialize(item);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var children = command.DoExecute();
@@ -60,7 +57,7 @@
 
       var command = new OpenGetChildrenCommand { Engine = new DataEngine(this.database) };
       command.Initialize(item);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var children = command.DoExecute();

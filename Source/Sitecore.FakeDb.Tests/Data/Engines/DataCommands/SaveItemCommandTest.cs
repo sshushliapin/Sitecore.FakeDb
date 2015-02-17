@@ -30,18 +30,14 @@
       this.dataStorage.GetFakeTemplate(null).ReturnsForAnyArgs(new DbTemplate("Sample", this.templateId));
 
       this.command = new OpenSaveItemCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.innerCommand);
+      this.command.Initialize(this.dataStorage);
     }
 
     [Fact]
     public void ShouldCreateInstance()
     {
-      // arsange
-      var createdCommand = Substitute.For<SaveItemCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.SaveItemCommand, SaveItemCommand>().Returns(createdCommand);
-
       // act & assert
-      this.command.CreateInstance().Should().Be(createdCommand);
+      this.command.CreateInstance().Should().BeOfType<SaveItemCommand>();
     }
 
     [Fact]

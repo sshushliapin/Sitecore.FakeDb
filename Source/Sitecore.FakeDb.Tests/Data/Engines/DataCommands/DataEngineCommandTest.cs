@@ -9,23 +9,27 @@
 
   public class DataEngineCommandTest
   {
-    private DataStorage dataStorage = Substitute.For<DataStorage>(Database.GetDatabase("master"));
+    private readonly DataStorage dataStorage = Substitute.For<DataStorage>(Database.GetDatabase("master"));
 
     [Fact]
-    public void ShouuldReceiveDataStorage()
+    public void ShouldSetDataStorage()
     {
+      // arrange
+      var command = new DataEngineCommand();
+
       // act
-      var command = new DataEngineCommand(dataStorage);
+      command.Initialize(this.dataStorage);
 
       // assert
-      command.DataStorage.Should().Be(dataStorage);
+      command.DataStorage.Should().Be(this.dataStorage);
     }
 
     [Fact]
     public void ShouldCreateInstance()
     {
       // arrange
-      var command = new DataEngineCommand(this.dataStorage);
+      var command = new DataEngineCommand();
+      command.Initialize(this.dataStorage);
 
       // act
       var newCommand = command.CreateInstance<Sitecore.Data.Engines.DataCommands.GetItemCommand, GetItemCommand>();
