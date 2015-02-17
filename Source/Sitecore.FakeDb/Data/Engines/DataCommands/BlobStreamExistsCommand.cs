@@ -5,15 +5,15 @@
 
   public class BlobStreamExistsCommand : Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand, IDataEngineCommand
   {
-    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
+    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
 
     private Guid blobId;
 
-    public virtual void Initialize(DataEngineCommand command)
+    public virtual void Initialize(DataStorage dataStorage)
     {
-      Assert.ArgumentNotNull(command, "command");
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand = command;
+      this.innerCommand.Initialize(dataStorage);
     }
 
     // TODO: CMS issue. The base.BlobId property should not be private.

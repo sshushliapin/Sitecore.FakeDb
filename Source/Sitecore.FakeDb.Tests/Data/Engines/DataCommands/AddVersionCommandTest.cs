@@ -20,7 +20,7 @@
       this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.AddVersionCommand, AddVersionCommand>().Returns(createdCommand);
 
       var command = new OpenAddVersionCommand();
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act & assert
       command.CreateInstance().Should().Be(createdCommand);
@@ -38,7 +38,7 @@
 
       var command = new OpenAddVersionCommand();
       command.Initialize(item);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       command.DoExecute();
@@ -64,7 +64,7 @@
 
       var command = new OpenAddVersionCommand();
       command.Initialize(originalItem);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var result = command.DoExecute();
@@ -85,7 +85,7 @@
 
       var command = new OpenAddVersionCommand();
       command.Initialize(item);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       command.DoExecute();
@@ -106,7 +106,7 @@
 
       var command = new OpenAddVersionCommand();
       command.Initialize(item);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       command.DoExecute();

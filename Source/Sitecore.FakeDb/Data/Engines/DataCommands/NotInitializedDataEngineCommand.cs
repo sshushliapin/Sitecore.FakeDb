@@ -2,6 +2,14 @@
 {
   using System;
 
+
+
+
+
+
+
+
+
   public class NotInitializedDataEngineCommand : DataEngineCommand
   {
     private const string ExceptionText = "Sitecore.FakeDb.Db instance has not been initialized.";

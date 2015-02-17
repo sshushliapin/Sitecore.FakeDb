@@ -19,7 +19,7 @@
       this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.HasChildrenCommand, HasChildrenCommand>().Returns(createdCommand);
 
       var command = new OpenHasChildrenCommand();
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act & assert
       command.CreateInstance().Should().Be(createdCommand);
@@ -38,7 +38,7 @@
 
       var command = new OpenHasChildrenCommand { Engine = new DataEngine(this.database) };
       command.Initialize(item);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var result = command.DoExecute();
@@ -60,7 +60,7 @@
 
       var command = new OpenHasChildrenCommand { Engine = new DataEngine(this.database) };
       command.Initialize(sitecoreItem);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var result = command.DoExecute();

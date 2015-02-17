@@ -7,13 +7,13 @@
 
   public class GetVersionsCommand : Sitecore.Data.Engines.DataCommands.GetVersionsCommand, IDataEngineCommand
   {
-    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
+    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
 
-    public virtual void Initialize(DataEngineCommand command)
+    public virtual void Initialize(DataStorage dataStorage)
     {
-      Assert.ArgumentNotNull(command, "command");
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand = command;
+      this.innerCommand.Initialize(dataStorage);
     }
 
     protected override Sitecore.Data.Engines.DataCommands.GetVersionsCommand CreateInstance()

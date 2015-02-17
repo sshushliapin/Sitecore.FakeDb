@@ -14,8 +14,11 @@
     [Fact]
     public void ShouldSetDataStorage()
     {
+      // arrange
+      var command = new DataEngineCommand();
+
       // act
-      var command = new DataEngineCommand(this.dataStorage);
+      command.Initialize(this.dataStorage);
 
       // assert
       command.DataStorage.Should().Be(this.dataStorage);
@@ -25,7 +28,7 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var command = new DataEngineCommand(this.dataStorage);
+      var command = new DataEngineCommand();
 
       // act
       var newCommand = command.CreateInstance<Sitecore.Data.Engines.DataCommands.GetItemCommand, GetItemCommand>();

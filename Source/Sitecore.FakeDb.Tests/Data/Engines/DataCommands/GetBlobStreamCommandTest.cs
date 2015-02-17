@@ -15,7 +15,7 @@
     public GetBlobStreamCommandTest()
     {
       this.command = new OpenGetBlobStreamCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.innerCommand);
+      this.command.Initialize(this.dataStorage);
     }
 
     [Fact]
