@@ -39,6 +39,8 @@
       this.Add(new DbField(FieldIDs.Updated));
       this.Add(new DbField(FieldIDs.UpdatedBy));
       this.Add(new DbField(FieldIDs.Revision));
+
+      this.Add(new DbField(FieldIDs.Hidden));
     }
 
     public void Add(string fieldName)

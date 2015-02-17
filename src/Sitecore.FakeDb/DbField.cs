@@ -18,6 +18,8 @@
         { FieldIDs.BaseTemplate, "__Base template" },   
         { FieldIDs.Created, "__Created" },
         { FieldIDs.CreatedBy, "__Created by" },
+        { FieldIDs.Hidden, "__Hidden" },
+        { FieldIDs.ReadOnly, "__Read Only" },
         { FieldIDs.LayoutField, "__Renderings" }, 
         { FieldIDs.Revision, "__Revision" }, 
         { FieldIDs.Lock, "__Lock" }, 
@@ -32,6 +34,8 @@
         { "__Base template", FieldIDs.BaseTemplate },   
         { "__Created", FieldIDs.Created },
         { "__Created by", FieldIDs.CreatedBy },
+        { "__Hidden", FieldIDs.Hidden },
+        { "__Read Only", FieldIDs.ReadOnly },
         { "__Renderings", FieldIDs.LayoutField }, 
         { "__Revision", FieldIDs.Revision }, 
         { "__Lock", FieldIDs.Lock }, 
@@ -141,7 +145,7 @@
         return;
       }
 
-      for (int i = version - 1; i > 0; --i)
+      for (var i = version - 1; i > 0; --i)
       {
         if (this.values[language].ContainsKey(i))
         {
@@ -230,16 +234,14 @@
     {
       Assert.ArgumentNotNullOrEmpty(language, "language");
 
-      if (this.values.ContainsKey(language))
+      if (!this.values.ContainsKey(language))
       {
-        var langValues = this.values[language];
-        if (langValues.Any())
-        {
-          return langValues.Last().Key;
-        }
+        return 0;
       }
 
-      return 0;
+      var langValues = this.values[language];
+
+      return langValues.Any() ? langValues.Last().Key : 0;
     }
   }
 }
