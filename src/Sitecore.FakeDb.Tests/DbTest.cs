@@ -1126,13 +1126,13 @@
         template.GetBaseTemplates().Any(t => t.ID == baseId).Should().BeTrue();
 
         template.GetField(FieldIDs.BaseTemplate).Should().NotBeNull();
-        template.GetField(WellknownFields.FieldIdToNameMapping[FieldIDs.BaseTemplate]).Should().NotBeNull();
+        template.GetField("__Base template").Should().NotBeNull();
 
         templateItem.Fields[FieldIDs.BaseTemplate].Should().NotBeNull();
         templateItem.Fields[FieldIDs.BaseTemplate].Value.Should().Contain(baseId.ToString());
 
-        templateItem.Fields[WellknownFields.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Should().NotBeNull();
-        templateItem.Fields[WellknownFields.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Value.Should().Contain(baseId.ToString());
+        templateItem.Fields["__Base template"].Should().NotBeNull();
+        templateItem.Fields["__Base template"].Value.Should().Contain(baseId.ToString());
       }
     }
 
