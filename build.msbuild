@@ -33,7 +33,7 @@
 
   <Target Name="Packages" DependsOnTargets="Tests">
     <MakeDir Directories="$(DeployFolder)" />
-    
+
     <Exec Command="$(NuGet) pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
 
     <Copy SourceFiles="$(SourceFolder)/Sitecore.FakeDb.NSubstitute.Tests/App.config" DestinationFiles="$(SourceFolder)/Sitecore.FakeDb.NSubstitute.Tests/App.config.transform" />
@@ -47,6 +47,8 @@
   </Target>
 
   <Target Name="Deploy" DependsOnTargets="Packages">
-    <Exec Command="$(NuGet) push ..\$(DeployFolder)\*.nupkg" WorkingDirectory="$(DeployFolder)" />
+    <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
+    <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.NSubstitute.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
+    <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.Serialization.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
   </Target>
 </Project>
