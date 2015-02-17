@@ -1,4 +1,12 @@
-﻿0.23.0
+﻿0.24.0
+* [NEW] #36: Introduce strongly typed LinkField configuration
+* [NEW] #37: Added support for shortened paths in serialized data. (thanks to @hermanussen)
+* [FIX] #35: Item.DeleteChildren() throws NullReferenceException if no fake item found in DataStorage
+* [FIX] #39: Encapsulate thread local datastorage management in the DataEngineCommand class
+* [FIX] #38: Get rid of the DataStorage dependency in the PipelineWatcher class
+* [FIX] #30: Using provided NUnit runner in JetBrains TeamCity. Partially fixed, waiting for Sitecore update
+
+0.23.0
 * [NEW] #32: Introduce IDTable provider switching
 * [NEW] #33: Specify item branch id
 * [FIX] #31: Use a higher level ItemManager.CopyItem() instead of ItemManager.Provider

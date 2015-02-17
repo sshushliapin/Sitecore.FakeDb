@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B1B3C599-9284-4653-9F22-FD0F726984BB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sitecore.FakeDb</RootNamespace>
+    <AssemblyName>Sitecore.FakeDb</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Lucene.Net">
+      <HintPath>..\..\Lib\Lucene.Net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sitecore.Kernel">
+      <HintPath>..\..\Lib\Sitecore.Kernel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="sitecore.nexus">
+      <HintPath>..\..\Lib\sitecore.nexus.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Configuration\Settings.cs" />
+    <Compile Include="Data\Engines\DataCommands\IDataEngineCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\DataEngineCommand.cs" />
+    <Compile Include="Configuration\DbConfiguration.cs" />
+    <Compile Include="Data\FakeStandardValuesProvider.cs" />
+    <Compile Include="Data\IDTables\IDTableProviderSwitcher.cs" />
+    <Compile Include="Data\Items\ItemWrapper.cs" />
+    <Compile Include="Data\IDTables\FakeIDTableProvider.cs" />
+    <Compile Include="DbLinkField.cs" />
+    <Compile Include="IDsDbItem.cs" />
+    <Compile Include="IThreadLocalProvider.cs" />
+    <Compile Include="Links\FakeLinkDatabase.cs" />
+    <Compile Include="Links\LinkDatabaseSwitcher.cs" />
+    <Compile Include="Pipelines\AddDbItem\AddVersion.cs" />
+    <Compile Include="Pipelines\AddDbItem\SetAccess.cs" />
+    <Compile Include="Pipelines\AddDbItem\AddDbItemArgs.cs" />
+    <Compile Include="Pipelines\AddDbItem\SetStatistics.cs" />
+    <Compile Include="Pipelines\AddDbItem\SetParent.cs" />
+    <Compile Include="Pipelines\AddDbItem\CreateTemplate.cs" />
+    <Compile Include="Pipelines\AddDbItem\EnsureIsChild.cs" />
+    <Compile Include="Pipelines\AddDbItem\SetFullPath.cs" />
+    <Compile Include="Pipelines\AddDbItem\CreateItem.cs" />
+    <Compile Include="Pipelines\AddDbItem\CreateChildren.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ReleaseDbArgs.cs" />
+    <Compile Include="Pipelines\GetTranslation\GetFakeTranslation.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitGlobals.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitStandardValuesProvider.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommands.cs" />
+    <Compile Include="IRequireDataStorage.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitAuthorizationProvider.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitDataProviders.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitDbArgs.cs" />
+    <Compile Include="Pipelines\InitFakeDb\InitDbProcessor.cs" />
+    <Compile Include="Pipelines\IPipelineProcessor.cs" />
+    <Compile Include="Pipelines\ItemLoadingArgs.cs" />
+    <Compile Include="Pipelines\PipelineRunEventArgs.cs" />
+    <Compile Include="Pipelines\PipelineWatcherProcessor.cs" />
+    <Compile Include="Pipelines\PipelineWatcher.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ResetDataProviders.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ReleasePipelineWatcher.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ResetFactory.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ResetSettings.cs" />
+    <Compile Include="Pipelines\ReleaseFakeDb\ResetTemplateEngine.cs" />
+    <Compile Include="Profile\FakeUserProfile.cs" />
+    <Compile Include="Properties\AssemblyVersionInfo.cs" />
+    <Compile Include="Security\AccessControl\AllowAccessResult.cs" />
+    <Compile Include="Security\AccessControl\AuthorizationSwitcher.cs" />
+    <Compile Include="Security\AccessControl\DenyAccessResult.cs" />
+    <Compile Include="Security\Accounts\FakeMembershipUser.cs" />
+    <Compile Include="Security\Accounts\FakeRolesInRolesProvider.cs" />
+    <Compile Include="Security\Accounts\RolesInRolesSwitcher.cs" />
+    <Compile Include="Security\Web\MembershipSwitcher.cs" />
+    <Compile Include="Sites\FakeSiteContext.cs" />
+    <Compile Include="ThreadLocalProviderSwitcher.cs" />
+    <Compile Include="Resources\Media\FakeMediaProvider.cs" />
+    <Compile Include="Resources\Media\MediaProviderSwitcher.cs" />
+    <Compile Include="Security\AccessControl\DbItemAccess.cs" />
+    <Compile Include="Configuration\ClientDataStoreStub.cs" />
+    <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\AddVersionCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\BlobStreamExistsCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\CopyItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\DeleteItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetBlobStreamCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetParentCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetRootItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetChildrenCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\GetVersionsCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\HasChildrenCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\MoveItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\RemoveDataCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\RemoveVersionCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\SaveItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\ResolvePathCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\SetBlobStreamCommand.cs" />
+    <Compile Include="Data\DataProviders\FakeDataProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Engines\DataCommands\GetItemCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\CreateItemCommand.cs" />
+    <Compile Include="Data\Engines\DataStorage.cs" />
+    <Compile Include="Data\Items\ItemHelper.cs" />
+    <Compile Include="Db.cs" />
+    <Compile Include="DbField.cs" />
+    <Compile Include="DbFieldCollection.cs" />
+    <Compile Include="DbItem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\AccessControl\FakeAccessRightProvider.cs" />
+    <Compile Include="SecurityModel\FakeDomainProvider.cs" />
+    <Compile Include="DbTemplate.cs" />
+    <Compile Include="Security\AccessControl\FakeAuthorizationProvider.cs" />
+    <Compile Include="Security\Authentication\FakeAuthenticationProvider.cs" />
+    <Compile Include="Security\Authentication\SwitchingAuthenticationProvider.cs" />
+    <Compile Include="Security\Web\FakeMembershipProvider.cs" />
+    <Compile Include="Security\Web\FakeProfileProvider.cs" />
+    <Compile Include="Security\Web\FakeRoleProvider.cs" />
+    <Compile Include="Security\Web\RoleProviderSwitcher.cs" />
+    <Compile Include="Tasks\FakeTaskDatabase.cs" />
+    <Compile Include="Tasks\TaskDatabaseSwitcher.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

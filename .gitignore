@@ -159,4 +159,7 @@ $RECYCLE.BIN/
 license.xml
 
 #DLLs from the Lib/
-Lib/*.dll
+lib/*.dll
+
+#Deploy
+deploy/
