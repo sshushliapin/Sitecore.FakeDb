@@ -118,7 +118,6 @@
     <Compile Include="Data\Engines\DataCommands\GetItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetParentCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetRootItemCommandTest.cs" />
-    <Compile Include="Data\Engines\DataCommands\NotInitializedDataEngineCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\SaveItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\ResolvePathCommandTest.cs" />
     <Compile Include="Data\Engines\DataStorageTest.cs" />

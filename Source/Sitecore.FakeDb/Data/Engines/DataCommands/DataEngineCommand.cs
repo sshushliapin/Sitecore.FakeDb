@@ -6,8 +6,6 @@
 
   public class DataEngineCommand
   {
-    public static readonly DataEngineCommand NotInitialized = new NotInitializedDataEngineCommand();
-
     private const string ExceptionText = "Sitecore.FakeDb.Db instance has not been initialized.";
 
     private readonly ThreadLocal<DataStorage> dataStorageScope = new ThreadLocal<DataStorage>();
