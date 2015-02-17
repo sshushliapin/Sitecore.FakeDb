@@ -4,7 +4,6 @@
   using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
@@ -15,14 +14,11 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var createdCommand = Substitute.For<HasChildrenCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.HasChildrenCommand, HasChildrenCommand>().Returns(createdCommand);
-
       var command = new OpenHasChildrenCommand();
       command.Initialize(this.dataStorage);
 
       // act & assert
-      command.CreateInstance().Should().Be(createdCommand);
+      command.CreateInstance().Should().BeOfType<HasChildrenCommand>();
     }
 
     [Fact]

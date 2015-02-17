@@ -33,12 +33,8 @@
     [Fact]
     public void ShouldCreateInstance()
     {
-      // arrange
-      var createdCommand = Substitute.For<CopyItemCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.CopyItemCommand, CopyItemCommand>().Returns(createdCommand);
-
       // act & assert
-      this.command.CreateInstance().Should().Be(createdCommand);
+      this.command.CreateInstance().Should().BeOfType<CopyItemCommand>();
     }
 
     [Fact]

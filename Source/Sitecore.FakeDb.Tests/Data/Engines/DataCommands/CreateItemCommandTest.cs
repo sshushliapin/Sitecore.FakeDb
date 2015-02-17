@@ -15,14 +15,11 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var createdCommand = Substitute.For<CreateItemCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.CreateItemCommand, CreateItemCommand>().Returns(createdCommand);
-
       var command = new OpenCreateItemCommand();
       command.Initialize(this.dataStorage);
 
       // act & assert
-      command.CreateInstance().Should().Be(createdCommand);
+      command.CreateInstance().Should().BeOfType<CreateItemCommand>();
     }
 
     [Fact]

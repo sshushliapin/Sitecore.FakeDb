@@ -14,14 +14,11 @@
     public void ShouldCreateInstance()
     {
       // arrange
-      var createdCommand = Substitute.For<GetChildrenCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetChildrenCommand, GetChildrenCommand>().Returns(createdCommand);
-
       var command = new OpenGetChildrenCommand();
       command.Initialize(this.dataStorage);
 
       // act & assert
-      command.CreateInstance().Should().Be(createdCommand);
+      command.CreateInstance().Should().BeOfType<GetChildrenCommand>();
     }
 
     [Fact]

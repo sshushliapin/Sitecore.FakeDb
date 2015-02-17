@@ -3,7 +3,6 @@
   using System;
   using System.IO;
   using FluentAssertions;
-  using NSubstitute;
   using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Xunit;
@@ -21,12 +20,8 @@
     [Fact]
     public void ShouldCreateInstance()
     {
-      // arrange
-      var createdCommand = Substitute.For<GetBlobStreamCommand>();
-      this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetBlobStreamCommand, GetBlobStreamCommand>().Returns(createdCommand);
-
       // act & assert
-      this.command.CreateInstance().Should().Be(createdCommand);
+      this.command.CreateInstance().Should().BeOfType<GetBlobStreamCommand>();
     }
 
     [Fact]

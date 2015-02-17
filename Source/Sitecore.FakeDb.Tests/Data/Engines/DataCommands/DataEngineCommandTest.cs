@@ -29,6 +29,7 @@
     {
       // arrange
       var command = new DataEngineCommand();
+      command.Initialize(this.dataStorage);
 
       // act
       var newCommand = command.CreateInstance<Sitecore.Data.Engines.DataCommands.GetItemCommand, GetItemCommand>();
