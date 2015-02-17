@@ -7,16 +7,11 @@
 
   public class CreateItemCommand : Sitecore.Data.Engines.DataCommands.CreateItemCommand, IDataEngineCommand
   {
-    private readonly ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
 
-    public CreateItemCommand()
+    public virtual void Initialize(DataStorage dataStorage)
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
-    }
-
-    public virtual void Initialize(DataEngineCommand command)
-    {
-      this.innerCommand.Value = command;
+      this.innerCommand.Initialize(dataStorage);
     }
 
     public override Sitecore.Data.Engines.DataCommands.CreateItemCommand Clone(EventHandler<ExecutingEventArgs<Sitecore.Data.Engines.DataCommands.CreateItemCommand>> executingEvent, EventHandler<ExecutedEventArgs<Sitecore.Data.Engines.DataCommands.CreateItemCommand>> executedEvent)
@@ -26,12 +21,12 @@
 
     protected override Sitecore.Data.Engines.DataCommands.CreateItemCommand CreateInstance()
     {
-      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.CreateItemCommand, CreateItemCommand>();
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.CreateItemCommand, CreateItemCommand>();
     }
 
     protected override Item DoExecute()
     {
-      var dataStorage = this.innerCommand.Value.DataStorage;
+      var dataStorage = this.innerCommand.DataStorage;
       dataStorage.Create(this.ItemName, this.ItemId, this.TemplateId, this.Destination);
 
       return dataStorage.GetSitecoreItem(this.ItemId);

@@ -1,32 +1,26 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Linq;
-  using System.Threading;
   using Sitecore.Collections;
   using Sitecore.Data;
 
   public class GetVersionsCommand : Sitecore.Data.Engines.DataCommands.GetVersionsCommand, IDataEngineCommand
   {
-    private readonly ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
 
-    public GetVersionsCommand()
+    public virtual void Initialize(DataStorage dataStorage)
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
-    }
-
-    public virtual void Initialize(DataEngineCommand command)
-    {
-      this.innerCommand.Value = command;
+      this.innerCommand.Initialize(dataStorage);
     }
 
     protected override Sitecore.Data.Engines.DataCommands.GetVersionsCommand CreateInstance()
     {
-      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.GetVersionsCommand, GetVersionsCommand>();
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetVersionsCommand, GetVersionsCommand>();
     }
 
     protected override VersionCollection DoExecute()
     {
-      var dbitem = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
+      var dbitem = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
       var language = this.Language.Name;
       var versionsCount = 0;
 
@@ -38,13 +32,15 @@
       // TODO:[Minor] Should be moved to independent 'addDbItem' processor.
       foreach (var field in dbitem.Fields)
       {
-        if (field.Values.ContainsKey(language))
+        if (!field.Values.ContainsKey(language))
         {
-          var maxVersion = field.Values[language].Keys.OrderBy(k => k).LastOrDefault();
-          if (maxVersion > versionsCount)
-          {
-            versionsCount = maxVersion;
-          }
+          continue;
+        }
+
+        var maxVersion = field.Values[language].Keys.OrderBy(k => k).LastOrDefault();
+        if (maxVersion > versionsCount)
+        {
+          versionsCount = maxVersion;
         }
       }
 

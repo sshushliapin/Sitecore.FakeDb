@@ -1,7 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Linq;
-  using System.Threading;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
@@ -9,28 +8,23 @@
 
   public class CopyItemCommand : Sitecore.Data.Engines.DataCommands.CopyItemCommand, IDataEngineCommand
   {
-    private readonly ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
 
-    public CopyItemCommand()
+    public virtual void Initialize(DataStorage dataStorage)
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
-    }
-
-    public virtual void Initialize(DataEngineCommand command)
-    {
-      this.innerCommand.Value = command;
+      this.innerCommand.Initialize(dataStorage);
     }
 
     protected override Sitecore.Data.Engines.DataCommands.CopyItemCommand CreateInstance()
     {
-      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.CopyItemCommand, CopyItemCommand>();
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.CopyItemCommand, CopyItemCommand>();
     }
 
     protected override Item DoExecute()
     {
-      this.innerCommand.Value.DataStorage.Create(this.CopyName, this.CopyId, this.Source.TemplateID, this.Destination);
+      this.innerCommand.DataStorage.Create(this.CopyName, this.CopyId, this.Source.TemplateID, this.Destination);
 
-      var dataStorage = this.innerCommand.Value.DataStorage;
+      var dataStorage = this.innerCommand.DataStorage;
 
       var fakeItem = dataStorage.GetFakeItem(this.Source.ID);
       var fakeCopy = dataStorage.GetFakeItem(this.CopyId);

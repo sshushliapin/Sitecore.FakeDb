@@ -1,30 +1,24 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Linq;
-  using System.Threading;
 
   public class RemoveVersionCommand : Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, IDataEngineCommand
   {
-    private readonly ThreadLocal<DataEngineCommand> innerCommand;
+    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
 
-    public RemoveVersionCommand()
+    public virtual void Initialize(DataStorage dataStorage)
     {
-      this.innerCommand = new ThreadLocal<DataEngineCommand> { Value = DataEngineCommand.NotInitialized };
-    }
-
-    public virtual void Initialize(DataEngineCommand command)
-    {
-      this.innerCommand.Value = command;
+      this.innerCommand.Initialize(dataStorage);
     }
 
     protected override Sitecore.Data.Engines.DataCommands.RemoveVersionCommand CreateInstance()
     {
-      return this.innerCommand.Value.CreateInstance<Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, RemoveVersionCommand>();
+      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, RemoveVersionCommand>();
     }
 
     protected override bool DoExecute()
     {
-      var dbitem = this.innerCommand.Value.DataStorage.GetFakeItem(this.Item.ID);
+      var dbitem = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
       var language = this.Item.Language.Name;
 
       var removed = false;
@@ -42,13 +36,13 @@
         removed = langValues.Remove(lastVersion);
       }
 
-      if (dbitem.VersionsCount.ContainsKey(language))
+      if (!dbitem.VersionsCount.ContainsKey(language))
       {
-        dbitem.VersionsCount[language] -= 1;
-        removed = true;
+        return removed;
       }
 
-      return removed;
+      dbitem.VersionsCount[language] -= 1;
+      return true;
     }
   }
 }

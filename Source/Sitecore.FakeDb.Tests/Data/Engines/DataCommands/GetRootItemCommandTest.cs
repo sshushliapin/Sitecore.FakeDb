@@ -20,7 +20,7 @@
       this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetRootItemCommand, GetRootItemCommand>().Returns(createdCommand);
 
       var command = new OpenGetRootItemCommand();
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act & assert
       command.CreateInstance().Should().Be(createdCommand);
@@ -36,7 +36,7 @@
 
       var command = new OpenGetRootItemCommand { Engine = new DataEngine(this.database) };
       command.Initialize(LanguageManager.DefaultLanguage, Version.Latest);
-      command.Initialize(this.innerCommand);
+      command.Initialize(this.dataStorage);
 
       // act
       var result = command.DoExecute();

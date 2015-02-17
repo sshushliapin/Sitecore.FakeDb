@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Pipelines.InitFakeDb
 {
+  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
 
   public class InitDataEngineCommands : InitDbProcessor
@@ -7,7 +8,7 @@
     public override void Process(InitDbArgs args)
     {
       var commands = args.Database.Engines.DataEngine.Commands;
-      var innerCommand = new DataEngineCommand(args.DataStorage);
+      var innerCommand = args.DataStorage;
 
       this.InitializeCommand(commands.AddFromTemplatePrototype, innerCommand);
       this.InitializeCommand(commands.AddVersionPrototype, innerCommand);
@@ -29,12 +30,12 @@
       this.InitializeCommand(commands.SetBlobStreamPrototype, innerCommand);
     }
 
-    protected virtual void InitializeCommand(object command, DataEngineCommand innerCommand)
+    protected virtual void InitializeCommand(object command, DataStorage dataStorage)
     {
       var cmd = command as IDataEngineCommand;
       if (cmd != null)
       {
-        cmd.Initialize(innerCommand);
+        cmd.Initialize(dataStorage);
       }
     }
   }
