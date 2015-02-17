@@ -34,7 +34,7 @@
       }
       else
       {
-        this.Name = StandardFields.FieldIdToNameMapping.ContainsKey(id) ? StandardFields.FieldIdToNameMapping[id] : this.Name = id.ToShortID().ToString();
+        this.Name = WellknownFields.FieldIdToNameMapping.ContainsKey(id) ? WellknownFields.FieldIdToNameMapping[id] : this.Name = id.ToShortID().ToString();
       }
 
       if (!ID.IsNullOrEmpty(id))
@@ -43,7 +43,8 @@
       }
       else
       {
-        this.ID = StandardFields.FieldNameToIdMapping.ContainsKey(name) ? StandardFields.FieldNameToIdMapping[name] : ID.NewID;
+        var keyValuePair = WellknownFields.FieldIdToNameMapping.FirstOrDefault(kvp => kvp.Value == name);
+        this.ID = !ID.IsNullOrEmpty(keyValuePair.Key) ? keyValuePair.Key : ID.NewID;
       }
 
       if (this.Name.StartsWith("__"))

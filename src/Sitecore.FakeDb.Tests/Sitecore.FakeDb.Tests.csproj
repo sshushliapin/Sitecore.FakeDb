@@ -163,7 +163,7 @@
     <Compile Include="Security\RoleProviderSwitcherTest.cs" />
     <Compile Include="Sites\FakeSiteContextTest.cs" />
     <Compile Include="Sites\SiteContextSwitcherTest.cs" />
-    <Compile Include="StandardFieldsTest.cs" />
+    <Compile Include="WellknownFieldsTest.cs" />
     <Compile Include="ThreadLocalProviderSwitcherTest.cs" />
     <Compile Include="Links\LinkDatabaseSwitcherTest.cs" />
     <Compile Include="Pipelines\PipelineWatcherProcessorTests.cs" />
