@@ -53,24 +53,24 @@
       processor.Process(args);
 
       // assert
-      ((IDataEngineCommand)commands.AddFromTemplatePrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.AddVersionPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.BlobStreamExistsPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.CopyItemPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.CreateItemPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.DeletePrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.GetBlobStreamPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.GetChildrenPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.GetItemPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.GetParentPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.GetRootItemPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.GetVersionsPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.HasChildrenPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.MoveItemPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.RemoveVersionPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.ResolvePathPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.SaveItemPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
-      ((IDataEngineCommand)commands.SetBlobStreamPrototype).Received().Initialize(Arg.Is<DataStorage>(ds => ds == this.dataStorage));
+      ((IDataEngineCommand)commands.AddFromTemplatePrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.AddVersionPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.BlobStreamExistsPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.CopyItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.CreateItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.DeletePrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.GetBlobStreamPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.GetChildrenPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.GetItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.GetParentPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.GetRootItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.GetVersionsPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.HasChildrenPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.MoveItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.RemoveVersionPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.ResolvePathPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.SaveItemPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
+      ((IDataEngineCommand)commands.SetBlobStreamPrototype).Received().Initialize(Arg.Is<DataEngineCommand>(c => c.DataStorage == this.dataStorage));
     }
 
     public void Dispose()

@@ -9,22 +9,26 @@
 
     private readonly ThreadLocal<DataStorage> dataStorageScope = new ThreadLocal<DataStorage>();
 
+    public DataEngineCommand(DataStorage dataStorage)
+    {
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
+
+      this.dataStorageScope.Value = dataStorage;
+    }
+
+    protected DataEngineCommand()
+    {
+    }
+
     public virtual DataStorage DataStorage
     {
       get { return this.dataStorageScope.Value; }
     }
 
-    public void Initialize(DataStorage dataStorage)
-    {
-      Assert.ArgumentNotNull(dataStorage, "dataStorageScope");
-
-      this.dataStorageScope.Value = dataStorage;
-    }
-
     public virtual TBaseCommand CreateInstance<TBaseCommand, TCommand>() where TCommand : TBaseCommand, IDataEngineCommand, new()
     {
       var command = new TCommand();
-      command.Initialize(this.DataStorage);
+      command.Initialize(this);
 
       return command;
     }

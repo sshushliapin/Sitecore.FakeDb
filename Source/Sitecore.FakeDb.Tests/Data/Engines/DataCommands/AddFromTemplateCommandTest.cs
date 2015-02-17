@@ -19,7 +19,7 @@
       this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand, AddFromTemplateCommand>().Returns(createdCommand);
 
       var command = new OpenAddFromTemplateCommand();
-      command.Initialize(this.dataStorage);
+      command.Initialize(this.innerCommand);
 
       // act & assert
       command.CreateInstance().Should().Be(createdCommand);
@@ -39,7 +39,7 @@
 
       var command = new OpenAddFromTemplateCommand { Engine = new DataEngine(database) };
       command.Initialize("home", templateId, destination, itemId);
-      command.Initialize(this.dataStorage);
+      command.Initialize(this.innerCommand);
 
       // act
       var result = command.DoExecute();

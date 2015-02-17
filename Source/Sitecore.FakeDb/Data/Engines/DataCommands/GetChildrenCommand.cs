@@ -2,14 +2,17 @@
 {
   using System.Linq;
   using Sitecore.Collections;
+  using Sitecore.Diagnostics;
 
   public class GetChildrenCommand : Sitecore.Data.Engines.DataCommands.GetChildrenCommand, IDataEngineCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public virtual void Initialize(DataEngineCommand command)
     {
-      this.innerCommand.Initialize(dataStorage);
+      Assert.ArgumentNotNull(command, "command");
+
+      this.innerCommand = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.GetChildrenCommand CreateInstance()

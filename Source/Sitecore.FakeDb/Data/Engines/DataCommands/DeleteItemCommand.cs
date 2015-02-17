@@ -2,14 +2,17 @@
 {
   using System.Collections.Generic;
   using Sitecore.Data;
+  using Sitecore.Diagnostics;
 
   public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand, IDataEngineCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public virtual void Initialize(DataEngineCommand command)
     {
-      this.innerCommand.Initialize(dataStorage);
+      Assert.ArgumentNotNull(command, "command");
+
+      this.innerCommand = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.DeleteItemCommand CreateInstance()

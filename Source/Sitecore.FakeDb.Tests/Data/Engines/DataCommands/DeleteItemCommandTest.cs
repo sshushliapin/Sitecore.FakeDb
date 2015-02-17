@@ -15,7 +15,7 @@
     public DeleteItemCommandTest()
     {
       this.command = new OpenDeleteItemCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
+      this.command.Initialize(this.innerCommand);
     }
 
     [Fact]

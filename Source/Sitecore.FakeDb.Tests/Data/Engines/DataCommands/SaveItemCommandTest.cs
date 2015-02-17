@@ -30,7 +30,7 @@
       this.dataStorage.GetFakeTemplate(null).ReturnsForAnyArgs(new DbTemplate("Sample", this.templateId));
 
       this.command = new OpenSaveItemCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
+      this.command.Initialize(this.innerCommand);
     }
 
     [Fact]

@@ -19,7 +19,7 @@
       this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetVersionsCommand, GetVersionsCommand>().Returns(createdCommand);
 
       var command = new OpenGetVersionsCommand();
-      command.Initialize(this.dataStorage);
+      command.Initialize(this.innerCommand);
 
       // act & assert
       command.CreateInstance().Should().Be(createdCommand);
@@ -37,7 +37,7 @@
 
       var command = new OpenGetVersionsCommand();
       command.Initialize(item, language);
-      command.Initialize(this.dataStorage);
+      command.Initialize(this.innerCommand);
 
       // act
       var versionCollection = command.DoExecute();
@@ -59,7 +59,7 @@
 
       var command = new OpenGetVersionsCommand();
       command.Initialize(item, language);
-      command.Initialize(this.dataStorage);
+      command.Initialize(this.innerCommand);
 
       // act
       var versionCollection = command.DoExecute();
@@ -84,7 +84,7 @@
 
       var command = new OpenGetVersionsCommand();
       command.Initialize(item, language);
-      command.Initialize(this.dataStorage);
+      command.Initialize(this.innerCommand);
 
       // act
       var versionCollection = command.DoExecute();

@@ -15,7 +15,7 @@
     public BlobStreamExistsCommandTest()
     {
       this.command = new OpenBlobStreamExistsCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
+      this.command.Initialize(this.innerCommand);
     }
 
     [Fact]

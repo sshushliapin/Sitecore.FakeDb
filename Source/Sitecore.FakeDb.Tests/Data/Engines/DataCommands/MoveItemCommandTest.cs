@@ -18,7 +18,7 @@
       this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.MoveItemCommand, MoveItemCommand>().Returns(createdCommand);
 
       var command = new OpenMoveItemCommand();
-      command.Initialize(this.dataStorage);
+      command.Initialize(this.innerCommand);
 
       // act & assert
       command.CreateInstance().Should().Be(createdCommand);
@@ -48,7 +48,7 @@
 
       var command = new OpenMoveItemCommand();
       command.Initialize(item, destination);
-      command.Initialize(this.dataStorage);
+      command.Initialize(this.innerCommand);
 
       // act
       var result = command.DoExecute();

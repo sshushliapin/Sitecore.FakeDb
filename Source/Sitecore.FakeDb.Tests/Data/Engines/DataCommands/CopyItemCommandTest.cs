@@ -27,7 +27,7 @@
       this.copyId = ID.NewID;
 
       this.command = new OpenCopyItemCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
+      this.command.Initialize(this.innerCommand);
     }
 
     [Fact]

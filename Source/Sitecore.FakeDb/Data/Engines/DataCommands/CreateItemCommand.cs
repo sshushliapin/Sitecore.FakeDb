@@ -1,22 +1,17 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using System;
-  using System.Threading;
-  using Sitecore.Data.Events;
   using Sitecore.Data.Items;
+  using Sitecore.Diagnostics;
 
   public class CreateItemCommand : Sitecore.Data.Engines.DataCommands.CreateItemCommand, IDataEngineCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public virtual void Initialize(DataEngineCommand command)
     {
-      this.innerCommand.Initialize(dataStorage);
-    }
+      Assert.ArgumentNotNull(command, "command");
 
-    public override Sitecore.Data.Engines.DataCommands.CreateItemCommand Clone(EventHandler<ExecutingEventArgs<Sitecore.Data.Engines.DataCommands.CreateItemCommand>> executingEvent, EventHandler<ExecutedEventArgs<Sitecore.Data.Engines.DataCommands.CreateItemCommand>> executedEvent)
-    {
-      return base.Clone();
+      this.innerCommand = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.CreateItemCommand CreateInstance()

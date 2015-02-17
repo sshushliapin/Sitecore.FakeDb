@@ -2,6 +2,6 @@
 {
   public interface IDataEngineCommand
   {
-    void Initialize(DataStorage dataStorage);
+    void Initialize(DataEngineCommand command);
   }
 }

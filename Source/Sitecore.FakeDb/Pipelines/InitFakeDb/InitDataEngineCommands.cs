@@ -8,7 +8,7 @@
     public override void Process(InitDbArgs args)
     {
       var commands = args.Database.Engines.DataEngine.Commands;
-      var innerCommand = args.DataStorage;
+      var innerCommand = new DataEngineCommand(args.DataStorage);
 
       this.InitializeCommand(commands.AddFromTemplatePrototype, innerCommand);
       this.InitializeCommand(commands.AddVersionPrototype, innerCommand);
@@ -30,12 +30,12 @@
       this.InitializeCommand(commands.SetBlobStreamPrototype, innerCommand);
     }
 
-    protected virtual void InitializeCommand(object command, DataStorage dataStorage)
+    protected virtual void InitializeCommand(object command, DataEngineCommand innerCommand)
     {
       var cmd = command as IDataEngineCommand;
       if (cmd != null)
       {
-        cmd.Initialize(dataStorage);
+        cmd.Initialize(innerCommand);
       }
     }
   }

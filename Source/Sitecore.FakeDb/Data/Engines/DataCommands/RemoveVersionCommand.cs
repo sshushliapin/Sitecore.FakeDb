@@ -1,14 +1,17 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System.Linq;
+  using Sitecore.Diagnostics;
 
   public class RemoveVersionCommand : Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, IDataEngineCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private DataEngineCommand innerCommand = DataEngineCommand.NotInitialized;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public virtual void Initialize(DataEngineCommand command)
     {
-      this.innerCommand.Initialize(dataStorage);
+      Assert.ArgumentNotNull(command, "command");
+
+      this.innerCommand = command;
     }
 
     protected override Sitecore.Data.Engines.DataCommands.RemoveVersionCommand CreateInstance()
