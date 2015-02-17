@@ -50,6 +50,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoFixture.3.23.1\lib\net40\Ploeh.AutoFixture.dll</HintPath>
     </Reference>
+    <Reference Include="Ploeh.AutoFixture.Xunit">
+      <HintPath>..\packages\AutoFixture.Xunit.3.23.1\lib\net40\Ploeh.AutoFixture.Xunit.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.ContentSearch">
       <HintPath>..\..\Lib\Sitecore.ContentSearch.dll</HintPath>
     </Reference>
@@ -139,6 +142,7 @@
     <Compile Include="DbTest.cs" />
     <Compile Include="DbItemTest.cs" />
     <Compile Include="Data\Query\FastQueryTest.cs" />
+    <Compile Include="FieldNamingHelperTest.cs" />
     <Compile Include="GettingStarted.cs" />
     <Compile Include="Globalization\TranslateTest.cs" />
     <Compile Include="GlobalsTest.cs" />
