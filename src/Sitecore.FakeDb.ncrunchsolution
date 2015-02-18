@@ -7,7 +7,7 @@
   <FrameworkUtilisationTypeForGallio>UseStaticAnalysis</FrameworkUtilisationTypeForGallio>
   <FrameworkUtilisationTypeForMSpec>UseStaticAnalysis</FrameworkUtilisationTypeForMSpec>
   <FrameworkUtilisationTypeForMSTest>UseStaticAnalysis</FrameworkUtilisationTypeForMSTest>
-  <AdditionalFilesToInclude>Sitecore.FakeDb.Tests\App.config</AdditionalFilesToInclude>
+  <AdditionalFilesToInclude>Sitecore.FakeDb.Tests\App.config;Sitecore.FakeDb.nuget.xslt</AdditionalFilesToInclude>
   <MetricsExclusionList>
 </MetricsExclusionList>
 </SolutionConfiguration>
