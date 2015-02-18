@@ -7,21 +7,27 @@
 
   public class FieldNamingHelper
   {
-    private static readonly IDictionary<ID, string> WellknownFields = new ReadOnlyDictionary<ID, string>(new Dictionary<ID, string>
-      {
-        { FieldIDs.BaseTemplate, "__Base template" },   
-        { FieldIDs.Created, "__Created" },
-        { FieldIDs.CreatedBy, "__Created by" },
-        { FieldIDs.Hidden, "__Hidden" },
-        { FieldIDs.ReadOnly, "__Read Only" },
-        { FieldIDs.LayoutField, "__Renderings" }, 
-        { FieldIDs.Revision, "__Revision" }, 
-        { FieldIDs.Lock, "__Lock" }, 
-        { FieldIDs.Security, "__Security" }, 
-        { FieldIDs.StandardValues, "__Standard values" },
-        { FieldIDs.Updated, "__Updated" },
-        { FieldIDs.UpdatedBy, "__Updated by" }
-      });
+    private static readonly IDictionary<ID, string> WellknownFields =
+      new ReadOnlyDictionary<ID, string>(
+        new Dictionary<ID, string>
+          {
+            // Appearance
+            { FieldIDs.DisplayName, "__Display name" },
+            { FieldIDs.Hidden, "__Hidden" },
+            { FieldIDs.ReadOnly, "__Read Only" },
+
+            // Other
+            { FieldIDs.BaseTemplate, "__Base template" },
+            { FieldIDs.Created, "__Created" },
+            { FieldIDs.CreatedBy, "__Created by" },
+            { FieldIDs.LayoutField, "__Renderings" },
+            { FieldIDs.Revision, "__Revision" },
+            { FieldIDs.Lock, "__Lock" },
+            { FieldIDs.Security, "__Security" },
+            { FieldIDs.StandardValues, "__Standard values" },
+            { FieldIDs.Updated, "__Updated" },
+            { FieldIDs.UpdatedBy, "__Updated by" }
+          });
 
     public KeyValuePair<ID, string> GetFieldIdNamePair(ID id, string name)
     {

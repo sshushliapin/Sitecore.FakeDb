@@ -42,11 +42,15 @@
         // act
         using (new EditContext(item))
         {
+          item.Appearance.DisplayName = "Home";
           item.Appearance.Hidden = true;
+          item.Appearance.ReadOnly = true;
         }
 
         // assert
+        item.Appearance.DisplayName.Should().Be("Home");
         item.Appearance.Hidden.Should().BeTrue();
+        item.Appearance.ReadOnly.Should().BeTrue();
       }
     }
   }

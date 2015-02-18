@@ -7,7 +7,8 @@
 
   public class FieldNamingHelperTest
   {
-    [Theory, AutoData]
+    [Theory]
+    [AutoData]
     public void ShouldReturnSuggestedIdNamePair(ID id, string name)
     {
       // arrange
