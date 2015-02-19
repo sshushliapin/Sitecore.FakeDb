@@ -85,7 +85,6 @@
     <Compile Include="Pipelines\InitFakeDb\InitStandardValuesProvider.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommands.cs" />
     <Compile Include="IRequireDataStorage.cs" />
-    <Compile Include="Pipelines\InitFakeDb\InitAuthorizationProvider.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDataProviders.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbArgs.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbProcessor.cs" />
