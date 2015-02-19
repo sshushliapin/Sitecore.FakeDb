@@ -53,5 +53,21 @@
         item.Appearance.ReadOnly.Should().BeTrue();
       }
     }
+
+    [Fact]
+    public void ShouldCreateReadonlyItem()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home") { { FieldIDs.ReadOnly, "1" } }
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // assert
+        item.Appearance.ReadOnly.Should().BeTrue();
+      }
+    }
   }
 }
