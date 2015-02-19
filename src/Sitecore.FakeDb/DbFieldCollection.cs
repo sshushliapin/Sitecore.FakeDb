@@ -2,7 +2,6 @@
 {
   using System.Collections;
   using System.Collections.Generic;
-  using System.Linq;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
@@ -50,7 +49,12 @@
       Assert.ArgumentNotNullOrEmpty(fieldName, "fieldName");
 
       var field = new DbField(fieldName) { Value = fieldValue };
+      this.Add(field);
+    }
 
+    public void Add(ID fieldId, string fieldValue)
+    {
+      var field = new DbField(fieldId) { Value = fieldValue };
       this.Add(field);
     }
 
