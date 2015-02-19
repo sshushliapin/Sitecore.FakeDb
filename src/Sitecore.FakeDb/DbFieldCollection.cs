@@ -28,14 +28,7 @@
       {
         Assert.ArgumentNotNull(value, "value");
 
-        if (this.fields.ContainsKey(value.ID))
-        {
-          this.fields[value.ID] = value;
-        }
-        else
-        {
-          this.fields.Add(value.ID, value);
-        }
+        this.fields[value.ID] = value;
       }
     }
 
