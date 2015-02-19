@@ -1114,7 +1114,7 @@
       using (var db = new Db
                         {
                           new DbTemplate("base", baseId), 
-                          new DbTemplate("main", this.templateId) { BaseIDs = new ID[] { baseId } }
+                          new DbTemplate("main", this.templateId) { BaseIDs = new[] { baseId } }
                         })
       {
         var template = TemplateManager.GetTemplate("main", db.Database);
@@ -1126,13 +1126,13 @@
         template.GetBaseTemplates().Any(t => t.ID == baseId).Should().BeTrue();
 
         template.GetField(FieldIDs.BaseTemplate).Should().NotBeNull();
-        template.GetField(DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]).Should().NotBeNull();
+        template.GetField("__Base template").Should().NotBeNull();
 
         templateItem.Fields[FieldIDs.BaseTemplate].Should().NotBeNull();
         templateItem.Fields[FieldIDs.BaseTemplate].Value.Should().Contain(baseId.ToString());
 
-        templateItem.Fields[DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Should().NotBeNull();
-        templateItem.Fields[DbField.FieldIdToNameMapping[FieldIDs.BaseTemplate]].Value.Should().Contain(baseId.ToString());
+        templateItem.Fields["__Base template"].Should().NotBeNull();
+        templateItem.Fields["__Base template"].Value.Should().Contain(baseId.ToString());
       }
     }
 
@@ -1168,7 +1168,6 @@
             db.Add(dbitem);
 
             var item = db.GetItem("/sitecore/content/home");
-            var uniqueId = item.GetUniqueId();
 
             // assert
             item["__Security"].Should().Be(expectedSecurity);

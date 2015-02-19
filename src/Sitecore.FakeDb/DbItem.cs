@@ -56,6 +56,11 @@ namespace Sitecore.FakeDb
       this.Fields.Add(fieldName, fieldValue);
     }
 
+    public void Add(ID fieldId, string fieldValue)
+    {
+      this.Fields.Add(fieldId, fieldValue);
+    }
+
     public void Add(DbField field)
     {
       this.Fields.Add(field);

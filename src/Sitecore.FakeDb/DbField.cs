@@ -3,7 +3,6 @@
   using System;
   using System.Collections;
   using System.Collections.Generic;
-  using System.Collections.ObjectModel;
   using System.Diagnostics;
   using System.Linq;
   using Sitecore.Data;
@@ -13,34 +12,6 @@
   [DebuggerDisplay("ID = {ID}, Name = {Name}, Value = {Value}")]
   public class DbField : IEnumerable
   {
-    internal static readonly IDictionary<ID, string> FieldIdToNameMapping = new ReadOnlyDictionary<ID, string>(new Dictionary<ID, string>
-      {
-        { FieldIDs.BaseTemplate, "__Base template" },   
-        { FieldIDs.Created, "__Created" },
-        { FieldIDs.CreatedBy, "__Created by" },
-        { FieldIDs.LayoutField, "__Renderings" }, 
-        { FieldIDs.Revision, "__Revision" }, 
-        { FieldIDs.Lock, "__Lock" }, 
-        { FieldIDs.Security, "__Security" }, 
-        { FieldIDs.StandardValues, "__Standard values" },
-        { FieldIDs.Updated, "__Updated" },
-        { FieldIDs.UpdatedBy, "__Updated by" }
-      });
-
-    private static readonly IDictionary<string, ID> FieldNameToIdMapping = new ReadOnlyDictionary<string, ID>(new Dictionary<string, ID>
-      {
-        { "__Base template", FieldIDs.BaseTemplate },   
-        { "__Created", FieldIDs.Created },
-        { "__Created by", FieldIDs.CreatedBy },
-        { "__Renderings", FieldIDs.LayoutField }, 
-        { "__Revision", FieldIDs.Revision }, 
-        { "__Lock", FieldIDs.Lock }, 
-        { "__Security", FieldIDs.Security }, 
-        { "__Standard values", FieldIDs.StandardValues },
-        { "__Updated", FieldIDs.Updated },
-        { "__Updated by", FieldIDs.UpdatedBy }
-      });
-
     private readonly IDictionary<string, IDictionary<int, string>> values = new Dictionary<string, IDictionary<int, string>>();
 
     private string sharedValue = string.Empty;
@@ -57,23 +28,9 @@
 
     public DbField(string name, ID id)
     {
-      if (!string.IsNullOrEmpty(name))
-      {
-        this.Name = name;
-      }
-      else
-      {
-        this.Name = FieldIdToNameMapping.ContainsKey(id) ? FieldIdToNameMapping[id] : this.Name = id.ToShortID().ToString();
-      }
-
-      if (!ID.IsNullOrEmpty(id))
-      {
-        this.ID = id;
-      }
-      else
-      {
-        this.ID = FieldNameToIdMapping.ContainsKey(name) ? FieldNameToIdMapping[name] : ID.NewID;
-      }
+      var idNamePair = new FieldNamingHelper().GetFieldIdNamePair(id, name);
+      this.ID = idNamePair.Key;
+      this.Name = idNamePair.Value;
 
       if (this.Name.StartsWith("__"))
       {
@@ -141,7 +98,7 @@
         return;
       }
 
-      for (int i = version - 1; i > 0; --i)
+      for (var i = version - 1; i > 0; --i)
       {
         if (this.values[language].ContainsKey(i))
         {
@@ -230,16 +187,14 @@
     {
       Assert.ArgumentNotNullOrEmpty(language, "language");
 
-      if (this.values.ContainsKey(language))
+      if (!this.values.ContainsKey(language))
       {
-        var langValues = this.values[language];
-        if (langValues.Any())
-        {
-          return langValues.Last().Key;
-        }
+        return 0;
       }
 
-      return 0;
+      var langValues = this.values[language];
+
+      return langValues.Any() ? langValues.Last().Key : 0;
     }
   }
 }
