@@ -16,36 +16,36 @@
   </Target>
 
   <Target Name="Tests" DependsOnTargets="Compile">
-    <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.Tests\bin\Release\Sitecore.FakeDb.Tests.dll" />
-    <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.NSubstitute.Tests\bin\Release\Sitecore.FakeDb.NSubstitute.Tests.dll" />
-    <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\bin\Release\Sitecore.FakeDb.Serialization.Tests.dll" />
+    <xunit Assembly="$(FakeDbTestsOutDir)\Sitecore.FakeDb.Tests.dll" />
+    <xunit Assembly="$(NSubstituteTestsOutDir)\Sitecore.FakeDb.NSubstitute.Tests.dll" />
+    <xunit Assembly="$(SerializationTestsOutDir)\Sitecore.FakeDb.Serialization.Tests.dll" />
 
     <!-- main tests with NSubstitute configs -->
-    <Copy SourceFiles="$(SourceFolder)\Sitecore.FakeDb.NSubstitute.Tests\bin\Release\Sitecore.FakeDb.NSubstitute.Tests.dll.config"
-          DestinationFiles="$(SourceFolder)\Sitecore.FakeDb.NSubstitute.Tests\bin\Release\Sitecore.FakeDb.Tests.dll.config" />
-    <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.NSubstitute.Tests\bin\Release\Sitecore.FakeDb.Tests.dll" />
+    <Copy SourceFiles="$(NSubstituteTestsOutDir)\Sitecore.FakeDb.NSubstitute.Tests.dll.config"
+          DestinationFiles="$(NSubstituteTestsOutDir)\Sitecore.FakeDb.Tests.dll.config" />
+    <xunit Assembly="$(NSubstituteTestsOutDir)\Sitecore.FakeDb.Tests.dll" />
 
     <!-- main tests with Serialization configs -->
-    <Copy SourceFiles="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\bin\Release\Sitecore.FakeDb.Serialization.Tests.dll.config"
-          DestinationFiles="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\bin\Release\Sitecore.FakeDb.Tests.dll.config" />
-    <xunit Assembly="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\bin\Release\Sitecore.FakeDb.Tests.dll" />
+    <Copy SourceFiles="$(SerializationTestsOutDir)\Sitecore.FakeDb.Serialization.Tests.dll.config"
+          DestinationFiles="$(SerializationTestsOutDir)\Sitecore.FakeDb.Tests.dll.config" />
+    <xunit Assembly="$(SerializationTestsOutDir)\Sitecore.FakeDb.Tests.dll" />
   </Target>
 
   <Target Name="Packages" DependsOnTargets="Tests">
     <MakeDir Directories="$(DeployFolder)" />
 
-    <XslTransformation XslInputPath="$(SourceFolder)\Sitecore.FakeDb.nuget.xslt" XmlInputPaths="$(FakeDbTestsProjectDir)\App.config" OutputPaths="$(FakeDbProjectDir)\App.config" />
-    <XslTransformation XslInputPath="$(SourceFolder)\Sitecore.FakeDb.nuget.xslt" XmlInputPaths="$(NSubstituteTestsProjectDir)\App.config" OutputPaths="$(NSubstituteTestsProjectDir)\App.config.transform" />
-    <XslTransformation XslInputPath="$(SourceFolder)\Sitecore.FakeDb.nuget.xslt" XmlInputPaths="$(SerializationTestsProjectDir)\App.config" OutputPaths="$(SerializationTestsProjectDir)\App.config.transform" />
+    <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(FakeDbTestsDir)\App.config" OutputPaths="$(FakeDbDir)\App.config" />
+    <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(NSubstituteTestsDir)\App.config" OutputPaths="$(NSubstituteTestsDir)\App.config.transform" />
+    <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(SerializationTestsDir)\App.config" OutputPaths="$(SerializationTestsDir)\App.config.transform" />
     
     <Exec Command="$(NuGet) pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) pack Sitecore.FakeDb.NSubstitute/Sitecore.FakeDb.NSubstitute.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) pack Sitecore.FakeDb.Serialization/Sitecore.FakeDb.Serialization.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
 
-    <Delete Files="$(SourceFolder)\Sitecore.FakeDb\App.config" />
-    <Delete Files="$(SourceFolder)\Sitecore.FakeDb.Tests\App.config.transform" />
-    <Delete Files="$(SourceFolder)\Sitecore.FakeDb.NSubstitute.Tests\App.config.transform" />
-    <Delete Files="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\App.config.transform" />
+    <Delete Files="$(FakeDbDir)\App.config" />
+    <Delete Files="$(FakeDbTestsDir)\App.config.transform" />
+    <Delete Files="$(NSubstituteTestsDir)\App.config.transform" />
+    <Delete Files="$(SerializationTestsDir)\App.config.transform" />
   </Target>
 
   <Target Name="Deploy" DependsOnTargets="Packages">
