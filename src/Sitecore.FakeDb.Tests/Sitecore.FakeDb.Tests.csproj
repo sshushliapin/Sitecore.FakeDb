@@ -146,7 +146,6 @@
     <Compile Include="Data\Query\FastQueryTest.cs" />
     <Compile Include="FieldNamingHelperTest.cs" />
     <Compile Include="GettingStarted.cs" />
-    <Compile Include="Globalization\TranslateTest.cs" />
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
     <Compile Include="Links\LinkManagerTest.cs" />
@@ -193,6 +192,11 @@
     <Compile Include="Security\FakeRoleProviderTest.cs" />
     <Compile Include="Tasks\FakeTaskDatabaseTest.cs" />
     <Compile Include="Tasks\TaskDatabaseSwitcherTest.cs" />
+    <Compile Include="Globalization\Translate\AutoTranslateEnabledTestBase.cs" />
+    <Compile Include="Globalization\Translate\AutoTranslateEnabledWithDefaultSuffix.cs" />
+    <Compile Include="Globalization\Translate\AutoTranslateEnabledWithLanguagePrefix.cs" />
+    <Compile Include="Globalization\Translate\AutoTranslateEnabledWithLanguageSuffix.cs" />
+    <Compile Include="Globalization\Translate\AutoTranslateDisabled.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
