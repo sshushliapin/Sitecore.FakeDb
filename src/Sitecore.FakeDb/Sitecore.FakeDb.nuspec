@@ -13,6 +13,6 @@
     <tags>Sitecore unit-testing testing in-memory TDD mocking mocks</tags>
   </metadata>
   <files>
-    <file src="..\Sitecore.FakeDb.Tests\App.config.transform" target="content" />
+    <file src="App.config" target="content" />
   </files>
 </package>

@@ -131,7 +131,6 @@
   </Target>
   <Target Name="AfterBuild">
     <XslTransformation XslInputPath="App.config.transform.xslt" XmlInputPaths="$(SolutionDir)\Sitecore.FakeDb.Tests\App.config" OutputPaths="$(OutDir)\$(TargetFileName).config" />
-    <XslTransformation XslInputPath="$(SolutionDir)\Sitecore.FakeDb.nuget.xslt" XmlInputPaths="$(ProjectDir)\App.config" OutputPaths="$(ProjectDir)\App.config.transform" />
   </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

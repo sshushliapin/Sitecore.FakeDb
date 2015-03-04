@@ -34,9 +34,18 @@
   <Target Name="Packages" DependsOnTargets="Tests">
     <MakeDir Directories="$(DeployFolder)" />
 
+    <XslTransformation XslInputPath="$(SourceFolder)\Sitecore.FakeDb.nuget.xslt" XmlInputPaths="$(FakeDbTestsProjectDir)\App.config" OutputPaths="$(FakeDbProjectDir)\App.config" />
+    <XslTransformation XslInputPath="$(SourceFolder)\Sitecore.FakeDb.nuget.xslt" XmlInputPaths="$(NSubstituteTestsProjectDir)\App.config" OutputPaths="$(NSubstituteTestsProjectDir)\App.config.transform" />
+    <XslTransformation XslInputPath="$(SourceFolder)\Sitecore.FakeDb.nuget.xslt" XmlInputPaths="$(SerializationTestsProjectDir)\App.config" OutputPaths="$(SerializationTestsProjectDir)\App.config.transform" />
+    
     <Exec Command="$(NuGet) pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) pack Sitecore.FakeDb.NSubstitute/Sitecore.FakeDb.NSubstitute.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) pack Sitecore.FakeDb.Serialization/Sitecore.FakeDb.Serialization.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
+
+    <Delete Files="$(SourceFolder)\Sitecore.FakeDb\App.config" />
+    <Delete Files="$(SourceFolder)\Sitecore.FakeDb.Tests\App.config.transform" />
+    <Delete Files="$(SourceFolder)\Sitecore.FakeDb.NSubstitute.Tests\App.config.transform" />
+    <Delete Files="$(SourceFolder)\Sitecore.FakeDb.Serialization.Tests\App.config.transform" />
   </Target>
 
   <Target Name="Deploy" DependsOnTargets="Packages">

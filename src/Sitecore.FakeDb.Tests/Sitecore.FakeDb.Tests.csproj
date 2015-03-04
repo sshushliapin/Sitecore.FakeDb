@@ -220,8 +220,7 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  -->
   <Target Name="AfterBuild">
-    <XslTransformation XslInputPath="$(SolutionDir)\Sitecore.FakeDb.nuget.xslt" XmlInputPaths="$(ProjectDir)\App.config" OutputPaths="$(ProjectDir)\App.config.transform" />
   </Target>
+  -->
 </Project>

@@ -163,6 +163,3 @@ lib/*.dll
 
 # Deploy
 deploy/
-
-# NuGet App.config
-App.config.transform
