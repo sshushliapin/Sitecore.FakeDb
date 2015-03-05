@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ConfigReader.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Data\Engines\DataCommands\IDataEngineCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\DataEngineCommand.cs" />
