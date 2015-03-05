@@ -17,7 +17,7 @@
 
       var suffix = Settings.GetSetting("Sitecore.FakeDb.AutoTranslateSuffix");
       suffix = suffix.Replace(@"{lang}", Context.Language.Name);
-      if (args.Key.EndsWith(suffix))
+      if (!string.IsNullOrEmpty(suffix) && args.Key.EndsWith(suffix))
       {
         return;
       }

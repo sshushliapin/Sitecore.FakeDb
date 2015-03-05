@@ -9,6 +9,7 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
   {
     public AutoTranslateEnabledWithLanguageSuffix()
     {
+      this.Db.Configuration.Settings["Sitecore.FakeDb.AutoTranslatePrefix"] = string.Empty;
       this.Db.Configuration.Settings["Sitecore.FakeDb.AutoTranslateSuffix"] = "_{lang}";
     }
 
@@ -16,6 +17,12 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
     public void SettingAutoTranslateIsTrue()
     {
       Settings.GetSetting("Sitecore.FakeDb.AutoTranslate").Should().Be("true");
+    }
+
+    [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslatePrefix"" is empty")]
+    public void SettingAutoTranslateSuffixIsEmpty()
+    {
+      Settings.GetSetting("Sitecore.FakeDb.AutoTranslatePrefix").Should().BeEmpty();
     }
 
     [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslateSuffix"" is ""_{lang}""")]
