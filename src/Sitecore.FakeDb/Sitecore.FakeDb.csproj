@@ -60,7 +60,6 @@
     <Compile Include="Data\Engines\DataCommands\DataEngineCommand.cs" />
     <Compile Include="Configuration\DbConfiguration.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
-    <Compile Include="DbFactory.cs" />
     <Compile Include="FieldNamingHelper.cs" />
     <Compile Include="Data\IDTables\IDTableProviderSwitcher.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />
