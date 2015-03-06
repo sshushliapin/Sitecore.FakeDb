@@ -4,7 +4,7 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
   using Sitecore.Configuration;
   using Xunit;
 
-  [Trait("Auto-translate is enabled with language suffix", "")]
+  [Trait("Translate", "Auto-translate is enabled with language suffix")]
   public class AutoTranslateEnabledWithLanguageSuffix : AutoTranslateEnabledTestBase
   {
     public AutoTranslateEnabledWithLanguageSuffix()
@@ -20,7 +20,7 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
     }
 
     [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslatePrefix"" is empty")]
-    public void SettingAutoTranslateSuffixIsEmpty()
+    public void SettingAutoTranslatePrefixIsEmpty()
     {
       Settings.GetSetting("Sitecore.FakeDb.AutoTranslatePrefix").Should().BeEmpty();
     }

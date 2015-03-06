@@ -4,7 +4,7 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
   using Sitecore.Configuration;
   using Xunit;
 
-  [Trait("Auto-translate is enabled with language prefix", "")]
+  [Trait("Translate", "Auto-translate is enabled with language prefix")]
   public class AutoTranslateEnabledWithLanguagePrefix : AutoTranslateEnabledTestBase
   {
     public AutoTranslateEnabledWithLanguagePrefix()

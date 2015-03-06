@@ -4,7 +4,7 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
   using Sitecore.Configuration;
   using Xunit;
 
-  [Trait("Auto-translate is enabled with default suffix", "")]
+  [Trait("Translate", "Auto-translate is enabled with default suffix")]
   public class AutoTranslateEnabledWithDefaultSuffix : AutoTranslateEnabledTestBase
   {
     [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslate"" is ""True""")]

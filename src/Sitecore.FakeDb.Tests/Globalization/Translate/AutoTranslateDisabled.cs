@@ -4,7 +4,7 @@
   using Sitecore.Configuration;
   using Xunit;
 
-  [Trait("Auto-translate is disabled (default)", "")]
+  [Trait("Translate", "Auto-translate is disabled (default)")]
   public class AutoTranslateDisabled
   {
     [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslate"" is ""False""")]
@@ -14,7 +14,7 @@
     }
 
     [Fact(DisplayName = @"Translate.Text() returns the same phrase")]
-    public void TranslateTextReturnSamePhrase()
+    public void TranslateTextReturnsSamePhrase()
     {
       Sitecore.Globalization.Translate.Text("Hello").Should().Be("Hello");
     }
