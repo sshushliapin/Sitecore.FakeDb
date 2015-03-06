@@ -1,6 +1,7 @@
 namespace Sitecore.FakeDb.Tests.Globalization.Translate
 {
   using FluentAssertions;
+  using Sitecore.Globalization;
   using Xunit;
 
   [Trait("Translate", "Auto-translate is enabled with default suffix")]
@@ -26,15 +27,19 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
     [Fact(DisplayName = @"Translate.Text() adds ""*"" to the end of the phrase")]
     public void TranslateTextAddAsteriskToEnd()
     {
-      Sitecore.Globalization.Translate.Text("Hello!").Should().Be("Hello!*");
+      Translate.Text("Hello!").Should().Be("Hello!*");
     }
 
     [Fact(DisplayName = @"Translate.Text() does not translate phrases twice")]
     public void TranslateTextNotTranslatePhraseTwice()
     {
-      Sitecore.Globalization.Translate.Text(
-        Sitecore.Globalization.Translate.Text("Hello!"))
-        .Should().Be("Hello!*");
+      Translate.Text(Translate.Text("Hello!")).Should().Be("Hello!*");
+    }
+
+    [Fact(DisplayName = @"Translate.TextByLanguage() adds ""*"" to the end of the phrase")]
+    public void TranslateTextByLanguageAddAsteriskToEnd()
+    {
+      Translate.TextByLanguage("Hello!", this.Language).Should().Be("Hello!*");
     }
   }
 }

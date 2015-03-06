@@ -1,6 +1,7 @@
 namespace Sitecore.FakeDb.Tests.Globalization.Translate
 {
   using FluentAssertions;
+  using Sitecore.Globalization;
   using Xunit;
 
   [Trait("Translate", "Auto-translate is enabled with language prefix")]
@@ -34,13 +35,19 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
     [Fact(DisplayName = @"Translate.Text() adds context language at the beginning of the phrase")]
     public void TranslateTextAddContextLanguageToBeginningOfPhrase()
     {
-      Sitecore.Globalization.Translate.Text("Hello!").Should().StartWith("en:Hello!");
+      Translate.Text("Hello!").Should().StartWith("en:Hello!");
     }
 
-    [Fact(DisplayName = "Translate.Text() does not use the default \"*\" suffix")]
+    [Fact(DisplayName = @"Translate.Text() does not use the default ""*"" suffix")]
     public void TranslateTextDontUseDefaultSuffix()
     {
-      Sitecore.Globalization.Translate.Text("Hello!").Should().NotEndWith("*");
+      Translate.Text("Hello!").Should().NotEndWith("*");
+    }
+
+    [Fact(DisplayName = "Translate.TextByLanguage() adds language to the beginning of the phrase")]
+    public void TranslateTextByLanguageAddAsteriskToBeginning()
+    {
+      Translate.TextByLanguage("Hello!", this.Language).Should().Be("da:Hello!");
     }
   }
 }

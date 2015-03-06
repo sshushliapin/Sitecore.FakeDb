@@ -904,7 +904,7 @@
         string daTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, da);
 
         Xunit.Assert.Equal("en:Welcome!", enTranslation);
-        // Xunit.Assert.Equal("da:Welcome!", daTranslation);
+        Xunit.Assert.Equal("da:Welcome!", daTranslation);
       }
     }
 

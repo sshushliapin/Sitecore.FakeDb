@@ -12,8 +12,10 @@
         return;
       }
 
+      var language = args.Language.Name;
+
       var prefix = Settings.GetSetting("FakeDb.AutoTranslatePrefix");
-      prefix = prefix.Replace(@"{lang}", Context.Language.Name);
+      prefix = prefix.Replace(@"{lang}", language);
 
       var suffix = Settings.GetSetting("FakeDb.AutoTranslateSuffix");
 
@@ -23,7 +25,7 @@
       }
       else if (suffix.Contains(@"{lang}"))
       {
-        suffix = suffix.Replace(@"{lang}", Context.Language.Name);
+        suffix = suffix.Replace(@"{lang}", language);
       }
 
       if (!string.IsNullOrEmpty(suffix) && args.Key.EndsWith(suffix))
