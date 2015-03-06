@@ -62,7 +62,7 @@
       this.Add(field, standardValue);
     }
 
-    public void Add(ID id, string standardValue)
+    public new void Add(ID id, string standardValue)
     {
       var field = new DbField(id);
 
