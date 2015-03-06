@@ -9,26 +9,26 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
   {
     public AutoTranslateEnabledWithLanguageSuffix()
     {
-      this.Db.Configuration.Settings["Sitecore.FakeDb.AutoTranslatePrefix"] = string.Empty;
-      this.Db.Configuration.Settings["Sitecore.FakeDb.AutoTranslateSuffix"] = "_{lang}";
+      this.Db.Configuration.Settings["FakeDb.AutoTranslatePrefix"] = string.Empty;
+      this.Db.Configuration.Settings["FakeDb.AutoTranslateSuffix"] = "_{lang}";
     }
 
-    [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslate"" is ""True""")]
+    [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslate"" is ""True""")]
     public void SettingAutoTranslateIsTrue()
     {
-      Settings.GetSetting("Sitecore.FakeDb.AutoTranslate").Should().Be("true");
+      Settings.GetSetting("FakeDb.AutoTranslate").Should().Be("true");
     }
 
-    [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslatePrefix"" is empty")]
+    [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslatePrefix"" is empty")]
     public void SettingAutoTranslatePrefixIsEmpty()
     {
-      Settings.GetSetting("Sitecore.FakeDb.AutoTranslatePrefix").Should().BeEmpty();
+      Settings.GetSetting("FakeDb.AutoTranslatePrefix").Should().BeEmpty();
     }
 
-    [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslateSuffix"" is ""_{lang}""")]
+    [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslateSuffix"" is ""_{lang}""")]
     public void SettingAutoTranslateSuffixIsLang()
     {
-      Settings.GetSetting("Sitecore.FakeDb.AutoTranslateSuffix").Should().Be("_{lang}");
+      Settings.GetSetting("FakeDb.AutoTranslateSuffix").Should().Be("_{lang}");
     }
 
     [Fact(DisplayName = @"Translate.Text() adds context language to the end of the phrase")]

@@ -7,16 +7,16 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
   [Trait("Translate", "Auto-translate is enabled with default suffix")]
   public class AutoTranslateEnabledWithDefaultSuffix : AutoTranslateEnabledTestBase
   {
-    [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslate"" is ""True""")]
+    [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslate"" is ""True""")]
     public void SettingAutoTranslateIsTrue()
     {
-      Settings.GetSetting("Sitecore.FakeDb.AutoTranslate").Should().Be("true");
+      Settings.GetSetting("FakeDb.AutoTranslate").Should().Be("true");
     }
 
-    [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslateSuffix"" is ""*""")]
+    [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslateSuffix"" is ""*""")]
     public void SettingAutoTranslateSuffixIsAsterisk()
     {
-      Settings.GetSetting("Sitecore.FakeDb.AutoTranslateSuffix").Should().Be("*");
+      Settings.GetSetting("FakeDb.AutoTranslateSuffix").Should().Be("*");
     }
 
     [Fact(DisplayName = @"Translate.Text() adds ""*"" to the end of the phrase")]

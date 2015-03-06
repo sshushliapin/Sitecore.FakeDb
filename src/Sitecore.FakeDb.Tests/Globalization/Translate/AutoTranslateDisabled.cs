@@ -7,10 +7,10 @@
   [Trait("Translate", "Auto-translate is disabled (default)")]
   public class AutoTranslateDisabled
   {
-    [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslate"" is ""False""")]
+    [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslate"" is ""False""")]
     public void SettingAutoTranslateIsTrue()
     {
-      Settings.GetSetting("Sitecore.FakeDb.AutoTranslate").Should().Be("false");
+      Settings.GetSetting("FakeDb.AutoTranslate").Should().Be("false");
     }
 
     [Fact(DisplayName = @"Translate.Text() returns the same phrase")]

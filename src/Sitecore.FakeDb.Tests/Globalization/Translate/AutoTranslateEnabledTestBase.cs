@@ -9,7 +9,7 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
     protected AutoTranslateEnabledTestBase()
     {
       this.db = new Db();
-      this.db.Configuration.Settings["Sitecore.FakeDb.AutoTranslate"] = "true";
+      this.db.Configuration.Settings["FakeDb.AutoTranslate"] = "true";
     }
 
     protected Db Db

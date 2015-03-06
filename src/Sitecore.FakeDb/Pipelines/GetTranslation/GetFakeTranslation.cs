@@ -7,15 +7,15 @@
   {
     public void Process(GetTranslationArgs args)
     {
-      if (!Settings.GetBoolSetting("Sitecore.FakeDb.AutoTranslate", false))
+      if (!Settings.GetBoolSetting("FakeDb.AutoTranslate", false))
       {
         return;
       }
 
-      var prefix = Settings.GetSetting("Sitecore.FakeDb.AutoTranslatePrefix");
+      var prefix = Settings.GetSetting("FakeDb.AutoTranslatePrefix");
       prefix = prefix.Replace(@"{lang}", Context.Language.Name);
 
-      var suffix = Settings.GetSetting("Sitecore.FakeDb.AutoTranslateSuffix");
+      var suffix = Settings.GetSetting("FakeDb.AutoTranslateSuffix");
       suffix = suffix.Replace(@"{lang}", Context.Language.Name);
       if (!string.IsNullOrEmpty(suffix) && args.Key.EndsWith(suffix))
       {
