@@ -6,15 +6,18 @@
   using System.Xml;
   using Sitecore.Configuration;
   using Sitecore.Data;
+  using Sitecore.Data.Events;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Configuration;
   using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
   using Sitecore.FakeDb.Pipelines.ReleaseFakeDb;
   using Sitecore.Globalization;
   using Sitecore.Pipelines;
+  using Version = Sitecore.Data.Version;
 
   public class Db : IDisposable, IEnumerable
   {
@@ -136,7 +139,7 @@
     {
       Assert.ArgumentNotNullOrEmpty(language, "language");
 
-      return this.Database.GetItem(id, Language.Parse(language), Sitecore.Data.Version.Parse(version));
+      return this.Database.GetItem(id, Language.Parse(language), Version.Parse(version));
     }
 
     public Item GetItem(string path)
@@ -159,7 +162,7 @@
       Assert.ArgumentNotNullOrEmpty(path, "path");
       Assert.ArgumentNotNullOrEmpty(language, "language");
 
-      return this.Database.GetItem(path, Language.Parse(language), Sitecore.Data.Version.Parse(version));
+      return this.Database.GetItem(path, Language.Parse(language), Version.Parse(version));
     }
 
     /// <summary>
