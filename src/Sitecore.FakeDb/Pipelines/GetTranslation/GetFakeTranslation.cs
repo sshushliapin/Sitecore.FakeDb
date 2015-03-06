@@ -16,7 +16,16 @@
       prefix = prefix.Replace(@"{lang}", Context.Language.Name);
 
       var suffix = Settings.GetSetting("FakeDb.AutoTranslateSuffix");
-      suffix = suffix.Replace(@"{lang}", Context.Language.Name);
+
+      if (string.IsNullOrEmpty(prefix) && string.IsNullOrEmpty(suffix))
+      {
+        suffix = "*";
+      }
+      else if (suffix.Contains(@"{lang}"))
+      {
+        suffix = suffix.Replace(@"{lang}", Context.Language.Name);
+      }
+
       if (!string.IsNullOrEmpty(suffix) && args.Key.EndsWith(suffix))
       {
         return;

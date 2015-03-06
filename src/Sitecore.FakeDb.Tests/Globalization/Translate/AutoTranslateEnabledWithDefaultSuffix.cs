@@ -1,22 +1,26 @@
 namespace Sitecore.FakeDb.Tests.Globalization.Translate
 {
   using FluentAssertions;
-  using Sitecore.Configuration;
   using Xunit;
 
   [Trait("Translate", "Auto-translate is enabled with default suffix")]
-  public class AutoTranslateEnabledWithDefaultSuffix : AutoTranslateEnabledTestBase
+  public class AutoTranslateEnabledWithDefaultSuffix : AutoTranslateTestBase
   {
+    public AutoTranslateEnabledWithDefaultSuffix()
+    {
+      this.Db.Configuration.Settings.AutoTranslate = true;
+    }
+
     [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslate"" is ""True""")]
     public void SettingAutoTranslateIsTrue()
     {
-      Settings.GetSetting("FakeDb.AutoTranslate").Should().Be("true");
+      this.Db.Configuration.Settings.AutoTranslate.Should().BeTrue();
     }
 
-    [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslateSuffix"" is ""*""")]
+    [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslateSuffix"" is empty")]
     public void SettingAutoTranslateSuffixIsAsterisk()
     {
-      Settings.GetSetting("FakeDb.AutoTranslateSuffix").Should().Be("*");
+      this.Db.Configuration.Settings.AutoTranslateSuffix.Should().BeEmpty();
     }
 
     [Fact(DisplayName = @"Translate.Text() adds ""*"" to the end of the phrase")]

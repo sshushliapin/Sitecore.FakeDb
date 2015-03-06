@@ -2,14 +2,13 @@ namespace Sitecore.FakeDb.Tests.Globalization.Translate
 {
   using System;
 
-  public abstract class AutoTranslateEnabledTestBase : IDisposable
+  public abstract class AutoTranslateTestBase : IDisposable
   {
     private readonly Db db;
 
-    protected AutoTranslateEnabledTestBase()
+    protected AutoTranslateTestBase()
     {
       this.db = new Db();
-      this.db.Configuration.Settings["FakeDb.AutoTranslate"] = "true";
     }
 
     protected Db Db

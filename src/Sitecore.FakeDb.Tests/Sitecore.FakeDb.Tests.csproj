@@ -192,7 +192,7 @@
     <Compile Include="Security\FakeRoleProviderTest.cs" />
     <Compile Include="Tasks\FakeTaskDatabaseTest.cs" />
     <Compile Include="Tasks\TaskDatabaseSwitcherTest.cs" />
-    <Compile Include="Globalization\Translate\AutoTranslateEnabledTestBase.cs" />
+    <Compile Include="Globalization\Translate\AutoTranslateTestBase.cs" />
     <Compile Include="Globalization\Translate\AutoTranslateEnabledWithDefaultSuffix.cs" />
     <Compile Include="Globalization\Translate\AutoTranslateEnabledWithLanguagePrefix.cs" />
     <Compile Include="Globalization\Translate\AutoTranslateEnabledWithLanguageSuffix.cs" />
