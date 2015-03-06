@@ -7,17 +7,28 @@
   {
     public void Process(GetTranslationArgs args)
     {
-      if (!Settings.GetBoolSetting("Sitecore.FakeDb.AutoTranslate", false))
+      if (!Settings.GetBoolSetting("FakeDb.AutoTranslate", false))
       {
         return;
       }
 
-      var prefix = Settings.GetSetting("Sitecore.FakeDb.AutoTranslatePrefix");
-      prefix = prefix.Replace(@"{lang}", Context.Language.Name);
+      var language = args.Language.Name;
 
-      var suffix = Settings.GetSetting("Sitecore.FakeDb.AutoTranslateSuffix");
-      suffix = suffix.Replace(@"{lang}", Context.Language.Name);
-      if (args.Key.EndsWith(suffix))
+      var prefix = Settings.GetSetting("FakeDb.AutoTranslatePrefix");
+      prefix = prefix.Replace(@"{lang}", language);
+
+      var suffix = Settings.GetSetting("FakeDb.AutoTranslateSuffix");
+
+      if (string.IsNullOrEmpty(prefix) && string.IsNullOrEmpty(suffix))
+      {
+        suffix = "*";
+      }
+      else if (suffix.Contains(@"{lang}"))
+      {
+        suffix = suffix.Replace(@"{lang}", language);
+      }
+
+      if (!string.IsNullOrEmpty(suffix) && args.Key.EndsWith(suffix))
       {
         return;
       }

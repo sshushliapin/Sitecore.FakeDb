@@ -1,33 +1,53 @@
 namespace Sitecore.FakeDb.Tests.Globalization.Translate
 {
   using FluentAssertions;
-  using Sitecore.Configuration;
+  using Sitecore.Globalization;
   using Xunit;
 
-  [Trait("Auto-translate is enabled with language prefix", "")]
-  public class AutoTranslateEnabledWithLanguagePrefix : AutoTranslateEnabledTestBase
+  [Trait("Translate", "Auto-translate is enabled with language prefix")]
+  public class AutoTranslateEnabledWithLanguagePrefix : AutoTranslateTestBase
   {
     public AutoTranslateEnabledWithLanguagePrefix()
     {
-      this.Db.Configuration.Settings["Sitecore.FakeDb.AutoTranslatePrefix"] = "{lang}:";
+      this.Db.Configuration.Settings.AutoTranslate = true;
+      this.Db.Configuration.Settings.AutoTranslatePrefix = "{lang}:";
+      this.Db.Configuration.Settings.AutoTranslateSuffix = string.Empty;
     }
 
-    [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslate"" is ""True""")]
+    [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslate"" is ""True""")]
     public void SettingAutoTranslateIsTrue()
     {
-      Settings.GetSetting("Sitecore.FakeDb.AutoTranslate").Should().Be("true");
+      this.Db.Configuration.Settings.AutoTranslate.Should().BeTrue();
     }
 
-    [Fact(DisplayName = @"Setting ""Sitecore.FakeDb.AutoTranslatePrefix"" is ""{lang}:""")]
+    [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslatePrefix"" is ""{lang}:""")]
     public void SettingAutoTranslatePrefixIsLang()
     {
-      Settings.GetSetting("Sitecore.FakeDb.AutoTranslatePrefix").Should().Be("{lang}:");
+      this.Db.Configuration.Settings.AutoTranslatePrefix.Should().Be("{lang}:");
+    }
+
+    [Fact(DisplayName = @"Setting ""FakeDb.AutoTranslateSuffix"" is empty")]
+    public void SettingAutoTranslateSuffixIsEmpty()
+    {
+      this.Db.Configuration.Settings.AutoTranslateSuffix.Should().BeEmpty();
     }
 
     [Fact(DisplayName = @"Translate.Text() adds context language at the beginning of the phrase")]
     public void TranslateTextAddContextLanguageToBeginningOfPhrase()
     {
-      Sitecore.Globalization.Translate.Text("Hello!").Should().StartWith("en:Hello!");
+      Translate.Text("Hello!").Should().StartWith("en:Hello!");
+    }
+
+    [Fact(DisplayName = @"Translate.Text() does not use the default ""*"" suffix")]
+    public void TranslateTextDontUseDefaultSuffix()
+    {
+      Translate.Text("Hello!").Should().NotEndWith("*");
+    }
+
+    [Fact(DisplayName = "Translate.TextByLanguage() adds language to the beginning of the phrase")]
+    public void TranslateTextByLanguageAddAsteriskToBeginning()
+    {
+      Translate.TextByLanguage("Hello!", this.Language).Should().Be("da:Hello!");
     }
   }
 }
