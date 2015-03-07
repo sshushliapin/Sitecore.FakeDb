@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sitecore.Diagnostics;
-using Sitecore.FakeDb.Pipelines;
-
-namespace Sitecore.FakeDb.Serialization.Pipelines
+﻿namespace Sitecore.FakeDb.Serialization.Pipelines
 {
+  using Sitecore.Diagnostics;
+  using Sitecore.FakeDb.Pipelines;
+
   using Sitecore.Data;
 
   public class CopySharedFields
