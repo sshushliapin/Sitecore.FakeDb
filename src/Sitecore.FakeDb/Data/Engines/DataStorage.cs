@@ -93,6 +93,14 @@ namespace Sitecore.FakeDb.Data.Engines
       }
 
       CorePipeline.Run("addDbItem", new AddDbItemArgs(item, this));
+
+      this.fakeItems.Add(item.ID, item);
+      foreach (var child in item.Children)
+      {
+        child.ParentID = item.ID;
+        child.FullPath = item.FullPath + "/" + child.Name;
+        this.AddFakeItem(child);
+      }
     }
 
     public virtual void AddFakeTemplate(DbTemplate template)
