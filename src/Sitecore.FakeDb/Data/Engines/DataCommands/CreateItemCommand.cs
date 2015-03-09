@@ -22,7 +22,9 @@
     protected override Item DoExecute()
     {
       var dataStorage = this.innerCommand.DataStorage;
-      dataStorage.Create(this.ItemName, this.ItemId, this.TemplateId, this.Destination);
+      var item = new DbItem(this.ItemName, this.ItemId, this.TemplateId) { ParentID = this.Destination.ID };
+      dataStorage.AddFakeItem(item);
+      item.VersionsCount.Clear();
 
       return dataStorage.GetSitecoreItem(this.ItemId);
     }

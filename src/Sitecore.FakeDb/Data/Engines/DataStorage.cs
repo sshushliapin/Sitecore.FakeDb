@@ -112,35 +112,6 @@ namespace Sitecore.FakeDb.Data.Engines
       }
     }
 
-    public virtual void Create(string itemName, ID itemId, ID templateId, Item destination, bool addFirstVersion = false)
-    {
-      Assert.ArgumentNotNullOrEmpty(itemName, "itemName");
-      Assert.ArgumentNotNull(destination, "destination");
-
-      if (this.GetFakeItem(itemId) != null)
-      {
-        return;
-      }
-
-      var parentItem = this.GetFakeItem(destination.ID);
-      Assert.IsNotNull(parentItem, "Parent item \"{0}\" not found.", destination.ID);
-
-      var fullPath = parentItem.FullPath + "/" + itemName;
-
-      var dbitem = new DbItem(itemName, itemId, templateId) { ParentID = destination.ID, FullPath = fullPath };
-      if (addFirstVersion)
-      {
-        var language = Language.Current;
-        dbitem.VersionsCount.Add(language.Name, 1);
-      }
-
-      // ToDo:[HIGH] move it out of here and consolidate with the processing that happens in the Db
-      this.SetStatistics(dbitem);
-
-      this.FakeItems.Add(itemId, dbitem);
-      this.GetFakeItem(destination.ID).Children.Add(dbitem);
-    }
-
     public virtual DbItem GetFakeItem(ID itemId)
     {
       Assert.ArgumentCondition(!ID.IsNullOrEmpty(itemId), "itemId", "Value cannot be null.");

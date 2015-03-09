@@ -128,7 +128,6 @@
     <Compile Include="Data\Engines\DataCommands\SaveItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\ResolvePathCommandTest.cs" />
     <Compile Include="Data\Engines\DataStorageTest.cs" />
-    <Compile Include="Data\Engines\DataStorageCreateTest.cs" />
     <Compile Include="Data\FakeStandardValuesProviderTest.cs" />
     <Compile Include="Data\Fields\LayoutFieldTest.cs" />
     <Compile Include="Data\Items\ItemHelperTest.cs" />
