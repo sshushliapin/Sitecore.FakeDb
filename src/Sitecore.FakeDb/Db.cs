@@ -6,12 +6,10 @@
   using System.Xml;
   using Sitecore.Configuration;
   using Sitecore.Data;
-  using Sitecore.Data.Events;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Configuration;
   using Sitecore.FakeDb.Data.Engines;
-  using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.FakeDb.Pipelines.InitFakeDb;
   using Sitecore.FakeDb.Pipelines.ReleaseFakeDb;
@@ -112,15 +110,17 @@
     {
       Assert.ArgumentNotNull(item, "item");
 
-      this.DataStorage.AddFakeItem(item);
-    }
+      if (item as DbTemplate != null)
+      {
+        var template = (DbTemplate)item;
+        Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A template with the same id has already been added.");
 
-    public void Add(DbTemplate template)
-    {
-      Assert.ArgumentNotNull(template, "template");
-      Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A template with the same id has already been added.");
-
-      this.DataStorage.AddFakeTemplate(template);
+        this.DataStorage.AddFakeTemplate(template);
+      }
+      else
+      {
+        this.DataStorage.AddFakeItem(item);
+      }
     }
 
     public Item GetItem(ID id)
