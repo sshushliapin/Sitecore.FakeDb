@@ -288,17 +288,5 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems.Add(TemplateIDs.TemplateField, new DbItem(TemplateFieldItemName, TemplateIDs.TemplateField, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
       this.FakeItems.Add(TemplateIDs.BranchTemplate, new DbItem(BranchItemName, TemplateIDs.BranchTemplate, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
     }
-
-    protected void SetStatistics(DbItem item)
-    {
-      var date = DateUtil.IsoNow;
-      var user = Context.User.Name;
-
-      item.Fields.Add(new DbField("__Created", FieldIDs.Created) { Value = date });
-      item.Fields.Add(new DbField("__Created by", FieldIDs.CreatedBy) { Value = user });
-      item.Fields.Add(new DbField("__Revision", FieldIDs.Revision) { Value = ID.NewID.ToString() });
-      item.Fields.Add(new DbField("__Updated", FieldIDs.Updated) { Value = date });
-      item.Fields.Add(new DbField("__Updated by", FieldIDs.UpdatedBy) { Value = user });
-    }
   }
 }
