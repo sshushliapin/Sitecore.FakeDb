@@ -38,7 +38,7 @@
 
       DsDbTemplate dsDbTemplate = new DsDbTemplate(templateId, serializationFolderName);
 
-      dataStorage.AddFakeTemplate(dsDbTemplate);
+      dataStorage.AddFakeItem(dsDbTemplate);
 
       // Deserialize base templates
       DbField baseTemplatesField = dsDbTemplate.Fields

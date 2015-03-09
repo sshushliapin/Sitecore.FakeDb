@@ -110,17 +110,7 @@
     {
       Assert.ArgumentNotNull(item, "item");
 
-      if (item as DbTemplate != null)
-      {
-        var template = (DbTemplate)item;
-        Assert.ArgumentCondition(!this.DataStorage.FakeTemplates.ContainsKey(template.ID), "template", "A template with the same id has already been added.");
-
-        this.DataStorage.AddFakeTemplate(template);
-      }
-      else
-      {
-        this.DataStorage.AddFakeItem(item);
-      }
+      this.DataStorage.AddFakeItem(item);
     }
 
     public Item GetItem(ID id)

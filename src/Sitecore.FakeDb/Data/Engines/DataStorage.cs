@@ -86,7 +86,16 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public virtual void AddFakeItem(DbItem item)
     {
-      // TODO: Consider including into the 'addDbItem' pipeline
+      Assert.ArgumentNotNull(item, "item");
+
+      if (item as DbTemplate != null)
+      {
+        var template = (DbTemplate)item;
+        Assert.ArgumentCondition(!this.FakeTemplates.ContainsKey(template.ID), "template", "A template with the same id has already been added.");
+
+        this.AddFakeTemplate(template);
+      }
+
       if (item is IDsDbItem)
       {
         CorePipeline.Run("loadDsDbItem", new DsItemLoadingArgs(item as IDsDbItem, this));
@@ -94,27 +103,13 @@ namespace Sitecore.FakeDb.Data.Engines
 
       CorePipeline.Run("addDbItem", new AddDbItemArgs(item, this));
 
-      this.fakeItems.Add(item.ID, item);
+      this.FakeItems.Add(item.ID, item);
       foreach (var child in item.Children)
       {
         child.ParentID = item.ID;
         child.FullPath = item.FullPath + "/" + child.Name;
         this.AddFakeItem(child);
       }
-    }
-
-    public virtual void AddFakeTemplate(DbTemplate template)
-    {
-      if (template is IDsDbItem)
-      {
-        CorePipeline.Run("loadDsDbTemplate", new DsItemLoadingArgs(template as IDsDbItem, this));
-      }
-
-      this.FakeTemplates.Add(template.ID, template);
-
-      this.Database.Engines.TemplateEngine.Reset();
-
-      this.AddFakeItem(template);
     }
 
     public virtual void Create(string itemName, ID itemId, ID templateId, Item destination, bool addFirstVersion = false)
@@ -190,6 +185,18 @@ namespace Sitecore.FakeDb.Data.Engines
       var fields = this.BuildItemFieldList(fakeItem, fakeItem.TemplateID, language, itemVersion);
 
       return ItemHelper.CreateInstance(this.database, fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fakeItem.BranchId, fields, language, itemVersion);
+    }
+
+    protected virtual void AddFakeTemplate(DbTemplate template)
+    {
+      if (template is IDsDbItem)
+      {
+        CorePipeline.Run("loadDsDbTemplate", new DsItemLoadingArgs(template as IDsDbItem, this));
+      }
+
+      this.FakeTemplates.Add(template.ID, template);
+
+      this.Database.Engines.TemplateEngine.Reset();
     }
 
     protected FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)

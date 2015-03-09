@@ -39,7 +39,7 @@
         template.Add(templatefield);
       }
 
-      dataStorage.AddFakeTemplate(template);
+      dataStorage.AddFakeItem(template);
     }
 
     protected virtual bool ResolveTemplate(DbItem item, DataStorage dataStorage)
