@@ -7,7 +7,7 @@ namespace Sitecore.FakeDb
   using Sitecore.Data;
   using Sitecore.FakeDb.Security.AccessControl;
 
-  [DebuggerDisplay("{Name,nq}, id: {ID.ToString(),nq}", Name = "{Name}")]
+  [DebuggerDisplay("{FullPath}, {ID.ToString()}")]
   public class DbItem : IEnumerable
   {
     public DbItem(string name)
