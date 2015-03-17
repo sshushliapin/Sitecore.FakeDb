@@ -2,9 +2,9 @@
 {
   using System.Linq;
   using FluentAssertions;
+  using Sitecore.Data;
   using Sitecore.FakeDb.Security.AccessControl;
   using Xunit;
-  using Sitecore.Data;
 
   public class DbItemTest
   {
@@ -44,13 +44,23 @@
     }
 
     [Fact]
-    public void ShouldAddFields()
+    public void ShouldAddFieldByNameAndValue()
     {
       // arrange 
       var item = new DbItem("home") { { "Title", "Welcome!" } };
 
       // act & assert
       item.Fields.Should().ContainSingle(f => f.Name == "Title" && f.Value == "Welcome!");
+    }
+
+    [Fact]
+    public void ShouldAddFieldByIdAndValue()
+    {
+      // arrange 
+      var item = new DbItem("home") { { FieldIDs.Hidden, "1" } };
+
+      // act & assert
+      item.Fields.Should().ContainSingle(f => f.ID == FieldIDs.Hidden && f.Value == "1");
     }
 
     [Fact]

@@ -10,29 +10,27 @@
       var commands = args.Database.Engines.DataEngine.Commands;
       var dataStorage = args.DataStorage;
 
-      var innerCommand = new DataEngineCommand();
-
-      this.InitializeCommand(commands.AddFromTemplatePrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.AddVersionPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.BlobStreamExistsPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.CopyItemPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.CreateItemPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.DeletePrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.GetBlobStreamPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.GetChildrenPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.GetItemPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.GetParentPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.GetRootItemPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.GetVersionsPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.HasChildrenPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.MoveItemPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.RemoveVersionPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.ResolvePathPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.SaveItemPrototype, innerCommand, dataStorage);
-      this.InitializeCommand(commands.SetBlobStreamPrototype, innerCommand, dataStorage);
+      this.InitializeCommand(commands.AddFromTemplatePrototype, dataStorage);
+      this.InitializeCommand(commands.AddVersionPrototype, dataStorage);
+      this.InitializeCommand(commands.BlobStreamExistsPrototype, dataStorage);
+      this.InitializeCommand(commands.CopyItemPrototype, dataStorage);
+      this.InitializeCommand(commands.CreateItemPrototype, dataStorage);
+      this.InitializeCommand(commands.DeletePrototype, dataStorage);
+      this.InitializeCommand(commands.GetBlobStreamPrototype, dataStorage);
+      this.InitializeCommand(commands.GetChildrenPrototype, dataStorage);
+      this.InitializeCommand(commands.GetItemPrototype, dataStorage);
+      this.InitializeCommand(commands.GetParentPrototype, dataStorage);
+      this.InitializeCommand(commands.GetRootItemPrototype, dataStorage);
+      this.InitializeCommand(commands.GetVersionsPrototype, dataStorage);
+      this.InitializeCommand(commands.HasChildrenPrototype, dataStorage);
+      this.InitializeCommand(commands.MoveItemPrototype, dataStorage);
+      this.InitializeCommand(commands.RemoveVersionPrototype, dataStorage);
+      this.InitializeCommand(commands.ResolvePathPrototype, dataStorage);
+      this.InitializeCommand(commands.SaveItemPrototype, dataStorage);
+      this.InitializeCommand(commands.SetBlobStreamPrototype, dataStorage);
     }
 
-    protected virtual void InitializeCommand(object command, DataEngineCommand innerCommand, DataStorage dataStorage)
+    protected virtual void InitializeCommand(object command, DataStorage dataStorage)
     {
       var cmd = command as IDataEngineCommand;
       if (cmd != null)

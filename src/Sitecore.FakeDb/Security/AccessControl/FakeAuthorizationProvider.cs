@@ -1,29 +1,16 @@
 ﻿namespace Sitecore.FakeDb.Security.AccessControl
 {
-  using System;
-  using Sitecore.Data;
-  using Sitecore.Diagnostics;
-  using Sitecore.FakeDb.Data.Engines;
-  using Sitecore.Security.AccessControl;
-  using Sitecore.Security.Accounts;
-  using System.Collections.Generic;
-  using System.Linq;
   using System.Threading;
   using Sitecore.Data.Items;
-  using System.Diagnostics;
+  using Sitecore.Diagnostics;
+  using Sitecore.Security.AccessControl;
+  using Sitecore.Security.Accounts;
 
-  public class FakeAuthorizationProvider : AuthorizationProvider, IRequireDataStorage, IThreadLocalProvider<AuthorizationProvider>
+  public class FakeAuthorizationProvider : AuthorizationProvider, IThreadLocalProvider<AuthorizationProvider>
   {
-    private readonly ThreadLocal<DataStorage> dataStorage = new ThreadLocal<DataStorage>();
-
     private readonly ThreadLocal<AuthorizationProvider> localProvider = new ThreadLocal<AuthorizationProvider>();
 
     private readonly ItemAuthorizationHelper itemHelper;
-
-    public virtual DataStorage DataStorage
-    {
-      get { return this.dataStorage.Value; }
-    }
 
     public virtual ThreadLocal<AuthorizationProvider> LocalProvider
     {
@@ -60,12 +47,7 @@
       }
 
       var item = entity as Item;
-      if (item != null)
-      {
-        return this.itemHelper.GetAccessRules(item);
-      }
-
-      return new AccessRuleCollection();
+      return item != null ? this.itemHelper.GetAccessRules(item) : new AccessRuleCollection();
     }
 
     public override void SetAccessRules(ISecurable entity, AccessRuleCollection rules)
@@ -77,17 +59,14 @@
       {
         this.LocalProvider.Value.SetAccessRules(entity, rules);
       }
-      else if (entity is Item)
+      else
       {
-        this.itemHelper.SetAccessRules((Item)entity, rules);
+        var item = entity as Item;
+        if (item != null)
+        {
+          this.itemHelper.SetAccessRules(item, rules);
+        }
       }
-    }
-
-    public virtual void SetDataStorage(DataStorage dataStorage)
-    {
-      Assert.ArgumentNotNull(dataStorage, "dataStorage");
-
-      this.dataStorage.Value = dataStorage;
     }
 
     public virtual bool IsLocalProviderSet()
@@ -98,12 +77,7 @@
     protected override AccessResult GetAccessCore(ISecurable entity, Account account, AccessRight accessRight)
     {
       var item = entity as Item;
-      if (item != null)
-      {
-        return this.itemHelper.GetAccess(item, account, accessRight);
-      }
-
-      return this.GetDefaultAccessResult();
+      return item != null ? this.itemHelper.GetAccess(item, account, accessRight) : this.GetDefaultAccessResult();
     }
 
     protected virtual AccessResult GetDefaultAccessResult()

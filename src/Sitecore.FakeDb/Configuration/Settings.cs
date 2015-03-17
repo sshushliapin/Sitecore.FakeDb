@@ -7,6 +7,12 @@
 
   public class Settings
   {
+    private const string AutoTranslateSetting = "FakeDb.AutoTranslate";
+
+    private const string AutoTranslatePrefixSetting = "FakeDb.AutoTranslatePrefix";
+
+    private const string AutoTranslateSuffixSetting = "FakeDb.AutoTranslateSuffix";
+
     private readonly XmlDocument section;
 
     public Settings(XmlDocument section)
@@ -17,6 +23,25 @@
     protected internal XmlDocument ConfigSection
     {
       get { return this.section; }
+    }
+
+    public bool AutoTranslate
+    {
+      get { return MainUtil.GetBool(this[AutoTranslateSetting], false); }
+      set { this[AutoTranslateSetting] = value.ToString().ToLower(); }
+    }
+
+
+    public string AutoTranslatePrefix
+    {
+      get { return this[AutoTranslatePrefixSetting]; }
+      set { this[AutoTranslatePrefixSetting] = value; }
+    }
+
+    public string AutoTranslateSuffix
+    {
+      get { return this[AutoTranslateSuffixSetting]; }
+      set { this[AutoTranslateSuffixSetting] = value; }
     }
 
     public virtual string this[string name]

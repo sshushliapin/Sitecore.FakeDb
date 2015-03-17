@@ -222,18 +222,25 @@
       this.field.Value.Should().Be("new shared value");
     }
 
-    [Fact]
-    public void ShouldBeReadonlyDictionary()
+    [Theory]
+    [InlineData("__Some Standard Field", true)]
+    [InlineData("Not Standard Field", false)]
+    public void ShouldMarkStandardFieldsSharedByDefault(string fieldName, bool shared)
     {
-      // act & assert
-      Assert.Throws<NotSupportedException>(() => DbField.FieldIdToNameMapping.Clear());
+      // arrange & act
+      var dbfield = new DbField(fieldName);
+
+      // assert
+      dbfield.Shared.Should().Be(shared);
     }
 
     [Theory]
     [InlineData("{12C33F3F-86C5-43A5-AEB4-5598CEC45116}", "__Base template")]
     [InlineData("{25BED78C-4957-4165-998A-CA1B52F67497}", "__Created")]
     [InlineData("{5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}", "__Created by")]
+    [InlineData("{39C4902E-9960-4469-AEEF-E878E9C8218F}", "__Hidden")]
     [InlineData("{001DD393-96C5-490B-924A-B0F25CD9EFD8}", "__Lock")]
+    [InlineData("{9C6106EA-7A5A-48E2-8CAD-F0F693B1E2D4}", "__Read Only")]
     [InlineData("{F1A1FE9E-A60C-4DDB-A3A0-BB5B29FE732E}", "__Renderings")]
     [InlineData("{8CDC337E-A112-42FB-BBB4-4143751E123F}", "__Revision")]
     [InlineData("{DEC8D2D5-E3CF-48B6-A653-8E69E2716641}", "__Security")]
@@ -256,7 +263,9 @@
     [InlineData("__Base template", "{12C33F3F-86C5-43A5-AEB4-5598CEC45116}")]
     [InlineData("__Created", "{25BED78C-4957-4165-998A-CA1B52F67497}")]
     [InlineData("__Created by", "{5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}")]
+    [InlineData("__Hidden", "{39C4902E-9960-4469-AEEF-E878E9C8218F}")]
     [InlineData("__Lock", "{001DD393-96C5-490B-924A-B0F25CD9EFD8}")]
+    [InlineData("__Read Only", "{9C6106EA-7A5A-48E2-8CAD-F0F693B1E2D4}")]
     [InlineData("__Renderings", "{F1A1FE9E-A60C-4DDB-A3A0-BB5B29FE732E}")]
     [InlineData("__Revision", "{8CDC337E-A112-42FB-BBB4-4143751E123F}")]
     [InlineData("__Security", "{DEC8D2D5-E3CF-48B6-A653-8E69E2716641}")]
@@ -272,20 +281,8 @@
       dbfield.ID.ToString().Should().Be(expectedId);
     }
 
-    [Theory]
-    [InlineData("__Some Standard Field", true)]
-    [InlineData("Not Standard Field", false)]
-    public void ShouldMarkStandardFieldsSharedByDefault(string fieldName, bool shared)
-    {
-      // arrange & act
-      var dbfield = new DbField(fieldName);
-
-      // assert
-      dbfield.Shared.Should().Be(shared);
-    }
-
     [Fact]
-    public void ShouldSetValueOfMissingLanguageAndVersionVersion()
+    public void ShouldSetValueOfMissingLanguageAndVersion()
     {
       // act
       this.field.SetValue("en", 1, "v1");

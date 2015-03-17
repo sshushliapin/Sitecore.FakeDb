@@ -645,28 +645,6 @@
       }
     }
 
-    /// <summary>
-    /// FakeDb supports simple localization mechanism. You can call Translate.Text() or
-    /// Translate.TextByLanguage() method to get a 'translated' version of the original text.
-    /// The translated version has got language name added to the initial phrase.
-    /// </summary>
-    [Fact]
-    public void HowToUnitTestLocalization()
-    {
-      // init languages
-      Sitecore.Globalization.Language en = Sitecore.Globalization.Language.Parse("en");
-      Sitecore.Globalization.Language da = Sitecore.Globalization.Language.Parse("da");
-
-      const string Phrase = "Welcome!";
-
-      // translate
-      string enTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, en);
-      string daTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, da);
-
-      Xunit.Assert.Equal("en:Welcome!", enTranslation);
-      Xunit.Assert.Equal("da:Welcome!", daTranslation);
-    }
-
     [Fact]
     public void HowToWorkWithLinkDatabase()
     {
@@ -856,14 +834,13 @@
       // arrange
       var stream = new System.IO.MemoryStream();
 
-      using (
-        Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-          {
-            new Sitecore.FakeDb.DbItem("home")
-              {
-                new Sitecore.FakeDb.DbField("field")
-              }
-          })
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home")
+            {
+              new Sitecore.FakeDb.DbField("field")
+            }
+        })
       {
         Sitecore.Data.Items.Item item = db.GetItem("/sitecore/content/home");
         Sitecore.Data.Fields.Field field = item.Fields["field"];
@@ -876,6 +853,58 @@
 
         // assert
         Xunit.Assert.Same(stream, field.GetBlobStream());
+      }
+    }
+
+    #endregion
+
+    #region Translate
+
+    [Fact]
+    public void HowToCheckTranslateTextIsCalled()
+    {
+      const string Phrase = "Welcome!";
+
+      // Enable the 'FakeDb.AutoTranslate' setting.
+      // It can be done either statically in the 'App.config' file or 
+      // dynamically in a particular test.
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+      {
+        db.Configuration.Settings.AutoTranslate = true;
+
+        // translate
+        string translatedPhrase = Sitecore.Globalization.Translate.Text(Phrase);
+
+        // note the '*' symbol at the end of the translated phrase
+        Xunit.Assert.Equal("Welcome!*", translatedPhrase);
+      }
+    }
+
+    /// <summary>
+    /// FakeDb supports simple localization mechanism. You can call Translate.Text() or
+    /// Translate.TextByLanguage() method to get a 'translated' version of the original text.
+    /// The translated version has got language name added to the initial phrase.
+    /// </summary>
+    [Fact]
+    public void HowToUnitTestLocalization()
+    {
+      // init languages
+      Sitecore.Globalization.Language en = Sitecore.Globalization.Language.Parse("en");
+      Sitecore.Globalization.Language da = Sitecore.Globalization.Language.Parse("da");
+
+      const string Phrase = "Welcome!";
+
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db())
+      {
+        db.Configuration.Settings.AutoTranslate = true;
+        db.Configuration.Settings.AutoTranslatePrefix = "{lang}:";
+
+        // translate
+        string enTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, en);
+        string daTranslation = Sitecore.Globalization.Translate.TextByLanguage(Phrase, da);
+
+        Xunit.Assert.Equal("en:Welcome!", enTranslation);
+        Xunit.Assert.Equal("da:Welcome!", daTranslation);
       }
     }
 

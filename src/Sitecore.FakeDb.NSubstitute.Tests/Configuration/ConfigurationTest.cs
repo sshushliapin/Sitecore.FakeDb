@@ -10,7 +10,7 @@
     public void ShouldResolveNSubstituteFactory()
     {
       // act & assert
-      Factory.CreateObject("factories/factory", true).Should().BeOfType<NSubstituteFactory>();
+      Factory.CreateObject("factories/factory[@id = \"nsubstitute\"]", true).Should().BeOfType<NSubstituteFactory>();
     }
   }
 }

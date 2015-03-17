@@ -3,30 +3,18 @@
   using System;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture;
+  using Ploeh.AutoFixture.Xunit;
   using Sitecore.Configuration;
-  using Sitecore.Data;
-  using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.FakeDb.Security.AccessControl;
-  using Sitecore.Reflection;
   using Sitecore.Security.AccessControl;
   using Sitecore.Security.Accounts;
   using Xunit;
   using Xunit.Extensions;
-  using System.Collections.Generic;
-  using System.Threading.Tasks;
-  using System.Threading;
-  using Sitecore.Data.Items;
 
   public class FakeAuthorizationProviderTest : IDisposable
   {
-    private readonly Fixture fixture;
-
-    private readonly Database database;
-
-    private readonly DataStorage dataStorage;
-
     private readonly AuthorizationProvider localProvider;
 
     private readonly ItemAuthorizationHelper helper;
@@ -35,24 +23,13 @@
 
     private readonly AccessRuleCollection rules;
 
-    private readonly Account account;
-
     private readonly Item item;
-
-    private readonly AccessRight accessRight;
-
-    private readonly AccessResult accessResult;
 
     private FakeAuthorizationProvider provider;
 
     public FakeAuthorizationProviderTest()
     {
-      this.fixture = new Fixture();
-      this.database = Database.GetDatabase("master");
-      this.dataStorage = new DataStorage(this.database);
-
       this.provider = new FakeAuthorizationProvider();
-      this.provider.SetDataStorage(this.dataStorage);
 
       this.localProvider = Substitute.For<AuthorizationProvider>();
       this.helper = Substitute.For<ItemAuthorizationHelper>();
@@ -60,10 +37,6 @@
       this.entity = Substitute.For<ISecurable>();
       this.item = ItemHelper.CreateInstance();
       this.rules = new AccessRuleCollection();
-
-      this.account = this.fixture.Create<User>();
-      this.accessRight = this.fixture.Create<AccessRight>();
-      this.accessResult = this.fixture.Create<AccessResult>();
     }
 
     [Fact]
@@ -108,18 +81,14 @@
       this.helper.Received().SetAccessRules(this.item, this.rules);
     }
 
-    [Fact]
-    public void ShouldGetAccessPermissionAllowByDefault()
+    [Theory, AutoData]
+    public void ShouldGetAccessPermissionAllowByDefault(User account, AccessRight accessRight)
     {
-      // arrange
-      var account = this.fixture.Create<User>();
-      var accessRight = this.fixture.Create<AccessRight>();
-
       // act & assert
-      this.provider.GetAccess(this.entity, account, accessRight).ShouldBeEquivalentTo(new AccessResult(AccessPermission.Allow, new AccessExplanation("Allow")));
+      this.provider
+          .GetAccess(this.entity, account, accessRight)
+          .ShouldBeEquivalentTo(new AccessResult(AccessPermission.Allow, new AccessExplanation("Allow")));
     }
-
-    #region ThreadLocal Provider
 
     [Fact]
     public void ShouldBeThreadLocalProvider()
@@ -128,15 +97,15 @@
       this.provider.Should().BeAssignableTo<IThreadLocalProvider<AuthorizationProvider>>();
     }
 
-    [Fact]
-    public void ShouldCallGetAccess()
+    [Theory, AutoData]
+    public void ShouldCallGetAccess(User account, AccessRight accessRight, AccessResult accessResult)
     {
       // arrange
       this.provider.LocalProvider.Value = this.localProvider;
-      this.localProvider.GetAccess(this.entity, this.account, this.accessRight).Returns(this.accessResult);
+      this.localProvider.GetAccess(this.entity, account, accessRight).Returns(accessResult);
 
       // act & assert
-      this.provider.GetAccess(this.entity, this.account, this.accessRight).Should().BeSameAs(this.accessResult);
+      this.provider.GetAccess(this.entity, account, accessRight).Should().BeSameAs(accessResult);
     }
 
     [Fact]
@@ -162,8 +131,6 @@
       // assert
       this.localProvider.Received().SetAccessRules(this.entity, this.rules);
     }
-
-    #endregion
 
     public void Dispose()
     {

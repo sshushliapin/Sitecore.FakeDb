@@ -31,7 +31,7 @@
 
       this.Add(new DbField(FieldIDs.BaseTemplate) { Shared = true });
 
-      // ToDo: we can move these out into the standard template. we have tempalte inheritance now
+      // TODO:[High] Move these out into the standard template. we have tempalte inheritance now
       this.Add(new DbField(FieldIDs.Lock) { Shared = true });
       this.Add(new DbField(FieldIDs.Security) { Shared = true });
       this.Add(new DbField(FieldIDs.Created));
@@ -39,6 +39,10 @@
       this.Add(new DbField(FieldIDs.Updated));
       this.Add(new DbField(FieldIDs.UpdatedBy));
       this.Add(new DbField(FieldIDs.Revision));
+
+      this.Add(new DbField(FieldIDs.DisplayName));
+      this.Add(new DbField(FieldIDs.Hidden));
+      this.Add(new DbField(FieldIDs.ReadOnly));
     }
 
     public void Add(string fieldName)
@@ -58,11 +62,16 @@
       this.Add(field, standardValue);
     }
 
-    public void Add(ID id, string standardValue)
+    public new void Add(ID id, string standardValue)
     {
       var field = new DbField(id);
 
       this.Add(field, standardValue);
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+      return this.Fields.GetEnumerator();
     }
 
     protected void Add(DbField field, string standardValue)
@@ -71,11 +80,6 @@
 
       var standardValueField = new DbField(field.Name, field.ID) { Value = standardValue };
       this.StandardValues.Add(standardValueField);
-    }
-
-    public IEnumerator GetEnumerator()
-    {
-      return this.Fields.GetEnumerator();
     }
   }
 }
