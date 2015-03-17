@@ -1,4 +1,9 @@
-﻿0.24.0
+﻿0.25.0
+* [NEW] #40: Create a protected item
+* [NEW] #41: Auto-translate should be disabled by default
+* [NEW] #42: Move database commands configuration out of the App.conifg file
+
+0.24.0
 * [NEW] #36: Introduce strongly typed LinkField configuration
 * [NEW] #37: Added support for shortened paths in serialized data. (thanks to @hermanussen)
 * [FIX] #35: Item.DeleteChildren() throws NullReferenceException if no fake item found in DataStorage
