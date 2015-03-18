@@ -61,6 +61,42 @@
     }
 
     [Fact]
+    public void ShouldBeThreadLocalStandardValuesProvider()
+    {
+      var templateId = ID.NewID;
+      var itemId = ID.NewID;
+      var fieldId = ID.NewID;
+
+      var t1 = Task.Factory.StartNew(() =>
+      {
+        using (var db = new Db
+                          {
+                            new DbTemplate(templateId) { { fieldId, "$name" } },
+                            new DbItem("Home", itemId, templateId)
+                          })
+        {
+          Thread.Sleep(1000);
+          db.GetItem(itemId)[fieldId].Should().Be("Home");
+        }
+      });
+
+      var t2 = Task.Factory.StartNew(() =>
+      {
+        using (var db = new Db
+                          {
+                            new DbTemplate(templateId) { fieldId },
+                            new DbItem("Home", itemId, templateId)
+                          })
+        {
+          db.GetItem(itemId)[fieldId].Should().BeEmpty();
+        }
+      });
+
+      t1.Wait();
+      t2.Wait();
+    }
+
+    [Fact]
     public void ShouldBeThreadSafePipelines()
     {
       var t1 = Task.Factory.StartNew(() =>
