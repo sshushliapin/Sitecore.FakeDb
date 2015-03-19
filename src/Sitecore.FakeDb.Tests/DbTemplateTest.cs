@@ -77,5 +77,25 @@
       template.Fields[FieldIDs.Lock].Shared.Should().BeTrue("__Lock");
       template.Fields[FieldIDs.Security].Shared.Should().BeTrue("__Security");
     }
+
+    [Fact]
+    public void ShouldGetOwnFields()
+    {
+      // arrange
+      var templateId = ID.NewID;
+
+      using (var db = new Db
+                        {
+                          new DbTemplate(templateId) { "expected own field" },
+                          new DbItem("home", ID.NewID, templateId)
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // assert
+        item.Template.OwnFields.Count().Should().Be(1, string.Join("\n\r", item.Template.OwnFields.Select(f => f.Name)));
+        item.Template.OwnFields.Single().Name.Should().Be("expected own field");
+      }
+    }
   }
 }
