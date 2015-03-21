@@ -106,6 +106,7 @@
     <Compile Include="Data\Items\ItemVersionsTest.cs" />
     <Compile Include="Data\Locking\ItemLockingTest.cs" />
     <Compile Include="Data\Managers\ItemManagerTest.cs" />
+    <Compile Include="Data\Templates\TemplatesTest.cs" />
     <Compile Include="DbConcurrencyTest.cs" />
     <Compile Include="Configuration\ClientDataStoreStubTest.cs" />
     <Compile Include="Configuration\ConfigurationTest.cs" />
