@@ -145,7 +145,7 @@
         newField.SetType(field.Type);
       }
 
-      builder.SetBaseIDs(string.Join("|", ft.BaseIDs ?? new[] { TemplateIDs.StandardTemplate } as IEnumerable<ID>));
+      builder.SetBaseIDs(ft.BaseIDs.Any() ? string.Join("|", ft.BaseIDs as IEnumerable<ID>) : TemplateIDs.StandardTemplate.ToString());
 
       return builder.Template;
     }

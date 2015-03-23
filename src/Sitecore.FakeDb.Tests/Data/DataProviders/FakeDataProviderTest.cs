@@ -71,20 +71,6 @@
     }
 
     [Fact]
-    public void ShouldGetTemplateWithBaseTemplateField()
-    {
-      // arrange
-      this.CreateTestTemplateInDataStorage();
-
-      // act
-      var result = this.dataProvider.GetTemplates(null).First();
-
-      // assert
-      result.GetField("__Base template").Should().NotBeNull();
-      result.GetField(FieldIDs.BaseTemplate).Should().NotBeNull();
-    }
-
-    [Fact]
     public void ShouldHaveStandardBaseTemplate()
     {
       // arrange
