@@ -1,11 +1,8 @@
-﻿using System.Web.UI;
-using System.Xml.Schema;
-using Sitecore.Data.Items;
-
-namespace Sitecore.FakeDb.Data
+﻿namespace Sitecore.FakeDb.Data
 {
   using Sitecore.Data;
   using Sitecore.Data.Fields;
+  using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Engines;
 
@@ -48,22 +45,24 @@ namespace Sitecore.FakeDb.Data
 
     protected string FindStandardValueInTheTemplate(DbTemplate template, ID fieldId)
     {
-      if (template.StandardValues.InnerFields.ContainsKey(fieldId))
+      if (template.StandardValues.ContainsKey(fieldId))
       {
-        return template.StandardValues[fieldId].Value; 
+        return template.StandardValues[fieldId].Value;
       }
 
-      if (template.BaseIDs != null && template.BaseIDs.Length > 0)
+      if (template.BaseIDs == null || template.BaseIDs.Length <= 0)
       {
-        foreach (var baseId in template.BaseIDs)
-        {
-          var baseTemplate = this.storage.GetFakeTemplate(baseId);
-          var value = FindStandardValueInTheTemplate(baseTemplate, fieldId);
+        return null;
+      }
 
-          if (value != null)
-          {
-            return value;
-          }
+      foreach (var baseId in template.BaseIDs)
+      {
+        var baseTemplate = this.storage.GetFakeTemplate(baseId);
+        var value = this.FindStandardValueInTheTemplate(baseTemplate, fieldId);
+
+        if (value != null)
+        {
+          return value;
         }
       }
 

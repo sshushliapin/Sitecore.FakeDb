@@ -257,7 +257,7 @@ namespace Sitecore.FakeDb.Data.Engines
       Assert.IsNotNull(templateField, "templateField");
 
       // The item has fields with the IDs matching the fields in the template it directly inherits from
-      if (fakeItem.Fields.InnerFields.ContainsKey(templateField.ID))
+      if (fakeItem.Fields.ContainsKey(templateField.ID))
       {
         return fakeItem.Fields[templateField.ID];
       }

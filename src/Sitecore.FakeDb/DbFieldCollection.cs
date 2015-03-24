@@ -63,6 +63,13 @@
       this.fields.Add(field.ID, field);
     }
 
+    public bool ContainsKey(ID id)
+    {
+      Assert.ArgumentNotNull(id, "id");
+
+      return this.fields.ContainsKey(id);
+    }
+
     public IEnumerator<DbField> GetEnumerator()
     {
       return this.fields.Values.GetEnumerator();
