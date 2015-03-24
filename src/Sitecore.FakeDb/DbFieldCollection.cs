@@ -9,12 +9,6 @@
   {
     private readonly IDictionary<ID, DbField> fields = new Dictionary<ID, DbField>();
 
-    // TODO: Get rid of this
-    internal IDictionary<ID, DbField> InnerFields
-    {
-      get { return this.fields; }
-    }
-
     public DbField this[ID id]
     {
       get

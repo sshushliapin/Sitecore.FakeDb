@@ -262,7 +262,7 @@ namespace Sitecore.FakeDb.Data.Engines
         return fakeItem.Fields[templateField.ID];
       }
 
-      return fakeItem.Fields.InnerFields.Values.SingleOrDefault(f => string.Equals(f.Name, templateField.Name));
+      return fakeItem.Fields.SingleOrDefault(f => string.Equals(f.Name, templateField.Name));
     }
 
     protected void FillDefaultFakeTemplates()

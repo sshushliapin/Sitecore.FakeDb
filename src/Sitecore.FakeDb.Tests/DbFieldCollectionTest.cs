@@ -112,5 +112,17 @@
       // act & assert
       collection.ContainsKey(ID.NewID).Should().BeFalse();
     }
+
+    [Fact]
+    public void ShouldGetValues()
+    {
+      // arrange
+      var field1 = new DbField("field1");
+      var field2 = new DbField("field2");
+      var collection = new DbFieldCollection { field1, field2 };
+
+      // act & assert
+      collection.ShouldAllBeEquivalentTo(new[] { field1, field2 });
+    }
   }
 }
