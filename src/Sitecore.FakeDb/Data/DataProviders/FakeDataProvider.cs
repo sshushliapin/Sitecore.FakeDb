@@ -140,6 +140,11 @@
 
       foreach (var field in ft.Fields)
       {
+        if (ft.ID != TemplateIDs.StandardTemplate && field.IsStandard())
+        {
+          continue;
+        }
+
         var newField = section.AddField(field.Name, field.ID);
         newField.SetShared(field.Shared);
         newField.SetType(field.Type);

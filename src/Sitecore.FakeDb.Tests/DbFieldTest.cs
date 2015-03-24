@@ -292,5 +292,14 @@
       this.field.Values["en"][1].Should().Be("v1");
       this.field.Values["en"][2].Should().Be("v2");
     }
+
+    [Theory]
+    [InlineData("__Created", true)]
+    [InlineData("Title", false)]
+    public void ShouldBeStandardIfNameStartsWithDashes(string name, bool standard)
+    {
+      // act & assert
+      new DbField(name).IsStandard().Should().Be(standard);
+    }
   }
 }

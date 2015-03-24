@@ -279,11 +279,14 @@ namespace Sitecore.FakeDb.Data.Engines
 
                                  new DbField(FieldIDs.Lock) { Shared = true },
                                  new DbField(FieldIDs.Security) { Shared = true },
+                                 
                                  new DbField(FieldIDs.Created),
                                  new DbField(FieldIDs.CreatedBy),
                                  new DbField(FieldIDs.Updated),
                                  new DbField(FieldIDs.UpdatedBy),
                                  new DbField(FieldIDs.Revision),
+
+                                 new DbField(FieldIDs.LayoutField),
 
                                  new DbField(FieldIDs.DisplayName),
                                  new DbField(FieldIDs.Hidden),

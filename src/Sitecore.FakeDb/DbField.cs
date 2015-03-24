@@ -32,7 +32,7 @@
       this.ID = idNamePair.Key;
       this.Name = idNamePair.Value;
 
-      if (this.Name.StartsWith("__"))
+      if (this.IsStandard())
       {
         this.Shared = true;
       }
@@ -181,6 +181,11 @@
       }
 
       this.values[language][version] = value;
+    }
+
+    public bool IsStandard()
+    {
+      return this.Name.StartsWith("__");
     }
 
     protected virtual int GetLatestVersion(string language)
