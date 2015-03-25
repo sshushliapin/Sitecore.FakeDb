@@ -1,11 +1,27 @@
 ﻿namespace Sitecore.FakeDb
 {
   using System.Collections;
+  using System.Linq;
   using Sitecore.Data;
+  using Sitecore.Diagnostics;
 
   public class DbTemplate : DbItem
   {
-    public ID[] BaseIDs { get; set; }
+    private ID[] baseIDs;
+
+    public ID[] BaseIDs
+    {
+      get
+      {
+        return this.baseIDs;
+      }
+
+      set
+      {
+        Assert.ArgumentNotNull(value, "value");
+        this.baseIDs = value;
+      }
+    }
 
     internal DbFieldCollection StandardValues { get; private set; }
 
@@ -28,21 +44,7 @@
       : base(name, ID.IsNullOrEmpty(id) ? ID.NewID : id, TemplateIDs.Template)
     {
       this.StandardValues = new DbFieldCollection();
-
-      this.Add(new DbField(FieldIDs.BaseTemplate) { Shared = true });
-
-      // TODO:[High] Move these out into the standard template. we have tempalte inheritance now
-      this.Add(new DbField(FieldIDs.Lock) { Shared = true });
-      this.Add(new DbField(FieldIDs.Security) { Shared = true });
-      this.Add(new DbField(FieldIDs.Created));
-      this.Add(new DbField(FieldIDs.CreatedBy));
-      this.Add(new DbField(FieldIDs.Updated));
-      this.Add(new DbField(FieldIDs.UpdatedBy));
-      this.Add(new DbField(FieldIDs.Revision));
-
-      this.Add(new DbField(FieldIDs.DisplayName));
-      this.Add(new DbField(FieldIDs.Hidden));
-      this.Add(new DbField(FieldIDs.ReadOnly));
+      this.BaseIDs = Enumerable.Empty<ID>() as ID[];
     }
 
     public void Add(string fieldName)

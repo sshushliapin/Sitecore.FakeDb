@@ -2,6 +2,7 @@
 {
   using FluentAssertions;
   using Sitecore.Data.Items;
+  using Sitecore.Globalization;
   using Xunit;
 
   public class ItemAppearanceTest
@@ -28,6 +29,55 @@
         item.Appearance.Sortorder.Should().Be(0);
         item.Appearance.Style.Should().BeEmpty();
         item.Appearance.Thumbnail.Should().Be("/sitecore/client/images/document16x16.gif");
+      }
+    }
+
+    [Fact]
+    public void ShouldGetEmptyDisplayNameField()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        // act & assert
+        db.GetItem("/sitecore/content/home")[FieldIDs.DisplayName].Should().BeEmpty();
+      }
+    }
+
+    [Fact]
+    public void ShouldGetItemNameAsDisplayName()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        db.GetItem("/sitecore/content/home").DisplayName.Should().Be("home");
+      }
+    }
+
+    [Fact]
+    public void ShouldSetDisplayNameInDifferencCultures()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home") { { FieldIDs.DisplayName, "Home!" } }
+                        })
+      {
+        db.GetItem("/sitecore/content/home", "en")[FieldIDs.DisplayName].Should().Be("Home!");
+        db.GetItem("/sitecore/content/home", "uk-UA")[FieldIDs.DisplayName].Should().BeEmpty();
+      }
+    }
+
+    [Fact]
+    public void ShouldSetDisplayNameInDifferencCulture1s()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField(FieldIDs.DisplayName) { { "en", "Home!" }, { "uk-UA", "Домівка" } } }
+                        })
+      {
+        db.GetItem("/sitecore/content/home", "en")[FieldIDs.DisplayName].Should().Be("Home!");
+        db.GetItem("/sitecore/content/home", "uk-UA")[FieldIDs.DisplayName].Should().Be("Домівка");
       }
     }
 

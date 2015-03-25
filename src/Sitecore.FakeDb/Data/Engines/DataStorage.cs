@@ -163,7 +163,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
       return ItemHelper.CreateInstance(this.database, fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fakeItem.BranchId, fields, language, itemVersion);
     }
-    
+
     protected FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
     {
       // build a sequence of templates that the item inherits from
@@ -235,6 +235,20 @@ namespace Sitecore.FakeDb.Data.Engines
       {
         allFields.Add(field.Key, field.Value);
       }
+
+      // TODO: Should not check if the Standard Template id.
+      if (!fakeTemplate.BaseIDs.Any() && fakeTemplate.ID != TemplateIDs.StandardTemplate)
+      {
+        var standardTemplate = this.GetFakeTemplate(TemplateIDs.StandardTemplate);
+        this.AddFieldsFromTemplate(allFields, fakeItem, standardTemplate, language, version);
+      }
+      else
+      {
+        foreach (var id in fakeTemplate.BaseIDs)
+        {
+          this.AddFieldsFromTemplate(allFields, fakeItem, this.fakeTemplates[id], language, version);
+        }
+      }
     }
 
     protected DbField FindItemDbField(DbItem fakeItem, DbField templateField)
@@ -243,12 +257,12 @@ namespace Sitecore.FakeDb.Data.Engines
       Assert.IsNotNull(templateField, "templateField");
 
       // The item has fields with the IDs matching the fields in the template it directly inherits from
-      if (fakeItem.Fields.InnerFields.ContainsKey(templateField.ID))
+      if (fakeItem.Fields.ContainsKey(templateField.ID))
       {
         return fakeItem.Fields[templateField.ID];
       }
 
-      return fakeItem.Fields.InnerFields.Values.SingleOrDefault(f => string.Equals(f.Name, templateField.Name));
+      return fakeItem.Fields.SingleOrDefault(f => string.Equals(f.Name, templateField.Name));
     }
 
     protected void FillDefaultFakeTemplates()
@@ -258,6 +272,28 @@ namespace Sitecore.FakeDb.Data.Engines
 
       this.FakeTemplates.Add(TemplateIDs.Template, new DbTemplate(TemplateItemName, TemplateIDs.Template) { new DbField(FieldIDs.BaseTemplate) });
       this.FakeTemplates.Add(TemplateIDs.Folder, new DbTemplate(FolderItemName, TemplateIDs.Folder));
+
+      var standardTemplate = new DbTemplate(TemplateIDs.StandardTemplate)
+                               {
+                                 new DbField(FieldIDs.BaseTemplate) { Shared = true },
+
+                                 new DbField(FieldIDs.Lock) { Shared = true },
+                                 new DbField(FieldIDs.Security) { Shared = true },
+                                 
+                                 new DbField(FieldIDs.Created),
+                                 new DbField(FieldIDs.CreatedBy),
+                                 new DbField(FieldIDs.Updated),
+                                 new DbField(FieldIDs.UpdatedBy),
+                                 new DbField(FieldIDs.Revision),
+
+                                 new DbField(FieldIDs.LayoutField),
+
+                                 new DbField(FieldIDs.DisplayName),
+                                 new DbField(FieldIDs.Hidden),
+                                 new DbField(FieldIDs.ReadOnly)
+                               };
+
+      this.FakeTemplates.Add(standardTemplate.ID, standardTemplate);
     }
 
     protected void FillDefaultFakeItems()

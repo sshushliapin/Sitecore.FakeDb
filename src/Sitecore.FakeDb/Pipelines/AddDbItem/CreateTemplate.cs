@@ -81,8 +81,8 @@
         return false;
       }
 
-      var lastItemTemplateKeys = string.Concat(sourceItem.Fields.InnerFields.Values.Select(f => f.Name));
-      var itemTemplateKeys = string.Concat(item.Fields.InnerFields.Values.Select(f => f.Name));
+      var lastItemTemplateKeys = string.Concat(sourceItem.Fields.Select(f => f.Name));
+      var itemTemplateKeys = string.Concat(item.Fields.Select(f => f.Name));
 
       if (lastItemTemplateKeys != itemTemplateKeys)
       {

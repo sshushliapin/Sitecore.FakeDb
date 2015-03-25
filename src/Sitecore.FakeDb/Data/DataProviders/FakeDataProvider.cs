@@ -41,7 +41,7 @@
     {
       if (this.DataStorage == null)
       {
-        return new IdCollection();  
+        return new IdCollection();
       }
 
       var ids = this.DataStorage.FakeTemplates.Select(t => t.Key).ToArray();
@@ -106,27 +106,10 @@
 
       foreach (var ft in this.DataStorage.FakeTemplates.Values)
       {
-        templates.Add(BuildTemplate(ft, templates));
+        templates.Add(this.BuildTemplate(ft, templates));
       }
 
       return templates;
-    }
-
-    protected virtual Template BuildTemplate(DbTemplate ft, TemplateCollection templates)
-    {
-      var builder = new Template.Builder(ft.Name, ft.ID, templates);
-      var section = builder.AddSection("Data", ID.NewID);
-
-      foreach (var field in ft.Fields)
-      {
-        var newField = section.AddField(field.Name, field.ID);
-        newField.SetShared(field.Shared);
-        newField.SetType(field.Type);
-      }
-
-      builder.SetBaseIDs(string.Join("|", ft.BaseIDs ?? new ID[] { } as IEnumerable<ID>));
-
-      return builder.Template;
     }
 
     public override LanguageCollection GetLanguages(CallContext context)
@@ -148,6 +131,28 @@
       var items = Query.SelectItems(query, this.Database);
 
       return items != null ? IDList.Build(items.Select(i => i.ID).ToArray()) : new IDList();
+    }
+
+    protected virtual Template BuildTemplate(DbTemplate ft, TemplateCollection templates)
+    {
+      var builder = new Template.Builder(ft.Name, ft.ID, templates);
+      var section = builder.AddSection("Data", ID.NewID);
+
+      foreach (var field in ft.Fields)
+      {
+        if (ft.ID != TemplateIDs.StandardTemplate && field.IsStandard())
+        {
+          continue;
+        }
+
+        var newField = section.AddField(field.Name, field.ID);
+        newField.SetShared(field.Shared);
+        newField.SetType(field.Type);
+      }
+
+      builder.SetBaseIDs(ft.BaseIDs.Any() ? string.Join("|", ft.BaseIDs as IEnumerable<ID>) : TemplateIDs.StandardTemplate.ToString());
+
+      return builder.Template;
     }
   }
 }
