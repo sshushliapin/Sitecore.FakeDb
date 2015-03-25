@@ -14,11 +14,9 @@
     {
       Assert.ArgumentNotNull(args, "args");
 
-      DsDbItem dsDbItem = args.DsDbItem as DsDbItem;
+      var dsDbItem = args.DsDbItem as DsDbItem;
 
-      if (dsDbItem == null
-          || !dsDbItem.DeserializeLinkedTemplate
-          || args.DataStorage.GetFakeItem(dsDbItem.TemplateID) != null)
+      if (dsDbItem == null || !dsDbItem.DeserializeLinkedTemplate || args.DataStorage.GetFakeItem(dsDbItem.TemplateID) != null)
       {
         return;
       }
@@ -28,33 +26,30 @@
 
     private static void DeserializeTemplate(DataStorage dataStorage, ID templateId, string serializationFolderName)
     {
-      string filePath = templateId.FindFilePath(serializationFolderName);
+      var filePath = templateId.FindFilePath(serializationFolderName);
 
-      if (string.IsNullOrWhiteSpace(filePath)
-          || !File.Exists(filePath))
+      if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
       {
         return;
       }
 
-      DsDbTemplate dsDbTemplate = new DsDbTemplate(templateId, serializationFolderName);
+      var dsDbTemplate = new DsDbTemplate(templateId, serializationFolderName);
 
-      dataStorage.AddFakeTemplate(dsDbTemplate);
+      dataStorage.AddFakeItem(dsDbTemplate);
 
       // Deserialize base templates
-      DbField baseTemplatesField = dsDbTemplate.Fields
-                                      .FirstOrDefault(f => f.ID == FieldIDs.BaseTemplate);
-      if (!string.IsNullOrWhiteSpace(baseTemplatesField.Value))
+      var baseTemplatesField = dsDbTemplate.Fields.FirstOrDefault(f => f.ID == FieldIDs.BaseTemplate);
+      if (string.IsNullOrWhiteSpace(baseTemplatesField.Value))
       {
-        foreach (ID baseTemplateId in baseTemplatesField.Value
-                    .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Where(ID.IsID)
-                    .Select(ID.Parse))
-        {
-          if (dataStorage.GetFakeItem(baseTemplateId) == null)
-          {
-            DeserializeTemplate(dataStorage, baseTemplateId, dsDbTemplate.SerializationFolderName);
-          }
-        }
+        return;
+      }
+
+      foreach (var baseTemplateId in baseTemplatesField.Value.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
+        .Where(ID.IsID)
+        .Select(ID.Parse)
+        .Where(baseTemplateId => dataStorage.GetFakeItem(baseTemplateId) == null))
+      {
+        DeserializeTemplate(dataStorage, baseTemplateId, dsDbTemplate.SerializationFolderName);
       }
     }
   }

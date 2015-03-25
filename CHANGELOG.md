@@ -1,4 +1,7 @@
-﻿0.25.0
+﻿0.25.1
+* [FIX] #44: Fix Template.OwnFields
+
+0.25.0
 * [NEW] #40: Create a protected item
 * [NEW] #41: Auto-translate should be disabled by default
 * [NEW] #42: Move database commands configuration out of the App.conifg file

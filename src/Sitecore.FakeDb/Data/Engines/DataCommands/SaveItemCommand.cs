@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using Sitecore.Data;
   using Sitecore.Data.Fields;
   using Sitecore.Diagnostics;
 
@@ -52,19 +53,30 @@
       var template = this.innerCommand.DataStorage.GetFakeTemplate(fakeItem.TemplateID);
       Assert.IsNotNull(template, "Item template not found. Item: '{0}', '{1}'; template: '{2}'.", Item.Name, Item.ID, Item.TemplateID);
 
-      // TODO: Looks strange. Should be removed.
       this.Item.Fields.ReadAll();
 
       foreach (Field field in this.Item.Fields)
       {
-        if (!fakeItem.Fields.InnerFields.ContainsKey(field.ID) && template.Fields.InnerFields.ContainsKey(field.ID))
+        if (!fakeItem.Fields.ContainsKey(field.ID) && this.IsTemplateField(template, field.ID))
         {
           fakeItem.Fields.Add(new DbField(field.ID));
         }
 
-        Assert.IsTrue(fakeItem.Fields.InnerFields.ContainsKey(field.ID), "Item field not found. Item: '{0}', '{1}'; field: '{2}'.", Item.Name, Item.ID, field.ID);
+        Assert.IsTrue(fakeItem.Fields.ContainsKey(field.ID), "Item field not found. Item: '{0}', '{1}'; field: '{2}'.", Item.Name, Item.ID, field.ID);
         fakeItem.Fields[field.ID].SetValue(Item.Language.Name, Item.Version.Number, field.Value);
       }
+    }
+
+    private bool IsTemplateField(DbItem template, ID fieldId)
+    {
+      var isField = template.Fields.ContainsKey(fieldId);
+      if (isField)
+      {
+        return true;
+      }
+
+      var standardTemplate = this.innerCommand.DataStorage.GetFakeTemplate(TemplateIDs.StandardTemplate);
+      return standardTemplate.Fields.ContainsKey(fieldId);
     }
   }
 }

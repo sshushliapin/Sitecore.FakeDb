@@ -1,10 +1,10 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
+  using System;
   using System.Linq;
   using FluentAssertions;
   using Sitecore.Data;
   using Xunit;
-  using System;
 
   public class DbFieldCollectionTest
   {
@@ -12,12 +12,9 @@
     public void ShouldAddDbField()
     {
       // arrange
-      var collection = new DbFieldCollection();
+      var collection = new DbFieldCollection { new DbField("Title") };
 
-      // act
-      collection.Add(new DbField("Title"));
-
-      // assert
+      // act & assert
       collection.Count().Should().Be(1);
     }
 
@@ -93,6 +90,39 @@
       // act & assert
       Assert.Throws<InvalidOperationException>(() => collection[missingFieldId])
         .Message.Should().Be(expectedMessage);
+    }
+
+    [Fact]
+    public void ShouldReturnTrueIfContainsField()
+    {
+      // arrange
+      var fieldId = ID.NewID;
+      var collection = new DbFieldCollection { new DbField(fieldId) };
+
+      // act & assert
+      collection.ContainsKey(fieldId).Should().BeTrue();
+    }
+
+    [Fact]
+    public void ShouldReturnFalseIfNoField()
+    {
+      // arrange
+      var collection = new DbFieldCollection();
+
+      // act & assert
+      collection.ContainsKey(ID.NewID).Should().BeFalse();
+    }
+
+    [Fact]
+    public void ShouldGetValues()
+    {
+      // arrange
+      var field1 = new DbField("field1");
+      var field2 = new DbField("field2");
+      var collection = new DbFieldCollection { field1, field2 };
+
+      // act & assert
+      collection.ShouldAllBeEquivalentTo(new[] { field1, field2 });
     }
   }
 }

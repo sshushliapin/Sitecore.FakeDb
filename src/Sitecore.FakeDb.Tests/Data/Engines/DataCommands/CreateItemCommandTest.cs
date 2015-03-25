@@ -34,7 +34,7 @@
 
       this.dataStorage.GetSitecoreItem(itemId).Returns(item);
 
-      var command = new OpenCreateItemCommand() { Engine = new DataEngine(this.database) };
+      var command = new OpenCreateItemCommand { Engine = new DataEngine(this.database) };
       command.Initialize(itemId, "home", templateId, destination);
       command.Initialize(this.dataStorage);
 
@@ -43,7 +43,10 @@
 
       // assert
       result.Should().Be(item);
-      this.dataStorage.Received().Create("home", itemId, templateId, destination);
+      this.dataStorage.Received().AddFakeItem(Arg.Is<DbItem>(i => i.Name == "home" &&
+                                                                  i.ID == itemId &&
+                                                                  i.TemplateID == templateId &&
+                                                                  i.ParentID == destination.ID));
     }
 
     private class OpenCreateItemCommand : CreateItemCommand

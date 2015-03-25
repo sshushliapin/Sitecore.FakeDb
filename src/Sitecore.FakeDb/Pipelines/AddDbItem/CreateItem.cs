@@ -1,5 +1,9 @@
 ﻿namespace Sitecore.FakeDb.Pipelines.AddDbItem
 {
+  using System;
+
+  // TODO: Not used. Remove.
+  [Obsolete]
   public class CreateItem
   {
     public virtual void Process(AddDbItemArgs args)

@@ -24,9 +24,10 @@
 
     protected override Item DoExecute()
     {
-      this.innerCommand.DataStorage.Create(this.CopyName, this.CopyId, this.Source.TemplateID, this.Destination);
-
       var dataStorage = this.innerCommand.DataStorage;
+
+      var item = new DbItem(this.CopyName, this.CopyId, this.Source.TemplateID) { ParentID = this.Destination.ID };
+      dataStorage.AddFakeItem(item);
 
       var fakeItem = dataStorage.GetFakeItem(this.Source.ID);
       var fakeCopy = dataStorage.GetFakeItem(this.CopyId);

@@ -1122,7 +1122,7 @@
 
         // assert
         template.BaseIDs.Should().HaveCount(1);
-        template.GetBaseTemplates().Should().HaveCount(1);
+        template.GetBaseTemplates().Should().HaveCount(2); // current 'base' + standard
         template.GetBaseTemplates().Any(t => t.ID == baseId).Should().BeTrue();
 
         template.GetField(FieldIDs.BaseTemplate).Should().NotBeNull();

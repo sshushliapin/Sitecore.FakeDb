@@ -43,7 +43,10 @@
 
       // assert
       result.Should().Be(item);
-      this.dataStorage.Received().Create("home", itemId, templateId, destination, true);
+      this.dataStorage.Received().AddFakeItem(Arg.Is<DbItem>(i => i.Name == "home" && 
+                                                                  i.ID == itemId &&
+                                                                  i.TemplateID == templateId && 
+                                                                  i.ParentID == destination.ID));
     }
 
     private class OpenAddFromTemplateCommand : AddFromTemplateCommand

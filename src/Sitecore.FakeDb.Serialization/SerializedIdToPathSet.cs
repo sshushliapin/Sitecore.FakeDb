@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sitecore.Data;
-
-namespace Sitecore.FakeDb.Serialization
+﻿namespace Sitecore.FakeDb.Serialization
 {
-    internal class SerializedIdToPathSet
-    {
-        internal Dictionary<ID, string> Paths { get; set; }
-        internal Stack<string> FilePaths { get; set; }
+  using System.Collections.Generic;
+  using Sitecore.Data;
 
-        internal SerializedIdToPathSet()
-        {
-            Paths = new Dictionary<ID, string>();
-            FilePaths = new Stack<string>();
-        }
+  internal class SerializedIdToPathSet
+  {
+    internal Dictionary<ID, string> Paths { get; set; }
+
+    internal Stack<string> FilePaths { get; set; }
+
+    internal SerializedIdToPathSet()
+    {
+      this.Paths = new Dictionary<ID, string>();
+      this.FilePaths = new Stack<string>();
     }
+  }
 }
