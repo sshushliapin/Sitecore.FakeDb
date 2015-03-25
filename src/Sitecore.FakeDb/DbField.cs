@@ -32,7 +32,13 @@
       this.ID = idNamePair.Key;
       this.Name = idNamePair.Value;
 
-      if (this.IsStandard())
+      if (!this.IsStandard())
+      {
+        return;
+      }
+
+      // TODO: Determine which of the standard fields should be shared.
+      if (this.ID != FieldIDs.DisplayName)
       {
         this.Shared = true;
       }
@@ -129,9 +135,12 @@
       var hasValueForLanguage = this.values.ContainsKey(language);
       if (!hasValueForLanguage)
       {
-        if (this.values.ContainsKey(Context.Language.Name))
+        var contextLang = Context.Language.Name;
+
+        // TODO: Avoid the DisplayName field id comparison.
+        if (this.values.ContainsKey(contextLang) && this.ID != FieldIDs.DisplayName)
         {
-          return this.GetValue(Context.Language.Name, version);
+          return this.GetValue(contextLang, version);
         }
 
         return string.Empty;

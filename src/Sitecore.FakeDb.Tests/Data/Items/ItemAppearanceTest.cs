@@ -63,7 +63,21 @@
                         })
       {
         db.GetItem("/sitecore/content/home", "en")[FieldIDs.DisplayName].Should().Be("Home!");
-        db.GetItem("/sitecore/content/home", "uk-UA")[FieldIDs.DisplayName].Should().Be("home");
+        db.GetItem("/sitecore/content/home", "uk-UA")[FieldIDs.DisplayName].Should().BeEmpty();
+      }
+    }
+
+    [Fact]
+    public void ShouldSetDisplayNameInDifferencCulture1s()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField(FieldIDs.DisplayName) { { "en", "Home!" }, { "uk-UA", "Домівка" } } }
+                        })
+      {
+        db.GetItem("/sitecore/content/home", "en")[FieldIDs.DisplayName].Should().Be("Home!");
+        db.GetItem("/sitecore/content/home", "uk-UA")[FieldIDs.DisplayName].Should().Be("Домівка");
       }
     }
 
