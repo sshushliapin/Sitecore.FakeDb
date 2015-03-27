@@ -76,7 +76,7 @@
       stubProvider.RequiresUniqueEmail.Should().BeFalse();
       stubProvider.ResetPassword(null, null).Should().BeNull();
       stubProvider.UnlockUser(null).Should().BeFalse();
-      Assert.DoesNotThrow(() => stubProvider.UpdateUser(null));
+      stubProvider.UpdateUser(null);
       stubProvider.ValidateUser(null, null).Should().BeFalse();
     }
 

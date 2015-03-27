@@ -50,29 +50,29 @@
       var stubProvider = new FakeRolesInRolesProvider();
 
       // act & assert
-      Assert.DoesNotThrow(() => stubProvider.AddRolesToRoles(null, null));
-      Assert.DoesNotThrow(() => stubProvider.FindRolesInRole(null, null, false));
-      Assert.DoesNotThrow(() => stubProvider.FindUsersInRole(null, null, false));
-      Assert.DoesNotThrow(() => stubProvider.GetAllRoles(false));
-      Assert.DoesNotThrow(() => stubProvider.GetCreatorOwnerRole());
-      Assert.DoesNotThrow(() => stubProvider.GetEveryoneRole());
-      Assert.DoesNotThrow(() => stubProvider.GetEveryoneRoles());
-      Assert.DoesNotThrow(() => stubProvider.GetGlobalRoles());
-      Assert.DoesNotThrow(() => stubProvider.GetRoleMembers(null, true));
-      Assert.DoesNotThrow(() => stubProvider.GetRolesForRole(null, true));
-      Assert.DoesNotThrow(() => stubProvider.GetRolesForUser(null, true));
-      Assert.DoesNotThrow(() => stubProvider.GetRolesInRole(null, true));
-      Assert.DoesNotThrow(() => stubProvider.GetSystemRoles());
-      Assert.DoesNotThrow(() => stubProvider.GetUsersInRole(null, true));
-      Assert.DoesNotThrow(() => stubProvider.IsCreatorOwnerRole(null));
-      Assert.DoesNotThrow(() => stubProvider.IsEveryoneRole("Everyone"));
-      Assert.DoesNotThrow(() => stubProvider.IsEveryoneRole("Everyone", Domain.GetDomain("exranet")));
-      Assert.DoesNotThrow(() => stubProvider.IsGlobalRole(null));
-      Assert.DoesNotThrow(() => stubProvider.IsRoleInRole(null, null, true));
-      Assert.DoesNotThrow(() => stubProvider.IsSystemRole(null));
-      Assert.DoesNotThrow(() => stubProvider.IsUserInRole(null, null, true));
-      Assert.DoesNotThrow(() => stubProvider.RemoveRoleRelations(null));
-      Assert.DoesNotThrow(() => stubProvider.RemoveRolesFromRoles(null, null));
+      stubProvider.AddRolesToRoles(null, null);
+      stubProvider.FindRolesInRole(null, null, false);
+      stubProvider.FindUsersInRole(null, null, false);
+      stubProvider.GetAllRoles(false);
+      stubProvider.GetCreatorOwnerRole();
+      stubProvider.GetEveryoneRole();
+      stubProvider.GetEveryoneRoles();
+      stubProvider.GetGlobalRoles();
+      stubProvider.GetRoleMembers(null, true);
+      stubProvider.GetRolesForRole(null, true);
+      stubProvider.GetRolesForUser(null, true);
+      stubProvider.GetRolesInRole(null, true);
+      stubProvider.GetSystemRoles();
+      stubProvider.GetUsersInRole(null, true);
+      stubProvider.IsCreatorOwnerRole(null);
+      stubProvider.IsEveryoneRole("Everyone");
+      stubProvider.IsEveryoneRole("Everyone", Domain.GetDomain("exranet"));
+      stubProvider.IsGlobalRole(null);
+      stubProvider.IsRoleInRole(null, null, true);
+      stubProvider.IsSystemRole(null);
+      stubProvider.IsUserInRole(null, null, true);
+      stubProvider.RemoveRoleRelations(null);
+      stubProvider.RemoveRolesFromRoles(null, null);
     }
 
     public void ShouldGetDefaultValuesIfNoBefaviourSet()

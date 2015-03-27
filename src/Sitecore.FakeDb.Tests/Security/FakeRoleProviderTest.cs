@@ -38,15 +38,15 @@
 
       // act & assert
       Assert.Null(stubProvider.ApplicationName);
-      Assert.DoesNotThrow(() => stubProvider.AddUsersToRoles(null, null));
-      Assert.DoesNotThrow(() => stubProvider.CreateRole(null));
+      stubProvider.AddUsersToRoles(null, null);
+      stubProvider.CreateRole(null);
       stubProvider.DeleteRole(null, false).Should().BeFalse();
       stubProvider.FindUsersInRole(null, null).Should().BeEmpty();
       stubProvider.GetAllRoles().Should().BeEmpty();
       stubProvider.GetRolesForUser(null).Should().BeEmpty();
       stubProvider.GetUsersInRole(null).Should().BeEmpty();
       stubProvider.IsUserInRole(null, null).Should().BeFalse();
-      Assert.DoesNotThrow(() => stubProvider.RemoveUsersFromRoles(null, null));
+      stubProvider.RemoveUsersFromRoles(null, null);
       stubProvider.RoleExists(null).Should().BeFalse();
     }
 

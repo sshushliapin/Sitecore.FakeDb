@@ -3,7 +3,7 @@
   using System;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture.Xunit;
+  using Ploeh.AutoFixture;
   using Sitecore.Configuration;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Items;
@@ -11,7 +11,6 @@
   using Sitecore.Security.AccessControl;
   using Sitecore.Security.Accounts;
   using Xunit;
-  using Xunit.Extensions;
 
   public class FakeAuthorizationProviderTest : IDisposable
   {
@@ -53,7 +52,7 @@
     public void ShouldNotFailWhenSetAccessRules()
     {
       // act & assert
-      Assert.DoesNotThrow(() => this.provider.SetAccessRules(this.entity, this.rules));
+      this.provider.SetAccessRules(this.entity, this.rules);
     }
 
     [Fact]
@@ -81,9 +80,14 @@
       this.helper.Received().SetAccessRules(this.item, this.rules);
     }
 
-    [Theory, AutoData]
-    public void ShouldGetAccessPermissionAllowByDefault(User account, AccessRight accessRight)
+    [Fact]
+    public void ShouldGetAccessPermissionAllowByDefault()
     {
+      // arrange
+      var fixture = new Fixture();
+      var account = fixture.Create<User>();
+      var accessRight = fixture.Create<AccessRight>();
+
       // act & assert
       this.provider
           .GetAccess(this.entity, account, accessRight)
@@ -97,10 +101,15 @@
       this.provider.Should().BeAssignableTo<IThreadLocalProvider<AuthorizationProvider>>();
     }
 
-    [Theory, AutoData]
-    public void ShouldCallGetAccess(User account, AccessRight accessRight, AccessResult accessResult)
+    [Fact]
+    public void ShouldCallGetAccess()
     {
       // arrange
+      var fixture = new Fixture();
+      var account = fixture.Create<User>();
+      var accessRight = fixture.Create<AccessRight>();
+      var accessResult = fixture.Create<AccessResult>();
+
       this.provider.LocalProvider.Value = this.localProvider;
       this.localProvider.GetAccess(this.entity, account, accessRight).Returns(accessResult);
 

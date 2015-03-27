@@ -38,7 +38,7 @@
       var stubLinkDatabase = new FakeLinkDatabase();
 
       // act & assert
-      Assert.DoesNotThrow(() => stubLinkDatabase.Compact(null));
+      stubLinkDatabase.Compact(null);
       stubLinkDatabase.GetBrokenLinks(null).Should().BeEmpty();
       stubLinkDatabase.GetReferenceCount(null).Should().Be(0);
       stubLinkDatabase.GetReferences(null).Should().BeEmpty();
@@ -50,10 +50,10 @@
       stubLinkDatabase.GetItemVersionReferrers(null).Should().BeEmpty();
       stubLinkDatabase.GetReferrers(null).Should().BeEmpty();
       stubLinkDatabase.HasExternalReferrers(null, false).Should().BeFalse();
-      Assert.DoesNotThrow(() => stubLinkDatabase.Rebuild(null));
-      Assert.DoesNotThrow(() => stubLinkDatabase.RemoveReferences(null));
-      Assert.DoesNotThrow(() => stubLinkDatabase.UpdateItemVersionReferences(null));
-      Assert.DoesNotThrow(() => stubLinkDatabase.UpdateReferences(null));
+      stubLinkDatabase.Rebuild(null);
+      stubLinkDatabase.RemoveReferences(null);
+      stubLinkDatabase.UpdateItemVersionReferences(null);
+      stubLinkDatabase.UpdateReferences(null);
     }
 
     [Fact]

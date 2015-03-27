@@ -40,10 +40,10 @@
       var stubProvider = new FakeIDTableProvider();
 
       // act & assert
-      Assert.DoesNotThrow(() => stubProvider.Add(null));
+      stubProvider.Add(null);
       stubProvider.GetID(null, null).Should().BeNull();
       stubProvider.GetKeys(null, null).Should().BeEmpty();
-      Assert.DoesNotThrow(() => stubProvider.Remove(null, null));
+      stubProvider.Remove(null, null);
     }
 
     [Fact]
