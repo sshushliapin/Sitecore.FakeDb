@@ -112,7 +112,7 @@
         }
       });
 
-      Task.Factory.StartNew(() =>
+      var t2 = Task.Factory.StartNew(() =>
       {
         using (new Db())
         {
@@ -120,6 +120,7 @@
       });
 
       t1.Wait();
+      t2.Wait();
     }
 
     [Fact]
@@ -137,16 +138,17 @@
         }
       });
 
-      Task.Factory.StartNew(() =>
-      {
-        using (var db = new Db())
-        {
-          db.Configuration.Settings["mysetting"] = "abc";
-          Settings.GetSetting("mysetting").Should().Be("abc");
-        }
-      });
+      var t2 = Task.Factory.StartNew(() =>
+       {
+         using (var db = new Db())
+         {
+           db.Configuration.Settings["mysetting"] = "abc";
+           Settings.GetSetting("mysetting").Should().Be("abc");
+         }
+       });
 
       t1.Wait();
+      t2.Wait();
     }
 
     [Fact(Skip = "To be implemented.")]

@@ -10,7 +10,7 @@
   using System;
   using Xunit;
 
-  public class FakeLinkDatabaseTest
+  public class FakeLinkDatabaseTest : IDisposable
   {
     private readonly LinkDatabase behavior;
 
@@ -220,6 +220,11 @@
 
       // assert
       this.behavior.Received().UpdateReferences(this.item);
+    }
+
+    public void Dispose()
+    {
+      this.linkDatabase.Dispose();
     }
   }
 }

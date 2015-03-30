@@ -1,14 +1,13 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security
 {
-  using FluentAssertions;
-  using NSubstitute;
-  using Ploeh.AutoFixture;
-  using Sitecore.FakeDb.Security.Web;
   using System;
   using System.Web.Security;
+  using FluentAssertions;
+  using NSubstitute;
+  using Sitecore.FakeDb.Security.Web;
   using Xunit;
 
-  public class FakeMembershipProviderTest
+  public class FakeMembershipProviderTest : IDisposable
   {
     private const string UserName = "John";
 
@@ -397,6 +396,11 @@
 
       // act & assert
       this.provider.ValidateUser(UserName, Password).Should().BeTrue();
+    }
+
+    public void Dispose()
+    {
+      this.provider.Dispose();
     }
   }
 }

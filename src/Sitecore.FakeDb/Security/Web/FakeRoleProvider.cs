@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Security.Web
 {
+  using System;
   using System.Threading;
   using System.Web.Security;
 
@@ -10,6 +11,8 @@
     private readonly string[] emptyRoles = { };
 
     private readonly string[] emptyUsers = { };
+
+    private bool disposed;
 
     public override string ApplicationName { get; set; }
 
@@ -76,6 +79,29 @@
     public override bool RoleExists(string roleName)
     {
       return this.IsLocalProviderSet() && this.localProvider.Value.RoleExists(roleName);
+    }
+
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (this.disposed)
+      {
+        return;
+      }
+
+      if (!disposing)
+      {
+        return;
+      }
+
+      this.localProvider.Dispose();
+
+      this.disposed = true;
     }
   }
 }

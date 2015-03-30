@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.IDTables
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Ploeh.AutoFixture;
@@ -8,7 +9,7 @@
   using Sitecore.FakeDb.Data.IDTables;
   using Xunit;
 
-  public class FakeIDTableProviderTest
+  public class FakeIDTableProviderTest : IDisposable
   {
     private readonly FakeIDTableProvider provider;
 
@@ -88,6 +89,11 @@
 
       // assert
       this.behavior.Received().Remove("prefix", "key");
+    }
+
+    public void Dispose()
+    {
+      this.provider.Dispose();
     }
   }
 }

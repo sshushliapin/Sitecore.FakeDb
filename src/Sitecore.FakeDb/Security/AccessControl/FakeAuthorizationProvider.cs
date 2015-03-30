@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Security.AccessControl
 {
+  using System;
   using System.Threading;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
@@ -11,6 +12,8 @@
     private readonly ThreadLocal<AuthorizationProvider> localProvider = new ThreadLocal<AuthorizationProvider>();
 
     private readonly ItemAuthorizationHelper itemHelper;
+
+    private bool disposed;
 
     public virtual ThreadLocal<AuthorizationProvider> LocalProvider
     {
@@ -74,6 +77,12 @@
       return this.localProvider.Value != null;
     }
 
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
     protected override AccessResult GetAccessCore(ISecurable entity, Account account, AccessRight accessRight)
     {
       var item = entity as Item;
@@ -83,6 +92,23 @@
     protected virtual AccessResult GetDefaultAccessResult()
     {
       return new AccessResult(AccessPermission.Allow, new AccessExplanation("Allow"));
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (this.disposed)
+      {
+        return;
+      }
+
+      if (!disposing)
+      {
+        return;
+      }
+
+      this.localProvider.Dispose();
+
+      this.disposed = true;
     }
   }
 }

@@ -1,12 +1,13 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security
 {
+  using System;
   using System.Web.Security;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.FakeDb.Security.Web;
   using Xunit;
 
-  public class FakeRoleProviderTest
+  public class FakeRoleProviderTest : IDisposable
   {
     private const string RoleName = @"sitecore\Editors";
 
@@ -145,6 +146,11 @@
 
       // act & assert
       this.provider.RoleExists(RoleName).Should().BeTrue();
+    }
+
+    public void Dispose()
+    {
+      this.provider.Dispose();
     }
   }
 }

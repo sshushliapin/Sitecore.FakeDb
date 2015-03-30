@@ -12,6 +12,8 @@ namespace Sitecore.FakeDb.Links
 
     private readonly ItemLink[] emptyLinks = { };
 
+    private bool disposed;
+
     public virtual ThreadLocal<LinkDatabase> LocalProvider
     {
       get { return this.localProvider; }
@@ -118,8 +120,31 @@ namespace Sitecore.FakeDb.Links
       }
     }
 
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
     protected override void UpdateLinks(Item item, ItemLink[] links)
     {
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (this.disposed)
+      {
+        return;
+      }
+
+      if (!disposing)
+      {
+        return;
+      }
+
+      this.localProvider.Dispose();
+
+      this.disposed = true;
     }
   }
 }

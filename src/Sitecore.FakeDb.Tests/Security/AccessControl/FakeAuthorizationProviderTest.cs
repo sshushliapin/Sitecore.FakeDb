@@ -143,8 +143,7 @@
 
     public void Dispose()
     {
-      this.provider.LocalProvider.Value = null;
-      Factory.Reset();
+      this.provider.Dispose();
     }
   }
 }

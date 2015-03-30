@@ -1,15 +1,15 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security.Accounts
 {
+  using System;
+  using System.Collections.Generic;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.FakeDb.Security.Accounts;
   using Sitecore.Security.Accounts;
   using Sitecore.Security.Domains;
-  using System.Collections.Generic;
   using Xunit;
-  using Xunit.Extensions;
 
-  public class FakeRolesInRolesProviderTest
+  public class FakeRolesInRolesProviderTest : IDisposable
   {
     private const string RoleName = @"sitecore\Editors";
 
@@ -365,6 +365,11 @@
 
       // assert
       this.localProvider.Received().RemoveRolesFromRoles(this.memberRoles, this.targetRoles);
+    }
+
+    public void Dispose()
+    {
+      this.provider.Dispose();
     }
   }
 }
