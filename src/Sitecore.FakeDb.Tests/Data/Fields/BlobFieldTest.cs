@@ -21,6 +21,7 @@
         using (new EditContext(item))
         {
           // act
+          field.Should().NotBeNull("'item.Fields[\"field\"]' should not be null");
           field.SetBlobStream(stream);
         }
 

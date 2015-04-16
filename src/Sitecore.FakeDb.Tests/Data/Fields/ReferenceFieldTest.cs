@@ -20,11 +20,13 @@
                         })
       {
         var item = db.GetItem("/sitecore/content/source");
+        item.Should().NotBeNull("the 'source' item should not be null");
 
         // act
         var referenceField = (ReferenceField)item.Fields["Reference"];
 
         // assert
+        referenceField.Should().NotBeNull("'item.Fields[\"Reference\"]' should not be null");
         referenceField.Database.Should().Be(db.Database);
         referenceField.Path.Should().Be("/sitecore/content/target");
         referenceField.TargetID.Should().Be(targetId);
@@ -44,11 +46,13 @@
                         })
       {
         var item = db.GetItem("/sitecore/content/source");
+        item.Should().NotBeNull("the 'source' item should not be null");
 
         // act
         var referenceField = (ReferenceField)item.Fields["Reference"];
 
         // assert
+        referenceField.Should().NotBeNull("'item.Fields[\"Reference\"]' should not be null");
         referenceField.Database.Should().Be(db.Database);
         referenceField.Path.Should().Be(targetId.ToString());
         referenceField.TargetID.Should().Be(targetId);
