@@ -20,7 +20,6 @@
       var database = Database.GetDatabase("master");
       this.dataStorage = new DataStorage(database);
       this.dataStorage.FakeItems.Clear();
-      this.dataStorage.FakeTemplates.Clear();
 
       this.dataProvider = new FakeDataProvider(this.dataStorage);
       ReflectionUtil.CallMethod(database, "AddDataProvider", new object[] { this.dataProvider });
@@ -242,7 +241,7 @@
     {
       var templateId = ID.NewID;
       var template = new DbTemplate(templateId.ToString(), templateId);
-      this.dataStorage.FakeTemplates.Add(template.ID, template);
+      this.dataStorage.FakeItems.Add(template.ID, template);
 
       return template;
     }

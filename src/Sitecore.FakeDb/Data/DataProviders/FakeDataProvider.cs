@@ -45,7 +45,7 @@
         return new IdCollection();
       }
 
-      var ids = this.DataStorage.FakeTemplates.Select(t => t.Key).ToArray();
+      var ids = this.DataStorage.GetFakeTemplates().Select(t => t.ID).ToArray();
 
       return new IdCollection { ids };
     }
@@ -111,7 +111,7 @@
         return templates;
       }
 
-      foreach (var ft in this.DataStorage.FakeTemplates.Values)
+      foreach (var ft in this.DataStorage.GetFakeTemplates())
       {
         templates.Add(this.BuildTemplate(ft, templates));
       }
