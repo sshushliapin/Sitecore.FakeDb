@@ -114,5 +114,33 @@
         home["Description"].Should().Be("My Home");
       }
     }
+
+    [Fact]
+    public void ShouldEditEmptyInheritedField()
+    {
+      // arrange
+      var baseTemplate = ID.NewID;
+      var templateId = ID.NewID;
+      var fieldId = ID.NewID;
+
+      using (var db = new Db
+                        {
+                          new DbTemplate("base", baseTemplate) { new DbField(fieldId) },
+                          new DbTemplate("sample", templateId) { BaseIDs = new[] { baseTemplate } },
+                          new DbItem("Home", ID.NewID, templateId)
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/Home");
+
+        // act
+        using (new EditContext(item))
+        {
+          item.Fields[fieldId].Value = "new value";
+        }
+
+        // assert
+        item.Fields[fieldId].Value.Should().Be("new value");
+      }
+    }
   }
 }
