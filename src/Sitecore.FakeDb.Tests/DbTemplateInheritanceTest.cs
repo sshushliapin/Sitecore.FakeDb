@@ -1,6 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
   using FluentAssertions;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
@@ -113,6 +114,30 @@
         // assert
         home["Title"].Should().Be("Home");
         home["Description"].Should().Be("My Home");
+      }
+    }
+
+    [Theory, AutoData]
+    public void ShouldEditEmptyInheritedField(ID baseTemplateId, ID templateId, ID fieldId)
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbTemplate("base", baseTemplateId) { new DbField(fieldId) },
+                          new DbTemplate("sample", templateId) { BaseIDs = new[] { baseTemplateId } },
+                          new DbItem("Home", ID.NewID, templateId)
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/Home");
+
+        // act
+        using (new EditContext(item))
+        {
+          item.Fields[fieldId].Value = "new value";
+        }
+
+        // assert
+        item.Fields[fieldId].Value.Should().Be("new value");
       }
     }
   }
