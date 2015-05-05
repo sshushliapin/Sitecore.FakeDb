@@ -15,7 +15,6 @@
   using Sitecore.Security.Accounts;
   using Sitecore.SecurityModel;
   using Xunit;
-  using Xunit.Extensions;
   using Version = Sitecore.Data.Version;
 
   public class DbTest
@@ -346,12 +345,15 @@
       {
         // act & assert
         var uriEn1 = new ItemUri(this.itemId, Language.Parse("en"), Version.Parse(1), db.Database);
+        Database.GetItem(uriEn1).Should().NotBeNull("the item '{0}' should not be null", uriEn1);
         Database.GetItem(uriEn1)["Title"].Should().Be("Welcome!");
 
         var uriDa1 = new ItemUri(this.itemId, Language.Parse("da"), Version.Parse(1), db.Database);
+        Database.GetItem(uriDa1).Should().NotBeNull("the item '{0}' should not be null", uriDa1);
         Database.GetItem(uriDa1)["Title"].Should().Be("Hello!");
 
         var uriDa2 = new ItemUri(this.itemId, Language.Parse("da"), Version.Parse(2), db.Database);
+        Database.GetItem(uriDa2).Should().NotBeNull("the item '{0}' should not be null", uriDa2);
         Database.GetItem(uriDa2)["Title"].Should().Be("Velkommen!");
       }
     }

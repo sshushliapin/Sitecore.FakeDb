@@ -9,7 +9,7 @@
   using Sitecore.Tasks;
   using Xunit;
 
-  public class FakeTaskDatabaseTest
+  public class FakeTaskDatabaseTest : IDisposable
   {
     private readonly FakeTaskDatabase taskDatabase;
 
@@ -144,6 +144,11 @@
 
       // assert
       this.behavior.Received().UpdateItemTask(this.task, true);
+    }
+
+    public void Dispose()
+    {
+      this.taskDatabase.Dispose();
     }
   }
 }

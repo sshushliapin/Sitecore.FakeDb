@@ -59,7 +59,7 @@
         return true;
       }
 
-      if (dataStorage.FakeTemplates.ContainsKey(item.TemplateID))
+      if (dataStorage.GetFakeTemplate(item.TemplateID) != null)
       {
         return true;
       }

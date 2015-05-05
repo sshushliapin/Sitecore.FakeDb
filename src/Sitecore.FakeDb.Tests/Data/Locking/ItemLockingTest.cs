@@ -41,13 +41,13 @@
         }
 
         // assert
-        item.Locking.CanLock().Should().BeFalse();
+        item.Locking.CanLock().Should().BeFalse("CanLock()");
 
         // TODO:[Minor] The next statement fails because ItemAccess.IsAdmin is always true by default... Restricting the item access leads to additional configuration in unit tests which is not desirable.
         // item.Locking.CanUnlock().Should().BeFalse();
         item.Locking.GetOwner().Should().Be(@"extranet\John");
-        item.Locking.HasLock().Should().BeFalse();
-        item.Locking.IsLocked().Should().BeTrue();
+        item.Locking.HasLock().Should().BeFalse("HasLock()");
+        item.Locking.IsLocked().Should().BeTrue("IsLocked()");
       }
     }
 

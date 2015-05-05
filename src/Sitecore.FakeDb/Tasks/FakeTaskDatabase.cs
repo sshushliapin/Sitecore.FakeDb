@@ -11,6 +11,8 @@
 
     private readonly Task[] emptyTasks = { };
 
+    private bool disposed;
+
     public virtual ThreadLocal<TaskDatabase> LocalProvider
     {
       get { return this.localProvider; }
@@ -88,6 +90,29 @@
       {
         this.localProvider.Value.UpdateItemTask(task, insertIfNotFound);
       }
+    }
+
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (this.disposed)
+      {
+        return;
+      }
+
+      if (!disposing)
+      {
+        return;
+      }
+
+      this.localProvider.Dispose();
+
+      this.disposed = true;
     }
   }
 }

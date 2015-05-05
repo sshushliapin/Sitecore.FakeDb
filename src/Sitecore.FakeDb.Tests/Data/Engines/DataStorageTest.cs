@@ -6,7 +6,6 @@
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Globalization;
   using Xunit;
-  using Xunit.Extensions;
 
   public class DataStorageTest
   {
@@ -69,11 +68,11 @@
     [Fact]
     public void ShouldCreateDefaultFakeTemplate()
     {
-      this.dataStorage.FakeTemplates[new TemplateID(new ID(TemplateIdSitecore))].Should().BeEquivalentTo(new DbTemplate("Main Section", new TemplateID(new ID(TemplateIdSitecore))));
-      this.dataStorage.FakeTemplates[new TemplateID(new ID(TemplateIdMainSection))].Should().BeEquivalentTo(new DbTemplate("Main Section", new TemplateID(new ID(TemplateIdMainSection))));
+      this.dataStorage.FakeItems[new TemplateID(new ID(TemplateIdSitecore))].Should().BeEquivalentTo(new DbTemplate("Main Section", new TemplateID(new ID(TemplateIdSitecore))));
+      this.dataStorage.FakeItems[new TemplateID(new ID(TemplateIdMainSection))].Should().BeEquivalentTo(new DbTemplate("Main Section", new TemplateID(new ID(TemplateIdMainSection))));
 
-      this.dataStorage.FakeTemplates[TemplateIDs.Template].Should().BeEquivalentTo(new DbTemplate("Template", TemplateIDs.Template));
-      this.dataStorage.FakeTemplates[TemplateIDs.Folder].Should().BeEquivalentTo(new DbTemplate("Folder", TemplateIDs.Folder));
+      this.dataStorage.FakeItems[TemplateIDs.Template].Should().BeEquivalentTo(new DbTemplate("Template", TemplateIDs.Template));
+      this.dataStorage.FakeItems[TemplateIDs.Folder].Should().BeEquivalentTo(new DbTemplate("Folder", TemplateIDs.Folder));
     }
 
     [Fact]
@@ -103,7 +102,7 @@
       var templateId = ID.NewID;
       var fieldId = ID.NewID;
 
-      this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title", fieldId) } });
+      this.dataStorage.FakeItems.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title", fieldId) } });
       this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId) { Fields = { new DbField("Title", fieldId) { Value = "Welcome!" } } });
 
       // act
@@ -121,7 +120,7 @@
       var templateId = ID.NewID;
       var fieldId = ID.NewID;
 
-      this.dataStorage.FakeTemplates.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title", fieldId) } });
+      this.dataStorage.FakeItems.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title", fieldId) } });
       this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId));
 
       // act
@@ -135,7 +134,7 @@
       // Sitecore needs to be able to make a trip up the templates path 
       // and it in turn requires the Db context
 
-      //      item[fieldId].Should().BeEmpty();
+      // item[fieldId].Should().BeEmpty();
     }
 
     [Fact]

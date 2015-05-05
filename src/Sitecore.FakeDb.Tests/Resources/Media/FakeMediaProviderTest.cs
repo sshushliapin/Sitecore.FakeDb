@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Resources.Media
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
@@ -9,7 +10,7 @@
   using Sitecore.Resources.Media;
   using Xunit;
 
-  public class FakeMediaProviderTest
+  public class FakeMediaProviderTest : IDisposable
   {
     private readonly MediaProvider localProvider;
 
@@ -252,6 +253,11 @@
     private static MediaItem CreateMediaItemMock()
     {
       return Substitute.For<MediaItem>(ItemHelper.CreateInstance(Database.GetDatabase("master")));
+    }
+
+    public void Dispose()
+    {
+      this.provider.Dispose();
     }
   }
 }

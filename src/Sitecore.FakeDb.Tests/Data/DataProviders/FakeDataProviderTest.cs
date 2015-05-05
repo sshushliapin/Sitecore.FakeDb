@@ -20,7 +20,6 @@
       var database = Database.GetDatabase("master");
       this.dataStorage = new DataStorage(database);
       this.dataStorage.FakeItems.Clear();
-      this.dataStorage.FakeTemplates.Clear();
 
       this.dataProvider = new FakeDataProvider(this.dataStorage);
       ReflectionUtil.CallMethod(database, "AddDataProvider", new object[] { this.dataProvider });
@@ -163,7 +162,7 @@
       // arrange
       var itemId = ID.NewID;
       var templateId = ID.NewID;
-      var callContext = new CallContext(new DataManager(this.dataStorage.Database), 1);
+      var callContext = this.GetCallContext();
 
       this.dataStorage.FakeItems.Add(itemId, new DbItem("home", itemId, templateId));
 
@@ -196,7 +195,7 @@
       var templateId = ID.NewID;
 
       var definition = new ItemDefinition(itemId, "home", templateId, ID.Null);
-      var callContext = new CallContext(new DataManager(this.dataStorage.Database), 1);
+      var callContext = this.GetCallContext();
 
       var item = new DbItem("home", itemId, templateId)
                    {
@@ -224,13 +223,32 @@
       versions[3].Version.Number.Should().Be(2);
     }
 
+    [Fact]
+    public void ShouldGetEmptyVersionsIfNoDataStorageSet()
+    {
+      // arrange
+      var itemId = ID.NewID;
+      var templateId = ID.NewID;
+
+      var definition = new ItemDefinition(itemId, "home", templateId, ID.Null);
+      var callContext = this.GetCallContext();
+
+      // act & assert
+      new FakeDataProvider().GetItemVersions(definition, callContext).Should().BeEmpty();
+    }
+
     private DbTemplate CreateTestTemplateInDataStorage()
     {
       var templateId = ID.NewID;
       var template = new DbTemplate(templateId.ToString(), templateId);
-      this.dataStorage.FakeTemplates.Add(template.ID, template);
+      this.dataStorage.FakeItems.Add(template.ID, template);
 
       return template;
+    }
+
+    private CallContext GetCallContext()
+    {
+      return new CallContext(new DataManager(this.dataStorage.Database), 1);
     }
   }
 }

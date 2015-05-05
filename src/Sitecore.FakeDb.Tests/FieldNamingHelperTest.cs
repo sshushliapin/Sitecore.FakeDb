@@ -1,17 +1,20 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit;
+  using Ploeh.AutoFixture;
   using Sitecore.Data;
-  using Xunit.Extensions;
+  using Xunit;
 
   public class FieldNamingHelperTest
   {
-    [Theory]
-    [AutoData]
-    public void ShouldReturnSuggestedIdNamePair(ID id, string name)
+    [Fact]
+    public void ShouldReturnSuggestedIdNamePair()
     {
       // arrange
+      var fixture = new Fixture();
+      var id = fixture.Create<ID>();
+      var name = fixture.Create<string>();
+
       var namingHelper = new FieldNamingHelper();
 
       // act

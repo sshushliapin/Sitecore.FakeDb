@@ -1,12 +1,13 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security
 {
+  using System;
   using System.Web.Security;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.FakeDb.Security.Web;
   using Xunit;
 
-  public class FakeRoleProviderTest
+  public class FakeRoleProviderTest : IDisposable
   {
     private const string RoleName = @"sitecore\Editors";
 
@@ -38,15 +39,15 @@
 
       // act & assert
       Assert.Null(stubProvider.ApplicationName);
-      Assert.DoesNotThrow(() => stubProvider.AddUsersToRoles(null, null));
-      Assert.DoesNotThrow(() => stubProvider.CreateRole(null));
+      stubProvider.AddUsersToRoles(null, null);
+      stubProvider.CreateRole(null);
       stubProvider.DeleteRole(null, false).Should().BeFalse();
       stubProvider.FindUsersInRole(null, null).Should().BeEmpty();
       stubProvider.GetAllRoles().Should().BeEmpty();
       stubProvider.GetRolesForUser(null).Should().BeEmpty();
       stubProvider.GetUsersInRole(null).Should().BeEmpty();
       stubProvider.IsUserInRole(null, null).Should().BeFalse();
-      Assert.DoesNotThrow(() => stubProvider.RemoveUsersFromRoles(null, null));
+      stubProvider.RemoveUsersFromRoles(null, null);
       stubProvider.RoleExists(null).Should().BeFalse();
     }
 
@@ -145,6 +146,11 @@
 
       // act & assert
       this.provider.RoleExists(RoleName).Should().BeTrue();
+    }
+
+    public void Dispose()
+    {
+      this.provider.Dispose();
     }
   }
 }

@@ -1,13 +1,9 @@
-﻿using Sitecore.Data.Items;
-using Sitecore.Data.Serialization.Exceptions;
-
-namespace Sitecore.FakeDb.Tests
+﻿namespace Sitecore.FakeDb.Tests
 {
   using FluentAssertions;
-  using Xunit;
-  using Xunit.Extensions;
   using Sitecore.Data;
   using Sitecore.Data.Managers;
+  using Xunit;
 
   public class DbStandardValuesTest
   {
@@ -19,18 +15,21 @@ namespace Sitecore.FakeDb.Tests
     public void ShouldCreateTemplateWithStandardValues(string standardValue, string expectedValue)
     {
       // arrange
-      using (var db = new Db { new DbTemplate("sample", templateId) { { "Title", standardValue } } })
+      using (var db = new Db
+                        {
+                          new DbTemplate("sample", this.templateId) { { "Title", standardValue } }
+                        })
       {
         var root = db.GetItem(ItemIDs.ContentRoot);
 
         // act
-        Item item = ItemManager.CreateItem("Home", root, templateId);
+        var item = ItemManager.CreateItem("Home", root, this.templateId);
 
         // assert
-        var fieldId = TemplateManager.GetFieldId("Title", templateId, db.Database);
-        fieldId.Should().NotBeNull();
-        item.Fields["Title"].Should().NotBeNull();
-        item.InnerData.Fields[fieldId].Should().BeNull();
+        var fieldId = TemplateManager.GetFieldId("Title", this.templateId, db.Database);
+        fieldId.Should().NotBeNull("'fieldId' should not be null");
+        item.Fields["Title"].Should().NotBeNull("'item.Fields[\"Title\"]' should not be null");
+        item.InnerData.Fields[fieldId].Should().BeNull("'item.InnerData.Fields[fieldId]' should be null");
 
         item["Title"].Should().Be(expectedValue);
       }
@@ -43,14 +42,13 @@ namespace Sitecore.FakeDb.Tests
     {
       // arrange
       var baseTemplateId = ID.NewID;
-      var templateId = ID.NewID;
 
       using (var db = new Db
-      {
-        new DbTemplate("Base Template", baseTemplateId) {{"Title", value}},
-        new DbTemplate("My Template", templateId) {BaseIDs = new ID[] {baseTemplateId}},
-        new DbItem("home", ID.NewID, templateId)
-      })
+                        {
+                          new DbTemplate("Base Template", baseTemplateId) { { "Title", value } },
+                          new DbTemplate("My Template", this.templateId) { BaseIDs = new[] { baseTemplateId } },
+                          new DbItem("home", ID.NewID, this.templateId)
+                        })
       {
         // act
         var home = db.GetItem("/sitecore/content/home");
@@ -64,16 +62,16 @@ namespace Sitecore.FakeDb.Tests
     public void ShouldUseTheClosestStandardValue()
     {
       // arrange
-      var baseTemplate = new DbTemplate() { { "Title", "Default" } };
-      var myTemplate = new DbTemplate() { BaseIDs = new ID[] { baseTemplate.ID } };
+      var baseTemplate = new DbTemplate { { "Title", "Default" } };
+      var myTemplate = new DbTemplate { BaseIDs = new[] { baseTemplate.ID } };
       myTemplate.Add("Title", "New Default");
 
       using (var db = new Db
-      {
-        baseTemplate,
-        myTemplate,
-        new DbItem("home", ID.NewID, myTemplate.ID)
-      })
+                        {
+                          baseTemplate,
+                          myTemplate,
+                          new DbItem("home", ID.NewID, myTemplate.ID)
+                        })
       {
         // act
         var home = db.GetItem("/sitecore/content/home");
@@ -87,34 +85,30 @@ namespace Sitecore.FakeDb.Tests
     public void ShouldBeAbleToAskForTheItemValueAndTheStandardValue()
     {
       // arrange
-      var templateId = ID.NewID;
-
       using (var db = new Db
-      {
-        new DbTemplate(templateId) {{"Title", "Value"}},
-        new DbItem("home", ID.NewID, templateId)
-      })
+                        {
+                          new DbTemplate(this.templateId) { { "Title", "Value" } },
+                          new DbItem("home", ID.NewID, this.templateId)
+                        })
       {
         // act
         var home = db.GetItem("/sitecore/content/home");
         var title = home.Fields["Title"];
-        ID fieldId = TemplateManager.GetFieldId("Title", templateId, db.Database);
-        
+        var fieldId = TemplateManager.GetFieldId("Title", this.templateId, db.Database);
 
-        //assert
-        fieldId.Should().NotBeNull();
-        home.Fields[fieldId].Should().NotBeNull();
-        home.Fields["Title"].Should().NotBeNull();
+        // assert
+        fieldId.Should().NotBeNull("'fieldId' should not be null");
+        home.Fields[fieldId].Should().NotBeNull("'home.Fields[fieldId]' should not be null");
+        home.Fields["Title"].Should().NotBeNull("'home.Fields[\"Title\"]' should not be null");
 
-        home.InnerData.Fields[fieldId].Should().BeNull();
+        home.InnerData.Fields[fieldId].Should().BeNull("'home.InnerData.Fields[fieldId]' should be null");
 
         home.Fields["Title"].Value.Should().Be("Value");
         home["Title"].Should().Be("Value");
 
         title.GetValue(false, false).Should().BeNull();
         title.GetValue(true, true).Should().Be("Value");
-      } 
+      }
     }
   }
-
 }

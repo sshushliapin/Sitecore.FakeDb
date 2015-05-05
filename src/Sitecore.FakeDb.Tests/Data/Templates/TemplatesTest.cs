@@ -22,6 +22,8 @@
         var item = db.GetItem("/sitecore/content/home");
 
         // assert
+        item.Should().NotBeNull("the \"Home\" item should not be null");
+        item.Template.Should().NotBeNull("the \"Home\" item template should not be null");
         item.Template.OwnFields.Count().Should().Be(1, string.Join("\n", item.Template.OwnFields.Select(f => f.Name)));
         item.Template.OwnFields.Single().Name.Should().Be("expected own field");
       }

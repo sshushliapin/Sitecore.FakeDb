@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb", "Sitecore.FakeDb\Sitecore.FakeDb.csproj", "{B1B3C599-9284-4653-9F22-FD0F726984BB}"
 EndProject
@@ -25,6 +25,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.Serialization", "Sitecore.FakeDb.Serialization\Sitecore.FakeDb.Serialization.csproj", "{8958B567-7955-4714-B3A8-BCFB43B0A588}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.Serialization.Tests", "Sitecore.FakeDb.Serialization.Tests\Sitecore.FakeDb.Serialization.Tests.csproj", "{FD78101C-A600-4962-B425-5BA86AB3DD41}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{61B65D79-BB0C-4A89-A410-E5C90A646ED6}"
+	ProjectSection(SolutionItems) = preProject
+		..\build.config = ..\build.config
+		..\build.msbuild = ..\build.msbuild
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

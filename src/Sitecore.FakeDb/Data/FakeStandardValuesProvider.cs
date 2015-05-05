@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data
 {
+  using System.Threading;
   using Sitecore.Data;
   using Sitecore.Data.Fields;
   using Sitecore.Data.Items;
@@ -8,11 +9,12 @@
 
   public class FakeStandardValuesProvider : StandardValuesProvider, IRequireDataStorage
   {
-    private DataStorage storage;
+    private readonly ThreadLocal<DataStorage> storage = new ThreadLocal<DataStorage>();
 
-    DataStorage IRequireDataStorage.DataStorage
+    public DataStorage DataStorage
     {
-      get { return this.storage; }
+      get { return this.storage.Value; }
+      private set { this.storage.Value = value; }
     }
 
     public override string GetStandardValue(Field field)
@@ -21,7 +23,7 @@
 
       Assert.IsNotNull(this.storage, "DataStorage cannot be null.");
 
-      var template = this.storage.GetFakeTemplate(templateId);
+      var template = this.DataStorage.GetFakeTemplate(templateId);
 
       if (template == null)
       {
@@ -30,9 +32,16 @@
         return string.Empty;
       }
 
-      var standardValue = FindStandardValueInTheTemplate(template, field.ID) ?? string.Empty;
+      var standardValue = this.FindStandardValueInTheTemplate(template, field.ID) ?? string.Empty;
 
-      return ReplaceTokens(standardValue, field.Item);
+      return this.ReplaceTokens(standardValue, field.Item);
+    }
+
+    public void SetDataStorage(DataStorage dataStorage)
+    {
+      Assert.ArgumentNotNull(dataStorage, "dataStorage");
+
+      this.DataStorage = dataStorage;
     }
 
     protected string ReplaceTokens(string standardValue, Item item)
@@ -57,7 +66,7 @@
 
       foreach (var baseId in template.BaseIDs)
       {
-        var baseTemplate = this.storage.GetFakeTemplate(baseId);
+        var baseTemplate = this.DataStorage.GetFakeTemplate(baseId);
         var value = this.FindStandardValueInTheTemplate(baseTemplate, fieldId);
 
         if (value != null)
@@ -67,13 +76,6 @@
       }
 
       return null;
-    }
-
-    void IRequireDataStorage.SetDataStorage(DataStorage dataStorage)
-    {
-      Assert.ArgumentNotNull(dataStorage, "dataStorage");
-
-      this.storage = dataStorage;
     }
   }
 }
