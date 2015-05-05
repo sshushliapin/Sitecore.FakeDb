@@ -1,4 +1,7 @@
-﻿0.25.1
+﻿0.25.2
+* [FIX] #48: Deserialization of base templates broken in latest version
+
+0.25.1
 * [FIX] #44: Fix Template.OwnFields
 
 0.25.0
