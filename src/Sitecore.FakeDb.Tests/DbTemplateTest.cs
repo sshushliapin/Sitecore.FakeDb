@@ -75,5 +75,20 @@
       // act & assert
       template.BaseIDs.Should().BeEmpty();
     }
+
+    [Fact]
+    public void ShouldGetBaseIdsFromFieldsIfExist()
+    {
+      // arrange
+      var id1 = ID.NewID;
+      var id2 = ID.NewID;
+
+      var template = new DbTemplate();
+      template.Fields.Add(new DbField(FieldIDs.BaseTemplate) { Value = id1 + "|" + id2 });
+
+      // act & assert
+      template.BaseIDs[0].Should().Be(id1);
+      template.BaseIDs[1].Should().Be(id2);
+    }
   }
 }

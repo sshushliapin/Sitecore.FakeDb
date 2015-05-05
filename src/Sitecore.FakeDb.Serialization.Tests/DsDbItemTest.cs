@@ -201,5 +201,23 @@
       item.Name.Should().BeEquivalentTo("still deeper");
       item.ID.ShouldBeEquivalentTo(id);
     }
+
+    [Fact]
+    public void ShouldDeserializeItemBasedOnTwoTemplates()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DsDbItem("/sitecore/content/New Composite Sample Item")
+                        })
+      {
+        // act
+        var item = db.GetItem("/sitecore/content/New Composite Sample Item");
+
+        // assert
+        item["Sample Field One"].Should().Be("Value One");
+        item["Sample Field Two"].Should().Be("Value Two");
+      }
+    }
   }
 }
