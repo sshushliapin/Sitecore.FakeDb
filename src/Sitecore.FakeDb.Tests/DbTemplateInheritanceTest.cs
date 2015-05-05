@@ -1,6 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
   using FluentAssertions;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
@@ -116,18 +117,14 @@
       }
     }
 
-    [Fact]
-    public void ShouldEditEmptyInheritedField()
+    [Theory, AutoData]
+    public void ShouldEditEmptyInheritedField(ID baseTemplateId, ID templateId, ID fieldId)
     {
       // arrange
-      var baseTemplate = ID.NewID;
-      var templateId = ID.NewID;
-      var fieldId = ID.NewID;
-
       using (var db = new Db
                         {
-                          new DbTemplate("base", baseTemplate) { new DbField(fieldId) },
-                          new DbTemplate("sample", templateId) { BaseIDs = new[] { baseTemplate } },
+                          new DbTemplate("base", baseTemplateId) { new DbField(fieldId) },
+                          new DbTemplate("sample", templateId) { BaseIDs = new[] { baseTemplateId } },
                           new DbItem("Home", ID.NewID, templateId)
                         })
       {
