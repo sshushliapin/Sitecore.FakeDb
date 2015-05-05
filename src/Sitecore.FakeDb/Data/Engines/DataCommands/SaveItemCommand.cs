@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System.Linq;
   using Sitecore.Data;
   using Sitecore.Data.Fields;
   using Sitecore.Diagnostics;
@@ -67,12 +68,19 @@
       }
     }
 
-    private bool IsTemplateField(DbItem template, ID fieldId)
+    private bool IsTemplateField(DbTemplate template, ID fieldId)
     {
       var isField = template.Fields.ContainsKey(fieldId);
       if (isField)
       {
         return true;
+      }
+
+      foreach (var baseTemplate in template.BaseIDs
+        .Where(b => b != TemplateIDs.StandardTemplate)
+        .Select(baseId => this.innerCommand.DataStorage.GetFakeTemplate(baseId)))
+      {
+        return this.IsTemplateField(baseTemplate, fieldId);
       }
 
       var standardTemplate = this.innerCommand.DataStorage.GetFakeTemplate(TemplateIDs.StandardTemplate);
