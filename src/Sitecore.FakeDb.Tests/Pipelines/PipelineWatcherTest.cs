@@ -163,7 +163,7 @@
       w.Dispose();
 
       // assert
-      Assert.DoesNotThrow(() => processor.Process(new PipelineArgs()));
+      processor.Process(new PipelineArgs());
     }
 
     [Fact]

@@ -1,14 +1,17 @@
 ﻿namespace Sitecore.FakeDb.Security.Accounts
 {
-  using Sitecore.Security.Accounts;
-  using Sitecore.Security.Domains;
+  using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading;
+  using Sitecore.Security.Accounts;
+  using Sitecore.Security.Domains;
 
   public class FakeRolesInRolesProvider : RolesInRolesProvider, IThreadLocalProvider<RolesInRolesProvider>
   {
     private readonly ThreadLocal<RolesInRolesProvider> localProvider = new ThreadLocal<RolesInRolesProvider>();
+
+    private bool disposed;
 
     public virtual ThreadLocal<RolesInRolesProvider> LocalProvider
     {
@@ -168,6 +171,29 @@
       {
         this.LocalProvider.Value.RemoveRolesFromRoles(memberRoles, targetRoles);
       }
+    }
+
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (this.disposed)
+      {
+        return;
+      }
+
+      if (!disposing)
+      {
+        return;
+      }
+
+      this.localProvider.Dispose();
+
+      this.disposed = true;
     }
   }
 }

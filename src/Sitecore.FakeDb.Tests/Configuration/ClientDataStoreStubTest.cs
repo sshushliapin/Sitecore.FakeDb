@@ -17,7 +17,7 @@
     public void ShouldNotThrowExceptionOnCompactData()
     {
       // act & assert
-      Assert.DoesNotThrow(() => this.dataStore.CompactData());
+      this.dataStore.CompactData();
     }
 
     [Fact]
@@ -31,14 +31,14 @@
     public void ShouldNotThrowExceptionOnSaveData()
     {
       // act & assert
-      Assert.DoesNotThrow(() => this.dataStore.SaveData("key", "data"));
+      this.dataStore.SaveData("key", "data");
     }
 
     [Fact]
     public void ShouldNotThrowExceptionOnRemoveData()
     {
       // act & assert
-      Assert.DoesNotThrow(() => this.dataStore.RemoveData("key"));
+      this.dataStore.RemoveData("key");
     }
 
     private class OpenClientDataStoreStub : ClientDataStoreStub

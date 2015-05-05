@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Security.Authentication
 {
+  using System;
   using System.Threading;
   using Sitecore.Security.Accounts;
   using Sitecore.Security.Authentication;
@@ -13,6 +14,8 @@
     private readonly User defaultActiveUser = User.FromName(@"default\Anonymous", false);
 
     private readonly User defaultVirtualUser = User.FromName(@"default\Virtual", false);
+
+    private bool disposed;
 
     public virtual ThreadLocal<AuthenticationProvider> LocalProvider
     {
@@ -89,6 +92,29 @@
       {
         this.activeUser.Value = user;
       }
+    }
+
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (this.disposed)
+      {
+        return;
+      }
+
+      if (!disposing)
+      {
+        return;
+      }
+
+      this.localProvider.Dispose();
+
+      this.disposed = true;
     }
   }
 }

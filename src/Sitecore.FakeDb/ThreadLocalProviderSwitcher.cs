@@ -7,6 +7,8 @@
   {
     private readonly IThreadLocalProvider<TProvider> provider;
 
+    private bool disposed;
+
     protected ThreadLocalProviderSwitcher(IThreadLocalProvider<TProvider> provider, TProvider localProvider)
     {
       Assert.ArgumentNotNull(provider, "provider");
@@ -25,7 +27,25 @@
 
     public void Dispose()
     {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (this.disposed)
+      {
+        return;
+      }
+
+      if (!disposing)
+      {
+        return;
+      }
+
       this.provider.LocalProvider.Value = default(TProvider);
+
+      this.disposed = true;
     }
   }
 }

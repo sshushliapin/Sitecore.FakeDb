@@ -16,7 +16,7 @@
                             {
                               new DbItem("item") { { "Title", "Welcome!" } }
                             },
-                          new DbItem("new root")
+                            new DbItem("new root")
                         })
       {
         var item = db.GetItem("/sitecore/content/old root/item");
@@ -81,6 +81,7 @@
         copy.Children.Should().HaveCount(1);
 
         var child = copy.Children.First();
+        child.Fields["Title"].Should().NotBeNull("'child.Fields[\"Title\"]' should not be null");
         child.Fields["Title"].Value.Should().Be("Child");
         child.ParentID.Should().Be(copy.ID);
         child.Name.Should().Be("child");
@@ -92,10 +93,10 @@
     public void ShouldCopyStandardFieldsWithoutTemplate()
     {
       // arrange
-      using (var db = new Db()
-      {
-        new DbItem("home") {new DbField(FieldIDs.LayoutField) {Value="<r />"}}
-      })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField(FieldIDs.LayoutField) { Value = "<r />" } }
+                        })
       {
         var home = db.GetItem("/sitecore/content/home");
 
@@ -111,10 +112,10 @@
     public void ShouldCopySharedFields()
     {
       // arrange
-      using (var db = new Db()
-      {
-        new DbItem("home") { new DbField("Title") { Shared = true, Value = "Me"} }
-      })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField("Title") { Shared = true, Value = "Me" } }
+                        })
       {
         var home = db.GetItem("/sitecore/content/home");
 
@@ -122,6 +123,7 @@
         var copy = home.CopyTo(home.Parent, "copy");
 
         // assert
+        copy.Fields["Title"].Should().NotBeNull("'copy.Fields[\"Title\"]' should not be null");
         copy.Fields["Title"].Shared.Should().BeTrue();
         copy["Title"].Should().Be("Me");
       }
@@ -130,14 +132,10 @@
     [Fact]
     public void ShouldCopyFieldType()
     {
-      using (var db = new Db()
-      {
-        new DbItem("home") {new DbField("Active")
-        {
-          Value = "1", 
-          Type = "Checkbox"
-        }}
-      })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField("Active") { Value = "1", Type = "Checkbox" } }
+                        })
       {
         var home = db.GetItem("/sitecore/content/home");
 
@@ -146,6 +144,7 @@
 
         // assert
         copy["Active"].Should().Be("1");
+        copy.Fields["Active"].Should().NotBeNull("'copy.Fields[\"Active\"]' should not be null");
         copy.Fields["Active"].Type.Should().Be("Checkbox");
       }
     }

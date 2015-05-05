@@ -8,6 +8,8 @@
   {
     private readonly ThreadLocal<MembershipProvider> localProvider = new ThreadLocal<MembershipProvider>();
 
+    private bool disposed;
+
     public virtual ThreadLocal<MembershipProvider> LocalProvider
     {
       get { return this.localProvider; }
@@ -183,6 +185,29 @@
     public override bool ValidateUser(string username, string password)
     {
       return this.IsLocalProviderSet() && this.LocalProvider.Value.ValidateUser(username, password);
+    }
+
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (this.disposed)
+      {
+        return;
+      }
+
+      if (!disposing)
+      {
+        return;
+      }
+
+      this.localProvider.Dispose();
+
+      this.disposed = true;
     }
   }
 }

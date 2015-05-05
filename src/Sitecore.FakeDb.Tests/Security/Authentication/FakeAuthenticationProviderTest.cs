@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security.Authentication
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.FakeDb.Security.Authentication;
@@ -7,7 +8,7 @@
   using Sitecore.Security.Authentication;
   using Xunit;
 
-  public class FakeAuthenticationProviderTest
+  public class FakeAuthenticationProviderTest : IDisposable
   {
     private const string UserName = @"extrante\Rambo";
 
@@ -191,5 +192,10 @@
     }
 
     #endregion
+
+    public void Dispose()
+    {
+      this.provider.Dispose();
+    }
   }
 }

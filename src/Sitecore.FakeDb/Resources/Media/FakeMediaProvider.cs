@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Resources.Media
 {
+  using System;
   using System.Threading;
   using System.Web;
   using Sitecore.Data.Items;
@@ -18,6 +19,8 @@
     private readonly MediaCreator mediaCreator = new MediaCreator();
 
     private readonly MimeResolver mimeResolver = new MimeResolver();
+
+    private bool disposed;
 
     public override MediaCache Cache
     {
@@ -157,6 +160,29 @@
     public override MediaRequest ParseMediaRequest(HttpRequest request)
     {
       return this.IsLocalProviderSet() ? this.localProvider.Value.ParseMediaRequest(request) : null;
+    }
+
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (this.disposed)
+      {
+        return;
+      }
+
+      if (!disposing)
+      {
+        return;
+      }
+
+      this.localProvider.Dispose();
+
+      this.disposed = true;
     }
   }
 }

@@ -15,13 +15,20 @@
     <MSBuild Projects="$(ProjectToBuild)" Properties="Configuration=Release" />
   </Target>
 
-  <Target Name="Tests" DependsOnTargets="Compile">
-    <xunit Assembly="$(FakeDbTestsOutDir)\Sitecore.FakeDb.Tests.dll" />
-    <xunit Assembly="$(NSubstituteTestsOutDir)\Sitecore.FakeDb.NSubstitute.Tests.dll" />
-    <xunit Assembly="$(SerializationTestsOutDir)\Sitecore.FakeDb.Serialization.Tests.dll" />
+  <ItemGroup>
+    <TestAssemblies Include="$(FakeDbTestsOutDir)\Sitecore.FakeDb.Tests.dll" />
+    <TestAssemblies Include="$(NSubstituteTestsOutDir)\Sitecore.FakeDb.NSubstitute.Tests.dll" />
+    <TestAssemblies Include="$(SerializationTestsOutDir)\Sitecore.FakeDb.Serialization.Tests.dll" />
+    <TestAssemblies Include="$(FakeDbTestsOutDir)\Sitecore.FakeDb.Tests.dll">
+      <ConfigFile>$(NSubstituteTestsOutDir)\Sitecore.FakeDb.NSubstitute.Tests.dll.config</ConfigFile>
+    </TestAssemblies>
+    <TestAssemblies Include="$(FakeDbTestsOutDir)\Sitecore.FakeDb.Tests.dll">
+      <ConfigFile>$(SerializationTestsOutDir)\Sitecore.FakeDb.Serialization.Tests.dll.config</ConfigFile>
+    </TestAssemblies>
+  </ItemGroup>
 
-    <xunit Assembly="$(FakeDbTestsOutDir)\Sitecore.FakeDb.Tests.dll" ConfigFile="$(NSubstituteTestsOutDir)\Sitecore.FakeDb.NSubstitute.Tests.dll.config" />
-    <xunit Assembly="$(FakeDbTestsOutDir)\Sitecore.FakeDb.Tests.dll" ConfigFile="$(SerializationTestsOutDir)\Sitecore.FakeDb.Serialization.Tests.dll.config" />
+  <Target Name="Tests" DependsOnTargets="Compile">
+    <xunit Assemblies="@(TestAssemblies)" ParallelizeTestCollections="false" />
   </Target>
 
   <Target Name="Packages" DependsOnTargets="Tests">

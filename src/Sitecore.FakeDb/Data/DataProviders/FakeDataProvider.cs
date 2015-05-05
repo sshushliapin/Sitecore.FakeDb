@@ -11,6 +11,7 @@
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Globalization;
   using CallContext = Sitecore.Data.DataProviders.CallContext;
+  using Version = Sitecore.Data.Version;
 
   public class FakeDataProvider : DataProvider, IRequireDataStorage
   {
@@ -64,6 +65,13 @@
     public override VersionUriList GetItemVersions(ItemDefinition itemDefinition, CallContext context)
     {
       var list = new List<VersionUri>();
+      var versions = new VersionUriList();
+
+      // TODO:[High] Shouldn't throw?
+      if (this.DataStorage == null)
+      {
+        return versions;
+      }
 
       var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
       foreach (var field in item.Fields)
@@ -86,7 +94,6 @@
         }
       }
 
-      var versions = new VersionUriList();
       foreach (var version in list)
       {
         versions.Add(version);
