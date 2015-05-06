@@ -1,8 +1,12 @@
 ﻿namespace Sitecore.FakeDb.Configuration
 {
+  using System;
+  using System.IO;
+  using System.Reflection;
   using Sitecore.Data;
   using Sitecore.Data.Events;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
+  using Sitecore.IO;
 
   public class ConfigReader : Sitecore.Configuration.ConfigReader
   {
@@ -12,6 +16,12 @@
     }
 
     private static void DatabaseInstanceCreated(object sender, InstanceCreatedEventArgs e)
+    {
+      SetAppDomainAppPath();
+      SetDataEngineCommands(e);
+    }
+
+    private static void SetDataEngineCommands(InstanceCreatedEventArgs e)
     {
       var commands = e.Database.Engines.DataEngine.Commands;
 
@@ -34,6 +44,29 @@
       commands.ResolvePathPrototype = new ResolvePathCommand();
       commands.SaveItemPrototype = new SaveItemCommand();
       commands.SetBlobStreamPrototype = new SetBlobStreamCommand();
+    }
+
+    private static void SetAppDomainAppPath()
+    {
+      if (!string.IsNullOrEmpty(Sitecore.Configuration.State.HttpRuntime.AppDomainAppPath))
+      {
+        return;
+      }
+
+      var directoryName = Path.GetDirectoryName(FileUtil.GetFilePathFromFileUri(Assembly.GetExecutingAssembly().CodeBase));
+
+      while ((directoryName.Length > 0) && (directoryName.IndexOf('\\') >= 0))
+      {
+        if (directoryName.EndsWith(@"\bin", StringComparison.InvariantCulture))
+        {
+          directoryName = directoryName.Substring(0, directoryName.LastIndexOf('\\'));
+          break;
+        }
+
+        directoryName = directoryName.Substring(0, directoryName.LastIndexOf('\\'));
+      }
+
+      Sitecore.Configuration.State.HttpRuntime.AppDomainAppPath = directoryName;
     }
   }
 }

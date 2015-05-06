@@ -73,7 +73,6 @@
     <Compile Include="Pipelines\AddDbItem\AddVersion.cs" />
     <Compile Include="Pipelines\AddDbItem\SetAccess.cs" />
     <Compile Include="Pipelines\AddDbItem\AddDbItemArgs.cs" />
-    <Compile Include="Pipelines\InitFakeDb\SetContextIsUnitTesting.cs" />
     <Compile Include="Pipelines\AddDbItem\SetStatistics.cs" />
     <Compile Include="Pipelines\AddDbItem\SetParent.cs" />
     <Compile Include="Pipelines\AddDbItem\CreateTemplate.cs" />
