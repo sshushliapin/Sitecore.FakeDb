@@ -55,6 +55,9 @@
     <Reference Include="Ploeh.AutoFixture.Xunit2">
       <HintPath>..\packages\AutoFixture.Xunit2.3.30.4\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
     </Reference>
+    <Reference Include="Sitecore.Analytics">
+      <HintPath>..\..\lib\Sitecore.Analytics.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.ContentSearch">
       <HintPath>..\..\Lib\Sitecore.ContentSearch.dll</HintPath>
     </Reference>
@@ -102,6 +105,7 @@
     <Compile Include="Data\Engines\DataCommands\CopyItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\MoveItemCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\RemoveVersionCommandTest.cs" />
+    <Compile Include="Data\Fields\FieldTypeManagerTest.cs" />
     <Compile Include="Data\Fields\LinkFieldTest.cs" />
     <Compile Include="Data\Fields\StatisticsFieldsTest.cs" />
     <Compile Include="Data\Fields\SecurityFieldTest.cs" />
