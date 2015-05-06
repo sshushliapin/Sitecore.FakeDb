@@ -27,7 +27,10 @@
         item.TemplateID = ID.NewID;
       }
 
-      var template = new DbTemplate(item.Name, item.TemplateID);
+      var template = new DbTemplate(item.Name, item.TemplateID)
+      {
+        Generated = true
+      };
 
       foreach (var itemField in item.Fields)
       {
@@ -69,8 +72,11 @@
         return false;
       }
 
-      // find the most recently added sibling
-      var sourceItem = dataStorage.FakeItems.Values.LastOrDefault(si => si.ParentID == item.ParentID);
+      // find the most recently added sibling with a generated template
+      var sourceItem = dataStorage.FakeItems.Values
+        .Where(si => si.ParentID == item.ParentID)
+        .LastOrDefault(si => dataStorage.GetFakeTemplate(si.TemplateID).Generated);
+
       if (sourceItem == null)
       {
         return false;

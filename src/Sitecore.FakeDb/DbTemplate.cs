@@ -9,6 +9,8 @@
   {
     private ID[] baseIDs;
 
+    internal bool Generated { get; set; }
+
     public ID[] BaseIDs
     {
       get
