@@ -1,4 +1,8 @@
-﻿0.25.2
+﻿0.25.3
+* [FIX] #49: Unable to edit an **empty** item field inherited from a base template
+* [FIX] #50: Update tests to xunit2
+
+0.25.2
 * [FIX] #48: Deserialization of base templates broken in latest version
 
 0.25.1
