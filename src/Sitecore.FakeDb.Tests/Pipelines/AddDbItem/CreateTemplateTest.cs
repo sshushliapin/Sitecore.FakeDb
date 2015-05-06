@@ -59,5 +59,30 @@
       // assert
       item.BranchId.Should().Be(branchId);
     }
+
+    [Fact]
+    public void ShouldNotReuseSiblingTemplateIfTemplateIdSpecified()
+    {
+      // arrange
+      var myId = ID.NewID;
+
+      // act
+      using (var db = new Db
+      {
+          new DbTemplate("Site Root", myId),
+          new DbItem("site", ID.NewID, myId)
+          {
+              new DbItem("home")
+          },
+          new DbItem("outside")
+      })
+      {
+          // assert
+        var home = db.GetItem("/sitecore/content/site/home");
+        var outside = db.GetItem("/sitecore/content/outside");
+
+        outside.TemplateID.Should().NotBe(myId); // <-- Fails
+      }
+    }
   }
 }
