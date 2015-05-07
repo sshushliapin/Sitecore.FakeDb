@@ -72,25 +72,16 @@
         return false;
       }
 
-      // find the most recently added sibling with a generated template
+      var fingerprint = string.Concat(item.Fields.Select(f => f.Name));
+
+      // find an item with a generated template that has a matching fields set
       var sourceItem = dataStorage.FakeItems.Values
-        .Where(si => si.ParentID == item.ParentID)
-        .LastOrDefault(si => dataStorage.GetFakeTemplate(si.TemplateID).Generated);
+        .Where(si => si.TemplateID != TemplateIDs.Template)
+        .Where(si => dataStorage.GetFakeTemplate(si.TemplateID) != null)
+        .Where(si => dataStorage.GetFakeTemplate(si.TemplateID).Generated)
+        .FirstOrDefault(si => string.Concat(si.Fields.Select(f => f.Name)) == fingerprint);
 
       if (sourceItem == null)
-      {
-        return false;
-      }
-
-      if (sourceItem.TemplateID == TemplateIDs.Template)
-      {
-        return false;
-      }
-
-      var lastItemTemplateKeys = string.Concat(sourceItem.Fields.Select(f => f.Name));
-      var itemTemplateKeys = string.Concat(item.Fields.Select(f => f.Name));
-
-      if (lastItemTemplateKeys != itemTemplateKeys)
       {
         return false;
       }

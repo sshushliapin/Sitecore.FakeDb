@@ -680,26 +680,36 @@
       }
     }
 
-    [Fact]
-    public void ShouldShareTemplateForSiblinsOnly()
+    [Theory]
+    [InlineData("/sitecore/content/home", "/sitecore/content/site", true)]
+    [InlineData("/sitecore/content/home", "/sitecore/content/site/four", true)]
+    [InlineData("/sitecore/content/home", "/sitecore/content/home/one", false)]
+    [InlineData("/sitecore/content/home/one", "/sitecore/content/site/two", true)]
+    [InlineData("/sitecore/content/site/two", "/sitecore/content/site/three", false)]
+    [InlineData("/sitecore/content/site/two", "/sitecore/content/site/four", false)]
+    public void ShouldReuseGeneratedTemplateFromNotOnlySiblings(string pathOne, string pathTwo, bool match)
     {
-      // arrange & act
+      // arrange
       using (var db = new Db
-                        {
-                          new DbItem("products")
-                            {
-                              new DbItem("hammer")
-                            },
-                          new DbItem("shapes") 
-                        })
       {
-        var productsId = db.GetItem("/sitecore/content/products").TemplateID;
-        var hammerId = db.GetItem("/sitecore/content/products/hammer").TemplateID;
-        var shapesId = db.GetItem("/sitecore/content/shapes").TemplateID;
+        new DbItem("home")
+        {
+          new DbItem("one") {{"Title", "One"}}
+        },
+        new DbItem("site")
+        {
+          new DbItem("two") {{"Title", "Two"}},
+          new DbItem("three") {{"Title", "Three"}, {"Name", "Three"}},
+          new DbItem("four")
+        }
+      })
+      {
+        // act
+        var one = db.GetItem(pathOne);
+        var two = db.GetItem(pathTwo);
 
         // assert
-        productsId.Should().Be(shapesId);
-        productsId.Should().NotBe(hammerId);
+        (one.TemplateID == two.TemplateID).Should().Be(match);
       }
     }
 

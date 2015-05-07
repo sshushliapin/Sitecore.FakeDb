@@ -77,7 +77,7 @@
           new DbItem("outside")
       })
       {
-          // assert
+        // assert
         var home = db.GetItem("/sitecore/content/site/home");
         var outside = db.GetItem("/sitecore/content/outside");
 
