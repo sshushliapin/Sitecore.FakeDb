@@ -714,7 +714,7 @@
     }
 
     [Fact]
-    public void ShouldThrowExceptionIfNoDbInstanceInitialized()
+    public void ShouldThrowIfNoDbInstanceInitialized()
     {
       // arrange
       Factory.Reset();
@@ -723,21 +723,39 @@
       Action action = () => Database.GetDatabase("master").GetItem("/sitecore/content");
 
       // assert
-      action.ShouldThrow<InvalidOperationException>().WithMessage("Sitecore.FakeDb.Db instance has not been initialized.");
+      action.ShouldThrow<InvalidOperationException>()
+            .WithMessage("Sitecore.FakeDb.Db instance has not been initialized.");
     }
 
     [Fact]
-    public void ShouldThrowExceptionIfTemplateIdIsAlreadyExists()
+    public void ShouldThrowIfItemIdIsAlreadyExists()
     {
       // arrange
-      var id = ID.NewID;
+      var id = new ID("{57289DB1-1C33-46DF-A7BA-C214B7F4C54C}");
+      using (var db = new Db { new DbItem("home", id) })
+      {
+        // act
+        Action action = () => db.Add(new DbItem("new home", id));
+
+        // assert
+        action.ShouldThrow<InvalidOperationException>()
+              .WithMessage("An item with the same id has already been added ('{57289DB1-1C33-46DF-A7BA-C214B7F4C54C}').");
+      }
+    }
+
+    [Fact]
+    public void ShouldThrowIfTemplateIdIsAlreadyExists()
+    {
+      // arrange
+      var id = new ID("{825697FD-5EED-47ED-8404-E9A47D7D6BDF}");
       using (var db = new Db { new DbTemplate("products", id) })
       {
         // act
         Action action = () => db.Add(new DbTemplate("products", id));
 
         // assert
-        action.ShouldThrow<ArgumentException>().WithMessage("A template with the same id has already been added.*");
+        action.ShouldThrow<InvalidOperationException>()
+              .WithMessage("A template with the same id has already been added ('{825697FD-5EED-47ED-8404-E9A47D7D6BDF}').");
       }
     }
 
