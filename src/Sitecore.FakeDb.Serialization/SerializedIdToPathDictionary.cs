@@ -65,7 +65,14 @@
               }
 
               var itemId = ID.Parse(itemIdStr);
+              
+              if(pathSet.Paths.ContainsKey(itemId))
+              {
+                continue;
+              }
+              
               pathSet.Paths.Add(itemId, file);
+              
               if (itemId == id)
               {
                 foundFile = file;
