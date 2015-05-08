@@ -732,14 +732,14 @@
     {
       // arrange
       var id = new ID("{57289DB1-1C33-46DF-A7BA-C214B7F4C54C}");
-      using (var db = new Db { new DbItem("home", id) })
+      using (var db = new Db { new DbItem("old home", id) })
       {
         // act
         Action action = () => db.Add(new DbItem("new home", id));
 
         // assert
         action.ShouldThrow<InvalidOperationException>()
-              .WithMessage("An item with the same id has already been added ('{57289DB1-1C33-46DF-A7BA-C214B7F4C54C}').");
+              .WithMessage("An item with the same id has already been added ('{57289DB1-1C33-46DF-A7BA-C214B7F4C54C}', '/sitecore/content/new home').");
       }
     }
 
@@ -748,14 +748,14 @@
     {
       // arrange
       var id = new ID("{825697FD-5EED-47ED-8404-E9A47D7D6BDF}");
-      using (var db = new Db { new DbTemplate("products", id) })
+      using (var db = new Db { new DbTemplate("old product", id) })
       {
         // act
-        Action action = () => db.Add(new DbTemplate("products", id));
+        Action action = () => db.Add(new DbTemplate("new product", id));
 
         // assert
         action.ShouldThrow<InvalidOperationException>()
-              .WithMessage("A template with the same id has already been added ('{825697FD-5EED-47ED-8404-E9A47D7D6BDF}').");
+              .WithMessage("A template with the same id has already been added ('{825697FD-5EED-47ED-8404-E9A47D7D6BDF}', 'new product').");
       }
     }
 
