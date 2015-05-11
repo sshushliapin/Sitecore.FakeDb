@@ -91,15 +91,21 @@ namespace Sitecore.FakeDb.Data.Engines
         }
       }
 
-      if (item is IDsDbItem)
+      // TODO: Combine the two pipelines below.
+      var loading = item is IDsDbItem;
+      if (loading)
       {
         CorePipeline.Run("loadDsDbItem", new DsItemLoadingArgs(item as IDsDbItem, this));
       }
 
       CorePipeline.Run("addDbItem", new AddDbItemArgs(item, this));
 
-      this.AssertNoItemExists(item);
-      this.FakeItems.Add(item.ID, item);
+      if (!loading)
+      {
+        this.AssertNoItemExists(item);
+      }
+
+      this.FakeItems[item.ID] = item;
 
       if (item as DbTemplate != null)
       {

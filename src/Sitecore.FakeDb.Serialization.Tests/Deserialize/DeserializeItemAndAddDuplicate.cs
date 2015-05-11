@@ -1,36 +1,36 @@
 namespace Sitecore.FakeDb.Serialization.Tests.Deserialize
 {
   using System;
+  using FluentAssertions;
   using Xunit;
 
   [Trait("Deserialize", "Deserializing an item and adding a duplicate")]
-  public class DeserializeItemAndAddDuplicate : IDisposable
+  public class DeserializeItemAndAddDuplicate : DeserializeTestBase
   {
-    private readonly Db db;
-
-    private readonly DbItem duplicateItem;
 
     public DeserializeItemAndAddDuplicate()
     {
-      this.db = new Db { new DsDbItem(SerializedItemIds.ContentHome) };
-      this.duplicateItem = new DbItem("Home", SerializedItemIds.ContentHome);
+      this.Db.Add(this.DeserializedItem);
     }
 
     [Fact(DisplayName = "Throws duplicate item exception")]
     public void ThrowException()
     {
-      this.db.Add(this.duplicateItem);
+      Assert.Throws<InvalidOperationException>(() => this.Db.Add(this.AdhocItem));
     }
 
     [Fact(DisplayName = "Does not overwrite the deserialized item")]
     public void DoesNotOverwriteDeserializedItem()
     {
-      this.db.Add(this.duplicateItem);
-    }
+      try
+      {
+        this.Db.Add(this.AdhocItem);
+      }
+      catch (InvalidOperationException)
+      {
+      }
 
-    public void Dispose()
-    {
-      this.db.Dispose();
+      this.Db.GetItem(SerializedItemIds.ContentHome)["Title"].Should().Be("Sitecore");
     }
   }
 }

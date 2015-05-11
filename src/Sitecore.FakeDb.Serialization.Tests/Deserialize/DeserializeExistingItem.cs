@@ -1,36 +1,27 @@
 ﻿namespace Sitecore.FakeDb.Serialization.Tests.Deserialize
 {
-  using System;
+  using FluentAssertions;
   using Xunit;
 
   [Trait("Deserialize", "Deserializing an item that is already exists")]
-  public class DeserializeExistingItem : IDisposable
+  public class DeserializeExistingItem : DeserializeTestBase
   {
-    private readonly Db db;
-
-    private readonly DsDbItem deserializedItem;
-
     public DeserializeExistingItem()
     {
-      this.db = new Db { new DbItem("Home", SerializedItemIds.ContentHome) };
-      this.deserializedItem = new DsDbItem(SerializedItemIds.ContentHome);
+      this.Db.Add(this.AdhocItem);
     }
 
     [Fact(DisplayName = "Does not throw an exception")]
     public void DoesNotThrow()
     {
-      this.db.Add(this.deserializedItem);
+      this.Db.Add(this.DeserializedItem);
     }
 
     [Fact(DisplayName = "Overwrites the existing item")]
     public void OverwriteExisting()
     {
-      this.db.Add(this.deserializedItem);
-    }
-
-    public void Dispose()
-    {
-      this.db.Dispose();
+      this.Db.Add(this.DeserializedItem);
+      this.Db.GetItem(SerializedItemIds.ContentHome)["Title"].Should().Be("Sitecore");
     }
   }
 }
