@@ -80,10 +80,15 @@ namespace Sitecore.FakeDb.Data.Engines
     {
       Assert.ArgumentNotNull(item, "item");
 
+      var loading = item is IDsDbItem;
       if (item as DbTemplate != null)
       {
         var template = (DbTemplate)item;
-        this.AssertNoTemplateExists(template);
+
+        if (!loading)
+        {
+          this.AssertNoTemplateExists(template);
+        }
 
         if (template is IDsDbItem)
         {
@@ -92,7 +97,6 @@ namespace Sitecore.FakeDb.Data.Engines
       }
 
       // TODO: Combine the two pipelines below.
-      var loading = item is IDsDbItem;
       if (loading)
       {
         CorePipeline.Run("loadDsDbItem", new DsItemLoadingArgs(item as IDsDbItem, this));

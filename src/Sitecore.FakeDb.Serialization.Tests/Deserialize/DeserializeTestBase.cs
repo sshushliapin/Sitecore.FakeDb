@@ -13,8 +13,8 @@
     protected DeserializeTestBase()
     {
       this.Db = new Db();
-      this.AdhocItem = new DbItem("Home", SerializedItemIds.ContentHome) { { "Title", "Home" } };
-      this.DeserializedItem = new DsDbItem(SerializedItemIds.ContentHome);
+      this.AdhocItem = new DbItem("Home", SerializationId.ContentHomeItem) { { "Title", "Home" } };
+      this.DeserializedItem = new DsDbItem(SerializationId.ContentHomeItem);
     }
 
     public void Dispose()

@@ -14,7 +14,7 @@ namespace Sitecore.FakeDb.Serialization.Tests.Deserialize
     [Fact(DisplayName = "Creates the new item")]
     public void CreateNewItem()
     {
-      this.Db.GetItem(SerializedItemIds.ContentHome).Should().NotBeNull();
+      this.Db.GetItem(SerializationId.ContentHomeItem).Should().NotBeNull();
     }
   }
 }
