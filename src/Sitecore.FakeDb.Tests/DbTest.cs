@@ -46,7 +46,13 @@
     public void ShouldCreateItemHierarchyAndReadChildByPath()
     {
       // arrange & act
-      using (var db = new Db { new DbItem("parent") { new DbItem("child") } })
+      using (var db = new Db
+                        {
+                          new DbItem("parent")
+                            {
+                              new DbItem("child")
+                            }
+                        })
       {
         // assert
         db.GetItem("/sitecore/content/parent/child").Should().NotBeNull();
@@ -57,7 +63,10 @@
     public void ShouldCreateItemInCustomLanguage()
     {
       // arrange & act
-      using (var db = new Db { new DbItem("home") { Fields = { new DbField("Title") { { "da", "Hej!" } } } } })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { Fields = { new DbField("Title") { { "da", "Hej!" } } } }
+                        })
       {
         var item = db.Database.GetItem("/sitecore/content/home", Language.Parse("da"));
 
@@ -71,7 +80,10 @@
     public void ShouldCreateItemInSpecificLanguage()
     {
       // arrange & act
-      using (var db = new Db { new DbItem("home") { new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } } } })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField("Title") { { "en", "Hello!" }, { "da", "Hej!" } } }
+                        })
       {
         db.Database.GetItem("/sitecore/content/home", Language.Parse("en"))["Title"].Should().Be("Hello!");
         db.Database.GetItem("/sitecore/content/home", Language.Parse("da"))["Title"].Should().Be("Hej!");
@@ -142,7 +154,10 @@
     public void ShouldCreateItemWithFields()
     {
       // act
-      using (var db = new Db { new DbItem("home", this.itemId) { { "Title", "Welcome!" } } })
+      using (var db = new Db
+                        {
+                          new DbItem("home", this.itemId) { { "Title", "Welcome!" } }
+                        })
       {
         var item = db.Database.GetItem(this.itemId);
 
@@ -175,7 +190,10 @@
     public void ShouldCreateItemWithUnversionedSharedFieldsByDefault()
     {
       // arrange & act
-      using (var db = new Db { new DbItem("home") { { "Title", "Hello!" } } })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { { "Title", "Hello!" } }
+                        })
       {
         db.Database.GetItem("/sitecore/content/home", Language.Parse("en"))["Title"].Should().Be("Hello!");
         db.Database.GetItem("/sitecore/content/home", Language.Parse("uk-UA"))["Title"].Should().Be("Hello!");
@@ -203,7 +221,10 @@
     public void ShouldDenyItemCreateAccess()
     {
       // arrange
-      using (var db = new Db { new DbItem("home") { Access = new DbItemAccess { CanCreate = false } } })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { Access = new DbItemAccess { CanCreate = false } }
+                        })
       {
         var item = db.GetItem("/sitecore/content/home");
 
@@ -219,7 +240,10 @@
     public void ShouldDenyItemReadAccess()
     {
       // arrange & act
-      using (var db = new Db { new DbItem("home") { Access = new DbItemAccess { CanRead = false } } })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { Access = new DbItemAccess { CanRead = false } }
+                        })
       {
         // assert
         db.GetItem("/sitecore/content/home").Should().BeNull();
@@ -230,7 +254,10 @@
     public void ShouldDenyItemWriteAccess()
     {
       // arrange
-      using (var db = new Db { new DbItem("home") { Access = new DbItemAccess { CanWrite = false } } })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { Access = new DbItemAccess { CanWrite = false } }
+                        })
       {
         var item = db.GetItem("/sitecore/content/home");
 
@@ -691,18 +718,18 @@
     {
       // arrange
       using (var db = new Db
-      {
-        new DbItem("home")
-        {
-          new DbItem("one") {{"Title", "One"}}
-        },
-        new DbItem("site")
-        {
-          new DbItem("two") {{"Title", "Two"}},
-          new DbItem("three") {{"Title", "Three"}, {"Name", "Three"}},
-          new DbItem("four")
-        }
-      })
+                        {
+                          new DbItem("home")
+                            {
+                              new DbItem("one") { { "Title", "One" } }
+                            }, 
+                          new DbItem("site")
+                            {
+                              new DbItem("two") { { "Title", "Two" } }, 
+                              new DbItem("three") { { "Title", "Three" }, { "Name", "Three" } }, 
+                              new DbItem("four")
+                            }
+                        })
       {
         // act
         var one = db.GetItem(pathOne);
@@ -714,30 +741,45 @@
     }
 
     [Fact]
-    public void ShouldThrowExceptionIfNoDbInstanceInitialized()
+    public void ShouldThrowIfNoDbInstanceInitialized()
     {
-      // arrange
-      Factory.Reset();
-
       // act
       Action action = () => Database.GetDatabase("master").GetItem("/sitecore/content");
 
       // assert
-      action.ShouldThrow<InvalidOperationException>().WithMessage("Sitecore.FakeDb.Db instance has not been initialized.");
+      action.ShouldThrow<InvalidOperationException>()
+            .WithMessage("Sitecore.FakeDb.Db instance has not been initialized.");
     }
 
     [Fact]
-    public void ShouldThrowExceptionIfTemplateIdIsAlreadyExists()
+    public void ShouldThrowIfItemIdIsAlreadyExists()
     {
       // arrange
-      var id = ID.NewID;
-      using (var db = new Db { new DbTemplate("products", id) })
+      var id = new ID("{57289DB1-1C33-46DF-A7BA-C214B7F4C54C}");
+      using (var db = new Db { new DbItem("old home", id) })
       {
         // act
-        Action action = () => db.Add(new DbTemplate("products", id));
+        Action action = () => db.Add(new DbItem("new home", id));
 
         // assert
-        action.ShouldThrow<ArgumentException>().WithMessage("A template with the same id has already been added.*");
+        action.ShouldThrow<InvalidOperationException>()
+              .WithMessage("An item with the same id has already been added ('{57289DB1-1C33-46DF-A7BA-C214B7F4C54C}', '/sitecore/content/new home').");
+      }
+    }
+
+    [Fact]
+    public void ShouldThrowIfTemplateIdIsAlreadyExists()
+    {
+      // arrange
+      var id = new ID("{825697FD-5EED-47ED-8404-E9A47D7D6BDF}");
+      using (var db = new Db { new DbTemplate("old product", id) })
+      {
+        // act
+        Action action = () => db.Add(new DbTemplate("new product", id));
+
+        // assert
+        action.ShouldThrow<InvalidOperationException>()
+              .WithMessage("A template with the same id has already been added ('{825697FD-5EED-47ED-8404-E9A47D7D6BDF}', 'new product').");
       }
     }
 
@@ -857,7 +899,10 @@
     public void ShouldCreateItemVersion()
     {
       // arrange
-      using (var db = new Db { new DbItem("home") { { "Title", "hello" } } })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { { "Title", "hello" } }
+                        })
       {
         var item1 = db.GetItem("/sitecore/content/home");
 
@@ -881,7 +926,10 @@
     public void ShouldCreateItemOfAnyVersion()
     {
       // arrange
-      using (var db = new Db { new DbItem("home") { { "Title", "title v1" } } })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { { "Title", "title v1" } }
+                        })
       {
         var version2 = db.GetItem("/sitecore/content/home", "en", 2);
 
@@ -919,7 +967,10 @@
     public void ShouldCreateItemOfFolderTemplate()
     {
       // arrange & act
-      using (var db = new Db { new DbItem("Sample") { TemplateID = TemplateIDs.Folder } })
+      using (var db = new Db
+                        {
+                          new DbItem("Sample") { TemplateID = TemplateIDs.Folder }
+                        })
       {
         // assert
         db.GetItem("/sitecore/content/sample").TemplateID.Should().Be(TemplateIDs.Folder);
@@ -930,7 +981,10 @@
     public void ShouldCreateSampleTemplateIfTemplateIdIsSetButTemplateIsMissing()
     {
       // act
-      using (var db = new Db { new DbItem("home", ID.NewID, this.templateId) })
+      using (var db = new Db
+                        {
+                          new DbItem("home", ID.NewID, this.templateId)
+                        })
       {
         // assert
         db.GetItem("/sitecore/content/home").TemplateID.Should().Be(this.templateId);
@@ -1003,7 +1057,10 @@
     public void ShouldCreateTemplateFieldsFromItemFieldsIfNoTemplateProvided()
     {
       // arrange
-      using (var db = new Db { new DbItem("home") { new DbField("Link") { Type = "General Link" } } })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField("Link") { Type = "General Link" } }
+                        })
       {
         // act
         var item = db.GetItem("/sitecore/content/home");
@@ -1019,7 +1076,10 @@
     public void ShouldPropagateFieldTypesFromTemplateToItem()
     {
       // arrange
-      using (var db = new Db { new DbItem("home") { new DbField("Link") { Type = "General Link" } } })
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField("Link") { Type = "General Link" } }
+                        })
       {
         // act
         var item = db.GetItem("/sitecore/content/home");
@@ -1167,24 +1227,19 @@
       var user = User.FromName(@"extranet\John", false);
 
       using (new UserSwitcher(user))
+      using (new SecurityDisabler())
+      using (var db = new Db())
       {
-        // TODO:[Minor] Try to avoid Security Disabler usage
-        using (new SecurityDisabler())
-        {
-          using (var db = new Db())
-          {
-            var dbitem = new DbItem("home");
-            ReflectionUtil.SetProperty(dbitem.Access, propertyName, actualPermission);
+        var dbitem = new DbItem("home");
+        ReflectionUtil.SetProperty(dbitem.Access, propertyName, actualPermission);
 
-            // act
-            db.Add(dbitem);
+        // act
+        db.Add(dbitem);
 
-            var item = db.GetItem("/sitecore/content/home");
+        var item = db.GetItem("/sitecore/content/home");
 
-            // assert
-            item["__Security"].Should().Be(expectedSecurity);
-          }
-        }
+        // assert
+        item["__Security"].Should().Be(expectedSecurity);
       }
     }
 

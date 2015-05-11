@@ -83,7 +83,7 @@ namespace Sitecore.FakeDb.Data.Engines
       if (item as DbTemplate != null)
       {
         var template = (DbTemplate)item;
-        Assert.ArgumentCondition(this.GetFakeTemplate(template.ID) == null, "template", "A template with the same id has already been added.");
+        this.AssertNoTemplateExists(template);
 
         if (template is IDsDbItem)
         {
@@ -98,6 +98,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
       CorePipeline.Run("addDbItem", new AddDbItemArgs(item, this));
 
+      this.AssertNoItemExists(item);
       this.FakeItems.Add(item.ID, item);
 
       if (item as DbTemplate != null)
@@ -318,6 +319,27 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems.Add(TemplateIDs.TemplateSection, new DbItem(TemplateSectionItemName, TemplateIDs.TemplateSection, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
       this.FakeItems.Add(TemplateIDs.TemplateField, new DbItem(TemplateFieldItemName, TemplateIDs.TemplateField, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
       this.FakeItems.Add(TemplateIDs.BranchTemplate, new DbItem(BranchItemName, TemplateIDs.BranchTemplate, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
+    }
+
+    private void AssertNoTemplateExists(DbItem item)
+    {
+      this.AssertDoesNotExists(item, "A template with the same id has already been added ('{0}', '{1}').");
+    }
+
+    private void AssertNoItemExists(DbItem item)
+    {
+      this.AssertDoesNotExists(item, "An item with the same id has already been added ('{0}', '{1}').");
+    }
+
+    private void AssertDoesNotExists(DbItem item, string format)
+    {
+      if (!this.FakeItems.ContainsKey(item.ID))
+      {
+        return;
+      }
+
+      var message = string.Format(format, item.ID, item.FullPath ?? item.Name);
+      throw new InvalidOperationException(message);
     }
   }
 }

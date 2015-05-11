@@ -75,5 +75,16 @@
       // assert
       Factory.GetDatabase("master").GetDataProviders()[0].CacheOptions.DisableAll.Should().BeTrue();
     }
+
+    [Fact]
+    public void ShouldSupportAutoIncludeFiles()
+    {
+      // arrange & act
+      using (new Db())
+      {
+        // assert
+        Settings.GetSetting("Sitecore.FakeDb.AutoInclude.Suported").Should().Be("Yes");
+      }
+    }
   }
 }
