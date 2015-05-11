@@ -80,9 +80,14 @@
     <Compile Include="..\Sitecore.FakeDb\Properties\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Deserialize\DeserializeExistingItem.cs" />
+    <Compile Include="Deserialize\DeserializeItemAndAddDuplicate.cs" />
+    <Compile Include="Deserialize\DeserializeNewItem.cs" />
+    <Compile Include="Deserialize\DeserializeTestBase.cs" />
     <Compile Include="DsDbItemTest.cs" />
     <Compile Include="DsDbTemplateTest.cs" />
     <Compile Include="GettingStarted.cs" />
+    <Compile Include="SerializedItemIds.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializedIdToPathResolverTest.cs" />
   </ItemGroup>

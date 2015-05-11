@@ -24,7 +24,7 @@
       var item = new DsDbItem("/sitecore/content/home");
 
       item.Should().NotBeNull();
-      item.ID.ShouldBeEquivalentTo(ID.Parse("{110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9}"));
+      item.ID.ShouldBeEquivalentTo(SerializedItemIds.ContentHome);
     }
 
     [Fact]
@@ -108,7 +108,7 @@
     [Fact]
     public void ShouldLookupById()
     {
-      var id = ID.Parse("{110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9}");
+      var id = SerializedItemIds.ContentHome;
 
       var item = new DsDbItem(id);
 
