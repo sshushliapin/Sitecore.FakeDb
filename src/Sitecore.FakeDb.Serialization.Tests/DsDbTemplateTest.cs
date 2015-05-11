@@ -22,7 +22,7 @@
       var template = new DsDbTemplate("/sitecore/templates/Sample/Sample Item");
 
       template.Should().NotBeNull();
-      template.ID.ShouldBeEquivalentTo(ID.Parse("{76036F5E-CBCE-46D1-AF0A-4143F9B557AA}"));
+      template.ID.ShouldBeEquivalentTo(SerializationId.SampleItemTemplate);
     }
 
     [Fact]
@@ -77,7 +77,7 @@
     [Fact]
     public void ShouldLookupById()
     {
-      var templateId = ID.Parse("{76036F5E-CBCE-46D1-AF0A-4143F9B557AA}");
+      var templateId = SerializationId.SampleItemTemplate;
 
       var template = new DsDbTemplate(templateId);
 

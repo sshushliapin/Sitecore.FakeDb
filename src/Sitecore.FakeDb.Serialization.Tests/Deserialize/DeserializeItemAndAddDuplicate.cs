@@ -30,7 +30,7 @@ namespace Sitecore.FakeDb.Serialization.Tests.Deserialize
       {
       }
 
-      this.Db.GetItem(SerializedItemIds.ContentHome)["Title"].Should().Be("Sitecore");
+      this.Db.GetItem(SerializationId.ContentHomeItem)["Title"].Should().Be("Sitecore");
     }
   }
 }

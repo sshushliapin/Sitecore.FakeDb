@@ -24,7 +24,7 @@
       var item = new DsDbItem("/sitecore/content/home");
 
       item.Should().NotBeNull();
-      item.ID.ShouldBeEquivalentTo(SerializedItemIds.ContentHome);
+      item.ID.ShouldBeEquivalentTo(SerializationId.ContentHomeItem);
     }
 
     [Fact]
@@ -33,7 +33,7 @@
       var item = new DsDbItem("/sitecore/content/home");
 
       item.Should().NotBeNull();
-      item.TemplateID.ShouldBeEquivalentTo(ID.Parse("{76036F5E-CBCE-46D1-AF0A-4143F9B557AA}"));
+      item.TemplateID.ShouldBeEquivalentTo(SerializationId.SampleItemTemplate);
     }
 
     [Fact]
@@ -108,7 +108,7 @@
     [Fact]
     public void ShouldLookupById()
     {
-      var id = SerializedItemIds.ContentHome;
+      var id = SerializationId.ContentHomeItem;
 
       var item = new DsDbItem(id);
 
@@ -123,7 +123,7 @@
       var item = new DsDbItem("/sitecore/content/home");
       using (var db = new Db { item })
       {
-        var templateId = ID.Parse("{76036F5E-CBCE-46D1-AF0A-4143F9B557AA}");
+        var templateId = SerializationId.SampleItemTemplate;
 
         item.Should().NotBeNull();
         item.TemplateID.ShouldBeEquivalentTo(templateId);

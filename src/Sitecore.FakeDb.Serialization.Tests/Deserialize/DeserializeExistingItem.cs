@@ -21,7 +21,7 @@
     public void OverwriteExisting()
     {
       this.Db.Add(this.DeserializedItem);
-      this.Db.GetItem(SerializedItemIds.ContentHome)["Title"].Should().Be("Sitecore");
+      this.Db.GetItem(SerializationId.ContentHomeItem)["Title"].Should().Be("Sitecore");
     }
   }
 }
