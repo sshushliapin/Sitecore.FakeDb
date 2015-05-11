@@ -14,10 +14,7 @@
       }
 
       var parent = dataStorage.GetFakeItem(item.ParentID);
-        if (parent != null)
-        {
-            item.FullPath = parent.FullPath + "/" + item.Name;
-        }
+      item.FullPath = parent.FullPath + "/" + item.Name;
     }
   }
 }

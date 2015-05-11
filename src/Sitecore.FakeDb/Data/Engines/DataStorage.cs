@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace Sitecore.FakeDb.Data.Engines
 {
   using System;
@@ -100,16 +98,9 @@ namespace Sitecore.FakeDb.Data.Engines
 
       CorePipeline.Run("addDbItem", new AddDbItemArgs(item, this));
 
-        if (!this.FakeItems.ContainsKey(item.ID))
-        {
-            this.FakeItems.Add(item.ID, item);
-        }
-        else
-        {
-            Trace.WriteLine("Duplicate ID for " + item.FullPath);
-        }
+      this.FakeItems.Add(item.ID, item);
 
-        if (item as DbTemplate != null)
+      if (item as DbTemplate != null)
       {
         this.Database.Engines.TemplateEngine.Reset();
       }

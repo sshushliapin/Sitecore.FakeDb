@@ -39,7 +39,7 @@
 
       // Deserialize base templates
       var baseTemplatesField = dsDbTemplate.Fields.FirstOrDefault(f => f.ID == FieldIDs.BaseTemplate);
-      if (baseTemplatesField == null || string.IsNullOrWhiteSpace(baseTemplatesField.Value))
+      if (string.IsNullOrWhiteSpace(baseTemplatesField.Value))
       {
         return;
       }
