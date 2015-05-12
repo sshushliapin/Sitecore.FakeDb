@@ -98,7 +98,20 @@ namespace Sitecore.FakeDb.Data.Engines
 
       CorePipeline.Run("addDbItem", new AddDbItemArgs(item, this));
 
-      this.AssertNoItemExists(item);
+
+      if (item is IDsDbItem)
+      {
+          //Overwrite the original if item is deserialized
+          if (this.FakeItems.ContainsKey(item.ID))
+          {
+              this.FakeItems.Remove(item.ID);
+          }
+      }
+      else
+      {
+          this.AssertNoItemExists(item);
+      }
+      
       this.FakeItems.Add(item.ID, item);
 
       if (item as DbTemplate != null)

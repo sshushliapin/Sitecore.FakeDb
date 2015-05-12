@@ -1,36 +1,52 @@
+using FluentAssertions;
+
 namespace Sitecore.FakeDb.Serialization.Tests.Deserialize
 {
-  using System;
-  using Xunit;
+    using System;
+    using Xunit;
 
-  [Trait("Deserialize", "Deserializing an item and adding a duplicate")]
-  public class DeserializeItemAndAddDuplicate : IDisposable
-  {
-    private readonly Db db;
-
-    private readonly DbItem duplicateItem;
-
-    public DeserializeItemAndAddDuplicate()
+    [Trait("Deserialize", "Deserializing an item and adding a duplicate")]
+    public class DeserializeItemAndAddDuplicate : IDisposable
     {
-      this.db = new Db { new DsDbItem(SerializedItemIds.ContentHome) };
-      this.duplicateItem = new DbItem("Home", SerializedItemIds.ContentHome);
-    }
+        private readonly Db db;
 
-    [Fact(DisplayName = "Throws duplicate item exception")]
-    public void ThrowException()
-    {
-      this.db.Add(this.duplicateItem);
-    }
+        private readonly DbItem duplicateItem;
 
-    [Fact(DisplayName = "Does not overwrite the deserialized item")]
-    public void DoesNotOverwriteDeserializedItem()
-    {
-      this.db.Add(this.duplicateItem);
-    }
+        public DeserializeItemAndAddDuplicate()
+        {
+            this.db = new Db { new DsDbItem(SerializedItemIds.ContentHome) };
+            this.duplicateItem = new DbItem("Home Custom", SerializedItemIds.ContentHome);
+        }
 
-    public void Dispose()
-    {
-      this.db.Dispose();
+        [Fact(DisplayName = "Throws duplicate item exception")]
+        public void ThrowException()
+        {
+            var exception = Record.Exception(() => this.db.Add(this.duplicateItem));
+
+            Assert.NotNull(exception);
+            Assert.IsType<InvalidOperationException>(exception);
+        }
+
+        [Fact(DisplayName = "Does not overwrite the deserialized item")]
+        public void DoesNotOverwriteDeserializedItem()
+        {
+            var itemId = this.duplicateItem.ID;
+
+            var before = this.db.GetItem(itemId);
+            before.ID.ShouldBeEquivalentTo(SerializedItemIds.ContentHome);
+            before.Name.ShouldBeEquivalentTo("Home");
+
+            Record.Exception(() => this.db.Add(this.duplicateItem));
+
+            var after = this.db.GetItem(itemId);
+            after.ID.ShouldBeEquivalentTo(SerializedItemIds.ContentHome);
+            after.Name.ShouldBeEquivalentTo("Home");
+
+        }
+
+        public void Dispose()
+        {
+            this.db.Dispose();
+        }
     }
-  }
 }
