@@ -7,7 +7,6 @@
   using Sitecore.FakeDb.Data;
   using Sitecore.FakeDb.Data.IDTables;
   using Xunit;
-  using Xunit.Extensions;
 
   public class ConfigurationTest
   {
@@ -56,7 +55,7 @@
     }
 
     [Fact]
-    public void ShouldGetIDTableProvider()
+    public void ShouldGetIdTableProvider()
     {
       // assert
       Factory.GetIDTable().Should().BeOfType<FakeIDTableProvider>();
@@ -77,7 +76,7 @@
     }
 
     [Fact]
-    public void ShouldSupportAutoIncludeFiles()
+    public void ShouldLoadAutoIncludeFiles()
     {
       // arrange & act
       using (new Db())
@@ -85,6 +84,13 @@
         // assert
         Settings.GetSetting("Sitecore.FakeDb.AutoInclude.Suported").Should().Be("Yes");
       }
+    }
+
+    [Fact]
+    public void ShouldLoadAutoIncludeFilesIfNoDbContextCreated()
+    {
+      // arrange & act
+      Settings.GetSetting("Sitecore.FakeDb.AutoInclude.Suported").Should().Be("Yes");
     }
   }
 }

@@ -5,6 +5,7 @@
   using System.Reflection;
   using Sitecore.Data;
   using Sitecore.Data.Events;
+  using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.IO;
 
@@ -12,12 +13,13 @@
   {
     static ConfigReader()
     {
+      SetAppDomainAppPath();
+
       Database.InstanceCreated += DatabaseInstanceCreated;
     }
 
     private static void DatabaseInstanceCreated(object sender, InstanceCreatedEventArgs e)
     {
-      SetAppDomainAppPath();
       SetDataEngineCommands(e);
     }
 
@@ -48,12 +50,8 @@
 
     private static void SetAppDomainAppPath()
     {
-      if (!string.IsNullOrEmpty(Sitecore.Configuration.State.HttpRuntime.AppDomainAppPath))
-      {
-        return;
-      }
-
       var directoryName = Path.GetDirectoryName(FileUtil.GetFilePathFromFileUri(Assembly.GetExecutingAssembly().CodeBase));
+      Assert.IsNotNull(directoryName, "Unable to set the 'HttpRuntime.AppDomainAppPath' property.");
 
       while ((directoryName.Length > 0) && (directoryName.IndexOf('\\') >= 0))
       {
