@@ -302,7 +302,7 @@ namespace Sitecore.FakeDb.Data.Engines
             new DbField(FieldIDs.Updated),
             new DbField(FieldIDs.UpdatedBy),
             new DbField(FieldIDs.Revision),
-            new DbField(FieldIDs.LayoutField),
+            new DbField(FieldIDs.LayoutField) { Type = "Layout" },
             new DbField(FieldIDs.DisplayName),
             new DbField(FieldIDs.Hidden),
             new DbField(FieldIDs.ReadOnly)
