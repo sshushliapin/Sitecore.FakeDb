@@ -86,14 +86,11 @@
       }
     }
 
-    [Fact(Skip = "To be implemented.")]
+    [Fact]
     public void ShouldGetTrackingField()
     {
       // arrange
-      using (var db = new Db
-                        {
-                          new DbItem("home") { new DbField("__Tracking") { Type = "Tracking" } }
-                        })
+      using (var db = new Db { new DbItem("home") })
       {
         var home = db.GetItem("/sitecore/content/home");
 

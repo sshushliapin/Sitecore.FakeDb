@@ -35,6 +35,10 @@
       <HintPath>..\..\Lib\Lucene.Net.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Sitecore.Analytics">
+      <HintPath>..\..\lib\Sitecore.Analytics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\..\Lib\Sitecore.Kernel.dll</HintPath>
       <Private>False</Private>
@@ -60,6 +64,7 @@
     <Compile Include="Data\Engines\DataCommands\IDataEngineCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\DataEngineCommand.cs" />
     <Compile Include="Configuration\DbConfiguration.cs" />
+    <Compile Include="Data\Engines\ItemNames.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
     <Compile Include="FieldNamingHelper.cs" />
     <Compile Include="Data\IDTables\IDTableProviderSwitcher.cs" />
