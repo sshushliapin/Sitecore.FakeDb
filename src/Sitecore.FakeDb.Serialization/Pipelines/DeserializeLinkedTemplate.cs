@@ -1,4 +1,6 @@
-﻿namespace Sitecore.FakeDb.Serialization.Pipelines
+﻿using System.Diagnostics;
+
+namespace Sitecore.FakeDb.Serialization.Pipelines
 {
   using System;
   using System.IO;
@@ -33,13 +35,15 @@
         return;
       }
 
+
       var dsDbTemplate = new DsDbTemplate(templateId, serializationFolderName);
 
       dataStorage.AddFakeItem(dsDbTemplate);
 
       // Deserialize base templates
       var baseTemplatesField = dsDbTemplate.Fields.FirstOrDefault(f => f.ID == FieldIDs.BaseTemplate);
-      if (string.IsNullOrWhiteSpace(baseTemplatesField.Value))
+
+      if (baseTemplatesField == null || string.IsNullOrWhiteSpace(baseTemplatesField.Value))
       {
         return;
       }
