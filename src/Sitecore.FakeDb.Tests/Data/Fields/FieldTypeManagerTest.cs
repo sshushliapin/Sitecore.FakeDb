@@ -99,5 +99,43 @@
         FieldTypeManager.GetFieldType("Tracking").Type.Should().Be<TrackingField>();
       }
     }
+
+    [Fact]
+    public void ShouldNotThrowOnGetDefaultFieldTypeItem()
+    {
+      // arrange
+      using (new Db("core"))
+      {
+        // act
+        FieldTypeManager.GetDefaultFieldTypeItem();
+      }
+    }
+
+    [Fact]
+    public void ShouldNotThrowOnGetFieldTypeItem()
+    {
+      // arrange
+      using (new Db("core"))
+      {
+        // act
+        FieldTypeManager.GetFieldTypeItem("text");
+      }
+    }
+
+    [Fact]
+    public void ShouldNotThrowOnGetTemplateFieldItem()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField("field") }
+                        })
+      {
+        var home = db.GetItem("/sitecore/content/home");
+
+        // act
+        FieldTypeManager.GetTemplateFieldItem(home.Fields["field"]);
+      }
+    }
   }
 }

@@ -27,5 +27,7 @@
     public const string Folder = "Folder";
 
     public const string Profiles = "Profiles";
+
+    public const string FieldTypes = "Field types";
   }
 }

@@ -143,5 +143,22 @@
       // assert
       this.dataStorage.FakeItems[ItemIDs.RootID].Fields[FieldIDs.Security].Value.Should().Be("ar|Everyone|p*|+*|");
     }
+
+    [Theory]
+    [InlineData("core", true)]
+    [InlineData("master", false)]
+    [InlineData("web", false)]
+    public void ShouldCreateFieldTypesRootInCoreDatabase(string database, bool exists)
+    {
+      // arrange
+      using (var db = new Db(database))
+      {
+        // act
+        var result = db.GetItem("/sitecore/system/Field Types") != null;
+
+        // assert
+        result.Should().Be(exists);
+      }
+    }
   }
 }

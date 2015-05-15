@@ -312,6 +312,16 @@ namespace Sitecore.FakeDb.Data.Engines
 
       this.AddFakeItem(new DbItem(ItemNames.DefinitionsRoot, Analytics.Data.Items.ItemIDs.DefinitionsRoot, TemplateIDs.Folder) { ParentID = ItemIDs.SystemRoot, FullPath = "/sitecore/system/Marketing Control Panel" });
       this.AddFakeItem(new DbItem(ItemNames.Profiles, ItemIDs.Analytics.Profiles, TemplateIDs.Folder) { ParentID = Analytics.Data.Items.ItemIDs.DefinitionsRoot, FullPath = "/sitecore/system/Marketing Control Panel/Profiles" });
+
+      if (this.Database.Name == "core")
+      {
+        this.AddFakeItem(
+          new DbItem(ItemNames.FieldTypes, new ID("{76E6D8C7-1F93-4712-872B-DA3C96B808F2}"), TemplateIDs.Node)
+            {
+              ParentID = ItemIDs.SystemRoot, 
+              Children = { new DbItem("text") { { "Control", "Text" } } }
+            });
+      }
     }
 
     private void AssertNoTemplateExists(DbItem item)
