@@ -2,9 +2,9 @@
 version: 1
 id: {9F389F1B-BFC5-4ED5-B889-ECDEB41CBFA3}
 database: master
-path: /sitecore/templates/NullBaseTemplate
+path: /sitecore/templates/Serialization Tests/Item Without BaseTemplates
 parent: {3C1715FE-6A13-4FCF-845F-DE308BA9741D}
-name: NullBaseTemplate
+name: Item Without BaseTemplates
 master: {00000000-0000-0000-0000-000000000000}
 template: {AB86861A-6030-46C5-B394-E8F99E8B87DB}
 templatekey: Template

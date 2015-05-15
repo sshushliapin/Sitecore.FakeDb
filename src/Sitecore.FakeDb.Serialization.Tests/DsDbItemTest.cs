@@ -1,8 +1,4 @@
-﻿using Sitecore.FakeDb.Pipelines;
-using Sitecore.FakeDb.Serialization.Pipelines;
-using Sitecore.Shell.Applications.ContentEditor;
-
-namespace Sitecore.FakeDb.Serialization.Tests
+﻿namespace Sitecore.FakeDb.Serialization.Tests
 {
   using System;
   using System.Linq;
@@ -40,20 +36,18 @@ namespace Sitecore.FakeDb.Serialization.Tests
       item.TemplateID.ShouldBeEquivalentTo(SerializationId.SampleItemTemplate);
     }
 
-      [Fact(DisplayName = "Should deserialize item with null BaseTemplate linked template.")]
-      public void ShouldDeserializeNullBaseTemplateItem()
+    [Fact(DisplayName = "Should deserialize item with null BaseTemplate linked template.")]
+    public void ShouldDeserializeNullBaseTemplateItem()
+    {
+      var item = new DsDbItem("/sitecore/content/New Item Without BaseTemplates");
+
+      using (var db = new Db { item })
       {
-          var item = new DsDbItem("/sitecore/content/Global");
-
-          using (var db = new Db())
-          {
-              db.Add(item);
-
-              var linkedTemplate = db.GetItem(item.TemplateID);
-              linkedTemplate.Should().NotBeNull();
-              linkedTemplate.Template.Name.ShouldBeEquivalentTo("Template");
-          }
+        var linkedTemplate = db.GetItem(item.TemplateID);
+        linkedTemplate.Should().NotBeNull();
+        linkedTemplate.Template.Name.ShouldBeEquivalentTo("Template");
       }
+    }
 
     [Fact]
     public void ShouldDeserializeMultilingualItem()
