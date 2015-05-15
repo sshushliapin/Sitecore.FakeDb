@@ -36,6 +36,19 @@
       item.TemplateID.ShouldBeEquivalentTo(SerializationId.SampleItemTemplate);
     }
 
+    [Fact(DisplayName = "Should deserialize item with null BaseTemplate linked template.")]
+    public void ShouldDeserializeNullBaseTemplateItem()
+    {
+      var item = new DsDbItem("/sitecore/content/New Item Without BaseTemplates");
+
+      using (var db = new Db { item })
+      {
+        var linkedTemplate = db.GetItem(item.TemplateID);
+        linkedTemplate.Should().NotBeNull();
+        linkedTemplate.Template.Name.ShouldBeEquivalentTo("Template");
+      }
+    }
+
     [Fact]
     public void ShouldDeserializeMultilingualItem()
     {
