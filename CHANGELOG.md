@@ -1,4 +1,13 @@
-﻿0.25.3
+﻿0.26.0
+* [NEW] #26: Include configs
+* [NEW] #46: Wish: Add default field types to app.config
+* [NEW] #34: Automatic template generation needs to be a little smarter
+* [NEW] #52: Allow reuse of generated templates across all items, not only siblings
+* [FIX] #54: Adding a duplicated item throws an exception with a helpless message
+* [FIX] #55: Deserialize item fails if there is an item with the same id
+* [FIX] #56: Deserializing a linked template throws an error if the '__BaseTemplates' field is null
+
+0.25.3
 * [FIX] #49: Unable to edit an **empty** item field inherited from a base template
 * [FIX] #50: Update tests to xunit2
 
