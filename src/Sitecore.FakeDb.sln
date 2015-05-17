@@ -32,6 +32,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{61B65D79
 		..\build.msbuild = ..\build.msbuild
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{D5B7F1D4-7020-4F1B-B281-6621CF343FC5}"
+	ProjectSection(SolutionItems) = preProject
+		Sitecore.FakeDb\Sitecore.FakeDb.nuspec = Sitecore.FakeDb\Sitecore.FakeDb.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

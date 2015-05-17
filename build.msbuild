@@ -38,11 +38,14 @@
     <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(NSubstituteTestsDir)\App.config" OutputPaths="$(NSubstituteTestsDir)\App.config.transform" />
     <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(SerializationTestsDir)\App.config" OutputPaths="$(SerializationTestsDir)\App.config.transform" />
 
+    <Copy SourceFiles="$(FakeDbTestsDir)\App_Config\FieldTypes.config" DestinationFolder="$(FakeDbDir)\App_config\" />
+
     <Exec Command="$(NuGet) pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) pack Sitecore.FakeDb.NSubstitute/Sitecore.FakeDb.NSubstitute.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) pack Sitecore.FakeDb.Serialization/Sitecore.FakeDb.Serialization.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
 
     <Delete Files="$(FakeDbDir)\App.config" />
+    <RemoveDir Directories="$(FakeDbDir)\App_Config\" />
     <Delete Files="$(FakeDbTestsDir)\App.config.transform" />
     <Delete Files="$(NSubstituteTestsDir)\App.config.transform" />
     <Delete Files="$(SerializationTestsDir)\App.config.transform" />
