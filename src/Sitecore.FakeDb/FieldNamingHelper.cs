@@ -3,6 +3,7 @@
   using System.Collections.Generic;
   using System.Collections.ObjectModel;
   using System.Linq;
+  using Sitecore.Analytics;
   using Sitecore.Data;
 
   public class FieldNamingHelper
@@ -11,12 +12,9 @@
       new ReadOnlyDictionary<ID, string>(
         new Dictionary<ID, string>
           {
-            // Appearance
             { FieldIDs.DisplayName, "__Display name" },
             { FieldIDs.Hidden, "__Hidden" },
             { FieldIDs.ReadOnly, "__Read Only" },
-
-            // Other
             { FieldIDs.BaseTemplate, "__Base template" },
             { FieldIDs.Created, "__Created" },
             { FieldIDs.CreatedBy, "__Created by" },
@@ -26,7 +24,8 @@
             { FieldIDs.Security, "__Security" },
             { FieldIDs.StandardValues, "__Standard values" },
             { FieldIDs.Updated, "__Updated" },
-            { FieldIDs.UpdatedBy, "__Updated by" }
+            { FieldIDs.UpdatedBy, "__Updated by" },
+            { AnalyticsIds.TrackingField, "__Tracking" }
           });
 
     public KeyValuePair<ID, string> GetFieldIdNamePair(ID id, string name)
