@@ -1,4 +1,7 @@
-﻿0.26.0
+﻿0.26.1
+* [FIX] #58: Versioned field value is not empty for item in `Invariant` language
+
+0.26.0
 * [NEW] #26: Include configs
 * [NEW] #46: Wish: Add default field types to app.config
 * [NEW] #34: Automatic template generation needs to be a little smarter
