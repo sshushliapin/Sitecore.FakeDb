@@ -3,21 +3,18 @@
   using System;
   using System.Collections.Generic;
   using FluentAssertions;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Globalization;
   using Xunit;
-  using Xunit.Extensions;
 
   public class DbFieldTest
   {
     private readonly DbField field;
 
-    private readonly DbField layoutField;
-
     public DbFieldTest()
     {
-      this.field = new DbField("Title") { Type = "Single-Line Text" };
-      this.layoutField = new DbField(FieldIDs.LayoutField);
+      this.field = new DbField("Title");
     }
 
     [Fact]
@@ -25,12 +22,14 @@
     {
       // act & assert
       this.field.Name.Should().Be("Title");
-      this.layoutField.Name.Should().Be("__Renderings");
     }
 
     [Fact]
     public void ShouldSetType()
     {
+      // arrange
+      this.field.Type = "Single-Line Text";
+
       // act & assert
       this.field.Type.Should().Be("Single-Line Text");
     }
@@ -50,11 +49,11 @@
     {
       // act
       this.field.Add("en", "en_value");
-      this.field.Add("ua", "ua_value");
+      this.field.Add("da", "da_value");
 
       // assert
       this.field.GetValue("en", 1).Should().Be("en_value");
-      this.field.GetValue("ua", 1).Should().Be("ua_value");
+      this.field.GetValue("da", 1).Should().Be("da_value");
     }
 
     [Fact]
@@ -63,14 +62,14 @@
       // act
       this.field.Add("en", 1, "en_value1");
       this.field.Add("en", 2, "en_value2");
-      this.field.Add("ua", 1, "ua_value1");
-      this.field.Add("ua", 2, "ua_value2");
+      this.field.Add("da", 1, "da_value1");
+      this.field.Add("da", 2, "da_value2");
 
       // assert
       this.field.GetValue("en", 1).Should().Be("en_value1");
       this.field.GetValue("en", 2).Should().Be("en_value2");
-      this.field.GetValue("ua", 1).Should().Be("ua_value1");
-      this.field.GetValue("ua", 2).Should().Be("ua_value2");
+      this.field.GetValue("da", 1).Should().Be("da_value1");
+      this.field.GetValue("da", 2).Should().Be("da_value2");
     }
 
     [Fact]
@@ -300,6 +299,28 @@
     {
       // act & assert
       new DbField(name).IsStandard().Should().Be(standard);
+    }
+
+    [Theory]
+    [AutoData]
+    public void ShouldGetEmptyValueForInvariantLanguageIfNotShared(DbField field)
+    {
+      // arrange
+      field.Shared = false;
+
+      // act & assert
+      field.GetValue(Language.Invariant.Name, 0).Should().BeEmpty();
+    }
+
+    [Theory]
+    [AutoData]
+    public void ShouldGetSomeValueForInvariantLanguageIfShared(DbField field)
+    {
+      // arrange
+      field.Shared = true;
+
+      // act & assert
+      field.GetValue(Language.Invariant.Name, 0).Should().NotBeEmpty();
     }
   }
 }

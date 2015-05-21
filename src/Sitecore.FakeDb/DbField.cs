@@ -127,6 +127,11 @@
         return this.sharedValue;
       }
 
+      if (Language.Parse(language) == Language.Invariant)
+      {
+        return string.Empty;
+      }
+
       if (version == 0)
       {
         version = this.GetLatestVersion(language);
