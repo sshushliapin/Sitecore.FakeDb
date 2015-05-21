@@ -12,12 +12,9 @@
   {
     private readonly DbField field;
 
-    private readonly DbField layoutField;
-
     public DbFieldTest()
     {
-      this.field = new DbField("Title") { Type = "Single-Line Text" };
-      this.layoutField = new DbField(FieldIDs.LayoutField);
+      this.field = new DbField("Title");
     }
 
     [Fact]
@@ -25,12 +22,14 @@
     {
       // act & assert
       this.field.Name.Should().Be("Title");
-      this.layoutField.Name.Should().Be("__Renderings");
     }
 
     [Fact]
     public void ShouldSetType()
     {
+      // arrange
+      this.field.Type = "Single-Line Text";
+
       // act & assert
       this.field.Type.Should().Be("Single-Line Text");
     }
