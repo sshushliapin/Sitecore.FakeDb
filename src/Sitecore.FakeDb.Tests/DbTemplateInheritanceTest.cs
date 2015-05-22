@@ -1,11 +1,13 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
+  using System;
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.Data.Templates;
+  using Sitecore.Exceptions;
   using Xunit;
 
   public class DbTemplateInheritanceTest
@@ -105,7 +107,7 @@
         {
           BaseIDs = new ID[] {this.baseTemplateOne.ID, this.baseTemplateThree.ID}
         },
-        new DbItem("home", ID.NewID, templateId) {{"Title", "Home"}, {"Description", "My Home"}}
+        new DbItem("home", ID.NewID, templateId) { { "Title", "Home" }, { "Description", "My Home" } }
       })
       {
         // act
@@ -144,17 +146,41 @@
 
     [Theory]
     [AutoData]
-    public void ShouldIgnoreMissingBaseTemplates(ID templateId, ID missingBaseTemplateId)
+    public void ShouldIgnoreBaseTemplateIfNull(ID templateId)
     {
       // arrange
       using (var db = new Db
                   {
-                    new DbTemplate(templateId) { BaseIDs = new[] { missingBaseTemplateId } },
+                    new DbTemplate(templateId) { BaseIDs = new[] { ID.Null } },
                     new DbItem("home", ID.NewID, templateId)
                   })
       {
-        // act & assert
-        db.GetItem("/sitecore/content/home").Should().NotBeNull();
+        // act
+        Action action = () => db.GetItem("/sitecore/content/home");
+
+        // assert
+        action.ShouldNotThrow();
+      }
+    }
+
+    [Theory]
+    [AutoData]
+    public void ShouldThrowIfBaseTemplateIsMissing(ID templateId)
+    {
+      // arrange
+      const string MissingBaseTemplateId = "{4F2BBCE8-92EC-4514-8A5F-2C1F432FEE5A}";
+
+      using (var db = new Db
+                  {
+                    new DbTemplate(templateId) { BaseIDs = new[] { new ID(MissingBaseTemplateId) } },
+                    new DbItem("home", ID.NewID, templateId)
+                  })
+      {
+        // act
+        Action action = () => db.GetItem("/sitecore/content/home");
+
+        // assert
+        action.ShouldThrow<TemplateNotFoundException>().WithMessage("The template \"{4F2BBCE8-92EC-4514-8A5F-2C1F432FEE5A}\" was not found.");
       }
     }
   }
