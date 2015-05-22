@@ -5,7 +5,9 @@
   using Sitecore.Data.Fields;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
+  using Sitecore.Exceptions;
   using Sitecore.FakeDb.Data.Engines;
+  using Sitecore.StringExtensions;
 
   public class FakeStandardValuesProvider : StandardValuesProvider, IRequireDataStorage
   {
@@ -66,9 +68,18 @@
 
       foreach (var baseId in template.BaseIDs)
       {
-        var baseTemplate = this.DataStorage.GetFakeTemplate(baseId);
-        var value = this.FindStandardValueInTheTemplate(baseTemplate, fieldId);
+        if (ID.IsNullOrEmpty(baseId))
+        {
+          continue;
+        }
 
+        var baseTemplate = this.DataStorage.GetFakeTemplate(baseId);
+        if (baseTemplate == null)
+        {
+          throw new TemplateNotFoundException("The template \"{0}\" was not found.".FormatWith(baseId.ToString()));
+        }
+
+        var value = this.FindStandardValueInTheTemplate(baseTemplate, fieldId);
         if (value != null)
         {
           return value;
