@@ -67,8 +67,12 @@
       foreach (var baseId in template.BaseIDs)
       {
         var baseTemplate = this.DataStorage.GetFakeTemplate(baseId);
-        var value = this.FindStandardValueInTheTemplate(baseTemplate, fieldId);
+        if (baseTemplate == null)
+        {
+          continue;
+        }
 
+        var value = this.FindStandardValueInTheTemplate(baseTemplate, fieldId);
         if (value != null)
         {
           return value;

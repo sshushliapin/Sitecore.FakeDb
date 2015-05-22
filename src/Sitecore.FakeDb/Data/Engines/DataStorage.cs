@@ -232,9 +232,9 @@ namespace Sitecore.FakeDb.Data.Engines
       }
       else
       {
-        foreach (var id in fakeTemplate.BaseIDs)
+        foreach (var template in fakeTemplate.BaseIDs.Select(this.GetFakeTemplate).Where(t => t != null))
         {
-          this.AddFieldsFromTemplate(allFields, fakeItem, this.GetFakeTemplate(id), language, version);
+          this.AddFieldsFromTemplate(allFields, fakeItem, template, language, version);
         }
       }
     }
@@ -318,7 +318,7 @@ namespace Sitecore.FakeDb.Data.Engines
         this.AddFakeItem(
           new DbItem(ItemNames.FieldTypes, new ID("{76E6D8C7-1F93-4712-872B-DA3C96B808F2}"), TemplateIDs.Node)
             {
-              ParentID = ItemIDs.SystemRoot, 
+              ParentID = ItemIDs.SystemRoot,
               Children = { new DbItem("text") { { "Control", "Text" } } }
             });
       }

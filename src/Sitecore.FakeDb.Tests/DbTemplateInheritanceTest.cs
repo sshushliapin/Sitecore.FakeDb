@@ -117,7 +117,8 @@
       }
     }
 
-    [Theory, AutoData]
+    [Theory]
+    [AutoData]
     public void ShouldEditEmptyInheritedField(ID baseTemplateId, ID templateId, ID fieldId)
     {
       // arrange
@@ -138,6 +139,22 @@
 
         // assert
         item.Fields[fieldId].Value.Should().Be("new value");
+      }
+    }
+
+    [Theory]
+    [AutoData]
+    public void ShouldIgnoreMissingBaseTemplates(ID templateId, ID missingBaseTemplateId)
+    {
+      // arrange
+      using (var db = new Db
+                  {
+                    new DbTemplate(templateId) { BaseIDs = new[] { missingBaseTemplateId } },
+                    new DbItem("home", ID.NewID, templateId)
+                  })
+      {
+        // act & assert
+        db.GetItem("/sitecore/content/home").Should().NotBeNull();
       }
     }
   }
