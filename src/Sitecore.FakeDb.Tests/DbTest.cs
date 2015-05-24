@@ -3,6 +3,7 @@
   using System;
   using System.Linq;
   using FluentAssertions;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -1301,6 +1302,21 @@
           item.Should().BeAssignableTo<DbItem>();
         }
       }
+    }
+
+    [Theory, AutoData]
+    public void ShouldThrowIfNoParentFoundById(Db db)
+    {
+      // arrange
+      const string ParentId = "{483AE2C1-3494-4248-B591-030F2E2C9843}";
+      var homessItem = new DbItem("homeless") { ParentID = new ID(ParentId) };
+
+      // act
+      Action action = () => db.Add(homessItem);
+
+      // assert
+      action.ShouldThrow<ItemNotFoundException>()
+            .WithMessage("The parent item \"{483AE2C1-3494-4248-B591-030F2E2C9843}\" was not found.");
     }
   }
 }
