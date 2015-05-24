@@ -103,7 +103,7 @@
 
     public IEnumerator GetEnumerator()
     {
-      throw new NotImplementedException();
+      return this.DataStorage.FakeItems.Values.GetEnumerator();
     }
 
     public void Add(DbItem item)

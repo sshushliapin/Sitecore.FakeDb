@@ -96,6 +96,7 @@
     <Compile Include="..\Sitecore.FakeDb\Properties\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="AutoFixture\AutoFixtrureTest.cs" />
     <Compile Include="Data\BranchRecordsTest.cs" />
     <Compile Include="Data\Engines\DataCommands\BlobStreamExistsCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\GetBlobStreamCommandTest.cs" />

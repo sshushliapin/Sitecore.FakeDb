@@ -1287,5 +1287,20 @@
         item["Title"].Should().BeEmpty();
       }
     }
+
+    [Fact]
+    public void ShouldEnumerateDbItems()
+    {
+      // arrange
+      using (var db = new Db())
+      {
+        // act
+        foreach (var item in db)
+        {
+          // assert
+          item.Should().BeAssignableTo<DbItem>();
+        }
+      }
+    }
   }
 }
