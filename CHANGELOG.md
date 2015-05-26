@@ -1,4 +1,9 @@
-﻿0.26.1
+﻿0.26.2
+* [FIX] #59: Unable to get an item if there is a missing base template
+* [FIX] #61: Implement db.GetEnumerator()
+* [FIX] #62: NullReference exception when trying to add an item to a parent that does not exists
+
+0.26.1
 * [FIX] #58: Versioned field value is not empty for item in `Invariant` language
 
 0.26.0
