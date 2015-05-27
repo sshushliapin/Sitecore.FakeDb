@@ -84,6 +84,7 @@
     <Compile Include="..\Sitecore.FakeDb\Properties\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Deserialize\DeserializeTree.cs" />
     <Compile Include="Deserialize\DeserializeExistingTemplate.cs" />
     <Compile Include="Deserialize\DeserializeExistingItem.cs" />
     <Compile Include="Deserialize\DeserializeItemAndAddDuplicate.cs" />
