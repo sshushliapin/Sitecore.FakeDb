@@ -1,4 +1,7 @@
-﻿0.26.2
+﻿0.27.0
+* [NEW] #63: Deserialize tree of items with templates
+
+0.26.2
 * [FIX] #59: Unable to get an item if there is a missing base template
 * [FIX] #61: Implement db.GetEnumerator()
 * [FIX] #62: NullReference exception when trying to add an item to a parent that does not exists
