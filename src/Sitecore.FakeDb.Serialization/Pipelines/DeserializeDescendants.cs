@@ -32,7 +32,14 @@
 
       foreach (var itemFile in childItemsFolder.GetFiles("*.item", SearchOption.TopDirectoryOnly))
       {
-        var childItem = new DsDbItem(dsDbItem.SerializationFolderName, itemFile, true);
+        DbItem childItem;
+        var syncItem = itemFile.Deserialize();
+
+        if (syncItem.TemplateID == TemplateIDs.Template.ToString())
+          childItem = new DsDbTemplate(dsDbItem.SerializationFolderName, syncItem, itemFile);
+        else
+          childItem = new DsDbItem(dsDbItem.SerializationFolderName, syncItem, itemFile, true);
+
         dsDbItem.Children.Add(childItem);
       }
     }
