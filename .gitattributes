@@ -1,4 +1,4 @@
-core.eol crlf
+*.cs eol=crlf
 
 *.cs diff=csharp 
 
