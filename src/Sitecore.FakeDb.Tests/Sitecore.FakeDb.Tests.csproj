@@ -108,6 +108,7 @@
     <Compile Include="Data\Engines\DataCommands\RemoveVersionCommandTest.cs" />
     <Compile Include="Data\Fields\FieldTypeManagerTest.cs" />
     <Compile Include="Data\Fields\LinkFieldTest.cs" />
+    <Compile Include="Data\Fields\StandardFieldsTest.cs" />
     <Compile Include="Data\Fields\StatisticsFieldsTest.cs" />
     <Compile Include="Data\Fields\SecurityFieldTest.cs" />
     <Compile Include="Data\IDTables\IDTableProviderSwitcherTest.cs" />
