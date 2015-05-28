@@ -24,7 +24,9 @@ public void HowToCreateSimpleItem()
 
 You can install the framework via [NuGet](https://www.nuget.org/packages/Sitecore.FakeDb/):
 
-`Install-Package Sitecore.FakeDb`
+``` powershell
+PM> Install-Package Sitecore.FakeDb`
+```
 
  For information about configuring assembly references and applying the license file, see the [Installation](https://github.com/sergeyshushlyapin/Sitecore.FakeDb/wiki/Installation) page.
 
