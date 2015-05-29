@@ -1,4 +1,7 @@
-﻿0.27.0
+﻿0.27.1
+* [FIX] #64: Cannot set and get the `__Final Renderings` field value
+
+0.27.0
 * [NEW] #63: Deserialize tree of items with templates
 
 0.26.2
