@@ -1,4 +1,8 @@
-﻿0.27.1
+﻿0.27.2
+* [FIX] #64: Cannot set and get the `__Final Renderings` field value (Sitecore 7.2)
+* [FIX] #67: Exception when trying to retrieve BaseTemplates
+
+0.27.1
 * [FIX] #64: Cannot set and get the `__Final Renderings` field value
 
 0.27.0
