@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Packages" ToolsVersion="4.0">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Versions" ToolsVersion="4.0">
   <Import Project="Build.config" />
 
   <UsingTask TaskName="xunit" AssemblyFile="$(XUnitPath)\xunit.runner.msbuild.dll" />
+
+  <PropertyGroup>
+    <Lib>lib\$(Version)\*.dll</Lib>
+  </PropertyGroup>
+  <ItemGroup>
+    <Lib Include="$(Lib)" />
+  </ItemGroup>
 
   <Target Name="Clean">
     <MSBuild Projects="@(ProjectToBuild)" Targets="Clean" Properties="Configuration=Debug" />
@@ -51,7 +58,17 @@
     <Delete Files="$(SerializationTestsDir)\App.config.transform" />
   </Target>
 
-  <Target Name="Deploy" DependsOnTargets="Packages">
+  <Target  Name="Version">
+    <Copy SourceFiles="@(Lib)" DestinationFolder="lib" />
+    <CallTarget Targets="Packages" />
+  </Target>
+  
+  <Target Name="Versions">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Version" Properties="Version=7.2"/>
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Version" Properties="Version=8.0"/>
+  </Target>
+
+  <Target Name="Deploy" DependsOnTargets="Versions">
     <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.NSubstitute.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.Serialization.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
