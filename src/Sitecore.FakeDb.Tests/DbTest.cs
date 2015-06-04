@@ -1318,5 +1318,22 @@
       action.ShouldThrow<ItemNotFoundException>()
             .WithMessage("The parent item \"{483AE2C1-3494-4248-B591-030F2E2C9843}\" was not found.");
     }
+
+
+    [Fact]
+    public void ShouldGetBaseTemplates()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // act
+        var baseTemplates = item.Template.BaseTemplates;
+
+        // assert
+        baseTemplates.Should().NotBeNull();
+      }
+    }
   }
 }

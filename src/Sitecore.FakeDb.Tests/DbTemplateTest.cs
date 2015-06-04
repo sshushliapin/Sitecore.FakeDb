@@ -2,33 +2,25 @@
 {
   using System.Linq;
   using FluentAssertions;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Xunit;
 
   public class DbTemplateTest
   {
-    [Fact]
-    public void ShouldBeAnItem()
+    [Theory, AutoData]
+    public void ShouldBeAnItem([NoAutoProperties]DbTemplate template)
     {
-      // arrange
-      var template = new DbTemplate();
-
-      // assert
       template.Should().BeAssignableTo<DbItem>();
     }
 
-    [Fact]
-    public void ShouldInstantiateStandardValuesCollection()
+    [Theory, AutoData]
+    public void ShouldInstantiateStandardValuesCollection([NoAutoProperties]DbTemplate template)
     {
-      // arrange & act
-      var template = new DbTemplate();
-
-      // assert
       template.StandardValues.Should().NotBeNull();
     }
 
     // TODO:[High] The test below states that we cannot get fake item fields by id.
-
     [Fact]
     public void ShouldCreateTemplateFieldsUsingNamesAsLowercaseKeys()
     {
@@ -39,11 +31,11 @@
       template.Fields.Where(f => !f.Name.StartsWith("__")).Select(f => f.Name).ShouldBeEquivalentTo(new[] { "Title", "Description" });
     }
 
-    [Fact]
-    public void ShouldSetStandardValues()
+    [Theory, AutoData]
+    public void ShouldSetStandardValues([NoAutoProperties]DbTemplate template)
     {
-      // arrange & act
-      var template = new DbTemplate { { "Title", "$name" } };
+      // act
+      template.Add("Title", "$name");
 
       // assert
       var id = template.Fields.Single(f => f.Name == "Title").ID;
@@ -52,43 +44,38 @@
       template.StandardValues[id].Value.Should().Be("$name");
     }
 
-    [Fact]
-    public void ShouldAddFieldById()
+    [Theory, AutoData]
+    public void ShouldAddFieldById([NoAutoProperties]DbTemplate template, ID fieldId)
     {
-      // arrange
-      var fieldId = ID.NewID;
-
       // act
-      var template = new DbTemplate { fieldId };
+      template.Add(fieldId);
 
       // assert
       template.Fields[fieldId].Should().NotBeNull();
       template.Fields[fieldId].Name.Should().Be(fieldId.ToShortID().ToString());
     }
 
-    [Fact]
-    public void ShouldBeEmptyBaseIds()
+    [Theory, AutoData]
+    public void ShouldBeEmptyBaseIds([NoAutoProperties]DbTemplate template)
     {
-      // arrange
-      var template = new DbTemplate();
-
-      // act & assert
       template.BaseIDs.Should().BeEmpty();
     }
 
-    [Fact]
-    public void ShouldGetBaseIdsFromFieldsIfExist()
+    [Theory, AutoData]
+    public void ShouldGetBaseIdsFromFieldsIfExist([NoAutoProperties]DbTemplate template, ID id1, ID id2)
     {
       // arrange
-      var id1 = ID.NewID;
-      var id2 = ID.NewID;
-
-      var template = new DbTemplate();
       template.Fields.Add(new DbField(FieldIDs.BaseTemplate) { Value = id1 + "|" + id2 });
 
       // act & assert
       template.BaseIDs[0].Should().Be(id1);
       template.BaseIDs[1].Should().Be(id2);
+    }
+
+    [Theory, AutoData]
+    public void ShouldSetDefaultParentId([NoAutoProperties] DbTemplate template)
+    {
+      template.ParentID.Should().Be(ItemIDs.TemplateRoot);
     }
   }
 }
