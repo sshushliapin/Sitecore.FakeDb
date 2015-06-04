@@ -25,7 +25,7 @@
             { FieldIDs.StandardValues, "__Standard values" },
             { FieldIDs.Updated, "__Updated" },
             { FieldIDs.UpdatedBy, "__Updated by" },
-            { FieldIDs.FinalLayoutField, "__Final Renderings" },
+            { DbFieldIds.FinalLayoutField, "__Final Renderings" },
             { AnalyticsIds.TrackingField, "__Tracking" }
           });
 
