@@ -2,6 +2,7 @@
 {
   using System.Linq;
   using FluentAssertions;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Xunit;
 
@@ -89,6 +90,12 @@
       // act & assert
       template.BaseIDs[0].Should().Be(id1);
       template.BaseIDs[1].Should().Be(id2);
+    }
+
+    [Theory, AutoData]
+    public void ShouldSetDefaultParentId([NoAutoProperties] DbTemplate template)
+    {
+      template.ParentID.Should().Be(ItemIDs.TemplateRoot);
     }
   }
 }

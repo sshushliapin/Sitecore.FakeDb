@@ -57,6 +57,7 @@
       : base(name, ID.IsNullOrEmpty(id) ? ID.NewID : id, TemplateIDs.Template)
     {
       this.StandardValues = new DbFieldCollection();
+      this.ParentID = ItemIDs.TemplateRoot;
     }
 
     public void Add(string fieldName)
