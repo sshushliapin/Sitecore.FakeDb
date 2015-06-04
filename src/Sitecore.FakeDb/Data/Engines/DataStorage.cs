@@ -269,25 +269,28 @@ namespace Sitecore.FakeDb.Data.Engines
 
       this.FakeItems.Add(TemplateIDs.Folder, new DbTemplate(ItemNames.Folder, TemplateIDs.Folder));
 
-      this.FakeItems.Add(
-        TemplateIDs.StandardTemplate,
-        new DbTemplate(TemplateIDs.StandardTemplate)
-          {
-            new DbField(FieldIDs.BaseTemplate) { Shared = true },
-            new DbField(FieldIDs.Lock) { Shared = true },
-            new DbField(FieldIDs.Security) { Shared = true },
-            new DbField(FieldIDs.Created),
-            new DbField(FieldIDs.CreatedBy),
-            new DbField(FieldIDs.Updated),
-            new DbField(FieldIDs.UpdatedBy),
-            new DbField(FieldIDs.Revision),
-            new DbField(FieldIDs.LayoutField) { Type = "Layout" },
-            new DbField(FieldIDs.FinalLayoutField),
-            new DbField(FieldIDs.DisplayName),
-            new DbField(FieldIDs.Hidden),
-            new DbField(FieldIDs.ReadOnly),
-            new DbField(AnalyticsIds.TrackingField) { Type = "Tracking", Shared = true }
-          });
+      var standardTemplate = new DbTemplate(TemplateIDs.StandardTemplate)
+        {
+          new DbField(FieldIDs.BaseTemplate) {Shared = true},
+          new DbField(FieldIDs.Lock) {Shared = true},
+          new DbField(FieldIDs.Security) {Shared = true},
+          new DbField(FieldIDs.Created),
+          new DbField(FieldIDs.CreatedBy),
+          new DbField(FieldIDs.Updated),
+          new DbField(FieldIDs.UpdatedBy),
+          new DbField(FieldIDs.Revision),
+          new DbField(FieldIDs.LayoutField) {Type = "Layout"},
+          //new DbField(FieldIDs.FinalLayoutField),
+          new DbField(FieldIDs.DisplayName),
+          new DbField(FieldIDs.Hidden),
+          new DbField(FieldIDs.ReadOnly),
+          new DbField(AnalyticsIds.TrackingField) {Type = "Tracking", Shared = true}
+        };
+      var finalLayoutIdField = typeof(FieldIDs).GetField("FinalLayoutField");
+      if (finalLayoutIdField != null)
+        standardTemplate.Add(new DbField((ID)finalLayoutIdField.GetValue(null)));
+
+      this.FakeItems.Add(TemplateIDs.StandardTemplate, standardTemplate);
     }
 
     protected void FillDefaultFakeItems()

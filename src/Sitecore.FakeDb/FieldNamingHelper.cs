@@ -25,9 +25,16 @@
             { FieldIDs.StandardValues, "__Standard values" },
             { FieldIDs.Updated, "__Updated" },
             { FieldIDs.UpdatedBy, "__Updated by" },
-            { FieldIDs.FinalLayoutField, "__Final Renderings" },
+            //{ FieldIDs.FinalLayoutField, "__Final Renderings" },
             { AnalyticsIds.TrackingField, "__Tracking" }
           });
+
+    static FieldNamingHelper()
+    {
+        var finalLayoutIdField = typeof (FieldIDs).GetField("FinalLayoutField");
+        if (finalLayoutIdField != null)
+            WellknownFields.Add((ID)finalLayoutIdField.GetValue(null), "__Final Renderings");
+    }
 
     public KeyValuePair<ID, string> GetFieldIdNamePair(ID id, string name)
     {
