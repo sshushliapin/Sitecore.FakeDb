@@ -41,6 +41,9 @@
     <Reference Include="Ploeh.AutoFixture">
       <HintPath>..\packages\AutoFixture.3.30.6\lib\net40\Ploeh.AutoFixture.dll</HintPath>
     </Reference>
+    <Reference Include="Sitecore.Analytics">
+      <HintPath>..\..\lib\Sitecore.Analytics.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.Kernel, Version=8.0.5138.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Sitecore.Kernel.dll</HintPath>
@@ -66,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoDbCustomizatonTest.cs" />
     <Compile Include="DatabaseSpecimenBuilderTest.cs" />
     <Compile Include="ItemSpecimenBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
