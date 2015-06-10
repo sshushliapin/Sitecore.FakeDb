@@ -66,6 +66,7 @@
   <Target Name="Versions">
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Version" Properties="Version=7.2"/>
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Version" Properties="Version=8.0"/>
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Version" Properties="Version=8.1"/>
   </Target>
 
   <Target Name="Deploy" DependsOnTargets="Versions">

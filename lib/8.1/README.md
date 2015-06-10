@@ -1,7 +1,6 @@
 # Required Files
 
-Copy the `license.xml`  
-Copy the following DLLs from your Sitecore's `Website\bin`:
+Copy the following DLLs from your Sitecore **8.1** `Website\bin`:
 
 * Lucene.Net.dll
 * Sitecore.Abstractions.dll (Sitecore 8.X)
