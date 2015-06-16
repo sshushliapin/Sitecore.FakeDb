@@ -66,7 +66,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
         if (!loading)
         {
-          this.AssertNoTemplateExists(template);
+          this.AssertDoesNotExists(template);
         }
 
         if (template is IDsDbItem)
@@ -85,7 +85,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
       if (!loading)
       {
-        this.AssertNoItemExists(item);
+        this.AssertDoesNotExists(item);
       }
 
       this.FakeItems[item.ID] = item;
@@ -325,24 +325,29 @@ namespace Sitecore.FakeDb.Data.Engines
       }
     }
 
-    private void AssertNoTemplateExists(DbItem item)
-    {
-      this.AssertDoesNotExists(item, "A template with the same id has already been added ('{0}', '{1}').");
-    }
-
-    private void AssertNoItemExists(DbItem item)
-    {
-      this.AssertDoesNotExists(item, "An item with the same id has already been added ('{0}', '{1}').");
-    }
-
-    private void AssertDoesNotExists(DbItem item, string format)
+    private void AssertDoesNotExists(DbItem item)
     {
       if (!this.FakeItems.ContainsKey(item.ID))
       {
         return;
       }
 
-      var message = string.Format(format, item.ID, item.FullPath ?? item.Name);
+      var existingItem = this.FakeItems[item.ID];
+      string message;
+
+      if (existingItem is DbTemplate)
+      {
+        message = string.Format("A template with the same id has already been added ('{0}', '{1}').", item.ID, item.FullPath ?? item.Name);
+      }
+      else if (existingItem.GetType() == typeof(DbItem) && item is DbTemplate)
+      {
+        message = string.Format("Unable to create the item based on the template '{0}'. An item with the same id has already been added ('{1}').", item.ID, existingItem.FullPath);
+      }
+      else
+      {
+        message = string.Format("An item with the same id has already been added ('{0}', '{1}').", item.ID, item.FullPath);
+      }
+
       throw new InvalidOperationException(message);
     }
   }
