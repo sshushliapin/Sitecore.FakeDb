@@ -97,8 +97,6 @@ namespace Sitecore.FakeDb.Data.Engines
 
       foreach (var child in item.Children)
       {
-        child.ParentID = item.ID;
-        child.FullPath = item.FullPath + "/" + child.Name;
         this.AddFakeItem(child);
       }
     }

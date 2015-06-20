@@ -5,6 +5,7 @@ namespace Sitecore.FakeDb
   using System.Collections.ObjectModel;
   using System.Diagnostics;
   using Sitecore.Data;
+  using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Security.AccessControl;
 
   [DebuggerDisplay("{FullPath}, {ID.ToString()}")]
@@ -53,21 +54,32 @@ namespace Sitecore.FakeDb
 
     public void Add(string fieldName, string fieldValue)
     {
+      Assert.ArgumentNotNull(fieldName, "fieldName");
+
       this.Fields.Add(fieldName, fieldValue);
     }
 
     public void Add(ID fieldId, string fieldValue)
     {
+      Assert.ArgumentNotNull(fieldId, "fieldId");
+
       this.Fields.Add(fieldId, fieldValue);
     }
 
     public void Add(DbField field)
     {
+      Assert.ArgumentNotNull(field, "field");
+
       this.Fields.Add(field);
     }
 
     public void Add(DbItem child)
     {
+      Assert.ArgumentNotNull(child, "child");
+
+      child.ParentID = this.ID;
+      child.FullPath = this.FullPath + "/" + child.Name;
+
       this.Children.Add(child);
     }
 
