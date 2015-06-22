@@ -753,10 +753,11 @@
     }
 
     [Fact]
-    public void ShouldThrowIfItemIdIsAlreadyExists()
+    public void ShouldThrowIfItemIdIsInUse()
     {
       // arrange
       var id = new ID("{57289DB1-1C33-46DF-A7BA-C214B7F4C54C}");
+
       using (var db = new Db { new DbItem("old home", id) })
       {
         // act
@@ -769,10 +770,11 @@
     }
 
     [Fact]
-    public void ShouldThrowIfTemplateIdIsAlreadyExists()
+    public void ShouldThrowIfTemplateIdIsInUseByOtherTemplate()
     {
       // arrange
       var id = new ID("{825697FD-5EED-47ED-8404-E9A47D7D6BDF}");
+
       using (var db = new Db { new DbTemplate("old product", id) })
       {
         // act
@@ -781,6 +783,24 @@
         // assert
         action.ShouldThrow<InvalidOperationException>()
               .WithMessage("A template with the same id has already been added ('{825697FD-5EED-47ED-8404-E9A47D7D6BDF}', 'new product').");
+      }
+    }
+
+    [Fact]
+    public void ShouldThrowIfTemplateIdIsInUseByOtherItem()
+    {
+      // arrange
+      var existingItemId = new ID("{61A9DB3D-8929-4472-A952-543F5304E341}");
+      var newItemTemplateId = existingItemId;
+
+      using (var db = new Db { new DbItem("existing item", existingItemId) })
+      {
+        // act
+        Action action = () => db.Add(new DbItem("new item", ID.NewID, newItemTemplateId));
+
+        // assert
+        action.ShouldThrow<InvalidOperationException>()
+              .WithMessage("Unable to create the item based on the template '{61A9DB3D-8929-4472-A952-543F5304E341}'. An item with the same id has already been added ('/sitecore/content/existing item').");
       }
     }
 
