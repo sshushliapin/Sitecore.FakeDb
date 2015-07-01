@@ -2,7 +2,6 @@ namespace Sitecore.FakeDb
 {
   using System.Collections;
   using System.Collections.Generic;
-  using System.Collections.ObjectModel;
   using System.Diagnostics;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
@@ -28,7 +27,7 @@ namespace Sitecore.FakeDb
       this.TemplateID = templateId;
       this.Access = new DbItemAccess();
       this.Fields = new DbFieldCollection();
-      this.Children = new Collection<DbItem>();
+      this.Children = new DbItemCollection();
       this.VersionsCount = new Dictionary<string, int>();
     }
 
