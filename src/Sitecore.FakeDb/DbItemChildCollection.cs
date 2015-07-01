@@ -3,24 +3,29 @@ namespace Sitecore.FakeDb
   using System.Collections;
   using System.Collections.Generic;
   using System.Collections.ObjectModel;
+  using System.Linq;
+  using Sitecore.Diagnostics;
 
-  public class DbItemCollection : ICollection<DbItem>
+  public class DbItemChildCollection : ICollection<DbItem>
   {
+    private readonly DbItem parent;
+
     private readonly ICollection<DbItem> innerCollection;
 
-    public DbItemCollection()
-      : this(new Collection<DbItem>())
+    public DbItemChildCollection(DbItem parent)
+      : this(parent, new Collection<DbItem>())
     {
     }
 
-    public DbItemCollection(ICollection<DbItem> innerCollection)
+    public DbItemChildCollection(DbItem parent, ICollection<DbItem> innerCollection)
     {
+      this.parent = parent;
       this.innerCollection = innerCollection;
     }
 
     public IEnumerator<DbItem> GetEnumerator()
     {
-      return this.innerCollection.GetEnumerator();
+      return this.innerCollection.ToList().GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -30,6 +35,11 @@ namespace Sitecore.FakeDb
 
     public void Add(DbItem item)
     {
+      Assert.ArgumentNotNull(item, "item");
+
+      item.ParentID = this.parent.ID;
+      item.FullPath = this.parent.FullPath + "/" + item.Name;
+
       this.innerCollection.Add(item);
     }
 

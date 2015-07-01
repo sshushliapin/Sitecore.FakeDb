@@ -5,10 +5,10 @@
   using Ploeh.AutoFixture.Xunit2;
   using Xunit;
 
-  public class DbItemCollectionTest
+  public class DbItemChildCollectionTest
   {
     [Theory, AutoData]
-    public void ShouldAdd(DbItem item, DbItemCollection sut)
+    public void ShouldAdd(DbItem item, DbItemChildCollection sut)
     {
       // act
       sut.Add(item);
@@ -18,7 +18,7 @@
     }
 
     [Theory, AutoData]
-    public void ShouldClear(DbItemCollection sut)
+    public void ShouldClear(DbItemChildCollection sut)
     {
       // act
       sut.Clear();
@@ -28,7 +28,7 @@
     }
 
     [Theory, AutoData]
-    public void ShouldCheckIfDoesNotContain(DbItem item, DbItemCollection sut)
+    public void ShouldCheckIfDoesNotContain(DbItem item, DbItemChildCollection sut)
     {
       // act
       var result = sut.Contains(item);
@@ -38,7 +38,7 @@
     }
 
     [Theory, AutoData]
-    public void ShouldCheckIfContains([Frozen]DbItem item, [Greedy]DbItemCollection sut)
+    public void ShouldCheckIfContains([Frozen]DbItem item, [Greedy]DbItemChildCollection sut)
     {
       // act
       var result = sut.Contains(item);
@@ -48,7 +48,7 @@
     }
 
     [Theory, AutoData]
-    public void ShouldCopyTo([Frozen]DbItem item, [Greedy]DbItemCollection sut)
+    public void ShouldCopyTo([Frozen]DbItem item, [Greedy]DbItemChildCollection sut)
     {
       // arrange
       var array = new DbItem[3];
@@ -61,7 +61,7 @@
     }
 
     [Theory, AutoData]
-    public void ShouldRemove([Frozen] DbItem item, [Greedy]DbItemCollection sut)
+    public void ShouldRemove([Frozen] DbItem item, [Greedy]DbItemChildCollection sut)
     {
       // act
       sut.Remove(item);
@@ -71,10 +71,10 @@
     }
 
     [Theory, AutoData]
-    public void ShouldCheckIfReadonly(ReadOnlyCollection<DbItem> items)
+    public void ShouldCheckIfReadonly(DbItem parent, ReadOnlyCollection<DbItem> items)
     {
       // arrange
-      var sut = new DbItemCollection(items);
+      var sut = new DbItemChildCollection(parent, items);
 
       // act
       var result = sut.IsReadOnly;
@@ -84,7 +84,7 @@
     }
 
     [Theory, AutoData]
-    public void ShouldCheckIfNotReadonly(DbItemCollection sut)
+    public void ShouldCheckIfNotReadonly(DbItemChildCollection sut)
     {
       // act
       var result = sut.IsReadOnly;
