@@ -27,10 +27,7 @@
       var oldParent = dataStorage.GetFakeItem(fakeItem.ParentID);
       oldParent.Children.Remove(fakeItem);
 
-      var destination = dataStorage.GetFakeItem(Destination.ID);
-
-      fakeItem.ParentID = destination.ID;
-      fakeItem.FullPath = destination.FullPath + "/" + this.Item.Name;
+      var destination = dataStorage.GetFakeItem(this.Destination.ID);
 
       destination.Children.Add(fakeItem);
 
