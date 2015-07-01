@@ -1355,5 +1355,25 @@
         baseTemplates.Should().NotBeNull();
       }
     }
+
+    [Fact]
+    public void ShouldGetItemChildByPathIfAddedUsingChildrenCollection()
+    {
+      // arrange
+      using (var db = new Db
+                {
+                  new DbItem("home")
+                    {
+                      Children = { new DbItem("sub-item") }
+                    }
+                })
+      {
+        // act
+        var item = db.GetItem("/sitecore/content/home/sub-item");
+
+        // assert
+        item.Should().NotBeNull();
+      }
+    }
   }
 }

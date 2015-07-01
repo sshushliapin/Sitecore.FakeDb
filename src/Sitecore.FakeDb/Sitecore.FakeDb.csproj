@@ -67,6 +67,7 @@
     <Compile Include="Data\Engines\ItemNames.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
     <Compile Include="DbFieldIds.cs" />
+    <Compile Include="DbItemChildCollection.cs" />
     <Compile Include="FieldNamingHelper.cs" />
     <Compile Include="Data\IDTables\IDTableProviderSwitcher.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />

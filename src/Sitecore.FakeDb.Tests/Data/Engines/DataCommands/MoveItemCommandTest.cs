@@ -36,7 +36,7 @@
       this.database.Engines.DataEngine.Commands.GetParentPrototype = getParentCommand;
 
       var fakeItem = new DbItem("item", itemId) { ParentID = parentId };
-      var fakeParent = new DbItem("parent") { Children = { fakeItem } };
+      var fakeParent = new DbItem("parent", parentId) { Children = { fakeItem } };
       var fakeDestination = new DbItem("destination", destinationId) { FullPath = "/new destination path" };
 
       this.dataStorage.GetFakeItem(itemId).Returns(fakeItem);
