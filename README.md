@@ -1,5 +1,9 @@
+
 Sitecore FakeDb
 ===============
+
+![#](https://img.shields.io/nuget/dt/Sitecore.FakeDb.svg)
+![#](https://img.shields.io/nuget/v/Sitecore.FakeDb.svg)
 
 This is the unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory. It is designed to minimize efforts for the test content initialization keeping focus on the minimal test data rather than comprehensive content tree representation.
 
