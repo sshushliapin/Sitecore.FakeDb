@@ -2,9 +2,9 @@ namespace Sitecore.FakeDb
 {
   using System.Collections;
   using System.Collections.Generic;
-  using System.Collections.ObjectModel;
   using System.Diagnostics;
   using Sitecore.Data;
+  using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Security.AccessControl;
 
   [DebuggerDisplay("{FullPath}, {ID.ToString()}")]
@@ -27,7 +27,7 @@ namespace Sitecore.FakeDb
       this.TemplateID = templateId;
       this.Access = new DbItemAccess();
       this.Fields = new DbFieldCollection();
-      this.Children = new Collection<DbItem>();
+      this.Children = new DbItemChildCollection(this);
       this.VersionsCount = new Dictionary<string, int>();
     }
 
@@ -53,21 +53,29 @@ namespace Sitecore.FakeDb
 
     public void Add(string fieldName, string fieldValue)
     {
+      Assert.ArgumentNotNull(fieldName, "fieldName");
+
       this.Fields.Add(fieldName, fieldValue);
     }
 
     public void Add(ID fieldId, string fieldValue)
     {
+      Assert.ArgumentNotNull(fieldId, "fieldId");
+
       this.Fields.Add(fieldId, fieldValue);
     }
 
     public void Add(DbField field)
     {
+      Assert.ArgumentNotNull(field, "field");
+
       this.Fields.Add(field);
     }
 
     public void Add(DbItem child)
     {
+      Assert.ArgumentNotNull(child, "child");
+
       this.Children.Add(child);
     }
 

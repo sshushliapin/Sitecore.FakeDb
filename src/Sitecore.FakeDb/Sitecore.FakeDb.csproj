@@ -67,6 +67,7 @@
     <Compile Include="Data\Engines\ItemNames.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
     <Compile Include="DbFieldIds.cs" />
+    <Compile Include="DbItemChildCollection.cs" />
     <Compile Include="FieldNamingHelper.cs" />
     <Compile Include="Data\IDTables\IDTableProviderSwitcher.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />
@@ -85,7 +86,6 @@
     <Compile Include="Pipelines\AddDbItem\EnsureIsChild.cs" />
     <Compile Include="Pipelines\AddDbItem\SetFullPath.cs" />
     <Compile Include="Pipelines\AddDbItem\CreateItem.cs" />
-    <Compile Include="Pipelines\AddDbItem\CreateChildren.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ReleaseDbArgs.cs" />
     <Compile Include="Pipelines\GetTranslation\GetFakeTranslation.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitGlobals.cs" />

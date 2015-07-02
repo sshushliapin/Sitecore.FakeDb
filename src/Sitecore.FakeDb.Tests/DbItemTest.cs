@@ -1,7 +1,9 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
+  using System;
   using System.Linq;
   using FluentAssertions;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.FakeDb.Security.AccessControl;
   using Xunit;
@@ -95,6 +97,46 @@
 
       // act & assert
       item.Access.CanRead.Should().BeFalse();
+    }
+
+    [Theory, AutoData]
+    public void ShouldThrowIfFieldNameIsNull(DbItem item, string value)
+    {
+      // act
+      Action action = () => item.Add((string)null, value);
+
+      // assert
+      action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: fieldName");
+    }
+
+    [Theory, AutoData]
+    public void ShouldThrowIfFieldIdIsNull(DbItem item, string value)
+    {
+      // act
+      Action action = () => item.Add((ID)null, value);
+
+      // assert
+      action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: fieldId");
+    }
+
+    [Theory, AutoData]
+    public void ShouldThrowIfFieldIsNull(DbItem item)
+    {
+      // act
+      Action action = () => item.Add((DbField)null);
+
+      // assert
+      action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: field");
+    }
+
+    [Theory, AutoData]
+    public void ShouldThrowIChildItemIsNull(DbItem item)
+    {
+      // act
+      Action action = () => item.Add((DbItem)null);
+
+      // assert
+      action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: child");
     }
   }
 }
