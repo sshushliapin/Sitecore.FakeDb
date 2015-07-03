@@ -3,6 +3,7 @@ namespace Sitecore.FakeDb
   using System.Collections;
   using System.Collections.Generic;
   using System.Diagnostics;
+  using System.Linq;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Security.AccessControl;
@@ -29,6 +30,18 @@ namespace Sitecore.FakeDb
       this.Fields = new DbFieldCollection();
       this.Children = new DbItemChildCollection(this);
       this.VersionsCount = new Dictionary<string, int>();
+    }
+
+    public DbItem(string name, ID id, ID templateId, params DbItem[] children)
+      : this(name, id, templateId)
+    {
+      if (children != null && children.Any())
+      {
+        foreach (var child in children)
+        {
+          this.Add(child);
+        }
+      }
     }
 
     public string Name { get; set; }

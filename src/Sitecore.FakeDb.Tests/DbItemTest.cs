@@ -66,6 +66,19 @@
     }
 
     [Fact]
+    public void ShouldCreateItemWithChildren()
+    {
+      // arrange
+      var child = new DbItem("child");
+
+      // act
+      var item = new DbItem("home", ID.NewID, ID.NewID, child);
+
+      // assert
+      item.Children.Single().Should().BeEquivalentTo(child);
+    }
+
+    [Fact]
     public void ShouldAddChildItem()
     {
       // arrange
