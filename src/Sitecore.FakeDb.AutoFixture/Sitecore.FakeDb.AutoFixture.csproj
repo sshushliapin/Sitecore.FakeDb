@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoDbCustomization.cs" />
+    <Compile Include="ContentItemCustomization.cs" />
+    <Compile Include="ContentItemGenerator.cs" />
     <Compile Include="DatabaseSpecimenBuilder.cs" />
     <Compile Include="ItemSpecimenBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
