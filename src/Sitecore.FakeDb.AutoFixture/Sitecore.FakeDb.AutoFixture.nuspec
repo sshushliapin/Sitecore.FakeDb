@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/sergeyshushlyapin/Sitecore.FakeDb/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/sergeyshushlyapin/Sitecore.FakeDb</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <tags>Sitecore unit-testing testing in-memory TDD mocking mocks</tags>
+    <dependencies>
+      <dependency id="Sitecore.FakeDb" version="$version$" />
+      <dependency id="AutoFixture" version="$version$" />
+    </dependencies>
+  </metadata>
+</package>

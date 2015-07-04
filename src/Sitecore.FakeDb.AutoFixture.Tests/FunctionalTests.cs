@@ -22,7 +22,7 @@
     {
       // act
       var result = Database.GetDatabase("master").GetItem(item.ID);
-      
+
       // assert
       result.Should().NotBeNull();
     }
@@ -37,13 +37,9 @@
       result.Should().NotBeNull();
     }
 
-    [Theory, AutoDbData]
+    [Theory(Skip = "To be implemented"), AutoDbData]
     public void ShouldAddContentDbItem(Db db, DbItem item)
     {
-      // arrange
-      // TODO: Special cpecimen builder required.
-      item.ParentID = ItemIDs.ContentRoot;
-      
       // act
       db.Add(item);
 

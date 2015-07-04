@@ -24,8 +24,12 @@
 
   <ItemGroup>
     <TestAssemblies Include="$(FakeDbTestsOutDir)\Sitecore.FakeDb.Tests.dll" />
+    <TestAssemblies Include="$(AutoFixtureTestsOutDir)\Sitecore.FakeDb.AutoFixture.Tests.dll" />
     <TestAssemblies Include="$(NSubstituteTestsOutDir)\Sitecore.FakeDb.NSubstitute.Tests.dll" />
     <TestAssemblies Include="$(SerializationTestsOutDir)\Sitecore.FakeDb.Serialization.Tests.dll" />
+    <TestAssemblies Include="$(FakeDbTestsOutDir)\Sitecore.FakeDb.Tests.dll">
+      <ConfigFile>$(AutoFixtureTestsOutDir)\Sitecore.FakeDb.AutoFixture.Tests.dll.config</ConfigFile>
+    </TestAssemblies>
     <TestAssemblies Include="$(FakeDbTestsOutDir)\Sitecore.FakeDb.Tests.dll">
       <ConfigFile>$(NSubstituteTestsOutDir)\Sitecore.FakeDb.NSubstitute.Tests.dll.config</ConfigFile>
     </TestAssemblies>
@@ -42,18 +46,21 @@
     <MakeDir Directories="$(DeployFolder)" />
 
     <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(FakeDbTestsDir)\App.config" OutputPaths="$(FakeDbDir)\App.config" />
+    <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(AutoFixtureTestsDir)\App.config" OutputPaths="$(AutoFixtureTestsDir)\App.config.transform" />
     <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(NSubstituteTestsDir)\App.config" OutputPaths="$(NSubstituteTestsDir)\App.config.transform" />
     <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(SerializationTestsDir)\App.config" OutputPaths="$(SerializationTestsDir)\App.config.transform" />
 
     <Copy SourceFiles="$(FakeDbTestsDir)\App_Config\FieldTypes.config" DestinationFolder="$(FakeDbDir)\App_config\" />
 
     <Exec Command="$(NuGet) pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
+    <Exec Command="$(NuGet) pack Sitecore.FakeDb.AutoFixture/Sitecore.FakeDb.AutoFixture.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) pack Sitecore.FakeDb.NSubstitute/Sitecore.FakeDb.NSubstitute.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) pack Sitecore.FakeDb.Serialization/Sitecore.FakeDb.Serialization.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
 
     <Delete Files="$(FakeDbDir)\App.config" />
     <RemoveDir Directories="$(FakeDbDir)\App_Config\" />
     <Delete Files="$(FakeDbTestsDir)\App.config.transform" />
+    <Delete Files="$(AutoFixtureTestsDir)\App.config.transform" />
     <Delete Files="$(NSubstituteTestsDir)\App.config.transform" />
     <Delete Files="$(SerializationTestsDir)\App.config.transform" />
   </Target>
@@ -71,6 +78,7 @@
 
   <Target Name="Deploy" DependsOnTargets="Versions">
     <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
+    <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.AutoFixture.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.NSubstitute.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
     <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.Serialization.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
   </Target>
