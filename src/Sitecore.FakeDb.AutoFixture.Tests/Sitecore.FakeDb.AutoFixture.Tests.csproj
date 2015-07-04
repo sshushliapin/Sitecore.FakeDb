@@ -79,11 +79,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddContentDbItemCommandTest.cs" />
     <Compile Include="AutoDbCustomizatonTest.cs" />
     <Compile Include="ContentAttribute.cs" />
     <Compile Include="ContentAttributeTest.cs" />
     <Compile Include="ContentItemCustomizationTest.cs" />
-    <Compile Include="ContentItemGeneratorTest.cs" />
+    <Compile Include="AddContentItemCommandTest.cs" />
     <Compile Include="DatabaseSpecimenBuilderTest.cs" />
     <Compile Include="ItemSpecimenBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

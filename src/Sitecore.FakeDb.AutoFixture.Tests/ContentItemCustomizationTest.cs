@@ -1,24 +1,23 @@
 ﻿namespace Sitecore.FakeDb.AutoFixture.Tests
 {
+  using System;
   using FluentAssertions;
-  using Ploeh.AutoFixture;
   using Xunit;
 
   public class ContentItemCustomizationTest
   {
-    [Fact(Skip = "To be fixed.")]
-    public void ShouldAddBuilder()
+    [Fact]
+    public void ShouldThrowIfFeatureIsNull()
     {
       // arrange
-      var fixture = new Fixture();
-
       var sut = new ContentItemCustomization();
 
       // act
-      sut.Customize(fixture);
+      Action action = () => sut.Customize(null);
 
       // assert
-      fixture.Customizations.Should().Contain(x => x.GetType() == typeof(ContentItemGenerator));
+      action.ShouldThrow<ArgumentNullException>()
+            .WithMessage("Value cannot be null.\r\nParameter name: fixture");
     }
   }
 }

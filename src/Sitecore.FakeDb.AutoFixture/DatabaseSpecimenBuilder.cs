@@ -12,6 +12,7 @@
         return new NoSpecimen(request);
       }
 
+      // TODO: Remove the hardcode.
       return Database.GetDatabase("master");
     }
   }
