@@ -3,7 +3,6 @@ namespace Sitecore.FakeDb
   using System.Collections;
   using System.Collections.Generic;
   using System.Diagnostics;
-  using System.Linq;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Security.AccessControl;
@@ -35,7 +34,7 @@ namespace Sitecore.FakeDb
     public DbItem(string name, ID id, ID templateId, params DbItem[] children)
       : this(name, id, templateId)
     {
-      if (children != null && children.Any())
+      if (children != null)
       {
         foreach (var child in children)
         {
