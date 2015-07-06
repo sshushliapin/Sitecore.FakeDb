@@ -3,7 +3,6 @@
   using System;
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Fields;
   using Sitecore.FakeDb.Data;
@@ -11,54 +10,58 @@
   using Sitecore.FakeDb.Data.Items;
   using Xunit;
 
-  public class FakeStandardValuesProviderTest : IDisposable
+  public class FakeStandardValuesProviderTest
   {
-    private readonly FakeStandardValuesProvider provider;
-
-    private readonly Database database;
-
-    public FakeStandardValuesProviderTest()
-    {
-      this.provider = new FakeStandardValuesProvider();
-      this.database = Factory.GetDatabase("master");
-    }
-
     [Fact]
     public void ShouldRequireDataStorage()
     {
+      // arrange
+      var sut = new FakeStandardValuesProvider();
+
       // act & assert
-      provider.Should().BeAssignableTo<IRequireDataStorage>();
+      sut.Should().BeAssignableTo<IRequireDataStorage>();
     }
 
     [Fact]
     public void ShouldSetDataStorage()
     {
       // arrange
-      var storage = Substitute.For<DataStorage>(this.database);
+      var storage = Substitute.For<DataStorage>(Database.GetDatabase("master"));
+      var sut = new FakeStandardValuesProvider();
 
       // act
-      ((IRequireDataStorage)this.provider).SetDataStorage(storage);
+      ((IRequireDataStorage)sut).SetDataStorage(storage);
 
       // assert
-      ((IRequireDataStorage)this.provider).DataStorage.Should().BeSameAs(storage);
+      ((IRequireDataStorage)sut).DataStorage.Should().BeSameAs(storage);
     }
 
     [Fact]
     public void ShouldReturnEmptyStringIfNoTemplateFound()
     {
       // arrange
-      var storage = Substitute.For<DataStorage>(this.database);
-      ((IRequireDataStorage)this.provider).SetDataStorage(storage);
-
-      var field = new Field(ID.NewID, ItemHelper.CreateInstance(this.database));
+      var storage = Substitute.For<DataStorage>(Database.GetDatabase("master"));
+      var field = new Field(ID.NewID, ItemHelper.CreateInstance());
+      var sut = new FakeStandardValuesProvider();
+      ((IRequireDataStorage)sut).SetDataStorage(storage);
 
       // act & assert
-      this.provider.GetStandardValue(field).Should().BeEmpty();
+      sut.GetStandardValue(field).Should().BeEmpty();
     }
 
-    public void Dispose()
+    [Fact]
+    public void ShouldThrowIfNoDataStorageSet()
     {
-      Factory.Reset();
+      // arrange
+      var field = new Field(ID.NewID, ItemHelper.CreateInstance());
+      var sut = new FakeStandardValuesProvider();
+
+      // act
+      Action action = () => sut.GetStandardValue(field);
+
+      // assert
+      action.ShouldThrow<InvalidOperationException>()
+            .WithMessage("DataStorage cannot be null.");
     }
   }
 }
