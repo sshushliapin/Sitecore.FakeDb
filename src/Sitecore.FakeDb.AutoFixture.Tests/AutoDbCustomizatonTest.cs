@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.AutoFixture.Tests
 {
+  using System;
   using FluentAssertions;
   using Ploeh.AutoFixture;
   using Sitecore.Data;
@@ -49,6 +50,20 @@
 
       // assert
       ruleContext.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void ShouldInitializeDatabase()
+    {
+      // arrange
+      var fixture = new Fixture();
+      fixture.Customize(new AutoDbCustomization());
+
+      // act
+      Action action = () => Database.GetDatabase("master").GetItem("/sitecore/content");
+
+      // assert
+      action.ShouldNotThrow();
     }
   }
 }
