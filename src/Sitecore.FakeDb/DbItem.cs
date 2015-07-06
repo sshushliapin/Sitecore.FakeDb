@@ -10,17 +10,17 @@ namespace Sitecore.FakeDb
   [DebuggerDisplay("{FullPath}, {ID.ToString()}")]
   public class DbItem : IEnumerable
   {
-    public DbItem(string name)
-      : this(name, ID.NewID)
+    public DbItem(string name, params DbItem[] children)
+      : this(name, ID.NewID, children)
     {
     }
 
-    public DbItem(string name, ID id)
-      : this(name, id, ID.Null)
+    public DbItem(string name, ID id, params DbItem[] children)
+      : this(name, id, ID.Null, children)
     {
     }
 
-    public DbItem(string name, ID id, ID templateId)
+    public DbItem(string name, ID id, ID templateId, params DbItem[] children)
     {
       this.Name = !string.IsNullOrEmpty(name) ? name : id.ToShortID().ToString();
       this.ID = id;
@@ -29,11 +29,7 @@ namespace Sitecore.FakeDb
       this.Fields = new DbFieldCollection();
       this.Children = new DbItemChildCollection(this);
       this.VersionsCount = new Dictionary<string, int>();
-    }
 
-    public DbItem(string name, ID id, ID templateId, params DbItem[] children)
-      : this(name, id, templateId)
-    {
       if (children != null)
       {
         foreach (var child in children)

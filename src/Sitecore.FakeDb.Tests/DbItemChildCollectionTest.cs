@@ -7,7 +7,7 @@
 
   public class DbItemChildCollectionTest
   {
-    [Theory, AutoData]
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
     public void ShouldAdd(DbItem item, DbItemChildCollection sut)
     {
       // act
@@ -17,7 +17,7 @@
       sut.Count.Should().Be(1);
     }
 
-    [Theory, AutoData]
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
     public void ShouldClear(DbItemChildCollection sut)
     {
       // act
@@ -27,7 +27,7 @@
       sut.Count.Should().Be(0);
     }
 
-    [Theory, AutoData]
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
     public void ShouldCheckIfDoesNotContain(DbItem item, DbItemChildCollection sut)
     {
       // act
@@ -37,7 +37,7 @@
       result.Should().BeFalse();
     }
 
-    [Theory, AutoData]
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
     public void ShouldCheckIfContains([Frozen]DbItem item, [Greedy]DbItemChildCollection sut)
     {
       // act
@@ -47,7 +47,7 @@
       result.Should().BeTrue();
     }
 
-    [Theory, AutoData]
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
     public void ShouldCopyTo([Frozen]DbItem item, [Greedy]DbItemChildCollection sut)
     {
       // arrange
@@ -60,7 +60,7 @@
       array.Should().Contain(item);
     }
 
-    [Theory, AutoData]
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
     public void ShouldRemove([Frozen] DbItem item, [Greedy]DbItemChildCollection sut)
     {
       // act
@@ -70,8 +70,8 @@
       sut.Count.Should().Be(2);
     }
 
-    [Theory, AutoData]
-    public void ShouldCheckIfReadonly(DbItem parent, ReadOnlyCollection<DbItem> items)
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
+    public void ShouldCheckIfReadonly([Frozen] DbItem parent, ReadOnlyCollection<DbItem> items)
     {
       // arrange
       var sut = new DbItemChildCollection(parent, items);
@@ -83,7 +83,7 @@
       result.Should().BeTrue();
     }
 
-    [Theory, AutoData]
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
     public void ShouldCheckIfNotReadonly(DbItemChildCollection sut)
     {
       // act

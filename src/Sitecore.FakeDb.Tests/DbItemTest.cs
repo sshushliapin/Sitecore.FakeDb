@@ -48,7 +48,7 @@
     [Fact]
     public void ShouldAddFieldByNameAndValue()
     {
-      // arrange 
+      // arrange
       var item = new DbItem("home") { { "Title", "Welcome!" } };
 
       // act & assert
@@ -58,7 +58,7 @@
     [Fact]
     public void ShouldAddFieldByIdAndValue()
     {
-      // arrange 
+      // arrange
       var item = new DbItem("home") { { FieldIDs.Hidden, "1" } };
 
       // act & assert
@@ -66,7 +66,33 @@
     }
 
     [Fact]
-    public void ShouldCreateItemWithChildren()
+    public void ShouldCreateItemWithChildrenProvidingName()
+    {
+      // arrange
+      var child = new DbItem("child");
+
+      // act
+      var item = new DbItem("home", child);
+
+      // assert
+      item.Children.Single().Should().BeEquivalentTo(child);
+    }
+
+    [Fact]
+    public void ShouldCreateItemWithChildrenProvidingNameAndId()
+    {
+      // arrange
+      var child = new DbItem("child");
+
+      // act
+      var item = new DbItem("home", ID.NewID, child);
+
+      // assert
+      item.Children.Single().Should().BeEquivalentTo(child);
+    }
+
+    [Fact]
+    public void ShouldCreateItemWithChildrenProvidingNameIdAndTemplateId()
     {
       // arrange
       var child = new DbItem("child");
@@ -76,6 +102,30 @@
 
       // assert
       item.Children.Single().Should().BeEquivalentTo(child);
+    }
+
+    [Fact]
+    public void ShouldCreateItemButNotAddChildrenProvidingNameIdAndTemplateIdIfChildrenObjectIsNull()
+    {
+      // arrange
+
+      // act
+      var item = new DbItem("home", ID.NewID, ID.NewID, null);
+
+      // assert
+      item.Children.Count.Should().Be(0);
+    }
+
+    [Fact]
+    public void ShouldThrowExceptionTryingToCreateItemWithNullChildItem()
+    {
+      // arrange
+
+      // act & assert
+      Action action = () => new DbItem("home", ID.NewID, ID.NewID, (DbItem)null);
+
+      // assert
+      action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: child");
     }
 
     [Fact]
@@ -112,7 +162,7 @@
       item.Access.CanRead.Should().BeFalse();
     }
 
-    [Theory, AutoData]
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
     public void ShouldThrowIfFieldNameIsNull(DbItem item, string value)
     {
       // act
@@ -122,7 +172,7 @@
       action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: fieldName");
     }
 
-    [Theory, AutoData]
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
     public void ShouldThrowIfFieldIdIsNull(DbItem item, string value)
     {
       // act
@@ -132,7 +182,7 @@
       action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: fieldId");
     }
 
-    [Theory, AutoData]
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
     public void ShouldThrowIfFieldIsNull(DbItem item)
     {
       // act
@@ -142,7 +192,7 @@
       action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: field");
     }
 
-    [Theory, AutoData]
+    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
     public void ShouldThrowIChildItemIsNull(DbItem item)
     {
       // act
