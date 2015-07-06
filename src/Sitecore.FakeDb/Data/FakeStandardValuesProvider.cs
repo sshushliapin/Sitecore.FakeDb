@@ -23,7 +23,7 @@
     {
       var templateId = field.Item.TemplateID;
 
-      Assert.IsNotNull(this.storage, "DataStorage cannot be null.");
+      Assert.IsNotNull(this.DataStorage, "DataStorage cannot be null.");
 
       var template = this.DataStorage.GetFakeTemplate(templateId);
 
