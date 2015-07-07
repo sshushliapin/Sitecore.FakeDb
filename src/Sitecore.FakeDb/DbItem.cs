@@ -3,6 +3,7 @@ namespace Sitecore.FakeDb
   using System.Collections;
   using System.Collections.Generic;
   using System.Diagnostics;
+  using System.Linq;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Security.AccessControl;
@@ -10,17 +11,17 @@ namespace Sitecore.FakeDb
   [DebuggerDisplay("{FullPath}, {ID.ToString()}")]
   public class DbItem : IEnumerable
   {
-    public DbItem(string name)
-      : this(name, ID.NewID)
+    public DbItem(string name, params object[] children)
+      : this(name, ID.NewID, children)
     {
     }
 
-    public DbItem(string name, ID id)
-      : this(name, id, ID.Null)
+    public DbItem(string name, ID id, params object[] children)
+      : this(name, id, ID.Null, children)
     {
     }
 
-    public DbItem(string name, ID id, ID templateId)
+    public DbItem(string name, ID id, ID templateId, params object[] children)
     {
       this.Name = !string.IsNullOrEmpty(name) ? name : id.ToShortID().ToString();
       this.ID = id;
@@ -29,6 +30,15 @@ namespace Sitecore.FakeDb
       this.Fields = new DbFieldCollection();
       this.Children = new DbItemChildCollection(this);
       this.VersionsCount = new Dictionary<string, int>();
+
+      if (children != null)
+      {
+        var items = children.OfType<DbItem>();
+        foreach (var item in items)
+        {
+          this.Add(item);
+        }
+      }
     }
 
     public string Name { get; set; }

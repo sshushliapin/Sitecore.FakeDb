@@ -71,7 +71,7 @@
     }
 
     [Theory, AutoData]
-    public void ShouldCheckIfReadonly(DbItem parent, ReadOnlyCollection<DbItem> items)
+    public void ShouldCheckIfReadonly([Frozen] DbItem parent, ReadOnlyCollection<DbItem> items)
     {
       // arrange
       var sut = new DbItemChildCollection(parent, items);

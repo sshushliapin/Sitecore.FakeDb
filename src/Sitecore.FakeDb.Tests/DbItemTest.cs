@@ -48,7 +48,7 @@
     [Fact]
     public void ShouldAddFieldByNameAndValue()
     {
-      // arrange 
+      // arrange
       var item = new DbItem("home") { { "Title", "Welcome!" } };
 
       // act & assert
@@ -58,11 +58,74 @@
     [Fact]
     public void ShouldAddFieldByIdAndValue()
     {
-      // arrange 
+      // arrange
       var item = new DbItem("home") { { FieldIDs.Hidden, "1" } };
 
       // act & assert
       item.Fields.Should().ContainSingle(f => f.ID == FieldIDs.Hidden && f.Value == "1");
+    }
+
+    [Fact]
+    public void ShouldCreateItemWithChildrenProvidingName()
+    {
+      // arrange
+      var child = new DbItem("child");
+
+      // act
+      var item = new DbItem("home", child);
+
+      // assert
+      item.Children.Single().Should().BeEquivalentTo(child);
+    }
+
+    [Fact]
+    public void ShouldCreateItemWithChildrenProvidingNameAndId()
+    {
+      // arrange
+      var child = new DbItem("child");
+
+      // act
+      var item = new DbItem("home", ID.NewID, child);
+
+      // assert
+      item.Children.Single().Should().BeEquivalentTo(child);
+    }
+
+    [Fact]
+    public void ShouldCreateItemWithChildrenProvidingNameIdAndTemplateId()
+    {
+      // arrange
+      var child = new DbItem("child");
+
+      // act
+      var item = new DbItem("home", ID.NewID, ID.NewID, child);
+
+      // assert
+      item.Children.Single().Should().BeEquivalentTo(child);
+    }
+
+    [Fact]
+    public void ShouldCreateItemButNotAddChildrenProvidingNameIdAndTemplateIdIfChildrenObjectIsNull()
+    {
+      // arrange
+
+      // act
+      var item = new DbItem("home", ID.NewID, ID.NewID, null);
+
+      // assert
+      item.Children.Count.Should().Be(0);
+    }
+
+    [Fact]
+    public void ShouldCreateItemButNotAssignChildrenThatAreNotDbItems()
+    {
+      // arrange
+
+      // act
+      var item = new DbItem("home", ID.NewID, ID.NewID, null, new object());
+
+      // assert
+      item.Children.Count.Should().Be(0);
     }
 
     [Fact]
