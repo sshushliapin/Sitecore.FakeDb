@@ -26,16 +26,7 @@
       }
 
       var serializer = new AccessRuleSerializer();
-
-      // TODO: Should not require to check if Security field is exists
-      if (item.Fields.Any(f => f.ID == FieldIDs.Security))
-      {
-        item.Fields[FieldIDs.Security].Value = serializer.Serialize(rules);
-      }
-      else
-      {
-        item.Fields.Add(new DbField("__Security", FieldIDs.Security) { Value = serializer.Serialize(rules) });
-      }
+      item.Fields.Add(new DbField("__Security", FieldIDs.Security) { Value = serializer.Serialize(rules) });
     }
 
     protected virtual void FillAccessRules(AccessRuleCollection rules, DbItemAccess itemAccess, AccessRight accessRight, Func<DbItemAccess, bool?> canAct)

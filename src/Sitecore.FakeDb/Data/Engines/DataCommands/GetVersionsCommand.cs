@@ -32,7 +32,6 @@
         versionsCount = dbitem.VersionsCount[language];
       }
 
-      // TODO:[Minor] Should be moved to independent 'addDbItem' processor.
       foreach (var field in dbitem.Fields)
       {
         if (!field.Values.ContainsKey(language))

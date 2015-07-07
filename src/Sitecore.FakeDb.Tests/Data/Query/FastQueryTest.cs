@@ -5,7 +5,6 @@
   using FluentAssertions;
   using Sitecore.Data;
   using Xunit;
-  using Xunit.Extensions;
 
   public class FastQueryTest
   {
@@ -88,12 +87,6 @@
     [InlineData("fast:/sitecore/content/Home//*[@@templateid = '{F348C2A0-73B8-4AF4-BD9E-2C5901908369}']", "Square,Triangle,Circle")]
     [InlineData("fast:/sitecore/content/Home//*[@@templatename = 'Shape']", "Square,Triangle,Circle")]
     [InlineData("fast:/sitecore/content/Home//*[@@templatekey = 'product']", "Stylish Bag,New Document,Table,Jacket,Old Document,Hammer")]
-
-    // TODO: Implement search by master id
-    // [InlineData("fast:/sitecore/content/Home//*[@@masterid='{47D22B69-AADC-4A79-9347-E0AD225F84FB}']", "")]
-
-    // TODO: Implement search by parent id
-    // [InlineData("fast:/sitecore/content/Home//*[@@parentid = '{8F906BEE-BA50-429F-9DCC-3EC4794FA182}']", "Stylish Bag,Table,Jacket,Documents,Hammer")]
     [InlineData("fast:/sitecore/content/Home//*[@@name='Jacket']/ancestor::*", "sitecore,Products,content,Home")]
     [InlineData("fast:/sitecore/content/Home/Products/Documents/parent::*/child::*", "Documents,Hammer,Jacket,Stylish Bag,Table")]
     [InlineData("fast:/sitecore/content/Home/Products/Documents/../*", "Documents,Hammer,Jacket,Stylish Bag,Table")]
@@ -119,7 +112,6 @@
                               new DbItem("Greeting Page") { { "Title", "Welcome to Sitecore" } },
                               new DbItem("Products", new ID("{8F906BEE-BA50-429F-9DCC-3EC4794FA182}"))
                                 {
-                                  // TODO: Would be nice to guess the template id somehow
                                   new DbItem("Hammer", ID.NewID, productTemplateId) { { "Available", "1" } },
                                   new DbItem("Jacket", ID.NewID, productTemplateId),
                                   new DbItem("Stylish Bag", new ID("{787EE6C5-0885-495D-855E-1D129C643E55}"), productTemplateId),

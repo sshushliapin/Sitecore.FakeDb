@@ -20,7 +20,6 @@
       template.StandardValues.Should().NotBeNull();
     }
 
-    // TODO:[High] The test below states that we cannot get fake item fields by id.
     [Fact]
     public void ShouldCreateTemplateFieldsUsingNamesAsLowercaseKeys()
     {
