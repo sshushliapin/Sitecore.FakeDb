@@ -165,7 +165,6 @@
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
     <Compile Include="Links\LinkManagerTest.cs" />
-    <Compile Include="OmitOnRecursionFixture.cs" />
     <Compile Include="Pipelines\AddDbItem\AddVersionTest.cs" />
     <Compile Include="Pipelines\AddDbItem\CreateTemplateTest.cs" />
     <Compile Include="Pipelines\AddDbItem\SetParentTest.cs" />

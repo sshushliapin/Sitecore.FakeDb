@@ -7,7 +7,7 @@
 
   public class DbItemChildCollectionTest
   {
-    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
+    [Theory, AutoData]
     public void ShouldAdd(DbItem item, DbItemChildCollection sut)
     {
       // act
@@ -17,7 +17,7 @@
       sut.Count.Should().Be(1);
     }
 
-    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
+    [Theory, AutoData]
     public void ShouldClear(DbItemChildCollection sut)
     {
       // act
@@ -27,7 +27,7 @@
       sut.Count.Should().Be(0);
     }
 
-    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
+    [Theory, AutoData]
     public void ShouldCheckIfDoesNotContain(DbItem item, DbItemChildCollection sut)
     {
       // act
@@ -37,7 +37,7 @@
       result.Should().BeFalse();
     }
 
-    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
+    [Theory, AutoData]
     public void ShouldCheckIfContains([Frozen]DbItem item, [Greedy]DbItemChildCollection sut)
     {
       // act
@@ -47,7 +47,7 @@
       result.Should().BeTrue();
     }
 
-    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
+    [Theory, AutoData]
     public void ShouldCopyTo([Frozen]DbItem item, [Greedy]DbItemChildCollection sut)
     {
       // arrange
@@ -60,7 +60,7 @@
       array.Should().Contain(item);
     }
 
-    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
+    [Theory, AutoData]
     public void ShouldRemove([Frozen] DbItem item, [Greedy]DbItemChildCollection sut)
     {
       // act
@@ -70,7 +70,7 @@
       sut.Count.Should().Be(2);
     }
 
-    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
+    [Theory, AutoData]
     public void ShouldCheckIfReadonly([Frozen] DbItem parent, ReadOnlyCollection<DbItem> items)
     {
       // arrange
@@ -83,7 +83,7 @@
       result.Should().BeTrue();
     }
 
-    [Theory, AutoData(typeof(OmitOnRecursionFixture))]
+    [Theory, AutoData]
     public void ShouldCheckIfNotReadonly(DbItemChildCollection sut)
     {
       // act
