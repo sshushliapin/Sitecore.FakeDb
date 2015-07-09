@@ -41,8 +41,14 @@
         return new KeyValuePair<ID, string>(id, name);
       }
 
+      ID newId;
+      if (ID.TryParse(name, out newId))
+      {
+        return new KeyValuePair<ID, string>(newId, name);
+      }
+
       var keyValuePair = WellknownFields.FirstOrDefault(kvp => kvp.Value == name);
-      var newId = !ID.IsNullOrEmpty(keyValuePair.Key) ? keyValuePair.Key : ID.NewID;
+      newId = !ID.IsNullOrEmpty(keyValuePair.Key) ? keyValuePair.Key : ID.NewID;
 
       return new KeyValuePair<ID, string>(newId, name);
     }
