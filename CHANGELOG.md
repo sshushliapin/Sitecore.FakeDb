@@ -1,4 +1,11 @@
-﻿0.27.2
+﻿0.28.0
+* [NEW] #45: DbItem constructor with children params (thanks to @maxshell)
+* [NEW] #75: FakeDb should try to 'guess' a field Id trying to parse an item name
+* [FIX] #68: Register the `getFieldValue` pipeline
+* [FIX] #69: Unclear exception message when creates an **item** using template id which is already in use
+* [FIX] #72: Cannot get a child item by path if the item is added using the Children collection
+
+0.27.2
 * [FIX] #64: Cannot set and get the `__Final Renderings` field value (Sitecore 7.2)
 * [FIX] #67: Exception when trying to retrieve BaseTemplates
 
