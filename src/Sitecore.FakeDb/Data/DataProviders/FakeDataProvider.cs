@@ -67,7 +67,6 @@
       var list = new List<VersionUri>();
       var versions = new VersionUriList();
 
-      // TODO:[High] Shouldn't throw?
       if (this.DataStorage == null)
       {
         return versions;

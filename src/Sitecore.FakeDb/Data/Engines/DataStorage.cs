@@ -75,7 +75,6 @@ namespace Sitecore.FakeDb.Data.Engines
         }
       }
 
-      // TODO: Combine the two pipelines below.
       if (loading)
       {
         CorePipeline.Run("loadDsDbItem", new DsItemLoadingArgs(item as IDsDbItem, this));
@@ -201,11 +200,9 @@ namespace Sitecore.FakeDb.Data.Engines
 
     protected void AddFieldsFromTemplate(FieldList allFields, DbItem fakeItem, DbTemplate fakeTemplate, Language language, Version version)
     {
-      var fields = new FieldList();
       foreach (var templateField in fakeTemplate.Fields)
       {
         var fieldId = templateField.ID;
-
         var itemField = this.FindItemDbField(fakeItem, templateField);
 
         if (itemField == null)
@@ -214,27 +211,21 @@ namespace Sitecore.FakeDb.Data.Engines
         }
 
         var value = itemField.GetValue(language.Name, version.Number);
-        fields.Add(fieldId, value);
+        allFields.Add(fieldId, value);
       }
 
-      foreach (KeyValuePair<ID, string> field in fields)
+      foreach (var template in fakeTemplate.BaseIDs.Select(this.GetFakeTemplate).Where(t => t != null))
       {
-        allFields.Add(field.Key, field.Value);
+        this.AddFieldsFromTemplate(allFields, fakeItem, template, language, version);
       }
 
-      // TODO: Should not check if the Standard Template id.
-      if (!fakeTemplate.BaseIDs.Any() && fakeTemplate.ID != TemplateIDs.StandardTemplate)
+      if (fakeTemplate.BaseIDs.Any() || fakeTemplate.ID == TemplateIDs.StandardTemplate)
       {
-        var standardTemplate = this.GetFakeTemplate(TemplateIDs.StandardTemplate);
-        this.AddFieldsFromTemplate(allFields, fakeItem, standardTemplate, language, version);
+        return;
       }
-      else
-      {
-        foreach (var template in fakeTemplate.BaseIDs.Select(this.GetFakeTemplate).Where(t => t != null))
-        {
-          this.AddFieldsFromTemplate(allFields, fakeItem, template, language, version);
-        }
-      }
+
+      var standardTemplate = this.GetFakeTemplate(TemplateIDs.StandardTemplate);
+      this.AddFieldsFromTemplate(allFields, fakeItem, standardTemplate, language, version);
     }
 
     protected DbField FindItemDbField(DbItem fakeItem, DbField templateField)

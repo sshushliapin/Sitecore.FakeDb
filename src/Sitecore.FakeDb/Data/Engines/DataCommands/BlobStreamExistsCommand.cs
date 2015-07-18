@@ -16,7 +16,6 @@
       this.innerCommand.Initialize(dataStorage);
     }
 
-    // TODO: CMS issue. The base.BlobId property should not be private.
     public override void Initialize(Guid id)
     {
       this.blobId = id;

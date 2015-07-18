@@ -31,12 +31,6 @@
       return this.IsLocalProviderSet() ? this.LocalProvider.Value.FindRolesInRole(targetRole, roleNameToMatch, includeIndirectMembership) : Enumerable.Empty<Role>();
     }
 
-    protected override IEnumerable<Role> FindRolesInRole(string targetRoleName, string roleNameToMatch)
-    {
-      return Enumerable.Empty<Role>();
-    }
-
-    // TODO:[Minor] Shouldn't it be IEnumerable<Users>? Register CMS issue.
     public override IEnumerable<Role> FindUsersInRole(Role targetRole, string userNameToMatch, bool includeIndirectMembership)
     {
       return this.IsLocalProviderSet() ? this.LocalProvider.Value.FindUsersInRole(targetRole, userNameToMatch, includeIndirectMembership) : Enumerable.Empty<Role>();
@@ -77,11 +71,6 @@
       return this.IsLocalProviderSet() ? this.LocalProvider.Value.GetRoleMembers(role, includeIndirectMembership) : Enumerable.Empty<Account>();
     }
 
-    protected override IEnumerable<Role> GetRolesForRole(string memberRoleName)
-    {
-      return Enumerable.Empty<Role>();
-    }
-
     public override IEnumerable<Role> GetRolesForRole(Role memberRole, bool includeIndirectMembership)
     {
       return this.IsLocalProviderSet() ? this.LocalProvider.Value.GetRolesForRole(memberRole, includeIndirectMembership) : Enumerable.Empty<Role>();
@@ -90,11 +79,6 @@
     public override IEnumerable<Role> GetRolesForUser(User user, bool includeIndirectMembership)
     {
       return this.IsLocalProviderSet() ? this.LocalProvider.Value.GetRolesForUser(user, includeIndirectMembership) : Enumerable.Empty<Role>();
-    }
-
-    protected override IEnumerable<Role> GetRolesInRole(string targetRoleName)
-    {
-      return Enumerable.Empty<Role>();
     }
 
     public override IEnumerable<Role> GetRolesInRole(Role targetRole, bool includeIndirectMembership)
@@ -135,11 +119,6 @@
     public virtual bool IsLocalProviderSet()
     {
       return this.localProvider.Value != null;
-    }
-
-    protected override bool IsRoleInRole(string memberRoleName, string targetRoleName)
-    {
-      return false;
     }
 
     public override bool IsRoleInRole(Role memberRole, Role targetRole, bool includeIndirectMembership)
@@ -194,6 +173,26 @@
       this.localProvider.Dispose();
 
       this.disposed = true;
+    }
+
+    protected override IEnumerable<Role> FindRolesInRole(string targetRoleName, string roleNameToMatch)
+    {
+      return Enumerable.Empty<Role>();
+    }
+
+    protected override IEnumerable<Role> GetRolesInRole(string targetRoleName)
+    {
+      return Enumerable.Empty<Role>();
+    }
+
+    protected override IEnumerable<Role> GetRolesForRole(string memberRoleName)
+    {
+      return Enumerable.Empty<Role>();
+    }
+
+    protected override bool IsRoleInRole(string memberRoleName, string targetRoleName)
+    {
+      return false;
     }
   }
 }

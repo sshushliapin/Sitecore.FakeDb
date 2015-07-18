@@ -170,6 +170,8 @@ namespace Sitecore.FakeDb.Pipelines
       }
 
       PipelineWatcherProcessor.PipelineRun -= this.PipelineRun;
+      CorePipelineFactory.ClearCache();
+
       this.disposed = true;
     }
 
