@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="AddContentDbItemCommand.cs" />
     <Compile Include="AutoDbCustomization.cs" />
+    <Compile Include="SetDefaultDbItemParentCommand.cs" />
     <Compile Include="ContentItemCustomization.cs" />
     <Compile Include="AddContentItemCommand.cs" />
     <Compile Include="DatabaseSpecimenBuilder.cs" />

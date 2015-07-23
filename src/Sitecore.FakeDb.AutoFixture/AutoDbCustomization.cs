@@ -1,6 +1,7 @@
 namespace Sitecore.FakeDb.AutoFixture
 {
   using Ploeh.AutoFixture;
+  using Ploeh.AutoFixture.Kernel;
 
   public class AutoDbCustomization : ICustomization
   {
@@ -9,6 +10,12 @@ namespace Sitecore.FakeDb.AutoFixture
       fixture.Freeze<Db>();
       fixture.Customizations.Add(new DatabaseSpecimenBuilder());
       fixture.Customizations.Add(new ItemSpecimenBuilder());
+      fixture.Customizations.Add(
+        new FilteringSpecimenBuilder(
+          new Postprocessor(
+            new MethodInvoker(new ListFavoringConstructorQuery()),
+            new SetDefaultDbItemParentCommand()),
+          new DbItemSpecification()));
     }
   }
 }

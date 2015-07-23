@@ -85,6 +85,7 @@
     <Compile Include="ContentAttributeTest.cs" />
     <Compile Include="ContentItemCustomizationTest.cs" />
     <Compile Include="AddContentItemCommandTest.cs" />
+    <Compile Include="SetDefaultDbItemParentCommandTest.cs" />
     <Compile Include="DatabaseSpecimenBuilderTest.cs" />
     <Compile Include="ItemSpecimenBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

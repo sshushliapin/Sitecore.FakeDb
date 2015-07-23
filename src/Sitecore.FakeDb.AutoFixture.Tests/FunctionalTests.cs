@@ -37,7 +37,7 @@
       result.Should().NotBeNull();
     }
 
-    [Theory(Skip = "To be implemented"), AutoDbData]
+    [Theory, AutoDbData]
     public void ShouldAddContentDbItem(Db db, DbItem item)
     {
       // act

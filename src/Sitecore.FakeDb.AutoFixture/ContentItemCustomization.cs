@@ -19,7 +19,8 @@
             new ItemSpecimenBuilder(), new AddContentItemCommand(db)),
             new ItemSpecification()));
 
-      fixture.Customizations.Add(
+      fixture.Customizations.Insert(
+        0,
         new FilteringSpecimenBuilder(
           new Postprocessor(
             new MethodInvoker(new ListFavoringConstructorQuery()),
