@@ -8,13 +8,21 @@
   {
     [Theory]
     [InlineAutoData("__Final Renderings")]
-    public void ShouldReadStandardFieldValues(string fieldName, string fieldValue, Db db)
+    [InlineAutoData("__Page Level Test Set Definition")]
+    public void ShouldReadStandardFieldValues(string fieldName, string fieldValue)
     {
       // arrange
-      db.Add(new DbItem("home") { { fieldName, fieldValue } });
+      using (var db = new Db
+                        {
+                          new DbItem("home") { { fieldName, fieldValue } }
+                        })
+      {
+        // act & assert
+        var item = db.GetItem("/sitecore/content/home");
+        item.Should().NotBeNull();
 
-      // act & assert
-      db.GetItem("/sitecore/content/home")[fieldName].Should().Be(fieldValue);
+        item[fieldName].Should().Be(fieldValue);
+      }
     }
   }
 }

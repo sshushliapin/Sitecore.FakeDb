@@ -13,6 +13,7 @@ namespace Sitecore.FakeDb.Data.Engines
   using Sitecore.FakeDb.Pipelines.AddDbItem;
   using Sitecore.Globalization;
   using Sitecore.Pipelines;
+  using ItemIDs = Sitecore.ItemIDs;
   using Version = Sitecore.Data.Version;
 
   public class DataStorage
@@ -275,6 +276,7 @@ namespace Sitecore.FakeDb.Data.Engines
             new DbField(FieldIDs.DisplayName),
             new DbField(FieldIDs.Hidden),
             new DbField(FieldIDs.ReadOnly),
+            new DbField(AnalyticsIds.PageLevelTestDefinitionField) { Shared = true },
             new DbField(AnalyticsIds.TrackingField) { Type = "Tracking", Shared = true }
           });
     }

@@ -26,6 +26,7 @@
             { FieldIDs.Updated, "__Updated" },
             { FieldIDs.UpdatedBy, "__Updated by" },
             { DbFieldIds.FinalLayoutField, "__Final Renderings" },
+            { AnalyticsIds.PageLevelTestDefinitionField, "__Page Level Test Set Definition" },
             { AnalyticsIds.TrackingField, "__Tracking" }
           });
 
