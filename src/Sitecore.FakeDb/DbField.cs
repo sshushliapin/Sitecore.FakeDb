@@ -72,7 +72,7 @@
 
     public virtual void Add(string language, int version, string value)
     {
-      Assert.ArgumentNotNullOrEmpty(language, "language");
+      Assert.ArgumentNotNull(language, "language");
 
       if (this.Shared)
       {
@@ -127,11 +127,6 @@
         return this.sharedValue;
       }
 
-      if (Language.Parse(language) == Language.Invariant)
-      {
-        return string.Empty;
-      }
-
       if (version == 0)
       {
         version = this.GetLatestVersion(language);
@@ -140,14 +135,6 @@
       var hasValueForLanguage = this.values.ContainsKey(language);
       if (!hasValueForLanguage)
       {
-        var contextLang = Context.Language.Name;
-
-        // TODO: Avoid the DisplayName field id comparison.
-        if (this.values.ContainsKey(contextLang) && this.ID != FieldIDs.DisplayName)
-        {
-          return this.GetValue(contextLang, version);
-        }
-
         return string.Empty;
       }
 
@@ -204,7 +191,7 @@
 
     protected virtual int GetLatestVersion(string language)
     {
-      Assert.ArgumentNotNullOrEmpty(language, "language");
+      Assert.ArgumentNotNull(language, "language");
 
       if (!this.values.ContainsKey(language))
       {
