@@ -201,6 +201,36 @@
     }
 
     [Fact]
+    public void ShouldGetItemInInvariantLanguage()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        // act
+        var item = db.GetItem("/sitecore/content/home", Language.Invariant.Name);
+
+        // assert
+        item.Should().NotBeNull();
+        item.Language.Should().Be(Language.Invariant);
+      }
+    }
+
+    [Fact]
+    public void ShouldGetItemInInvariantLanguageAndVersion()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        // act
+        var item = db.GetItem("/sitecore/content/home", Language.Invariant.Name, 1);
+
+        // assert
+        item.Should().NotBeNull();
+        item.Language.Should().Be(Language.Invariant);
+      }
+    }
+
+    [Fact]
     public void ShouldCreateSimpleItem()
     {
       // arrange
