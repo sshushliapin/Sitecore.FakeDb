@@ -30,7 +30,7 @@
       // act
       using (var db = new Db
                         {
-                          new DbItem("item1") { { "Title", "Welcome from item 1!" } }, 
+                          new DbItem("item1") { { "Title", "Welcome from item 1!" } },
                           new DbItem("item2") { { "Title", "Welcome from item 2!" } }
                         })
       {
@@ -188,16 +188,45 @@
     }
 
     [Fact]
-    public void ShouldCreateItemWithUnversionedSharedFieldsByDefault()
+    public void ShouldCreateItemInInvariantLanguage()
     {
       // arrange & act
       using (var db = new Db
-                        {
-                          new DbItem("home") { { "Title", "Hello!" } }
-                        })
+                    {
+                      new DbItem("home") { new DbField("Title") { { "", "Hello!" } } }
+                    })
       {
-        db.Database.GetItem("/sitecore/content/home", Language.Parse("en"))["Title"].Should().Be("Hello!");
-        db.Database.GetItem("/sitecore/content/home", Language.Parse("uk-UA"))["Title"].Should().Be("Hello!");
+        db.Database.GetItem("/sitecore/content/home", Language.Invariant)["Title"].Should().Be("Hello!");
+      }
+    }
+
+    [Fact]
+    public void ShouldGetItemInInvariantLanguage()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        // act
+        var item = db.GetItem("/sitecore/content/home", Language.Invariant.Name);
+
+        // assert
+        item.Should().NotBeNull();
+        item.Language.Should().Be(Language.Invariant);
+      }
+    }
+
+    [Fact]
+    public void ShouldGetItemInInvariantLanguageAndVersion()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        // act
+        var item = db.GetItem("/sitecore/content/home", Language.Invariant.Name, 1);
+
+        // assert
+        item.Should().NotBeNull();
+        item.Language.Should().Be(Language.Invariant);
       }
     }
 
@@ -364,7 +393,7 @@
                             {
                               new DbField("Title")
                                 {
-                                  { "en", 1, "Welcome!" }, 
+                                  { "en", 1, "Welcome!" },
                                   { "da", 1, "Hello!" },
                                   { "da", 2, "Velkommen!" }
                                 }
@@ -723,11 +752,11 @@
                           new DbItem("home")
                             {
                               new DbItem("one") { { "Title", "One" } }
-                            }, 
+                            },
                           new DbItem("site")
                             {
-                              new DbItem("two") { { "Title", "Two" } }, 
-                              new DbItem("three") { { "Title", "Three" }, { "Name", "Three" } }, 
+                              new DbItem("two") { { "Title", "Two" } },
+                              new DbItem("three") { { "Title", "Three" }, { "Name", "Three" } },
                               new DbItem("four")
                             }
                         })
@@ -853,7 +882,7 @@
                                 {
                                   new DbField("Title")
                                     {
-                                      { "en", 1, "title version 1" }, 
+                                      { "en", 1, "title version 1" },
                                       { "en", 2, "title version 2" }
                                     }
                                 }
@@ -1206,7 +1235,7 @@
       var baseId = ID.NewID;
       using (var db = new Db
                         {
-                          new DbTemplate("base", baseId), 
+                          new DbTemplate("base", baseId),
                           new DbTemplate("main", this.templateId) { BaseIDs = new[] { baseId } }
                         })
       {
