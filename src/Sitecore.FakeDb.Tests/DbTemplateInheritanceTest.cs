@@ -119,8 +119,7 @@
       }
     }
 
-    [Theory]
-    [AutoData]
+    [Theory, AutoData]
     public void ShouldEditEmptyInheritedField(ID baseTemplateId, ID templateId, ID fieldId)
     {
       // arrange
@@ -144,8 +143,7 @@
       }
     }
 
-    [Theory]
-    [AutoData]
+    [Theory, AutoData]
     public void ShouldIgnoreBaseTemplateIfNull(ID templateId)
     {
       // arrange
@@ -163,8 +161,7 @@
       }
     }
 
-    [Theory]
-    [AutoData]
+    [Theory, AutoData]
     public void ShouldThrowIfBaseTemplateIsMissing(ID templateId)
     {
       // arrange
@@ -182,6 +179,16 @@
         // assert
         action.ShouldThrow<TemplateNotFoundException>().WithMessage("The template \"{4F2BBCE8-92EC-4514-8A5F-2C1F432FEE5A}\" was not found.");
       }
+    }
+
+    [Theory, AutoData]
+    public void ShouldGetEmptyBaseTemplatesCollectionForStandardTemplate(Db db)
+    {
+      // act
+      var standardTemplate = (TemplateItem)db.GetItem(TemplateIDs.StandardTemplate);
+
+      // assert
+      standardTemplate.BaseTemplates.Should().BeEmpty();
     }
   }
 }

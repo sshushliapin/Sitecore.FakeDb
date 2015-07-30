@@ -142,7 +142,7 @@
     public Item GetItem(string path, string language)
     {
       Assert.ArgumentNotNullOrEmpty(path, "path");
-      Assert.ArgumentNotNullOrEmpty(language, "language");
+      Assert.ArgumentNotNull(language, "language");
 
       return this.Database.GetItem(path, Language.Parse(language));
     }
@@ -150,7 +150,7 @@
     public Item GetItem(string path, string language, int version)
     {
       Assert.ArgumentNotNullOrEmpty(path, "path");
-      Assert.ArgumentNotNullOrEmpty(language, "language");
+      Assert.ArgumentNotNull(language, "language");
 
       return this.Database.GetItem(path, Language.Parse(language), Version.Parse(version));
     }
