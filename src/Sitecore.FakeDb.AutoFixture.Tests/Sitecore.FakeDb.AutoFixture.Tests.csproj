@@ -89,7 +89,7 @@
     <Compile Include="DatabaseSpecimenBuilderTest.cs" />
     <Compile Include="ItemSpecimenBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FunctionalTests.cs" />
+    <Compile Include="AutoDbDataSampleAttributeTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

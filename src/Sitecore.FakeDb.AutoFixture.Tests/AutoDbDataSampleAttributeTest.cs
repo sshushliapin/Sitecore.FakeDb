@@ -9,11 +9,12 @@
   using Sitecore.Rules;
   using Xunit;
 
-  public class FunctionalTests
+  public class AutoDbDataSampleAttributeTest
   {
     [Theory, AutoDbData]
     public void ShouldCreateItemInstance(Item item)
     {
+      // assert
       item.Should().NotBeNull();
     }
 
@@ -50,21 +51,23 @@
     [Theory, AutoDbData]
     public void ShouldCreatePipelineArgs(PipelineArgs args)
     {
+      // assert
       args.Should().NotBeNull();
     }
 
     [Theory, AutoDbData]
     public void ShouldCreateRuleContext(RuleContext context)
     {
+      // assert
       context.Should().NotBeNull();
     }
-  }
 
-  internal class AutoDbDataAttribute : AutoDataAttribute
-  {
-    public AutoDbDataAttribute()
-      : base(new Fixture().Customize(new AutoDbCustomization()))
+    internal class AutoDbDataAttribute : AutoDataAttribute
     {
+      public AutoDbDataAttribute()
+        : base(new Fixture().Customize(new AutoDbCustomization()))
+      {
+      }
     }
   }
 }
