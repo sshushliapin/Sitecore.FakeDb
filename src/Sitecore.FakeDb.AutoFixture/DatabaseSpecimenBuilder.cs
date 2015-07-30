@@ -8,11 +8,6 @@
   {
     private readonly string database;
 
-    public DatabaseSpecimenBuilder()
-      : this("master")
-    {
-    }
-
     public DatabaseSpecimenBuilder(string database)
     {
       Assert.ArgumentNotNull(database, "database");

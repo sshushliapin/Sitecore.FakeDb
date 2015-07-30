@@ -13,7 +13,7 @@
     public void ShouldBeISpecimenBuilder()
     {
       // arrange
-      var customization = new DatabaseSpecimenBuilder();
+      var customization = new DatabaseSpecimenBuilder("master");
 
       // assert
       customization.Should().BeAssignableTo<ISpecimenBuilder>();
@@ -23,7 +23,7 @@
     public void ShouldReturnNoSpecimentIfNotDatabaseRequested()
     {
       // arrange
-      var customization = new DatabaseSpecimenBuilder();
+      var customization = new DatabaseSpecimenBuilder("master");
 
       // act
       var result = customization.Create(new object(), null);
@@ -32,32 +32,21 @@
       result.Should().BeOfType<NoSpecimen>();
     }
 
-    [Fact]
-    public void ShouldReturnMasterDatabaseInstance()
+    [Theory]
+    [InlineData("master")]
+    [InlineData("web")]
+    [InlineData("core")]
+    public void ShouldReturnDatabaseInstance(string databaseName)
     {
       // arrange
       var fixture = new Fixture();
-      fixture.Customizations.Add(new DatabaseSpecimenBuilder());
+      fixture.Customizations.Add(new DatabaseSpecimenBuilder(databaseName));
 
       // act
       var database = fixture.Create<Database>();
 
       // assert
-      database.Should().Match<Database>(x => x.Name == "master");
-    }
-
-    [Fact]
-    public void ShouldSpecifyDatabaseName()
-    {
-      // arrange
-      var fixture = new Fixture();
-      fixture.Customizations.Add(new DatabaseSpecimenBuilder("web"));
-
-      // act
-      var database = fixture.Create<Database>();
-
-      // assert
-      database.Should().Match<Database>(x => x.Name == "web");
+      database.Should().Match<Database>(x => x.Name == databaseName);
     }
 
     [Fact]

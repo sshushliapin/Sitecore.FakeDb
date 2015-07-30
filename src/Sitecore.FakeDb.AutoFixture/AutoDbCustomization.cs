@@ -7,8 +7,8 @@ namespace Sitecore.FakeDb.AutoFixture
   {
     public void Customize(IFixture fixture)
     {
-      fixture.Freeze<Db>();
-      fixture.Customizations.Add(new DatabaseSpecimenBuilder());
+      var db = fixture.Freeze<Db>();
+      fixture.Customizations.Add(new DatabaseSpecimenBuilder(db.Database.Name));
       fixture.Customizations.Add(new ItemSpecimenBuilder());
       fixture.Customizations.Add(
         new FilteringSpecimenBuilder(
