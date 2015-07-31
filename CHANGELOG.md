@@ -1,4 +1,10 @@
-﻿0.28.0
+﻿0.28.1
+* [NEW] #76: Register the `__Page Level Test Set Definition` analytics field
+* [FIX] #77: Standard Template should return empty `BaseTemplates` collection
+* [FIX] #79: Cannot set a field value for an item in Invariant language
+* [FIX] Revert "Merge pull request #73 from maxshell/issue/45-constructor-children"
+
+0.28.0
 * [NEW] #45: DbItem constructor with children params (thanks to @maxshell)
 * [NEW] #75: FakeDb should try to 'guess' a field Id trying to parse an item name
 * [FIX] #68: Register the `getFieldValue` pipeline
