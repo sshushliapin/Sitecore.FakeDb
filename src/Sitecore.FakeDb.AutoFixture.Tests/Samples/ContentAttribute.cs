@@ -1,10 +1,10 @@
-﻿namespace Sitecore.FakeDb.AutoFixture.Tests
+﻿namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
 {
   using System.Reflection;
   using Ploeh.AutoFixture;
   using Ploeh.AutoFixture.Xunit2;
 
-  public class ContentAttribute : CustomizeAttribute
+  internal class ContentAttribute : CustomizeAttribute
   {
     public override ICustomization GetCustomization(ParameterInfo parameter)
     {

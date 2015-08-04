@@ -2,6 +2,7 @@
 {
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
+  using Sitecore.FakeDb.AutoFixture.Tests.Samples;
   using Xunit;
 
   public class ContentAttributeTest

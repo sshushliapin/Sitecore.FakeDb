@@ -1,63 +1,43 @@
 ﻿namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
 {
-  using FluentAssertions;
   using Sitecore.Data;
   using Sitecore.Data.Items;
-  using Sitecore.Pipelines;
-  using Sitecore.Rules;
   using Xunit;
 
   public class AutoDbDataSample
   {
     [Theory, AutoDbData]
-    public void ShouldCreateItemInstance(Item item)
+    public void ResolveMasterDatabaes(Database database)
     {
-      // assert
-      item.Should().NotBeNull();
+      Xunit.Assert.NotNull(database);
+      Xunit.Assert.Equal("master", database.Name);
     }
 
     [Theory, AutoDbData]
-    public void ShouldCreateContentItem([Content] Item item)
+    public void CreateItemInstance(Item item)
     {
-      // act
-      var result = Database.GetDatabase("master").GetItem(item.ID);
-
-      // assert
-      result.Should().NotBeNull();
+      Xunit.Assert.NotNull(item);
     }
 
     [Theory, AutoDbData]
-    public void ShouldCreateContentDbItem([Content] DbItem item)
+    public void AddContentDbItem(Db db, DbItem item)
     {
-      // act
-      var result = Database.GetDatabase("master").GetItem(item.ID);
-
-      // assert
-      result.Should().NotBeNull();
-    }
-
-    [Theory, AutoDbData]
-    public void ShouldAddContentDbItem(Db db, DbItem item)
-    {
-      // act
       db.Add(item);
-
-      // assert
-      db.GetItem(item.ID).Should().NotBeNull();
+      Xunit.Assert.NotNull(db.GetItem(item.ID));
     }
 
     [Theory, AutoDbData]
-    public void ShouldCreatePipelineArgs(PipelineArgs args)
+    public void CreateContentItem([Content] Item item, Database database)
     {
-      // assert
-      args.Should().NotBeNull();
+      var newItem = database.GetItem(item.ID);
+      Xunit.Assert.NotNull(newItem);
     }
 
     [Theory, AutoDbData]
-    public void ShouldCreateRuleContext(RuleContext context)
+    public void CreateContentDbItem([Content] DbItem item, Database database)
     {
-      // assert
-      context.Should().NotBeNull();
+      var newItem = database.GetItem(item.ID);
+      Xunit.Assert.NotNull(newItem);
     }
   }
 }
