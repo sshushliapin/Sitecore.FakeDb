@@ -8,12 +8,7 @@ namespace Sitecore.FakeDb.AutoFixture
     public bool IsSatisfiedBy(object request)
     {
       var type = request as Type;
-      if (type == null)
-      {
-        return false;
-      }
-
-      return typeof(DbItem) == type;
+      return typeof(DbItem).IsAssignableFrom(type);
     }
   }
 }

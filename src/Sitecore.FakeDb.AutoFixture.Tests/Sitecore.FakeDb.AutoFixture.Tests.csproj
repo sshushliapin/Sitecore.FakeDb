@@ -81,7 +81,10 @@
   <ItemGroup>
     <Compile Include="AddContentDbItemCommandTest.cs" />
     <Compile Include="AutoDbCustomizatonTest.cs" />
-    <Compile Include="ContentAttribute.cs" />
+    <Compile Include="DbItemSpecificationTest.cs" />
+    <Compile Include="Samples\AutoDbDataAttribute.cs" />
+    <Compile Include="Samples\AutoTemplateSample.cs" />
+    <Compile Include="Samples\ContentAttribute.cs" />
     <Compile Include="ContentAttributeTest.cs" />
     <Compile Include="ContentItemCustomizationTest.cs" />
     <Compile Include="AddContentItemCommandTest.cs" />
@@ -89,7 +92,7 @@
     <Compile Include="DatabaseSpecimenBuilderTest.cs" />
     <Compile Include="ItemSpecimenBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AutoDbDataSampleAttributeTest.cs" />
+    <Compile Include="Samples\AutoDbDataSample.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -111,6 +114,7 @@
   <ItemGroup>
     <Content Include="App.config.transform.xslt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -1,15 +1,13 @@
-﻿namespace Sitecore.FakeDb.AutoFixture.Tests
+﻿namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
 {
   using FluentAssertions;
-  using Ploeh.AutoFixture;
-  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Pipelines;
   using Sitecore.Rules;
   using Xunit;
 
-  public class AutoDbDataSampleAttributeTest
+  public class AutoDbDataSample
   {
     [Theory, AutoDbData]
     public void ShouldCreateItemInstance(Item item)
@@ -19,7 +17,7 @@
     }
 
     [Theory, AutoDbData]
-    public void ShouldCreateContentItem([Content]Item item)
+    public void ShouldCreateContentItem([Content] Item item)
     {
       // act
       var result = Database.GetDatabase("master").GetItem(item.ID);
@@ -29,7 +27,7 @@
     }
 
     [Theory, AutoDbData]
-    public void ShouldCreateContentDbItem([Content]DbItem item)
+    public void ShouldCreateContentDbItem([Content] DbItem item)
     {
       // act
       var result = Database.GetDatabase("master").GetItem(item.ID);
@@ -60,14 +58,6 @@
     {
       // assert
       context.Should().NotBeNull();
-    }
-
-    internal class AutoDbDataAttribute : AutoDataAttribute
-    {
-      public AutoDbDataAttribute()
-        : base(new Fixture().Customize(new AutoDbCustomization()))
-      {
-      }
     }
   }
 }
