@@ -5,7 +5,7 @@
   using Sitecore.Data.Items;
   using Xunit;
 
-  public class AutoTemplateTest
+  public class AutoDbTemplateSamples
   {
     [Theory, AutoDbData]
     public void CreateItemBasedOnCustomTemplate(

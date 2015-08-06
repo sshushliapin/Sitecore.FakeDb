@@ -4,10 +4,10 @@
   using Sitecore.Data.Items;
   using Xunit;
 
-  public class AutoDbDataSample
+  public class AutoDbDataAttributeSamples
   {
     [Theory, AutoDbData]
-    public void ResolveMasterDatabaes(Database database)
+    public void ResolveMasterDatabase(Database database)
     {
       Xunit.Assert.NotNull(database);
       Xunit.Assert.Equal("master", database.Name);

@@ -82,8 +82,9 @@
     <Compile Include="AddContentDbItemCommandTest.cs" />
     <Compile Include="AutoDbCustomizatonTest.cs" />
     <Compile Include="DbItemSpecificationTest.cs" />
+    <Compile Include="Samples\AutoDbCustomizartionSamples.cs" />
     <Compile Include="Samples\AutoDbDataAttribute.cs" />
-    <Compile Include="Samples\AutoTemplateSample.cs" />
+    <Compile Include="Samples\AutoDbTemplateSamples.cs" />
     <Compile Include="Samples\ContentAttribute.cs" />
     <Compile Include="ContentAttributeTest.cs" />
     <Compile Include="ContentItemCustomizationTest.cs" />
@@ -92,7 +93,7 @@
     <Compile Include="DatabaseSpecimenBuilderTest.cs" />
     <Compile Include="ItemSpecimenBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Samples\AutoDbDataSample.cs" />
+    <Compile Include="Samples\AutoDbDataAttributeSamples.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
