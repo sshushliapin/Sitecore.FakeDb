@@ -106,7 +106,7 @@
       Action action = () => item.Add((string)null, value);
 
       // assert
-      action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: fieldName");
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*fieldName");
     }
 
     [Theory, AutoData]
@@ -116,7 +116,7 @@
       Action action = () => item.Add((ID)null, value);
 
       // assert
-      action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: fieldId");
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*fieldId");
     }
 
     [Theory, AutoData]
@@ -126,7 +126,7 @@
       Action action = () => item.Add((DbField)null);
 
       // assert
-      action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: field");
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*field");
     }
 
     [Theory, AutoData]
@@ -136,7 +136,7 @@
       Action action = () => item.Add((DbItem)null);
 
       // assert
-      action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: child");
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*child");
     }
   }
 }

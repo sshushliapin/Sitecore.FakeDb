@@ -16,8 +16,7 @@
       Action action = () => sut.Customize(null);
 
       // assert
-      action.ShouldThrow<ArgumentNullException>()
-            .WithMessage("Value cannot be null.\r\nParameter name: fixture");
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*fixture");
     }
   }
 }
