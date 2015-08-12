@@ -22,17 +22,19 @@
 
     protected override bool DoExecute()
     {
-      return this.RemoveRecursive(this.innerCommand.DataStorage.FakeItems, Item.ID);
+      return this.RemoveRecursive(this.innerCommand.DataStorage.GetFakeItems(), this.Item.ID);
     }
 
-    protected virtual bool RemoveRecursive(IDictionary<ID, DbItem> fakeItems, ID itemId)
+    protected virtual bool RemoveRecursive(IEnumerable<DbItem> fakeItems, ID itemId)
     {
-      if (!fakeItems.ContainsKey(itemId))
+      var dataStorage = this.innerCommand.DataStorage;
+
+      var item = dataStorage.GetFakeItem(itemId);
+      if (item == null)
       {
         return false;
       }
 
-      var item = fakeItems[itemId];
       foreach (var child in item.Children)
       {
         this.RemoveRecursive(fakeItems, child.ID);
@@ -40,11 +42,11 @@
 
       if (!ID.IsNullOrEmpty(item.ParentID))
       {
-        var parent = fakeItems[item.ParentID];
+        var parent = dataStorage.GetFakeItem(item.ParentID);
         parent.Children.Remove(item);
       }
 
-      return fakeItems.Remove(itemId);
+      return dataStorage.RemoveFakeItem(itemId);
     }
   }
 }

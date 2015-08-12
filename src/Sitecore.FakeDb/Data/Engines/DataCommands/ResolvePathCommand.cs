@@ -28,12 +28,10 @@
         return new ID(this.ItemPath);
       }
 
-      Assert.IsNotNull(this.innerCommand.DataStorage.FakeItems, "this.innerCommand.Value.DataStorage.FakeItems");
-
       var itemPath = StringUtil.RemovePostfix("/", this.ItemPath);
-      var kvp = this.innerCommand.DataStorage.FakeItems.SingleOrDefault(fi => string.Compare(fi.Value.FullPath, itemPath, StringComparison.OrdinalIgnoreCase) == 0);
+      var item = this.innerCommand.DataStorage.GetFakeItems().SingleOrDefault(fi => string.Compare(fi.FullPath, itemPath, StringComparison.OrdinalIgnoreCase) == 0);
 
-      return kvp.Key;
+      return item != null ? item.ID : null;
     }
   }
 }

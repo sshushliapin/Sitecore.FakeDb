@@ -27,18 +27,14 @@ namespace Sitecore.FakeDb.Data.Engines
     private readonly IDictionary<Guid, Stream> blobs;
 
     public DataStorage(Database database)
-      : this()
     {
       this.database = database;
 
-      this.FillDefaultFakeTemplates();
-      this.FillDefaultFakeItems();
-    }
-
-    internal DataStorage()
-    {
       this.fakeItems = new Dictionary<ID, DbItem>();
       this.blobs = new Dictionary<Guid, Stream>();
+
+      this.FillDefaultFakeTemplates();
+      this.FillDefaultFakeItems();
     }
 
     public Database Database
@@ -46,12 +42,12 @@ namespace Sitecore.FakeDb.Data.Engines
       get { return this.database; }
     }
 
-    public IDictionary<ID, DbItem> FakeItems
+    protected IDictionary<ID, DbItem> FakeItems
     {
       get { return this.fakeItems; }
     }
 
-    public IDictionary<Guid, Stream> Blobs
+    protected IDictionary<Guid, Stream> Blobs
     {
       get { return this.blobs; }
     }
@@ -113,7 +109,7 @@ namespace Sitecore.FakeDb.Data.Engines
       return this.FakeItems.ContainsKey(templateId) ? this.FakeItems[templateId] as DbTemplate : null;
     }
 
-    public IEnumerable<DbTemplate> GetFakeTemplates()
+    public virtual IEnumerable<DbTemplate> GetFakeTemplates()
     {
       return this.FakeItems.Values.OfType<DbTemplate>();
     }
@@ -148,6 +144,28 @@ namespace Sitecore.FakeDb.Data.Engines
       var fields = this.BuildItemFieldList(fakeItem, fakeItem.TemplateID, language, itemVersion);
 
       return ItemHelper.CreateInstance(this.database, fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fakeItem.BranchId, fields, language, itemVersion);
+    }
+
+    public virtual IEnumerable<DbItem> GetFakeItems()
+    {
+      return this.FakeItems.Values;
+    }
+
+    public virtual bool RemoveFakeItem(ID itemId)
+    {
+      return this.FakeItems.Remove(itemId);
+    }
+
+    public virtual void SetBlobStream(Guid blobId, Stream stream)
+    {
+      Assert.ArgumentNotNull(stream, "stream");
+
+      this.Blobs[blobId] = stream;
+    }
+
+    public virtual Stream GetBlobStream(Guid blobId)
+    {
+      return this.Blobs.ContainsKey(blobId) ? this.Blobs[blobId] : null;
     }
 
     protected FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)

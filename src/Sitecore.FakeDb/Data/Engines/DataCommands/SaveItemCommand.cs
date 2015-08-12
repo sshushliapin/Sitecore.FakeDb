@@ -23,7 +23,7 @@
 
     protected override bool DoExecute()
     {
-      var fakeItem = this.innerCommand.DataStorage.GetFakeItem(Item.ID);
+      var fakeItem = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
 
       this.UpdateBasicData(fakeItem);
       this.UpdateFields(fakeItem);
@@ -52,7 +52,7 @@
     protected virtual void UpdateFields(DbItem fakeItem)
     {
       var template = this.innerCommand.DataStorage.GetFakeTemplate(fakeItem.TemplateID);
-      Assert.IsNotNull(template, "Item template not found. Item: '{0}', '{1}'; template: '{2}'.", Item.Name, Item.ID, Item.TemplateID);
+      Assert.IsNotNull(template, "Item template not found. Item: '{0}', '{1}'; template: '{2}'.", this.Item.Name, this.Item.ID, this.Item.TemplateID);
 
       this.Item.Fields.ReadAll();
 
@@ -63,8 +63,8 @@
           fakeItem.Fields.Add(new DbField(field.ID));
         }
 
-        Assert.IsTrue(fakeItem.Fields.ContainsKey(field.ID), "Item field not found. Item: '{0}', '{1}'; field: '{2}'.", Item.Name, Item.ID, field.ID);
-        fakeItem.Fields[field.ID].SetValue(Item.Language.Name, Item.Version.Number, field.Value);
+        Assert.IsTrue(fakeItem.Fields.ContainsKey(field.ID), "Item field not found. Item: '{0}', '{1}'; field: '{2}'.", this.Item.Name, this.Item.ID, field.ID);
+        fakeItem.Fields[field.ID].SetValue(this.Item.Language.Name, this.Item.Version.Number, field.Value);
       }
     }
 

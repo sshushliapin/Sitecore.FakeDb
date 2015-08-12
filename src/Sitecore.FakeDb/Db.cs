@@ -103,7 +103,7 @@
 
     public IEnumerator GetEnumerator()
     {
-      return this.DataStorage.FakeItems.Values.GetEnumerator();
+      return this.DataStorage.GetFakeItems().GetEnumerator();
     }
 
     public void Add(DbItem item)

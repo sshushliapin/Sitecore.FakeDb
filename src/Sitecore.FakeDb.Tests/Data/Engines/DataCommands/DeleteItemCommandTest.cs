@@ -31,7 +31,11 @@
       // arrange
       var itemId = ID.NewID;
 
-      this.dataStorage.FakeItems.Add(itemId, new DbItem("item"));
+      var item = new DbItem("item", itemId);
+      this.dataStorage.GetFakeItem(itemId).Returns(item);
+      this.dataStorage.GetFakeItems().Returns(new[] { item });
+      this.dataStorage.RemoveFakeItem(itemId).Returns(true);
+
       this.command.Initialize(ItemHelper.CreateInstance(this.database, itemId), ID.NewID);
 
       // act
@@ -39,7 +43,6 @@
 
       // assert
       result.Should().BeTrue();
-      this.dataStorage.FakeItems.Should().NotContainKey(itemId);
     }
 
     [Fact]
@@ -57,9 +60,9 @@
       item.Children.Add(desc1);
       desc1.Children.Add(desc2);
 
-      this.dataStorage.FakeItems.Add(itemId, item);
-      this.dataStorage.FakeItems.Add(desc1Id, desc1);
-      this.dataStorage.FakeItems.Add(desc2Id, desc2);
+      this.dataStorage.GetFakeItem(itemId).Returns(item);
+      this.dataStorage.GetFakeItem(desc1Id).Returns(desc1);
+      this.dataStorage.GetFakeItem(desc2Id).Returns(desc2);
 
       this.command.Initialize(ItemHelper.CreateInstance(this.database, itemId), ID.NewID);
 
@@ -67,8 +70,8 @@
       this.command.DoExecute();
 
       // assert
-      this.dataStorage.FakeItems.Should().NotContainKey(desc1Id);
-      this.dataStorage.FakeItems.Should().NotContainKey(desc2Id);
+      this.dataStorage.Received().RemoveFakeItem(desc1Id);
+      this.dataStorage.Received().RemoveFakeItem(desc2Id);
     }
 
     [Fact]
@@ -96,8 +99,8 @@
 
       parent.Children.Add(item);
 
-      this.dataStorage.FakeItems.Add(itemId, item);
-      this.dataStorage.FakeItems.Add(parentId, parent);
+      this.dataStorage.GetFakeItem(itemId).Returns(item);
+      this.dataStorage.GetFakeItem(parentId).Returns(parent);
 
       this.command.Initialize(ItemHelper.CreateInstance(this.database, itemId), ID.NewID);
 
@@ -105,7 +108,7 @@
       this.command.DoExecute();
 
       // assert
-      this.dataStorage.FakeItems[parentId].Children.Should().BeEmpty();
+      this.dataStorage.GetFakeItem(parentId).Children.Should().BeEmpty();
     }
 
     private class OpenDeleteItemCommand : DeleteItemCommand

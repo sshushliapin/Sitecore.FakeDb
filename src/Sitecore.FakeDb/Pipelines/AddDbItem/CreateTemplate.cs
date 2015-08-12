@@ -75,7 +75,7 @@
       var fingerprint = string.Concat(item.Fields.Select(f => f.Name));
 
       // find an item with a generated template that has a matching fields set
-      var sourceItem = dataStorage.FakeItems.Values
+      var sourceItem = dataStorage.GetFakeItems()
         .Where(si => si.TemplateID != TemplateIDs.Template)
         .Where(si => dataStorage.GetFakeTemplate(si.TemplateID) != null)
         .Where(si => dataStorage.GetFakeTemplate(si.TemplateID).Generated)

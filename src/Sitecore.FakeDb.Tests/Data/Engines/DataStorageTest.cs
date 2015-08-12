@@ -1,6 +1,9 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines
 {
+  using System;
+  using System.IO;
   using FluentAssertions;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Engines;
@@ -58,21 +61,21 @@
     public void ShouldInitializeDefaultFakeItems(string itemId, string itemName, string templateId, string parentId, string fullPath)
     {
       // assert
-      this.dataStorage.FakeItems[ID.Parse(itemId)].ID.ToString().Should().Be(itemId);
-      this.dataStorage.FakeItems[ID.Parse(itemId)].Name.Should().Be(itemName);
-      this.dataStorage.FakeItems[ID.Parse(itemId)].TemplateID.ToString().Should().Be(templateId);
-      this.dataStorage.FakeItems[ID.Parse(itemId)].ParentID.ToString().Should().Be(parentId);
-      this.dataStorage.FakeItems[ID.Parse(itemId)].FullPath.Should().Be(fullPath);
+      this.dataStorage.GetFakeItem(ID.Parse(itemId)).ID.ToString().Should().Be(itemId);
+      this.dataStorage.GetFakeItem(ID.Parse(itemId)).Name.Should().Be(itemName);
+      this.dataStorage.GetFakeItem(ID.Parse(itemId)).TemplateID.ToString().Should().Be(templateId);
+      this.dataStorage.GetFakeItem(ID.Parse(itemId)).ParentID.ToString().Should().Be(parentId);
+      this.dataStorage.GetFakeItem(ID.Parse(itemId)).FullPath.Should().Be(fullPath);
     }
 
     [Fact]
     public void ShouldCreateDefaultFakeTemplate()
     {
-      this.dataStorage.FakeItems[new TemplateID(new ID(TemplateIdSitecore))].Should().BeEquivalentTo(new DbTemplate("Main Section", new TemplateID(new ID(TemplateIdSitecore))));
-      this.dataStorage.FakeItems[new TemplateID(new ID(TemplateIdMainSection))].Should().BeEquivalentTo(new DbTemplate("Main Section", new TemplateID(new ID(TemplateIdMainSection))));
+      this.dataStorage.GetFakeItem(new TemplateID(new ID(TemplateIdSitecore))).Should().BeEquivalentTo(new DbTemplate("Main Section", new TemplateID(new ID(TemplateIdSitecore))));
+      this.dataStorage.GetFakeItem(new TemplateID(new ID(TemplateIdMainSection))).Should().BeEquivalentTo(new DbTemplate("Main Section", new TemplateID(new ID(TemplateIdMainSection))));
 
-      this.dataStorage.FakeItems[TemplateIDs.Template].Should().BeEquivalentTo(new DbTemplate("Template", TemplateIDs.Template));
-      this.dataStorage.FakeItems[TemplateIDs.Folder].Should().BeEquivalentTo(new DbTemplate("Folder", TemplateIDs.Folder));
+      this.dataStorage.GetFakeItem(TemplateIDs.Template).Should().BeEquivalentTo(new DbTemplate("Template", TemplateIDs.Template));
+      this.dataStorage.GetFakeItem(TemplateIDs.Folder).Should().BeEquivalentTo(new DbTemplate("Folder", TemplateIDs.Folder));
     }
 
     [Fact]
@@ -102,8 +105,8 @@
       var templateId = ID.NewID;
       var fieldId = ID.NewID;
 
-      this.dataStorage.FakeItems.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title", fieldId) } });
-      this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId) { Fields = { new DbField("Title", fieldId) { Value = "Welcome!" } } });
+      this.dataStorage.AddFakeItem(new DbTemplate("Sample", templateId) { Fields = { new DbField("Title", fieldId) } });
+      this.dataStorage.AddFakeItem(new DbItem("Sample", itemId, templateId) { Fields = { new DbField("Title", fieldId) { Value = "Welcome!" } } });
 
       // act
       var item = this.dataStorage.GetSitecoreItem(itemId, Language.Current);
@@ -120,8 +123,8 @@
       var templateId = ID.NewID;
       var fieldId = ID.NewID;
 
-      this.dataStorage.FakeItems.Add(templateId, new DbTemplate("Sample", templateId) { Fields = { new DbField("Title", fieldId) } });
-      this.dataStorage.FakeItems.Add(itemId, new DbItem("Sample", itemId, templateId));
+      this.dataStorage.AddFakeItem(new DbTemplate("Sample", templateId) { Fields = { new DbField("Title", fieldId) } });
+      this.dataStorage.AddFakeItem(new DbItem("Sample", itemId, templateId));
 
       // act
       var item = this.dataStorage.GetSitecoreItem(itemId, Language.Current);
@@ -141,7 +144,7 @@
     public void ShouldSetSecurityFieldForRootItem()
     {
       // assert
-      this.dataStorage.FakeItems[ItemIDs.RootID].Fields[FieldIDs.Security].Value.Should().Be("ar|Everyone|p*|+*|");
+      this.dataStorage.GetFakeItem(ItemIDs.RootID).Fields[FieldIDs.Security].Value.Should().Be("ar|Everyone|p*|+*|");
     }
 
     [Theory]
@@ -159,6 +162,27 @@
         // assert
         result.Should().Be(exists);
       }
+    }
+
+    [Theory, AutoData]
+    public void GetBlobStreamReturnsNullIfNoStreamFound(Guid someBlobId)
+    {
+      this.dataStorage.GetBlobStream(someBlobId).Should().BeNull();
+    }
+
+    [Theory, AutoData]
+    public void SetBlobStreamOverridesExistingStream(Guid blobId, [NoAutoProperties] MemoryStream existing, [NoAutoProperties]MemoryStream @new)
+    {
+      this.dataStorage.SetBlobStream(blobId, existing);
+      this.dataStorage.SetBlobStream(blobId, @new);
+
+      this.dataStorage.GetBlobStream(blobId).Should().BeSameAs(@new);
+    }
+
+    [Theory, AutoData]
+    public void SetBlobStreamThrowsIfStreamIsNull(Guid blobId)
+    {
+      Assert.Throws<ArgumentNullException>(() => this.dataStorage.SetBlobStream(blobId, null));
     }
   }
 }

@@ -24,7 +24,7 @@ namespace Sitecore.FakeDb.Tests.Data.Fields
         }
       })
       {
-        DbItem fakeItem = db.DataStorage.FakeItems[itemId];
+        DbItem fakeItem = db.DataStorage.GetFakeItem(itemId);
         Assert.Equal("<r/>", fakeItem.Fields[FieldIDs.LayoutField].Value);
 
         var item = db.GetItem("/sitecore/content/page");
@@ -51,7 +51,7 @@ namespace Sitecore.FakeDb.Tests.Data.Fields
             <d id=""{5A6E7DC3-987F-4E74-AF78-AC0E544975F2}"" l=""{4CA7478E-6184-4890-9072-1156DB468A1B}"" />
           </r>";
 
-      string itemDelta = 
+      string itemDelta =
         @"<r xmlns:p=""p"" xmlns:s=""s"" p:p=""1"">
               <d id=""{FE5D7FDF-89C0-4D99-9AA3-B5FBD009C9F3}"">
                   <r uid=""{BC2FDEAE-A971-420B-A874-BA5C767C42FE}"" s:id=""{B5BFA387-74C8-416B-98AF-01C9230C24B2}"" s:ph=""Score Content Main"" />

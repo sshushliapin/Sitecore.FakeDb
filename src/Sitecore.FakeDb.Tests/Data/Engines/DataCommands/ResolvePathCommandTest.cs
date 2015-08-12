@@ -1,11 +1,11 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Xunit;
-  using Xunit.Extensions;
 
   public class ResolvePathCommandTest : CommandTestBase
   {
@@ -34,7 +34,7 @@
       var itemId = ID.NewID;
       var item = new DbItem("home", itemId) { FullPath = "/sitecore/content/home" };
 
-      this.dataStorage.FakeItems.Add(itemId, item);
+      this.dataStorage.GetFakeItems().Returns(new[] { item });
 
       this.command.Initialize(path);
 

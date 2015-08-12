@@ -28,8 +28,7 @@
 
     protected override bool DoExecute()
     {
-      // TODO:[Minor] Check what should be returned if there is a blobId exists, but the stream is null.
-      return this.innerCommand.DataStorage.Blobs.ContainsKey(this.blobId);
+      return this.innerCommand.DataStorage.GetBlobStream(this.blobId) != null;
     }
   }
 }

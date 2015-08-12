@@ -3,6 +3,7 @@
   using System;
   using System.IO;
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Xunit;
@@ -37,8 +38,7 @@
       this.command.DoExecute();
 
       // assert
-      this.dataStorage.Blobs.Should().HaveCount(1);
-      this.dataStorage.Blobs[blobId].Should().BeSameAs(stream);
+      this.dataStorage.Received().SetBlobStream(blobId, stream);
     }
 
     private class OpenSetBlobStreamCommand : SetBlobStreamCommand

@@ -20,7 +20,7 @@
 
     protected override bool DoExecute()
     {
-      this.innerCommand.DataStorage.Blobs[this.BlobId] = this.Stream;
+      this.innerCommand.DataStorage.SetBlobStream(this.BlobId, this.Stream);
 
       return true;
     }

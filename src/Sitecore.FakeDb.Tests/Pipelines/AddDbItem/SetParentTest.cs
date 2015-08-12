@@ -22,7 +22,7 @@
       var item = new DbItem("sample branch") { ParentID = parentId };
 
       // act
-      this.processor.Process(new AddDbItemArgs(item, new DataStorage()));
+      this.processor.Process(new AddDbItemArgs(item, new DataStorage(Database.GetDatabase("master"))));
 
       // assert
       item.ParentID.Should().Be(parentId);
@@ -35,7 +35,7 @@
       var item = new DbItem("sample branch", ID.NewID, TemplateIDs.Template);
 
       // act
-      this.processor.Process(new AddDbItemArgs(item, new DataStorage()));
+      this.processor.Process(new AddDbItemArgs(item, new DataStorage(Database.GetDatabase("master"))));
 
       // assert
       item.ParentID.Should().Be(ItemIDs.TemplateRoot);
@@ -48,7 +48,7 @@
       var item = new DbItem("sample branch", ID.NewID, TemplateIDs.BranchTemplate);
 
       // act
-      this.processor.Process(new AddDbItemArgs(item, new DataStorage()));
+      this.processor.Process(new AddDbItemArgs(item, new DataStorage(Database.GetDatabase("master"))));
 
       // assert
       item.ParentID.Should().Be(ItemIDs.BranchesRoot);

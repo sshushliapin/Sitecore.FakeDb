@@ -2,6 +2,7 @@
 {
   using System.Linq;
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
   using Sitecore.FakeDb.Data.DataProviders;
@@ -18,8 +19,7 @@
     public FakeDataProviderTest()
     {
       var database = Database.GetDatabase("master");
-      this.dataStorage = new DataStorage(database);
-      this.dataStorage.FakeItems.Clear();
+      this.dataStorage = Substitute.For<DataStorage>(database);
 
       this.dataProvider = new FakeDataProvider(this.dataStorage);
       ReflectionUtil.CallMethod(database, "AddDataProvider", new object[] { this.dataProvider });
@@ -29,32 +29,26 @@
     public void ShouldGetTemplateIds()
     {
       // arrange
-      var t1 = this.CreateTestTemplateInDataStorage();
-      var t2 = this.CreateTestTemplateInDataStorage();
+      var template = this.CreateTestTemplateInDataStorage();
 
       // act
       var templateIds = this.dataProvider.GetTemplateItemIds(null);
 
       // assert
-      templateIds.Count.Should().Be(2);
-      templateIds.Should().Contain(t1.ID);
-      templateIds.Should().Contain(t2.ID);
+      templateIds.Should().Contain(template.ID);
     }
 
     [Fact]
     public void ShouldGetTemplatesFromDataStorage()
     {
       // arrange
-      var t1 = this.CreateTestTemplateInDataStorage();
-      var t2 = this.CreateTestTemplateInDataStorage();
+      var template = this.CreateTestTemplateInDataStorage();
 
       // act
       var templates = this.dataProvider.GetTemplates(null);
 
       // assert
-      templates.Count.Should().Be(2);
-      templates.GetTemplate(t1.ID).Name.Should().Be(t1.Name);
-      templates.GetTemplate(t2.ID).Name.Should().Be(t2.Name);
+      templates.GetTemplate(template.ID).Name.Should().Be(template.Name);
     }
 
     [Fact]
@@ -164,7 +158,7 @@
       var templateId = ID.NewID;
       var callContext = this.GetCallContext();
 
-      this.dataStorage.FakeItems.Add(itemId, new DbItem("home", itemId, templateId));
+      this.dataStorage.GetFakeItem(itemId).Returns(new DbItem("home", itemId, templateId));
 
       // act
       var definition = this.dataProvider.GetItemDefinition(itemId, callContext);
@@ -206,7 +200,7 @@
                        }
                    };
 
-      this.dataStorage.FakeItems.Add(itemId, item);
+      this.dataStorage.GetFakeItem(itemId).Returns(item);
 
       // act
       var versions = this.dataProvider.GetItemVersions(definition, callContext);
@@ -241,7 +235,7 @@
     {
       var templateId = ID.NewID;
       var template = new DbTemplate(templateId.ToString(), templateId);
-      this.dataStorage.FakeItems.Add(template.ID, template);
+      this.dataStorage.GetFakeTemplates().Returns(new[] { template });
 
       return template;
     }

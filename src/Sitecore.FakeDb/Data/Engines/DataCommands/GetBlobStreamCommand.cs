@@ -21,9 +21,7 @@
 
     protected override Stream DoExecute()
     {
-      var blobs = this.innerCommand.DataStorage.Blobs;
-
-      return blobs.ContainsKey(this.BlobId) ? blobs[this.BlobId] : null;
+      return this.innerCommand.DataStorage.GetBlobStream(this.BlobId);
     }
   }
 }

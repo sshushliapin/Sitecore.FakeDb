@@ -8,7 +8,6 @@
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.StringExtensions;
   using Xunit;
-  using Xunit.Extensions;
   using SaveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.SaveItemCommand;
 
   public class SaveItemCommandTest : CommandTestBase
@@ -46,10 +45,9 @@
       // arrange
       var originalItem = new DbItem("original item", this.itemId) { new DbField("Title", this.fieldId) { Value = "original title" } };
       this.dataStorage.GetFakeItem(this.itemId).Returns(originalItem);
-      this.dataStorage.FakeItems.Add(this.itemId, originalItem);
 
       var fields = new FieldList { { this.fieldId, "updated title" } };
-      var updatedItem = ItemHelper.CreateInstance(database, "updated item", this.itemId, ID.NewID, ID.Null, fields);
+      var updatedItem = ItemHelper.CreateInstance(this.database, "updated item", this.itemId, ID.NewID, ID.Null, fields);
 
       this.command.Initialize(updatedItem);
 
@@ -57,8 +55,8 @@
       this.command.DoExecute();
 
       // assert
-      dataStorage.FakeItems[this.itemId].Name.Should().Be("updated item");
-      dataStorage.FakeItems[this.itemId].Fields[this.fieldId].Value.Should().Be("updated title");
+      originalItem.Name.Should().Be("updated item");
+      originalItem.Fields[this.fieldId].Value.Should().Be("updated title");
     }
 
     [Fact]
@@ -107,7 +105,6 @@
       // arrange
       var originalItem = new DbItem("original item") { FullPath = originalPath };
       this.dataStorage.GetFakeItem(this.itemId).Returns(originalItem);
-      this.dataStorage.FakeItems.Add(this.itemId, originalItem);
 
       var updatedItem = ItemHelper.CreateInstance(this.database, "updated item", this.itemId);
       this.command.Initialize(updatedItem);
@@ -116,7 +113,7 @@
       this.command.DoExecute();
 
       // assertt
-      this.dataStorage.FakeItems[this.itemId].FullPath.Should().Be(expectedPath);
+      originalItem.FullPath.Should().Be(expectedPath);
     }
 
     [Fact]
@@ -128,7 +125,6 @@
 
       this.dataStorage.GetFakeItem(this.itemId).Returns(originalItem);
       this.dataStorage.GetFakeTemplate(this.templateId).Returns(template);
-      this.dataStorage.FakeItems.Add(this.itemId, originalItem);
 
       var fields = new FieldList { { this.fieldId, "updated title" } };
       var updatedItem = ItemHelper.CreateInstance(this.database, "updated item", this.itemId, ID.NewID, ID.Null, fields);
@@ -139,8 +135,8 @@
       this.command.DoExecute();
 
       // assert
-      dataStorage.FakeItems[this.itemId].Name.Should().Be("updated item");
-      dataStorage.FakeItems[this.itemId].Fields[this.fieldId].Value.Should().Be("updated title");
+      originalItem.Name.Should().Be("updated item");
+      originalItem.Fields[this.fieldId].Value.Should().Be("updated title");
     }
 
     private class OpenSaveItemCommand : SaveItemCommand

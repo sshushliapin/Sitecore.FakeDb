@@ -3,6 +3,7 @@
   using System;
   using System.IO;
   using FluentAssertions;
+  using NSubstitute;
   using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Xunit;
@@ -31,7 +32,7 @@
       var blobId = Guid.NewGuid();
       var stream = new MemoryStream();
 
-      this.dataStorage.Blobs.Add(blobId, stream);
+      this.dataStorage.GetBlobStream(blobId).Returns(stream);
 
       this.command.Initialize(blobId);
 
