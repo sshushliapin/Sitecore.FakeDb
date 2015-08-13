@@ -14,6 +14,8 @@
       var isResolved = this.ResolveTemplate(item, dataStorage);
       if (isResolved)
       {
+        new TemplateTreeBuilder().Build(item);
+
         return;
       }
 
@@ -41,6 +43,8 @@
                               };
         template.Add(templatefield);
       }
+
+      new TemplateTreeBuilder().Build(item);
 
       dataStorage.AddFakeItem(template);
     }

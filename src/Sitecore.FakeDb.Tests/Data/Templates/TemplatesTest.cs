@@ -31,11 +31,20 @@
     }
 
     [Theory, AutoData]
-    public void ShouldCreateTemplateFieldItems(ID templateId, ID fieldId)
+    public void ShouldCreateTemplateFieldItemsBasedOnFieldId(ID templateId, ID fieldId)
     {
       using (var db = new Db { new DbTemplate(templateId) { fieldId } })
       {
         db.GetItem(fieldId).Should().NotBeNull();
+      }
+    }
+
+    [Theory, AutoData]
+    public void ShouldCreateTemplateFieldItemsBasedOnDbField(ID templateId, DbField field)
+    {
+      using (var db = new Db { new DbTemplate(templateId) { field } })
+      {
+        db.GetItem(field.ID).Should().NotBeNull();
       }
     }
   }

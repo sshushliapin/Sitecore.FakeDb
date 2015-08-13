@@ -76,16 +76,5 @@
     {
       template.ParentID.Should().Be(ItemIDs.TemplateRoot);
     }
-
-    [Theory, AutoData]
-    public void ShouldCreateTemplateFieldItem(DbTemplate template, ID fieldId)
-    {
-      template.Add(fieldId);
-
-      var fieldItem = template.Children.Single();
-
-      fieldItem.ID.Should().Be(fieldId);
-      fieldItem.TemplateID.Should().Be(TemplateIDs.TemplateField);
-    }
   }
 }
