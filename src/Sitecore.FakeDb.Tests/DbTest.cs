@@ -1407,7 +1407,7 @@
     {
       using (var db = new Db
                         {
-                          new DbItem("TestField", this.itemId,TemplateIDs.TemplateField)
+                          new DbItem("TestField", this.itemId, TemplateIDs.TemplateField)
                         })
       {
         db.GetItem(this.itemId).Should().NotBeNull();

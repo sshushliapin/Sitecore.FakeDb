@@ -95,6 +95,8 @@
 
       var standardValueField = new DbField(field.Name, field.ID) { Value = standardValue };
       this.StandardValues.Add(standardValueField);
+
+      this.Children.Add(new DbItem(field.Name, field.ID, TemplateIDs.TemplateField));
     }
   }
 }
