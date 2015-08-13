@@ -317,7 +317,7 @@ namespace Sitecore.FakeDb.Data.Engines
 
       // TODO: Move 'Template' item to proper directory to correspond Sitecore structure.
       this.FakeItems.Add(TemplateIDs.TemplateSection, new DbItem(ItemNames.TemplateSection, TemplateIDs.TemplateSection, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
-      this.FakeItems.Add(TemplateIDs.TemplateField, new DbItem(ItemNames.TemplateField, TemplateIDs.TemplateField, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
+      this.FakeItems.Add(TemplateIDs.TemplateField, new DbTemplate(ItemNames.TemplateField, TemplateIDs.TemplateField) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
       this.FakeItems.Add(TemplateIDs.BranchTemplate, new DbItem(ItemNames.Branch, TemplateIDs.BranchTemplate, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
 
       this.AddFakeItem(new DbItem(ItemNames.DefinitionsRoot, Analytics.Data.Items.ItemIDs.DefinitionsRoot, TemplateIDs.Folder) { ParentID = ItemIDs.SystemRoot, FullPath = "/sitecore/system/Marketing Control Panel" });
