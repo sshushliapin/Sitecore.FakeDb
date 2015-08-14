@@ -1,4 +1,10 @@
-﻿0.28.1
+﻿0.29.1
+* [FIX] #80: Creating an Template Field item
+
+0.29.0
+* [NEW] #43: AutoFixture integration
+
+0.28.1
 * [NEW] #76: Register the `__Page Level Test Set Definition` analytics field
 * [FIX] #77: Standard Template should return empty `BaseTemplates` collection
 * [FIX] #79: Cannot set a field value for an item in Invariant language
