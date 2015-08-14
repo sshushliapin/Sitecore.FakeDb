@@ -229,7 +229,7 @@ namespace Sitecore.FakeDb.Data.Engines
           continue;
         }
 
-        var value = itemField.GetValue(language.Name, version.Number);
+        var value = itemField.GetValue(language.Name, version.Number) ?? string.Empty;
         allFields.Add(fieldId, value);
       }
 
@@ -297,6 +297,19 @@ namespace Sitecore.FakeDb.Data.Engines
             new DbField(AnalyticsIds.PageLevelTestDefinitionField) { Shared = true },
             new DbField(AnalyticsIds.TrackingField) { Type = "Tracking", Shared = true }
           });
+
+      this.FakeItems.Add(
+        TemplateIDs.TemplateField,
+        new DbTemplate(ItemNames.TemplateField, TemplateIDs.TemplateField, TemplateIDs.TemplateField)
+          {
+            ParentID = ItemIDs.TemplateRoot,
+            FullPath = "/sitecore/templates/template field",
+            Fields =
+              {
+                new DbField(TemplateFieldIDs.Type),
+                new DbField(TemplateFieldIDs.Shared)
+              }
+          });
     }
 
     protected void FillDefaultFakeItems()
@@ -316,8 +329,7 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems[ItemIDs.RootID].Add(this.FakeItems[ItemIDs.MediaLibraryRoot]);
 
       // TODO: Move 'Template' item to proper directory to correspond Sitecore structure.
-      this.FakeItems.Add(TemplateIDs.TemplateSection, new DbItem(ItemNames.TemplateSection, TemplateIDs.TemplateSection, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
-      this.FakeItems.Add(TemplateIDs.TemplateField, new DbItem(ItemNames.TemplateField, TemplateIDs.TemplateField, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template field" });
+      this.FakeItems.Add(TemplateIDs.TemplateSection, new DbTemplate(ItemNames.TemplateSection, TemplateIDs.TemplateSection, TemplateIDs.TemplateSection) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
       this.FakeItems.Add(TemplateIDs.BranchTemplate, new DbItem(ItemNames.Branch, TemplateIDs.BranchTemplate, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
 
       this.AddFakeItem(new DbItem(ItemNames.DefinitionsRoot, Analytics.Data.Items.ItemIDs.DefinitionsRoot, TemplateIDs.Folder) { ParentID = ItemIDs.SystemRoot, FullPath = "/sitecore/system/Marketing Control Panel" });

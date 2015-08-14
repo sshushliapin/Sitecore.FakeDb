@@ -1390,18 +1390,27 @@
     {
       // arrange
       using (var db = new Db
-                {
-                  new DbItem("home")
-                    {
-                      Children = { new DbItem("sub-item") }
-                    }
-                })
+                        {
+                          new DbItem("home") { Children = { new DbItem("sub-item") } }
+                        })
       {
         // act
         var item = db.GetItem("/sitecore/content/home/sub-item");
 
         // assert
         item.Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateItemBasedOnTemplateField()
+    {
+      using (var db = new Db
+                        {
+                          new DbItem("TestField", this.itemId, TemplateIDs.TemplateField)
+                        })
+      {
+        db.GetItem(this.itemId).Should().NotBeNull();
       }
     }
   }

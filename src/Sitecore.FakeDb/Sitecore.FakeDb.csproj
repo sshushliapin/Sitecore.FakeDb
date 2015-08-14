@@ -114,6 +114,7 @@
     <Compile Include="Security\Accounts\RolesInRolesSwitcher.cs" />
     <Compile Include="Security\Web\MembershipSwitcher.cs" />
     <Compile Include="Sites\FakeSiteContext.cs" />
+    <Compile Include="TemplateTreeBuilder.cs" />
     <Compile Include="ThreadLocalProviderSwitcher.cs" />
     <Compile Include="Resources\Media\FakeMediaProvider.cs" />
     <Compile Include="Resources\Media\MediaProviderSwitcher.cs" />
