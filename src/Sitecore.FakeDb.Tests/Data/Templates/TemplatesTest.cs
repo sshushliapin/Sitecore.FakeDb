@@ -4,6 +4,7 @@
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
+  using Sitecore.Data.Items;
   using Xunit;
 
   public class TemplatesTest
@@ -53,7 +54,24 @@
     {
       using (var db = new Db { new DbTemplate(templateId) { field } })
       {
-        db.GetItem(field.ID).Fields.Contains(TemplateFieldIDs.Type).Should().BeTrue();
+        var templateFieldItem = (TemplateFieldItem)db.GetItem(field.ID);
+
+        templateFieldItem.Type.Should().Be(field.Type);
+      }
+    }
+
+    [Theory]
+    [InlineAutoData(true)]
+    [InlineAutoData(false)]
+    public void ShouldCreateTemplateFieldItemWithSharedField(bool shared, ID templateId, DbField field)
+    {
+      field.Shared = shared;
+
+      using (var db = new Db { new DbTemplate(templateId) { field } })
+      {
+        var templateFieldItem = (TemplateFieldItem)db.GetItem(field.ID);
+
+        templateFieldItem.Shared.Should().Be(shared);
       }
     }
   }

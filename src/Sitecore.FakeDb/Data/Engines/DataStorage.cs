@@ -306,7 +306,8 @@ namespace Sitecore.FakeDb.Data.Engines
             FullPath = "/sitecore/templates/template field",
             Fields =
               {
-                new DbField(TemplateFieldIDs.Type)
+                new DbField(TemplateFieldIDs.Type),
+                new DbField(TemplateFieldIDs.Shared)
               }
           });
     }
