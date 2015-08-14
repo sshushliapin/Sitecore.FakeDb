@@ -54,7 +54,12 @@
     }
 
     public DbTemplate(string name, ID id)
-      : base(name, ID.IsNullOrEmpty(id) ? ID.NewID : id, TemplateIDs.Template)
+      : this(name, ID.IsNullOrEmpty(id) ? ID.NewID : id, TemplateIDs.Template)
+    {
+    }
+
+    internal DbTemplate(string name, ID id, ID templateId)
+      : base(name, ID.IsNullOrEmpty(id) ? ID.NewID : id, templateId)
     {
       this.StandardValues = new DbFieldCollection();
       this.ParentID = ItemIDs.TemplateRoot;

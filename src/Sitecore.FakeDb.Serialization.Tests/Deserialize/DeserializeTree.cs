@@ -26,7 +26,10 @@
       var nonTemplateItemCount =
           this.Db.Database.GetItem(TemplateIDs.TemplateFolder)
               .Axes.GetDescendants()
-              .Count(x => x.TemplateID != TemplateIDs.Template);
+              .Count(x =>
+                x.TemplateID != TemplateIDs.Template &&
+                x.TemplateID != TemplateIDs.TemplateSection &&
+                x.TemplateID != TemplateIDs.TemplateField);
 
       Assert.Equal(5, nonTemplateItemCount);
     }

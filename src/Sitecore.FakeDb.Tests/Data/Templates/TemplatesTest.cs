@@ -31,7 +31,7 @@
     }
 
     [Theory, AutoData]
-    public void ShouldCreateTemplateFieldItemsBasedOnFieldId(ID templateId, ID fieldId)
+    public void ShouldCreateTemplateFieldItemBasedOnFieldId(ID templateId, ID fieldId)
     {
       using (var db = new Db { new DbTemplate(templateId) { fieldId } })
       {
@@ -40,11 +40,20 @@
     }
 
     [Theory, AutoData]
-    public void ShouldCreateTemplateFieldItemsBasedOnDbField(ID templateId, DbField field)
+    public void ShouldCreateTemplateFieldItemBasedOnDbField(ID templateId, DbField field)
     {
       using (var db = new Db { new DbTemplate(templateId) { field } })
       {
         db.GetItem(field.ID).Should().NotBeNull();
+      }
+    }
+
+    [Theory, AutoData]
+    public void ShouldCreateTemplateFieldItemWithTypeField(ID templateId, DbField field)
+    {
+      using (var db = new Db { new DbTemplate(templateId) { field } })
+      {
+        db.GetItem(field.ID).Fields.Contains(TemplateFieldIDs.Type).Should().BeTrue();
       }
     }
   }

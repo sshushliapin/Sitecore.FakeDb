@@ -53,5 +53,18 @@
       var section = template.Children.Single();
       section.Children.Should().BeEmpty();
     }
+
+    [Theory, AutoData]
+    public void ShouldSaveFieldType(TemplateTreeBuilder sut, DbTemplate template, DbField field)
+    {
+      field.Type = "General Link";
+      template.Add(field);
+
+      sut.Build(template);
+
+      var section = template.Children.Single();
+      var fieldItem = section.Children.Single();
+      fieldItem.Fields[TemplateFieldIDs.Type].Value.Should().Be("General Link");
+    }
   }
 }

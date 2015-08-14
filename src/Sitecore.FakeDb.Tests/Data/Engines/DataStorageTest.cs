@@ -55,8 +55,8 @@
     [InlineData(ItemIdsSystemRoot, "system", TemplateIdMainSection, ItemIdsRootId, "/sitecore/system")]
     [InlineData(ItemIdsMediaLibraryRoot, "media library", TemplateIdMainSection, ItemIdsRootId, "/sitecore/media library")]
     [InlineData(TemplateIdsTemplate, "Template", TemplateIdsTemplate, ItemIdsTemplateRoot, "/sitecore/templates/template")]
-    [InlineData(ItemIdsTemplateSection, "Template section", TemplateIdsTemplate, ItemIdsTemplateRoot, "/sitecore/templates/template section")]
-    [InlineData(ItemIdsTemplateField, "Template field", TemplateIdsTemplate, ItemIdsTemplateRoot, "/sitecore/templates/template field")]
+    [InlineData(ItemIdsTemplateSection, "Template section", ItemIdsTemplateSection, ItemIdsTemplateRoot, "/sitecore/templates/template section")]
+    [InlineData(ItemIdsTemplateField, "Template field", ItemIdsTemplateField, ItemIdsTemplateRoot, "/sitecore/templates/template field")]
     [InlineData(TemplateIdsBranch, "Branch", TemplateIdsTemplate, ItemIdsTemplateRoot, "/sitecore/templates/branch")]
     public void ShouldInitializeDefaultFakeItems(string itemId, string itemName, string templateId, string parentId, string fullPath)
     {

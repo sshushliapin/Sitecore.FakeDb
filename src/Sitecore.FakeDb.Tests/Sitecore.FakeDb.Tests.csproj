@@ -157,6 +157,7 @@
     <Compile Include="DbTest.cs" />
     <Compile Include="DbItemTest.cs" />
     <Compile Include="Data\Query\FastQueryTest.cs" />
+    <Compile Include="FieldCollectionExtensions.cs" />
     <Compile Include="FieldNamingHelperTest.cs" />
     <Compile Include="GettingStarted.cs" />
     <Compile Include="GlobalsTest.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="Security\RoleProviderSwitcherTest.cs" />
     <Compile Include="Sites\FakeSiteContextTest.cs" />
     <Compile Include="Sites\SiteContextSwitcherTest.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="TemplateTreeBuilderTest.cs" />
     <Compile Include="ThreadLocalProviderSwitcherTest.cs" />
     <Compile Include="Links\LinkDatabaseSwitcherTest.cs" />

@@ -17,7 +17,11 @@
 
       foreach (var field in template.Fields.Where(field => !field.IsStandard()))
       {
-        dataSection.Children.Add(new DbItem(field.Name, field.ID, TemplateIDs.TemplateField));
+        dataSection.Children.Add(
+          new DbItem(field.Name, field.ID, TemplateIDs.TemplateField)
+            {
+              new DbField(TemplateFieldIDs.Type) { Value = field.Type }
+            });
       }
     }
   }
