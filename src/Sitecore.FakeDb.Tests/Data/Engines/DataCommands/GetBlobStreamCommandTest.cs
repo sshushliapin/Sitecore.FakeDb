@@ -4,65 +4,32 @@
   using System.IO;
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Data.Engines;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
+  using Sitecore.Reflection;
   using Xunit;
 
-  public class GetBlobStreamCommandTest : CommandTestBase
+  public class GetBlobStreamCommandTest
   {
-    private readonly OpenGetBlobStreamCommand command;
-
-    public GetBlobStreamCommandTest()
+    [Theory, DefaultAutoData]
+    public void ShouldGetBlobStreamFromDataStorage(GetBlobStreamCommand sut, Guid blobId, [Modest]MemoryStream stream)
     {
-      this.command = new OpenGetBlobStreamCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
-    }
+      // arrange
+      sut.DataStorage.GetBlobStream(blobId).Returns(stream);
+      sut.Initialize(blobId);
 
-    [Fact]
-    public void ShouldCreateInstance()
-    {
       // act & assert
-      this.command.CreateInstance().Should().BeOfType<GetBlobStreamCommand>();
+      ReflectionUtil.CallMethod(sut, "DoExecute").Should().BeSameAs(stream);
     }
 
-    [Fact]
-    public void ShouldGetBlobStreamFromDataStorage()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnNullIfNoBlobStreamExistsInDataStorage(GetBlobStreamCommand sut, Guid blobId)
     {
       // arrange
-      var blobId = Guid.NewGuid();
-      var stream = new MemoryStream();
+      sut.Initialize(blobId);
 
-      this.dataStorage.GetBlobStream(blobId).Returns(stream);
-
-      this.command.Initialize(blobId);
-
-      // act & act
-      this.command.DoExecute().Should().BeSameAs(stream);
-    }
-
-    [Fact]
-    public void ShouldReturnNullIfNoBlobStreamExistsInDataStorage()
-    {
-      // arrange
-      var blobId = Guid.NewGuid();
-
-      this.command.Initialize(blobId);
-
-      // act & act
-      this.command.DoExecute().Should().BeNull();
-    }
-
-    private class OpenGetBlobStreamCommand : GetBlobStreamCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.GetBlobStreamCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new Stream DoExecute()
-      {
-        return base.DoExecute();
-      }
+      // act & assert
+      ReflectionUtil.CallMethod(sut, "DoExecute").Should().BeNull();
     }
   }
 }

@@ -6,7 +6,7 @@
   using Sitecore.Data;
   using Sitecore.Data.Events;
   using Sitecore.Diagnostics;
-  using Sitecore.FakeDb.Data.Engines.DataCommands;
+  using Sitecore.FakeDb.Data.Engines.DataCommands.Prototypes;
   using Sitecore.IO;
 
   public class ConfigReader : Sitecore.Configuration.ConfigReader
@@ -27,25 +27,25 @@
     {
       var commands = e.Database.Engines.DataEngine.Commands;
 
-      commands.AddFromTemplatePrototype = new AddFromTemplateCommand();
-      commands.AddVersionPrototype = new AddVersionCommand();
-      commands.BlobStreamExistsPrototype = new BlobStreamExistsCommand();
-      commands.CopyItemPrototype = new CopyItemCommand();
-      commands.CreateItemPrototype = new CreateItemCommand();
-      commands.DeletePrototype = new DeleteItemCommand();
-      commands.GetBlobStreamPrototype = new GetBlobStreamCommand();
-      commands.GetChildrenPrototype = new GetChildrenCommand();
-      commands.GetItemPrototype = new GetItemCommand();
-      commands.GetParentPrototype = new GetParentCommand();
-      commands.GetRootItemPrototype = new GetRootItemCommand();
-      commands.GetVersionsPrototype = new GetVersionsCommand();
-      commands.HasChildrenPrototype = new HasChildrenCommand();
-      commands.MoveItemPrototype = new MoveItemCommand();
-      commands.RemoveDataPrototype = new RemoveDataCommand();
-      commands.RemoveVersionPrototype = new RemoveVersionCommand();
-      commands.ResolvePathPrototype = new ResolvePathCommand();
-      commands.SaveItemPrototype = new SaveItemCommand();
-      commands.SetBlobStreamPrototype = new SetBlobStreamCommand();
+      commands.AddFromTemplatePrototype = new AddFromTemplateCommandPrototype();
+      commands.AddVersionPrototype = new AddVersionCommandProtoype();
+      commands.BlobStreamExistsPrototype = new BlobStreamExistsCommandPrototype();
+      commands.CopyItemPrototype = new CopyItemCommandPrototype();
+      commands.CreateItemPrototype = new CreateItemCommandPrototype();
+      commands.DeletePrototype = new DeleteItemCommandPrototype();
+      commands.GetBlobStreamPrototype = new GetBlobStreamCommandPrototype();
+      commands.GetChildrenPrototype = new GetChildrenCommandPrototype();
+      commands.GetItemPrototype = new GetItemCommandPrototype();
+      commands.GetParentPrototype = new GetParentCommandPrototype();
+      commands.GetRootItemPrototype = new GetRootItemCommandPrototype();
+      commands.GetVersionsPrototype = new GetVersionsCommandPrototype();
+      commands.HasChildrenPrototype = new HasChildrenCommandPrototype();
+      commands.MoveItemPrototype = new MoveItemCommandPrototype();
+      commands.RemoveDataPrototype = new RemoveDataCommandPrototype();
+      commands.RemoveVersionPrototype = new RemoveVersionCommandPrototype();
+      commands.ResolvePathPrototype = new ResolvePathCommandPrototype();
+      commands.SaveItemPrototype = new SaveItemCommandPrototype();
+      commands.SetBlobStreamPrototype = new SetBlobStreamCommandPrototype();
     }
 
     private static void SetAppDomainAppPath()

@@ -1,27 +1,33 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System;
   using System.Linq;
   using Sitecore.Diagnostics;
 
-  public class RemoveVersionCommand : Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, IDataEngineCommand
+  public class RemoveVersionCommand : Sitecore.Data.Engines.DataCommands.RemoveVersionCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private readonly DataStorage dataStorage;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public RemoveVersionCommand(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand.Initialize(dataStorage);
+      this.dataStorage = dataStorage;
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.RemoveVersionCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.RemoveVersionCommand, RemoveVersionCommand>();
+      throw new NotSupportedException();
     }
 
     protected override bool DoExecute()
     {
-      var dbitem = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
+      var dbitem = this.dataStorage.GetFakeItem(this.Item.ID);
       var language = this.Item.Language.Name;
 
       var removed = false;

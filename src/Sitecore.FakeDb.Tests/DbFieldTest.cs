@@ -301,8 +301,7 @@
       new DbField(name).IsStandard().Should().Be(standard);
     }
 
-    [Theory]
-    [AutoData]
+    [Theory, AutoData]
     public void ShouldGetEmptyValueForInvariantLanguageIfNotShared(DbField field)
     {
       // arrange
@@ -312,8 +311,7 @@
       field.GetValue(Language.Invariant.Name, 0).Should().BeEmpty();
     }
 
-    [Theory]
-    [AutoData]
+    [Theory, AutoData]
     public void ShouldGetSomeValueForInvariantLanguageIfShared(DbField field)
     {
       // arrange

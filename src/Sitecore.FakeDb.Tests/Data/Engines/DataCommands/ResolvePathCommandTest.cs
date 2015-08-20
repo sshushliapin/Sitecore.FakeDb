@@ -3,88 +3,59 @@
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
-  using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
+  using Sitecore.Reflection;
   using Xunit;
 
-  public class ResolvePathCommandTest : CommandTestBase
+  public class ResolvePathCommandTest
   {
-    private readonly OpenResolvePathCommand command;
-
-    public ResolvePathCommandTest()
-    {
-      this.command = new OpenResolvePathCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
-    }
-
-    [Fact]
-    public void ShouldCreateInstance()
-    {
-      // act & assert
-      this.command.CreateInstance().Should().BeOfType<ResolvePathCommand>();
-    }
-
     [Theory]
-    [InlineData("/sitecore/content/home")]
-    [InlineData("/Sitecore/Content/Home")]
-    [InlineData("/Sitecore/Content/Home/")]
-    public void ShouldResolvePath(string path)
+    [InlineDefaultAutoData("/sitecore/content/home")]
+    [InlineDefaultAutoData("/Sitecore/Content/Home")]
+    [InlineDefaultAutoData("/Sitecore/Content/Home/")]
+    public void ShouldResolvePath(string path, ResolvePathCommand sut, DbItem item)
     {
       // arrange
-      var itemId = ID.NewID;
-      var item = new DbItem("home", itemId) { FullPath = "/sitecore/content/home" };
+      item.FullPath = "/sitecore/content/home";
+      sut.DataStorage.GetFakeItems().Returns(new[] { item });
 
-      this.dataStorage.GetFakeItems().Returns(new[] { item });
-
-      this.command.Initialize(path);
+      sut.Initialize(path);
 
       // act
-      var id = this.command.DoExecute();
+      var result = ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      id.Should().Be(itemId);
+      result.Should().Be(item.ID);
     }
 
-    [Fact]
-    public void ShouldReturnNullIfNoItemFound()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnNullIfNoItemFound(ResolvePathCommand sut)
     {
+      // arrange
       const string Path = "/sitecore/content/some path";
-      this.command.Initialize(Path);
+
+      sut.Initialize(Path);
 
       // act
-      var id = this.command.DoExecute();
+      var result = ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      id.Should().BeNull();
+      result.Should().BeNull();
     }
 
-    [Fact]
-    public void ShouldReturnIdIfPathIsId()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnIdIfPathIsId(ResolvePathCommand sut, ID itemId)
     {
       // arrange
-      var itemId = ID.NewID;
       var path = itemId.ToString();
 
-      this.command.Initialize(path);
+      sut.Initialize(path);
 
       // act
-      var resultId = this.command.DoExecute();
+      var result = ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      resultId.Should().Be(itemId);
-    }
-
-    private class OpenResolvePathCommand : ResolvePathCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.ResolvePathCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new ID DoExecute()
-      {
-        return base.DoExecute();
-      }
+      result.Should().Be(itemId);
     }
   }
 }

@@ -12,6 +12,11 @@
       return CreateInstance(Database.GetDatabase("master"));
     }
 
+    public static Item CreateInstance(ID itemId)
+    {
+      return CreateInstance(Database.GetDatabase("master"), itemId);
+    }
+
     public static Item CreateInstance(Database database)
     {
       return CreateInstance(database, ID.NewID.ToString());

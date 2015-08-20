@@ -1,29 +1,35 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System;
   using System.Linq;
   using Sitecore.Data;
   using Sitecore.Data.Fields;
   using Sitecore.Diagnostics;
 
-  public class SaveItemCommand : Sitecore.Data.Engines.DataCommands.SaveItemCommand, IDataEngineCommand
+  public class SaveItemCommand : Sitecore.Data.Engines.DataCommands.SaveItemCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private readonly DataStorage dataStorage;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public SaveItemCommand(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand.Initialize(dataStorage);
+      this.dataStorage = dataStorage;
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.SaveItemCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.SaveItemCommand, SaveItemCommand>();
+      throw new NotSupportedException();
     }
 
     protected override bool DoExecute()
     {
-      var fakeItem = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
+      var fakeItem = this.dataStorage.GetFakeItem(this.Item.ID);
 
       this.UpdateBasicData(fakeItem);
       this.UpdateFields(fakeItem);
@@ -51,7 +57,7 @@
 
     protected virtual void UpdateFields(DbItem fakeItem)
     {
-      var template = this.innerCommand.DataStorage.GetFakeTemplate(fakeItem.TemplateID);
+      var template = this.dataStorage.GetFakeTemplate(fakeItem.TemplateID);
       Assert.IsNotNull(template, "Item template not found. Item: '{0}', '{1}'; template: '{2}'.", this.Item.Name, this.Item.ID, this.Item.TemplateID);
 
       this.Item.Fields.ReadAll();
@@ -78,12 +84,12 @@
 
       foreach (var baseTemplate in template.BaseIDs
         .Where(b => b != TemplateIDs.StandardTemplate)
-        .Select(baseId => this.innerCommand.DataStorage.GetFakeTemplate(baseId)))
+        .Select(baseId => this.dataStorage.GetFakeTemplate(baseId)))
       {
         return this.IsTemplateField(baseTemplate, fieldId);
       }
 
-      var standardTemplate = this.innerCommand.DataStorage.GetFakeTemplate(TemplateIDs.StandardTemplate);
+      var standardTemplate = this.dataStorage.GetFakeTemplate(TemplateIDs.StandardTemplate);
       return standardTemplate.Fields.ContainsKey(fieldId);
     }
   }

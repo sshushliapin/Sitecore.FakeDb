@@ -4,65 +4,32 @@
   using System.IO;
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Data.Engines;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
+  using Sitecore.Reflection;
   using Xunit;
 
-  public class BlobStreamExistsCommandTest : CommandTestBase
+  public class BlobStreamExistsCommandTest
   {
-    private readonly OpenBlobStreamExistsCommand command;
-
-    public BlobStreamExistsCommandTest()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnTrueIfBlobStreamExistsInDataStorage(BlobStreamExistsCommand sut, Guid blobId, [Modest] MemoryStream stream)
     {
-      this.command = new OpenBlobStreamExistsCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
-    }
+      // arrange
+      sut.DataStorage.GetBlobStream(blobId).Returns(stream);
+      sut.Initialize(blobId);
 
-    [Fact]
-    public void ShouldCreateInstance()
-    {
       // act & assert
-      this.command.CreateInstance().Should().BeOfType<BlobStreamExistsCommand>();
+      ReflectionUtil.CallMethod(sut, "DoExecute").Should().Be(true);
     }
 
-    [Fact]
-    public void ShouldReturnTrueIfBlobStreamExistsInDataStorage()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnFalseIfNoBlobStreamExistsInDataStorage(BlobStreamExistsCommand sut, Guid blobId)
     {
       // arrange
-      var blobId = Guid.NewGuid();
-      var stream = new MemoryStream();
+      sut.Initialize(blobId);
 
-      this.dataStorage.GetBlobStream(blobId).Returns(stream);
-
-      this.command.Initialize(blobId);
-
-      // act & act
-      this.command.DoExecute().Should().BeTrue();
-    }
-
-    [Fact]
-    public void ShouldReturnFalseIfNoBlobStreamExistsInDataStorage()
-    {
-      // arrange
-      var blobId = Guid.NewGuid();
-
-      this.command.Initialize(blobId);
-
-      // act & act
-      this.command.DoExecute().Should().BeFalse();
-    }
-
-    private class OpenBlobStreamExistsCommand : BlobStreamExistsCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new bool DoExecute()
-      {
-        return base.DoExecute();
-      }
+      // act & assert
+      ReflectionUtil.CallMethod(sut, "DoExecute").Should().Be(false);
     }
   }
 }

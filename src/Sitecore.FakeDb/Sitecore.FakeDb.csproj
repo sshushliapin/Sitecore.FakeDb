@@ -61,9 +61,27 @@
   <ItemGroup>
     <Compile Include="Configuration\ConfigReader.cs" />
     <Compile Include="Configuration\Settings.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\AddFromTemplateCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\AddVersionCommandProtoype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\BlobStreamExistsCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\CopyItemCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\CreateItemCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\DeleteItemCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\GetBlobStreamCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\GetChildrenCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\GetItemCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\GetParentCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\GetRootItemCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\GetVersionsCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\HasChildrenCommandPrototype.cs" />
     <Compile Include="Data\Engines\DataCommands\IDataEngineCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\DataEngineCommand.cs" />
     <Compile Include="Configuration\DbConfiguration.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\MoveItemCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\RemoveVersionCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\ResolvePathCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\SaveItemCommandPrototype.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\SetBlobStreamCommandPrototype.cs" />
     <Compile Include="Data\Engines\ItemNames.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
     <Compile Include="DbFieldIds.cs" />
@@ -132,7 +150,7 @@
     <Compile Include="Data\Engines\DataCommands\GetVersionsCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\HasChildrenCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\MoveItemCommand.cs" />
-    <Compile Include="Data\Engines\DataCommands\RemoveDataCommand.cs" />
+    <Compile Include="Data\Engines\DataCommands\Prototypes\RemoveDataCommandPrototype.cs" />
     <Compile Include="Data\Engines\DataCommands\RemoveVersionCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\SaveItemCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\ResolvePathCommand.cs" />

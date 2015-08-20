@@ -2,57 +2,27 @@
 {
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
-  using Sitecore.FakeDb.Data.Items;
+  using Sitecore.Reflection;
   using Xunit;
   using Version = Sitecore.Data.Version;
 
-  public class GetRootItemCommandTest : CommandTestBase
+  public class GetRootItemCommandTest
   {
-    [Fact]
-    public void ShouldCreateInstance()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnRootItem(GetRootItemCommand sut, Item rootItem)
     {
       // arrange
-      var command = new OpenGetRootItemCommand();
-      command.Initialize(this.dataStorage);
-
-      // act & assert
-      command.CreateInstance().Should().BeOfType<GetRootItemCommand>();
-    }
-
-    [Fact]
-    public void ShouldReturnRootItem()
-    {
-      // arrange
-      var rootItem = ItemHelper.CreateInstance(this.database);
-
-      dataStorage.GetSitecoreItem(ItemIDs.RootID, rootItem.Language).Returns(rootItem);
-
-      var command = new OpenGetRootItemCommand { Engine = new DataEngine(this.database) };
-      command.Initialize(LanguageManager.DefaultLanguage, Version.Latest);
-      command.Initialize(this.dataStorage);
+      sut.DataStorage.GetSitecoreItem(ItemIDs.RootID, rootItem.Language).Returns(rootItem);
+      sut.Initialize(LanguageManager.DefaultLanguage, Version.Latest);
 
       // act
-      var result = command.DoExecute();
+      var result = ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       result.Should().Be(rootItem);
-    }
-
-    private class OpenGetRootItemCommand : GetRootItemCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.GetRootItemCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new Item DoExecute()
-      {
-        return base.DoExecute();
-      }
     }
   }
 }

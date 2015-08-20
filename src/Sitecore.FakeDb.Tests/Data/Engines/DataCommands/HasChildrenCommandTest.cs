@@ -2,80 +2,45 @@
 {
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Data;
-  using Sitecore.Data.Engines;
+  using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
-  using Sitecore.FakeDb.Data.Items;
+  using Sitecore.Reflection;
   using Xunit;
 
-  public class HasChildrenCommandTest : CommandTestBase
+  public class HasChildrenCommandTest
   {
-    [Fact]
-    public void ShouldCreateInstance()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnTrueIfHasChildren(HasChildrenCommand sut, Item item, DbItem fakeItem, DbItem child)
     {
       // arrange
-      var command = new OpenHasChildrenCommand();
-      command.Initialize(this.dataStorage);
+      fakeItem.Add(child);
 
-      // act & assert
-      command.CreateInstance().Should().BeOfType<HasChildrenCommand>();
-    }
+      sut.DataStorage.GetSitecoreItem(item.ID, item.Language).Returns(item);
+      sut.DataStorage.GetFakeItem(item.ID).Returns(fakeItem);
 
-    [Fact]
-    public void ShouldReturnTrueIfHasChildren()
-    {
-      // arrange
-      var itemId = ID.NewID;
-      var item = ItemHelper.CreateInstance(this.database, itemId);
-      var fakeItemWithChildren = new DbItem("parent", itemId) { new DbItem("child") };
-
-      this.dataStorage.GetSitecoreItem(itemId, item.Language).Returns(item);
-      this.dataStorage.GetFakeItem(itemId).Returns(fakeItemWithChildren);
-
-      var command = new OpenHasChildrenCommand { Engine = new DataEngine(this.database) };
-      command.Initialize(item);
-      command.Initialize(this.dataStorage);
+      sut.Initialize(item);
 
       // act
-      var result = command.DoExecute();
+      var result = (bool)ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       result.Should().BeTrue();
     }
 
-    [Fact]
-    public void ShouldReturnFalseIfNoChildren()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnFalseIfNoChildren(HasChildrenCommand sut, Item item, DbItem fakeItemWithoutChildren)
     {
       // arrange
-      var itemId = ID.NewID;
-      var sitecoreItem = ItemHelper.CreateInstance(this.database, itemId);
-      var fakeItemWithoutChildren = new DbItem("item", itemId);
+      sut.DataStorage.GetSitecoreItem(item.ID, item.Language).Returns(item);
+      sut.DataStorage.GetFakeItem(item.ID).Returns(fakeItemWithoutChildren);
 
-      this.dataStorage.GetSitecoreItem(itemId, sitecoreItem.Language).Returns(sitecoreItem);
-      this.dataStorage.GetFakeItem(itemId).Returns(fakeItemWithoutChildren);
-
-      var command = new OpenHasChildrenCommand { Engine = new DataEngine(this.database) };
-      command.Initialize(sitecoreItem);
-      command.Initialize(this.dataStorage);
+      sut.Initialize(item);
 
       // act
-      var result = command.DoExecute();
+      var result = (bool)ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       result.Should().BeFalse();
-    }
-
-    private class OpenHasChildrenCommand : HasChildrenCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.HasChildrenCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new bool DoExecute()
-      {
-        return base.DoExecute();
-      }
     }
   }
 }

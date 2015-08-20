@@ -23,21 +23,5 @@
       // assert
       command.DataStorage.Should().Be(this.dataStorage);
     }
-
-    [Fact]
-    public void ShouldCreateInstance()
-    {
-      // arrange
-      var command = new DataEngineCommand();
-      command.Initialize(this.dataStorage);
-
-      // act
-      var newCommand = command.CreateInstance<Sitecore.Data.Engines.DataCommands.GetItemCommand, GetItemCommand>();
-
-      // assert
-      newCommand.Should().NotBeNull();
-      newCommand.Should().BeAssignableTo<Sitecore.Data.Engines.DataCommands.GetItemCommand>();
-      newCommand.Should().BeOfType<GetItemCommand>();
-    }
   }
 }

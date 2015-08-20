@@ -1,30 +1,36 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using Sitecore.Data;
+  using System;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
+  using Version = Sitecore.Data.Version;
 
-  public class AddVersionCommand : Sitecore.Data.Engines.DataCommands.AddVersionCommand, IDataEngineCommand
+  public class AddVersionCommand : Sitecore.Data.Engines.DataCommands.AddVersionCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private readonly DataStorage dataStorage;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public AddVersionCommand(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand.Initialize(dataStorage);
+      this.dataStorage = dataStorage;
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.AddVersionCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.AddVersionCommand, AddVersionCommand>();
+      throw new NotSupportedException();
     }
 
     protected override Item DoExecute()
     {
-      var dbitem = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
+      var dbitem = this.dataStorage.GetFakeItem(this.Item.ID);
       var language = this.Item.Language.Name;
-      var currentVersion = Item.Version.Number;
+      var currentVersion = this.Item.Version.Number;
       var nextVersion = new Version(currentVersion + 1);
 
       foreach (var field in dbitem.Fields)
@@ -35,7 +41,7 @@
 
       dbitem.VersionsCount[language] = nextVersion.Number;
 
-      return this.innerCommand.DataStorage.GetSitecoreItem(this.Item.ID, this.Item.Language, nextVersion);
+      return this.dataStorage.GetSitecoreItem(this.Item.ID, this.Item.Language, nextVersion);
     }
   }
 }

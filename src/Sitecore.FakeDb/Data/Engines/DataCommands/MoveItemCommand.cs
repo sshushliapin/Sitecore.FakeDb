@@ -1,33 +1,37 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System;
   using Sitecore.Diagnostics;
 
-  public class MoveItemCommand : Sitecore.Data.Engines.DataCommands.MoveItemCommand, IDataEngineCommand
+  public class MoveItemCommand : Sitecore.Data.Engines.DataCommands.MoveItemCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private readonly DataStorage dataStorage;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public MoveItemCommand(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand.Initialize(dataStorage);
+      this.dataStorage = dataStorage;
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.MoveItemCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.MoveItemCommand, MoveItemCommand>();
+      throw new NotSupportedException();
     }
 
     protected override bool DoExecute()
     {
-      var dataStorage = this.innerCommand.DataStorage;
+      var fakeItem = this.dataStorage.GetFakeItem(this.Item.ID);
 
-      var fakeItem = dataStorage.GetFakeItem(this.Item.ID);
-
-      var oldParent = dataStorage.GetFakeItem(fakeItem.ParentID);
+      var oldParent = this.dataStorage.GetFakeItem(fakeItem.ParentID);
       oldParent.Children.Remove(fakeItem);
 
-      var destination = dataStorage.GetFakeItem(this.Destination.ID);
+      var destination = this.dataStorage.GetFakeItem(this.Destination.ID);
 
       destination.Children.Add(fakeItem);
 

@@ -1,29 +1,35 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System;
   using System.Linq;
   using Sitecore.Collections;
-  using Sitecore.Data;
   using Sitecore.Diagnostics;
+  using Version = Sitecore.Data.Version;
 
-  public class GetVersionsCommand : Sitecore.Data.Engines.DataCommands.GetVersionsCommand, IDataEngineCommand
+  public class GetVersionsCommand : Sitecore.Data.Engines.DataCommands.GetVersionsCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private readonly DataStorage dataStorage;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public GetVersionsCommand(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand.Initialize(dataStorage);
+      this.dataStorage = dataStorage;
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.GetVersionsCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.GetVersionsCommand, GetVersionsCommand>();
+      throw new NotSupportedException();
     }
 
     protected override VersionCollection DoExecute()
     {
-      var dbitem = this.innerCommand.DataStorage.GetFakeItem(this.Item.ID);
+      var dbitem = this.dataStorage.GetFakeItem(this.Item.ID);
       var language = this.Language.Name;
       var versionsCount = 0;
 

@@ -5,31 +5,32 @@
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data;
+  using Sitecore.FakeDb.Data.Engines.DataCommands.Prototypes;
   using Sitecore.FakeDb.Data.IDTables;
   using Xunit;
 
   public class ConfigurationTest
   {
     [Theory]
-    [InlineData("AddFromTemplatePrototype", typeof(FakeDb.Data.Engines.DataCommands.AddFromTemplateCommand))]
-    [InlineData("AddVersionPrototype", typeof(FakeDb.Data.Engines.DataCommands.AddVersionCommand))]
-    [InlineData("BlobStreamExistsPrototype", typeof(FakeDb.Data.Engines.DataCommands.BlobStreamExistsCommand))]
-    [InlineData("CopyItemPrototype", typeof(FakeDb.Data.Engines.DataCommands.CopyItemCommand))]
-    [InlineData("CreateItemPrototype", typeof(FakeDb.Data.Engines.DataCommands.CreateItemCommand))]
-    [InlineData("DeletePrototype", typeof(FakeDb.Data.Engines.DataCommands.DeleteItemCommand))]
-    [InlineData("GetBlobStreamPrototype", typeof(FakeDb.Data.Engines.DataCommands.GetBlobStreamCommand))]
-    [InlineData("GetChildrenPrototype", typeof(FakeDb.Data.Engines.DataCommands.GetChildrenCommand))]
-    [InlineData("GetItemPrototype", typeof(FakeDb.Data.Engines.DataCommands.GetItemCommand))]
-    [InlineData("GetParentPrototype", typeof(FakeDb.Data.Engines.DataCommands.GetParentCommand))]
-    [InlineData("GetRootItemPrototype", typeof(FakeDb.Data.Engines.DataCommands.GetRootItemCommand))]
-    [InlineData("GetVersionsPrototype", typeof(FakeDb.Data.Engines.DataCommands.GetVersionsCommand))]
-    [InlineData("HasChildrenPrototype", typeof(FakeDb.Data.Engines.DataCommands.HasChildrenCommand))]
-    [InlineData("MoveItemPrototype", typeof(FakeDb.Data.Engines.DataCommands.MoveItemCommand))]
-    [InlineData("RemoveDataPrototype", typeof(FakeDb.Data.Engines.DataCommands.RemoveDataCommand))]
-    [InlineData("RemoveVersionPrototype", typeof(FakeDb.Data.Engines.DataCommands.RemoveVersionCommand))]
-    [InlineData("ResolvePathPrototype", typeof(FakeDb.Data.Engines.DataCommands.ResolvePathCommand))]
-    [InlineData("SaveItemPrototype", typeof(FakeDb.Data.Engines.DataCommands.SaveItemCommand))]
-    [InlineData("SetBlobStreamPrototype", typeof(FakeDb.Data.Engines.DataCommands.SetBlobStreamCommand))]
+    [InlineData("AddFromTemplatePrototype", typeof(AddFromTemplateCommandPrototype))]
+    [InlineData("AddVersionPrototype", typeof(AddVersionCommandProtoype))]
+    [InlineData("BlobStreamExistsPrototype", typeof(BlobStreamExistsCommandPrototype))]
+    [InlineData("CopyItemPrototype", typeof(CopyItemCommandPrototype))]
+    [InlineData("CreateItemPrototype", typeof(CreateItemCommandPrototype))]
+    [InlineData("DeletePrototype", typeof(DeleteItemCommandPrototype))]
+    [InlineData("GetBlobStreamPrototype", typeof(GetBlobStreamCommandPrototype))]
+    [InlineData("GetChildrenPrototype", typeof(GetChildrenCommandPrototype))]
+    [InlineData("GetItemPrototype", typeof(GetItemCommandPrototype))]
+    [InlineData("GetParentPrototype", typeof(GetParentCommandPrototype))]
+    [InlineData("GetRootItemPrototype", typeof(GetRootItemCommandPrototype))]
+    [InlineData("GetVersionsPrototype", typeof(GetVersionsCommandPrototype))]
+    [InlineData("HasChildrenPrototype", typeof(HasChildrenCommandPrototype))]
+    [InlineData("MoveItemPrototype", typeof(MoveItemCommandPrototype))]
+    [InlineData("RemoveDataPrototype", typeof(RemoveDataCommandPrototype))]
+    [InlineData("RemoveVersionPrototype", typeof(RemoveVersionCommandPrototype))]
+    [InlineData("ResolvePathPrototype", typeof(ResolvePathCommandPrototype))]
+    [InlineData("SaveItemPrototype", typeof(SaveItemCommandPrototype))]
+    [InlineData("SetBlobStreamPrototype", typeof(SetBlobStreamCommandPrototype))]
     public void ShouldRegisterFakeCommand(string propertyName, Type propertyType)
     {
       // arrange

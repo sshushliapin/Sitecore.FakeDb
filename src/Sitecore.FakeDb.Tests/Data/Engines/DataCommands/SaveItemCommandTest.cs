@@ -1,155 +1,125 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
   using System;
+  using System.Reflection;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
-  using Sitecore.Data.Engines;
   using Sitecore.FakeDb.Data.Items;
+  using Sitecore.Reflection;
   using Sitecore.StringExtensions;
   using Xunit;
   using SaveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.SaveItemCommand;
 
-  public class SaveItemCommandTest : CommandTestBase
+  public class SaveItemCommandTest
   {
-    private readonly ID templateId;
-
-    private readonly ID itemId;
-
-    private readonly ID fieldId;
-
-    private readonly OpenSaveItemCommand command;
-
-    public SaveItemCommandTest()
-    {
-      this.templateId = ID.NewID;
-      this.itemId = ID.NewID;
-      this.fieldId = ID.NewID;
-
-      this.dataStorage.GetFakeTemplate(null).ReturnsForAnyArgs(new DbTemplate("Sample", this.templateId));
-
-      this.command = new OpenSaveItemCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
-    }
-
-    [Fact]
-    public void ShouldCreateInstance()
-    {
-      // act & assert
-      this.command.CreateInstance().Should().BeOfType<SaveItemCommand>();
-    }
-
-    [Fact]
-    public void ShouldUpdateExistingItemInDataStorage()
+    [Theory, DefaultAutoData]
+    public void ShouldUpdateExistingItemInDataStorage(SaveItemCommand sut, ID itemId, ID templateId, ID fieldId)
     {
       // arrange
-      var originalItem = new DbItem("original item", this.itemId) { new DbField("Title", this.fieldId) { Value = "original title" } };
-      this.dataStorage.GetFakeItem(this.itemId).Returns(originalItem);
+      var originalItem = new DbItem("original item", itemId) { new DbField("Title", fieldId) { Value = "original title" } };
+      sut.DataStorage.GetFakeItem(itemId).Returns(originalItem);
+      sut.DataStorage.GetFakeTemplate(null).ReturnsForAnyArgs(new DbTemplate("Sample", templateId));
 
-      var fields = new FieldList { { this.fieldId, "updated title" } };
-      var updatedItem = ItemHelper.CreateInstance(this.database, "updated item", this.itemId, ID.NewID, ID.Null, fields);
+      var fields = new FieldList { { fieldId, "updated title" } };
+      var updatedItem = ItemHelper.CreateInstance(sut.Database, "updated item", itemId, ID.NewID, ID.Null, fields);
 
-      this.command.Initialize(updatedItem);
+      sut.Initialize(updatedItem);
 
       // act
-      this.command.DoExecute();
+      ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       originalItem.Name.Should().Be("updated item");
-      originalItem.Fields[this.fieldId].Value.Should().Be("updated title");
+      originalItem.Fields[fieldId].Value.Should().Be("updated title");
     }
 
-    [Fact]
-    public void ShouldThrowExceptionIfNoTemplateFound()
+    [Theory, DefaultAutoData]
+    public void ShouldThrowExceptionIfNoTemplateFound(SaveItemCommand sut, ID itemId, ID templateId)
     {
       // arrange
-      var originalItem = new DbItem("original item", this.itemId, this.templateId);
-      this.dataStorage.GetFakeItem(this.itemId).Returns(originalItem);
-      this.dataStorage.GetFakeTemplate(this.templateId).Returns(x => null);
+      var originalItem = new DbItem("original item", itemId, templateId);
+      sut.DataStorage.GetFakeItem(itemId).Returns(originalItem);
+      sut.DataStorage.GetFakeTemplate(templateId).Returns(x => null);
 
-      var updatedItem = ItemHelper.CreateInstance(this.database, "updated item", this.itemId, this.templateId);
+      var updatedItem = ItemHelper.CreateInstance(sut.Database, "updated item", itemId, templateId);
 
-      this.command.Initialize(updatedItem);
+      sut.Initialize(updatedItem);
 
       // act
-      Action action = () => this.command.DoExecute();
+      Action action = () => ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      action.ShouldThrow<InvalidOperationException>().WithMessage("Item template not found. Item: 'updated item', '{0}'; template: '{1}'.".FormatWith(this.itemId, this.templateId));
+      action
+        .ShouldThrow<TargetInvocationException>()
+        .WithInnerException<InvalidOperationException>()
+        .WithInnerMessage("Item template not found. Item: 'updated item', '{0}'; template: '{1}'.".FormatWith(itemId, templateId));
     }
 
-    [Fact]
-    public void ShouldThrowExceptionIfNoFieldFoundInOriginalItem()
+    [Theory, DefaultAutoData]
+    public void ShouldThrowExceptionIfNoFieldFoundInOriginalItem(SaveItemCommand sut, ID itemId, ID templateId, ID fieldId)
     {
       // arrange
-      var originalItem = new DbItem("original item", this.itemId) { new DbField("Title") };
-      this.dataStorage.GetFakeItem(this.itemId).Returns(originalItem);
+      var originalItem = new DbItem("original item", itemId) { new DbField("Title") };
+      sut.DataStorage.GetFakeItem(itemId).Returns(originalItem);
+      sut.DataStorage.GetFakeTemplate(null).ReturnsForAnyArgs(new DbTemplate("Sample", templateId));
 
-      var fields = new FieldList { { this.fieldId, "updated title" } };
-      var updatedItem = ItemHelper.CreateInstance(this.database, "updated item", this.itemId, ID.NewID, ID.Null, fields);
+      var fields = new FieldList { { fieldId, "updated title" } };
+      var updatedItem = ItemHelper.CreateInstance(sut.Database, "updated item", itemId, ID.NewID, ID.Null, fields);
 
-      this.command.Initialize(updatedItem);
+      sut.Initialize(updatedItem);
 
       // act
-      Action action = () => this.command.DoExecute();
+      Action action = () => ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      action.ShouldThrow<InvalidOperationException>().WithMessage("Item field not found. Item: 'updated item', '{0}'; field: '{1}'.".FormatWith(this.itemId, this.fieldId));
+      action
+        .ShouldThrow<TargetInvocationException>()
+        .WithInnerException<InvalidOperationException>()
+        .WithInnerMessage("Item field not found. Item: 'updated item', '{0}'; field: '{1}'.".FormatWith(itemId, fieldId));
     }
 
     [Theory]
-    [InlineData("/sitecore/content/original item", "/sitecore/content/updated item")]
-    [InlineData("/sitecore/content/original item/original item", "/sitecore/content/original item/updated item")]
-    public void ShouldUpdateItemPathAfterRename(string originalPath, string expectedPath)
+    [InlineDefaultAutoData("/sitecore/content/original item", "/sitecore/content/updated item")]
+    [InlineDefaultAutoData("/sitecore/content/original item/original item", "/sitecore/content/original item/updated item")]
+    public void ShouldUpdateItemPathAfterRename(string originalPath, string expectedPath, SaveItemCommand sut, ID itemId, ID templateId)
     {
       // arrange
       var originalItem = new DbItem("original item") { FullPath = originalPath };
-      this.dataStorage.GetFakeItem(this.itemId).Returns(originalItem);
+      sut.DataStorage.GetFakeItem(itemId).Returns(originalItem);
+      sut.DataStorage.GetFakeTemplate(null).ReturnsForAnyArgs(new DbTemplate("Sample", templateId));
 
-      var updatedItem = ItemHelper.CreateInstance(this.database, "updated item", this.itemId);
-      this.command.Initialize(updatedItem);
+      var updatedItem = ItemHelper.CreateInstance(sut.Database, "updated item", itemId);
+      sut.Initialize(updatedItem);
 
       // act
-      this.command.DoExecute();
+      ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assertt
       originalItem.FullPath.Should().Be(expectedPath);
     }
 
-    [Fact]
-    public void ShouldAddMissingFieldToItemIfFieldExistsInTemplate()
+    [Theory, DefaultAutoData]
+    public void ShouldAddMissingFieldToItemIfFieldExistsInTemplate(SaveItemCommand sut, ID itemId, ID templateId, ID fieldId)
     {
       // arrange
-      var template = new DbTemplate("Sample", this.templateId) { this.fieldId };
-      var originalItem = new DbItem("original item", this.itemId, this.templateId);
+      var template = new DbTemplate("Sample", templateId) { fieldId };
+      var originalItem = new DbItem("original item", itemId, templateId);
 
-      this.dataStorage.GetFakeItem(this.itemId).Returns(originalItem);
-      this.dataStorage.GetFakeTemplate(this.templateId).Returns(template);
+      sut.DataStorage.GetFakeItem(itemId).Returns(originalItem);
+      sut.DataStorage.GetFakeTemplate(templateId).Returns(template);
 
-      var fields = new FieldList { { this.fieldId, "updated title" } };
-      var updatedItem = ItemHelper.CreateInstance(this.database, "updated item", this.itemId, ID.NewID, ID.Null, fields);
+      var fields = new FieldList { { fieldId, "updated title" } };
+      var updatedItem = ItemHelper.CreateInstance(sut.Database, "updated item", itemId, ID.NewID, ID.Null, fields);
 
-      this.command.Initialize(updatedItem);
+      sut.Initialize(updatedItem);
 
       // act
-      this.command.DoExecute();
+      ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       originalItem.Name.Should().Be("updated item");
-      originalItem.Fields[this.fieldId].Value.Should().Be("updated title");
-    }
-
-    private class OpenSaveItemCommand : SaveItemCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.SaveItemCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new void DoExecute()
-      {
-        base.DoExecute();
-      }
+      originalItem.Fields[fieldId].Value.Should().Be("updated title");
     }
   }
 }

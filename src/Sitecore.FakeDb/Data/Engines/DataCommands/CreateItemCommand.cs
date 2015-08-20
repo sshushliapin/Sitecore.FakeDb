@@ -1,32 +1,37 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
 
-  public class CreateItemCommand : Sitecore.Data.Engines.DataCommands.CreateItemCommand, IDataEngineCommand
+  public class CreateItemCommand : Sitecore.Data.Engines.DataCommands.CreateItemCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private readonly DataStorage dataStorage;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public CreateItemCommand(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand.Initialize(dataStorage);
+      this.dataStorage = dataStorage;
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.CreateItemCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.CreateItemCommand, CreateItemCommand>();
+      throw new NotSupportedException();
     }
 
     protected override Item DoExecute()
     {
-      var dataStorage = this.innerCommand.DataStorage;
       var item = new DbItem(this.ItemName, this.ItemId, this.TemplateId) { ParentID = this.Destination.ID };
-      dataStorage.AddFakeItem(item);
+      this.dataStorage.AddFakeItem(item);
       item.VersionsCount.Clear();
 
-      return dataStorage.GetSitecoreItem(this.ItemId);
+      return this.dataStorage.GetSitecoreItem(this.ItemId);
     }
   }
 }

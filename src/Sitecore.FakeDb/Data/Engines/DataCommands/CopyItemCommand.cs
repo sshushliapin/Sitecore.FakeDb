@@ -1,40 +1,44 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System;
   using System.Linq;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.Diagnostics;
 
-  public class CopyItemCommand : Sitecore.Data.Engines.DataCommands.CopyItemCommand, IDataEngineCommand
+  public class CopyItemCommand : Sitecore.Data.Engines.DataCommands.CopyItemCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private readonly DataStorage dataStorage;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public CopyItemCommand(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand.Initialize(dataStorage);
+      this.dataStorage = dataStorage;
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.CopyItemCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.CopyItemCommand, CopyItemCommand>();
+      throw new NotSupportedException();
     }
 
     protected override Item DoExecute()
     {
-      var dataStorage = this.innerCommand.DataStorage;
-
       var item = new DbItem(this.CopyName, this.CopyId, this.Source.TemplateID) { ParentID = this.Destination.ID };
-      dataStorage.AddFakeItem(item);
+      this.dataStorage.AddFakeItem(item);
 
-      var fakeItem = dataStorage.GetFakeItem(this.Source.ID);
-      var fakeCopy = dataStorage.GetFakeItem(this.CopyId);
+      var fakeItem = this.dataStorage.GetFakeItem(this.Source.ID);
+      var fakeCopy = this.dataStorage.GetFakeItem(this.CopyId);
 
       this.CopyFields(fakeItem, fakeCopy);
 
-      var copy = dataStorage.GetSitecoreItem(this.CopyId, this.Source.Language);
+      var copy = this.dataStorage.GetSitecoreItem(this.CopyId, this.Source.Language);
 
       if (!this.Deep)
       {

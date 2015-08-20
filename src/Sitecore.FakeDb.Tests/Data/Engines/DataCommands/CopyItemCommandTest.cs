@@ -2,73 +2,29 @@
 {
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Data;
-  using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
+  using Sitecore.Reflection;
   using Xunit;
   using CopyItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.CopyItemCommand;
 
-  public class CopyItemCommandTest : CommandTestBase
+  public class CopyItemCommandTest
   {
-    private readonly ID templateId;
-
-    private readonly ID itemId;
-
-    private readonly ID copyId;
-
-    private readonly OpenCopyItemCommand command;
-
-    public CopyItemCommandTest()
-    {
-      this.templateId = ID.NewID;
-      this.itemId = ID.NewID;
-      this.copyId = ID.NewID;
-
-      this.command = new OpenCopyItemCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
-    }
-
-    [Fact]
-    public void ShouldCreateInstance()
-    {
-      // act & assert
-      this.command.CreateInstance().Should().BeOfType<CopyItemCommand>();
-    }
-
-    [Fact]
-    public void ShouldCopyItem()
+    [Theory, DefaultAutoData]
+    public void ShouldCopyItem(CopyItemCommand sut, Item item, Item copy, Item destination)
     {
       // arrange
-      var item = ItemHelper.CreateInstance(this.database, "home", this.itemId, this.templateId, ID.Null, new FieldList());
-      var copy = ItemHelper.CreateInstance(this.database);
-      var destination = ItemHelper.CreateInstance(this.database);
+      sut.DataStorage.GetFakeItem(item.ID).Returns(new DbItem("home"));
+      sut.DataStorage.GetFakeItem(copy.ID).Returns(new DbItem("copy"));
+      sut.DataStorage.GetSitecoreItem(copy.ID, Language.Current).Returns(copy);
 
-      this.dataStorage.GetFakeItem(this.itemId).Returns(new DbItem("home"));
-      this.dataStorage.GetFakeItem(this.copyId).Returns(new DbItem("copy"));
-      this.dataStorage.GetSitecoreItem(this.copyId, Language.Current).Returns(copy);
-
-      this.command.Initialize(item, destination, "copy of home", this.copyId, false);
+      sut.Initialize(item, destination, "copy of home", copy.ID, false);
 
       // act
-      var result = this.command.DoExecute();
+      var result = ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       result.Should().Be(copy);
-    }
-
-    private class OpenCopyItemCommand : CopyItemCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.CopyItemCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new Item DoExecute()
-      {
-        return base.DoExecute();
-      }
     }
   }
 }

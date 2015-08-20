@@ -2,97 +2,60 @@
 {
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Data;
-  using Sitecore.Data.Engines;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
+  using Sitecore.Reflection;
   using Xunit;
 
-  public class GetParentCommandTest : CommandTestBase
+  public class GetParentCommandTest
   {
-    private readonly OpenGetParentCommand command;
-
-    public GetParentCommandTest()
-    {
-      this.command = new OpenGetParentCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
-    }
-
-    [Fact]
-    public void ShouldCreateInstance()
-    {
-      // act & assert
-      this.command.CreateInstance().Should().BeOfType<GetParentCommand>();
-    }
-
-    [Fact]
-    public void ShouldReturnRootItem()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnRootItem(GetParentCommand sut, Item parentItem, Item childItem)
     {
       // arrange
-      var parentId = ID.NewID;
-      var childId = ID.NewID;
+      sut.DataStorage.GetFakeItem(childItem.ID).Returns(new DbItem("child", childItem.ID) { ParentID = parentItem.ID });
+      sut.DataStorage.GetSitecoreItem(parentItem.ID, parentItem.Language).Returns(parentItem);
 
-      var parentItem = ItemHelper.CreateInstance(this.database);
-      var childItem = ItemHelper.CreateInstance(this.database, childId);
-
-      this.dataStorage.GetFakeItem(childId).Returns(new DbItem("child", childId) { ParentID = parentId });
-      this.dataStorage.GetSitecoreItem(parentId, parentItem.Language).Returns(parentItem);
-
-      this.command.Initialize(childItem);
+      sut.Initialize(childItem);
 
       // act
-      var result = this.command.DoExecute();
+      var result = ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       result.Should().Be(parentItem);
     }
 
-    [Fact]
-    public void ShouldReturnNullIfNoParentFound()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnNullIfNoParentFound(GetParentCommand sut, Item item)
     {
       // arrange
-      var item = ItemHelper.CreateInstance(this.database);
-      this.command.Initialize(item);
+      sut.Initialize(item);
 
       // act
-      var parent = this.command.DoExecute();
+      var result = ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      parent.Should().BeNull();
-      this.dataStorage.DidNotReceiveWithAnyArgs().GetSitecoreItem(null, null);
+      result.Should().BeNull();
+      sut.DataStorage.DidNotReceiveWithAnyArgs().GetSitecoreItem(null, null);
     }
 
-    [Fact]
-    public void ShouldNotTryToLocateParentForSitecoreRoot()
+    [Theory, DefaultAutoData]
+    public void ShouldNotTryToLocateParentForSitecoreRoot(GetParentCommand sut, DbItem dbitem)
     {
       // arrange
       var rootId = ItemIDs.RootID;
-      var item = ItemHelper.CreateInstance(this.database, rootId);
+      var item = ItemHelper.CreateInstance(rootId);
 
-      dataStorage.GetFakeItem(rootId).Returns(new DbItem("sitecore", rootId));
-
-      this.command.Initialize(item);
+      sut.DataStorage.GetFakeItem(rootId).Returns(dbitem);
+      sut.Initialize(item);
 
       // act
-      var parent = this.command.DoExecute();
+      var result = ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      parent.Should().BeNull();
-      dataStorage.DidNotReceiveWithAnyArgs().GetSitecoreItem(null, null);
-    }
-
-    private class OpenGetParentCommand : GetParentCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.GetParentCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new Item DoExecute()
-      {
-        return base.DoExecute();
-      }
+      result.Should().BeNull();
+      sut.DataStorage.DidNotReceiveWithAnyArgs().GetSitecoreItem(null, null);
     }
   }
 }

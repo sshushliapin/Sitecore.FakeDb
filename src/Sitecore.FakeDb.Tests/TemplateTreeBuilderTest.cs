@@ -7,7 +7,7 @@
 
   public class TemplateTreeBuilderTest
   {
-    [Theory, AutoData]
+    [Theory, DefaultAutoData]
     public void ShouldAddTemplateSection(TemplateTreeBuilder sut, DbTemplate template)
     {
       sut.Build(template);
@@ -17,7 +17,7 @@
       template.Children.Single().TemplateID.Should().Be(TemplateIDs.TemplateSection);
     }
 
-    [Theory, AutoData]
+    [Theory, DefaultAutoData]
     public void ShouldAddTemplateFieldItemsToDefaultSection(TemplateTreeBuilder sut, DbTemplate template, DbField field1, DbField field2)
     {
       template.Add(field1);
@@ -29,7 +29,7 @@
       section.Children.Should().HaveCount(2);
     }
 
-    [Theory, AutoData]
+    [Theory, DefaultAutoData]
     public void ShouldSetTemplateFieldItemData(TemplateTreeBuilder sut, DbTemplate template, DbField field)
     {
       template.Add(field);
@@ -43,7 +43,7 @@
       fieldItem.TemplateID.Should().Be(TemplateIDs.TemplateField);
     }
 
-    [Theory, AutoData]
+    [Theory, DefaultAutoData]
     public void ShouldNotCreateTemplateFieldItemIfStandardField(TemplateTreeBuilder sut, DbTemplate template)
     {
       template.Add("__Created");
@@ -54,7 +54,7 @@
       section.Children.Should().BeEmpty();
     }
 
-    [Theory, AutoData]
+    [Theory, DefaultAutoData]
     public void ShouldSaveFieldType(TemplateTreeBuilder sut, DbTemplate template, DbField field)
     {
       field.Type = "General Link";

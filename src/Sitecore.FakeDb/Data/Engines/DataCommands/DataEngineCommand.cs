@@ -19,20 +19,15 @@
 
     public virtual DataStorage DataStorage
     {
-      get { return this.dataStorageScope.Value; }
-    }
-
-    public virtual TBaseCommand CreateInstance<TBaseCommand, TCommand>() where TCommand : TBaseCommand, IDataEngineCommand, new()
-    {
-      if (this.DataStorage == null)
+      get
       {
-        throw new InvalidOperationException(ExceptionText);
+        if (this.dataStorageScope.Value == null)
+        {
+          throw new InvalidOperationException(ExceptionText);
+        }
+
+        return this.dataStorageScope.Value;
       }
-
-      var command = new TCommand();
-      command.Initialize(this.DataStorage);
-
-      return command;
     }
   }
 }

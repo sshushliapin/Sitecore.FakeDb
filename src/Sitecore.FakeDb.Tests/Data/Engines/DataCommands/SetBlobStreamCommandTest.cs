@@ -2,56 +2,25 @@
 {
   using System;
   using System.IO;
-  using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Data.Engines;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
+  using Sitecore.Reflection;
   using Xunit;
 
-  public class SetBlobStreamCommandTest : CommandTestBase
+  public class SetBlobStreamCommandTest
   {
-    private readonly OpenSetBlobStreamCommand command;
-
-    public SetBlobStreamCommandTest()
-    {
-      this.command = new OpenSetBlobStreamCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
-    }
-
-    [Fact]
-    public void ShouldCreateInstance()
-    {
-      // act & assert
-      this.command.CreateInstance().Should().BeOfType<SetBlobStreamCommand>();
-    }
-
-    [Fact]
-    public void ShouldSetBlobStreamInDataStorage()
+    [Theory, DefaultAutoData]
+    public void ShouldSetBlobStreamInDataStorage(SetBlobStreamCommand sut, Guid blobId, [Modest]MemoryStream stream)
     {
       // arrange
-      var stream = new MemoryStream();
-      var blobId = Guid.NewGuid();
-
-      this.command.Initialize(stream, blobId);
+      sut.Initialize(stream, blobId);
 
       // act
-      this.command.DoExecute();
+      ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      this.dataStorage.Received().SetBlobStream(blobId, stream);
-    }
-
-    private class OpenSetBlobStreamCommand : SetBlobStreamCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.SetBlobStreamCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new void DoExecute()
-      {
-        base.DoExecute();
-      }
+      sut.DataStorage.Received().SetBlobStream(blobId, stream);
     }
   }
 }

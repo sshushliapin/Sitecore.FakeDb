@@ -3,17 +3,22 @@
   using System;
   using Sitecore.Diagnostics;
 
-  public class BlobStreamExistsCommand : Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand, IDataEngineCommand
+  public class BlobStreamExistsCommand : Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private readonly DataStorage dataStorage;
 
     private Guid blobId;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public BlobStreamExistsCommand(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand.Initialize(dataStorage);
+      this.dataStorage = dataStorage;
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
     }
 
     public override void Initialize(Guid id)
@@ -23,12 +28,12 @@
 
     protected override Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand, BlobStreamExistsCommand>();
+      throw new NotSupportedException();
     }
 
     protected override bool DoExecute()
     {
-      return this.innerCommand.DataStorage.GetBlobStream(this.blobId) != null;
+      return this.dataStorage.GetBlobStream(this.blobId) != null;
     }
   }
 }

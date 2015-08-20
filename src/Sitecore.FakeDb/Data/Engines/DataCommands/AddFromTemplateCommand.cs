@@ -1,31 +1,36 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
 
-  public class AddFromTemplateCommand : Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand, IDataEngineCommand
+  public class AddFromTemplateCommand : Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private readonly DataStorage dataStorage;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public AddFromTemplateCommand(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand.Initialize(dataStorage);
+      this.dataStorage = dataStorage;
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.AddFromTemplateCommand, AddFromTemplateCommand>();
+      throw new NotSupportedException();
     }
 
     protected override Item DoExecute()
     {
-      var dataStorage = this.innerCommand.DataStorage;
       var item = new DbItem(this.ItemName, this.NewId, this.TemplateId) { ParentID = this.Destination.ID };
-      dataStorage.AddFakeItem(item);
+      this.dataStorage.AddFakeItem(item);
 
-      return dataStorage.GetSitecoreItem(this.NewId);
+      return this.dataStorage.GetSitecoreItem(this.NewId);
     }
   }
 }

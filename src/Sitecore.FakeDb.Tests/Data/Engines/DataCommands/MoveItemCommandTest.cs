@@ -3,76 +3,40 @@
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
-  using Sitecore.Data.Engines.DataCommands;
-  using Sitecore.FakeDb.Data.Items;
+  using Sitecore.Data.Items;
+  using Sitecore.FakeDb.Data.Engines.DataCommands.Prototypes;
+  using Sitecore.Reflection;
   using Xunit;
   using MoveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.MoveItemCommand;
 
-  public class MoveItemCommandTest : CommandTestBase
+  public class MoveItemCommandTest
   {
-    [Fact]
-    public void ShouldCreateInstance()
+    [Theory, DefaultAutoData]
+    public void ShouldMoveItemToNewDestination(MoveItemCommand sut, GetParentCommandPrototype getParentCommand, Item item, Item destination, ID parentId)
     {
       // arrange
-      var command = new OpenMoveItemCommand();
-      command.Initialize(this.dataStorage);
+      getParentCommand.Initialize(sut.DataStorage);
+      sut.Database.Engines.DataEngine.Commands.GetParentPrototype = getParentCommand;
 
-      // act & assert
-      command.CreateInstance().Should().BeOfType<MoveItemCommand>();
-    }
-
-    [Fact]
-    public void ShouldMoveItemToNewDestination()
-    {
-      // arrange
-      var itemId = ID.NewID;
-      var parentId = ID.NewID;
-      var destinationId = ID.Null;
-
-      var item = ItemHelper.CreateInstance(this.database, "item", itemId);
-      var destination = ItemHelper.CreateInstance(this.database, destinationId);
-
-      var getParentCommand = new FakeGetParentCommand();
-      this.database.Engines.DataEngine.Commands.GetParentPrototype = getParentCommand;
-
-      var fakeItem = new DbItem("item", itemId) { ParentID = parentId };
+      var fakeItem = new DbItem("item", item.ID) { ParentID = parentId };
       var fakeParent = new DbItem("parent", parentId) { Children = { fakeItem } };
-      var fakeDestination = new DbItem("destination", destinationId) { FullPath = "/new destination path" };
+      var fakeDestination = new DbItem("destination", destination.ID) { FullPath = "/new destination path" };
 
-      this.dataStorage.GetFakeItem(itemId).Returns(fakeItem);
-      this.dataStorage.GetFakeItem(parentId).Returns(fakeParent);
-      this.dataStorage.GetFakeItem(destinationId).Returns(fakeDestination);
+      sut.DataStorage.GetFakeItem(item.ID).Returns(fakeItem);
+      sut.DataStorage.GetFakeItem(parentId).Returns(fakeParent);
+      sut.DataStorage.GetFakeItem(destination.ID).Returns(fakeDestination);
 
-      var command = new OpenMoveItemCommand();
-      command.Initialize(item, destination);
-      command.Initialize(this.dataStorage);
+      sut.Initialize(item, destination);
 
       // act
-      var result = command.DoExecute();
+      var result = (bool)ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       result.Should().BeTrue();
-      fakeItem.ParentID.Should().Be(destinationId);
+      fakeItem.ParentID.Should().Be(destination.ID);
       fakeItem.FullPath.Should().Be("/new destination path/item");
       fakeParent.Children.Should().NotContain(fakeItem);
       fakeDestination.Children.Should().Contain(fakeItem);
-    }
-
-    private class OpenMoveItemCommand : MoveItemCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.MoveItemCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new bool DoExecute()
-      {
-        return base.DoExecute();
-      }
-    }
-
-    private class FakeGetParentCommand : GetParentCommand
-    {
     }
   }
 }

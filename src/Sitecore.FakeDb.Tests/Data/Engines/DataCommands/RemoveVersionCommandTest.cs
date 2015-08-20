@@ -3,102 +3,61 @@
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
-  using Sitecore.Data;
+  using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
-  using Sitecore.FakeDb.Data.Items;
+  using Sitecore.Reflection;
   using Xunit;
 
-  public class RemoveVersionCommandTest : CommandTestBase
+  public class RemoveVersionCommandTest
   {
-    [Fact]
-    public void ShouldCreateInstance()
+    [Theory, DefaultAutoData]
+    public void ShouldRemoveVersionFromFakeDbFields(RemoveVersionCommand sut, Item item)
     {
       // arrange
-      var command = new OpenRemoveVersionCommand();
-      command.Initialize(this.dataStorage);
-
-      // act & assert
-      command.CreateInstance().Should().BeOfType<RemoveVersionCommand>();
-    }
-
-    [Fact]
-    public void ShouldRemoveVersionFromFakeDbFields()
-    {
-      // arrange
-      var itemId = ID.NewID;
       var dbitem = new DbItem("item") { Fields = { new DbField("Title") { { "en", "Hello!" } } } };
-      this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
+      sut.DataStorage.GetFakeItem(item.ID).Returns(dbitem);
 
-      var item = ItemHelper.CreateInstance(this.database, itemId);
-
-      var command = new OpenRemoveVersionCommand();
-      command.Initialize(item);
-      command.Initialize(this.dataStorage);
+      sut.Initialize(item);
 
       // act
-      var result = command.DoExecute();
+      var result = (bool)ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       result.Should().BeTrue();
       dbitem.Fields.Single().Values["en"].Values.Should().BeEmpty();
     }
 
-    [Fact]
-    public void ShouldNotRemoveVersionIfNoVersionFoundInSpecificLanguage()
+    [Theory, DefaultAutoData]
+    public void ShouldNotRemoveVersionIfNoVersionFoundInSpecificLanguage(RemoveVersionCommand sut, Item item)
     {
       // arrange
-      var itemId = ID.NewID;
       var dbitem = new DbItem("item") { Fields = { new DbField("Title") } };
-      this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
+      sut.DataStorage.GetFakeItem(item.ID).Returns(dbitem);
 
-      var item = ItemHelper.CreateInstance(this.database, itemId);
-
-      var command = new OpenRemoveVersionCommand();
-      command.Initialize(item);
-      command.Initialize(this.dataStorage);
+      sut.Initialize(item);
 
       // act
-      var result = command.DoExecute();
+      var result = (bool)ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       result.Should().BeFalse();
     }
 
-    [Fact]
-    public void ShouldDecreaseFakeItemVersionCount()
+    [Theory, DefaultAutoData]
+    public void ShouldDecreaseFakeItemVersionCount(RemoveVersionCommand sut, Item item, DbItem dbItem)
     {
       // arrange
-      var itemId = ID.NewID;
-      var dbitem = new DbItem("item");
-      dbitem.VersionsCount.Add("en", 2);
+      dbItem.VersionsCount.Add("en", 2);
+      sut.DataStorage.GetFakeItem(item.ID).Returns(dbItem);
 
-      this.dataStorage.GetFakeItem(itemId).Returns(dbitem);
-
-      var item = ItemHelper.CreateInstance(this.database, itemId);
-
-      var command = new OpenRemoveVersionCommand();
-      command.Initialize(item);
-      command.Initialize(this.dataStorage);
+      sut.Initialize(item);
 
       // act
-      var result = command.DoExecute();
+      var result = (bool)ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       result.Should().BeTrue();
-      dbitem.VersionsCount["en"].Should().Be(1);
-    }
-
-    private class OpenRemoveVersionCommand : RemoveVersionCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.RemoveVersionCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new bool DoExecute()
-      {
-        return base.DoExecute();
-      }
+      dbItem.VersionsCount["en"].Should().Be(1);
     }
   }
 }

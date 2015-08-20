@@ -1,35 +1,39 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
+  using System;
   using System.Collections.Generic;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
-  public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand, IDataEngineCommand
+  public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private readonly DataStorage dataStorage;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public DeleteItemCommand(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand.Initialize(dataStorage);
+      this.dataStorage = dataStorage;
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.DeleteItemCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.DeleteItemCommand, DeleteItemCommand>();
+      throw new NotSupportedException();
     }
 
     protected override bool DoExecute()
     {
-      return this.RemoveRecursive(this.innerCommand.DataStorage.GetFakeItems(), this.Item.ID);
+      return this.RemoveRecursive(this.dataStorage.GetFakeItems(), this.Item.ID);
     }
 
     protected virtual bool RemoveRecursive(IEnumerable<DbItem> fakeItems, ID itemId)
     {
-      var dataStorage = this.innerCommand.DataStorage;
-
-      var item = dataStorage.GetFakeItem(itemId);
+      var item = this.dataStorage.GetFakeItem(itemId);
       if (item == null)
       {
         return false;
@@ -42,11 +46,14 @@
 
       if (!ID.IsNullOrEmpty(item.ParentID))
       {
-        var parent = dataStorage.GetFakeItem(item.ParentID);
-        parent.Children.Remove(item);
+        var parent = this.dataStorage.GetFakeItem(item.ParentID);
+        if (parent != null)
+        {
+          parent.Children.Remove(item);
+        }
       }
 
-      return dataStorage.RemoveFakeItem(itemId);
+      return this.dataStorage.RemoveFakeItem(itemId);
     }
   }
 }

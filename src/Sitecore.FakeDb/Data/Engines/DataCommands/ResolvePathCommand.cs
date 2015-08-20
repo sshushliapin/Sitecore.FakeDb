@@ -5,20 +5,25 @@
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
-  public class ResolvePathCommand : Sitecore.Data.Engines.DataCommands.ResolvePathCommand, IDataEngineCommand
+  public class ResolvePathCommand : Sitecore.Data.Engines.DataCommands.ResolvePathCommand
   {
-    private readonly DataEngineCommand innerCommand = new DataEngineCommand();
+    private readonly DataStorage dataStorage;
 
-    public virtual void Initialize(DataStorage dataStorage)
+    public ResolvePathCommand(DataStorage dataStorage)
     {
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-      this.innerCommand.Initialize(dataStorage);
+      this.dataStorage = dataStorage;
+    }
+
+    public DataStorage DataStorage
+    {
+      get { return this.dataStorage; }
     }
 
     protected override Sitecore.Data.Engines.DataCommands.ResolvePathCommand CreateInstance()
     {
-      return this.innerCommand.CreateInstance<Sitecore.Data.Engines.DataCommands.ResolvePathCommand, ResolvePathCommand>();
+      throw new NotSupportedException();
     }
 
     protected override ID DoExecute()
@@ -29,7 +34,7 @@
       }
 
       var itemPath = StringUtil.RemovePostfix("/", this.ItemPath);
-      var item = this.innerCommand.DataStorage.GetFakeItems().SingleOrDefault(fi => string.Compare(fi.FullPath, itemPath, StringComparison.OrdinalIgnoreCase) == 0);
+      var item = this.dataStorage.GetFakeItems().SingleOrDefault(fi => string.Compare(fi.FullPath, itemPath, StringComparison.OrdinalIgnoreCase) == 0);
 
       return item != null ? item.ID : null;
     }

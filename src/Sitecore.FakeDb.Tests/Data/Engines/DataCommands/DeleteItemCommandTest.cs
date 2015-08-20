@@ -3,125 +3,81 @@
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
-  using Sitecore.Data.Engines;
+  using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.FakeDb.Data.Items;
+  using Sitecore.Reflection;
   using Xunit;
 
-  public class DeleteItemCommandTest : CommandTestBase
+  public class DeleteItemCommandTest
   {
-    private readonly OpenDeleteItemCommand command;
-
-    public DeleteItemCommandTest()
-    {
-      this.command = new OpenDeleteItemCommand { Engine = new DataEngine(this.database) };
-      this.command.Initialize(this.dataStorage);
-    }
-
-    [Fact]
-    public void ShouldCreateInstance()
-    {
-      // act & assert
-      this.command.CreateInstance().Should().BeOfType<DeleteItemCommand>();
-    }
-
-    [Fact]
-    public void ShouldDeleteItemFromDataStorageAndReturnTrue()
+    [Theory, DefaultAutoData]
+    public void ShouldDeleteItemFromDataStorageAndReturnTrue(DeleteItemCommand sut, DbItem item, ID parentId)
     {
       // arrange
-      var itemId = ID.NewID;
+      sut.DataStorage.GetFakeItem(item.ID).Returns(item);
+      sut.DataStorage.RemoveFakeItem(item.ID).Returns(true);
 
-      var item = new DbItem("item", itemId);
-      this.dataStorage.GetFakeItem(itemId).Returns(item);
-      this.dataStorage.GetFakeItems().Returns(new[] { item });
-      this.dataStorage.RemoveFakeItem(itemId).Returns(true);
-
-      this.command.Initialize(ItemHelper.CreateInstance(this.database, itemId), ID.NewID);
+      sut.Initialize(ItemHelper.CreateInstance(item.ID), parentId);
 
       // act
-      var result = this.command.DoExecute();
+      var result = (bool)ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       result.Should().BeTrue();
     }
 
-    [Fact]
-    public void ShouldDeleteItemDescendants()
+    [Theory, DefaultAutoData]
+    public void ShouldDeleteItemDescendants(DeleteItemCommand sut, DbItem item, DbItem desc1, DbItem desc2, ID parentId)
     {
       // arrange
-      var itemId = ID.NewID;
-      var desc1Id = ID.NewID;
-      var desc2Id = ID.NewID;
-
-      var item = new DbItem("item", itemId);
-      var desc1 = new DbItem("descendant1", desc1Id);
-      var desc2 = new DbItem("descendant2", desc2Id);
-
       item.Children.Add(desc1);
       desc1.Children.Add(desc2);
 
-      this.dataStorage.GetFakeItem(itemId).Returns(item);
-      this.dataStorage.GetFakeItem(desc1Id).Returns(desc1);
-      this.dataStorage.GetFakeItem(desc2Id).Returns(desc2);
+      sut.DataStorage.GetFakeItem(item.ID).Returns(item);
+      sut.DataStorage.GetFakeItem(desc1.ID).Returns(desc1);
+      sut.DataStorage.GetFakeItem(desc2.ID).Returns(desc2);
 
-      this.command.Initialize(ItemHelper.CreateInstance(this.database, itemId), ID.NewID);
+      sut.Initialize(ItemHelper.CreateInstance(item.ID), parentId);
 
       // act
-      this.command.DoExecute();
+      ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      this.dataStorage.Received().RemoveFakeItem(desc1Id);
-      this.dataStorage.Received().RemoveFakeItem(desc2Id);
+      sut.DataStorage.Received().RemoveFakeItem(desc1.ID);
+      sut.DataStorage.Received().RemoveFakeItem(desc2.ID);
     }
 
-    [Fact]
-    public void ShouldReturnFalseIfNoItemFound()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnFalseIfNoItemFound(DeleteItemCommand sut, Item item, ID parentId)
     {
       // arrange
-      this.command.Initialize(ItemHelper.CreateInstance(this.database), ID.NewID);
+      sut.Initialize(item, parentId);
 
       // act
-      var result = this.command.DoExecute();
+      var result = (bool)ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
       result.Should().BeFalse();
     }
 
-    [Fact]
-    public void ShouldDeleteItemFromParentsChildrenCollection()
+    [Theory, DefaultAutoData]
+    public void ShouldDeleteItemFromParentsChildrenCollection(DeleteItemCommand sut, DbItem parent, DbItem item)
     {
       // arrange
-      var itemId = ID.NewID;
-      var parentId = ID.NewID;
-
-      var item = new DbItem("item", itemId) { ParentID = parentId };
-      var parent = new DbItem("parent", parentId);
-
+      item.ParentID = parent.ID;
       parent.Children.Add(item);
 
-      this.dataStorage.GetFakeItem(itemId).Returns(item);
-      this.dataStorage.GetFakeItem(parentId).Returns(parent);
+      sut.DataStorage.GetFakeItem(item.ID).Returns(item);
+      sut.DataStorage.GetFakeItem(parent.ID).Returns(parent);
 
-      this.command.Initialize(ItemHelper.CreateInstance(this.database, itemId), ID.NewID);
+      sut.Initialize(ItemHelper.CreateInstance(item.ID), ID.NewID);
 
       // act
-      this.command.DoExecute();
+      ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      this.dataStorage.GetFakeItem(parentId).Children.Should().BeEmpty();
-    }
-
-    private class OpenDeleteItemCommand : DeleteItemCommand
-    {
-      public new Sitecore.Data.Engines.DataCommands.DeleteItemCommand CreateInstance()
-      {
-        return base.CreateInstance();
-      }
-
-      public new bool DoExecute()
-      {
-        return base.DoExecute();
-      }
+      sut.DataStorage.GetFakeItem(parent.ID).Children.Should().BeEmpty();
     }
   }
 }
