@@ -56,6 +56,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AutoFixture.Xunit2.3.30.8\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
     </Reference>
+    <Reference Include="Sitecore.Abstractions">
+      <HintPath>..\..\lib\Sitecore.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.Analytics">
       <HintPath>..\..\lib\Sitecore.Analytics.dll</HintPath>
     </Reference>
