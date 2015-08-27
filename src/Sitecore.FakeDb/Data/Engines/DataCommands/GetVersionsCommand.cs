@@ -30,6 +30,12 @@
     protected override VersionCollection DoExecute()
     {
       var dbitem = this.dataStorage.GetFakeItem(this.Item.ID);
+      var versions = new VersionCollection();
+      if (dbitem == null)
+      {
+        return versions;
+      }
+
       var language = this.Language.Name;
       var versionsCount = 0;
 
@@ -52,7 +58,6 @@
         }
       }
 
-      var versions = new VersionCollection();
       for (var i = 1; i <= versionsCount; i++)
       {
         versions.Add(new Version(i));

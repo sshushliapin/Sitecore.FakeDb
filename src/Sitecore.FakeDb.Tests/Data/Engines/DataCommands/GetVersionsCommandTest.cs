@@ -13,10 +13,9 @@
   public class GetVersionsCommandTest
   {
     [Theory, DefaultAutoData]
-    public void ShouldGetEmptyVersionCollection(GetVersionsCommand sut, Item item, Language language, DbItem dbitem)
+    public void ShouldGetEmptyVersionCollectionIfNoFakeItemFound(GetVersionsCommand sut, Item item, Language language, DbItem dbitem)
     {
       // arrange
-      sut.DataStorage.GetFakeItem(item.ID).Returns(dbitem);
       sut.Initialize(item, language);
 
       // act
