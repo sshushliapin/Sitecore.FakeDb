@@ -1458,5 +1458,21 @@
       // assert
       Switcher<DataStorage>.CurrentValue.Should().NotBeSameAs(dataStorage);
     }
+
+    [Fact]
+    public void ShouldSupportNestedDatabases()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        // act
+        using (new Db())
+        {
+        }
+
+        // assert
+        db.GetItem("/sitecore/content/home").Should().NotBeNull();
+      }
+    }
   }
 }
