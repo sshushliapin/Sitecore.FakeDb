@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.DataProviders
 {
+  using System;
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
@@ -10,18 +11,19 @@
   using Sitecore.Reflection;
   using Xunit;
 
-  public class FakeDataProviderTest
+  public class FakeDataProviderTest : IDisposable
   {
     private readonly FakeDataProvider dataProvider;
 
     private readonly DataStorage dataStorage;
+    private readonly DataStorageSwitcher dataStorageSwitcher;
 
     public FakeDataProviderTest()
     {
       var database = Database.GetDatabase("master");
       this.dataStorage = Substitute.For<DataStorage>(database);
-
-      this.dataProvider = new FakeDataProvider(this.dataStorage);
+      this.dataStorageSwitcher = new DataStorageSwitcher(this.dataStorage);
+      this.dataProvider = new FakeDataProvider();
       ReflectionUtil.CallMethod(database, "AddDataProvider", new object[] { this.dataProvider });
     }
 
@@ -124,19 +126,6 @@
     }
 
     [Fact]
-    public void ShouldSetDataStorage()
-    {
-      // arrange
-      var ds = new DataStorage(Database.GetDatabase("master"));
-
-      // act
-      this.dataProvider.SetDataStorage(ds);
-
-      // assert
-      this.dataProvider.DataStorage.Should().Be(ds);
-    }
-
-    [Fact]
     public void ShouldGetDefaultLanguage()
     {
       // arrange
@@ -218,7 +207,7 @@
     }
 
     [Fact]
-    public void ShouldGetEmptyVersionsIfNoDataStorageSet()
+    public void ShouldGetEmptyVersionsIfNoFakeItemFound()
     {
       // arrange
       var itemId = ID.NewID;
@@ -229,6 +218,11 @@
 
       // act & assert
       new FakeDataProvider().GetItemVersions(definition, callContext).Should().BeEmpty();
+    }
+
+    public void Dispose()
+    {
+      this.dataStorageSwitcher.Dispose();
     }
 
     private DbTemplate CreateTestTemplateInDataStorage()

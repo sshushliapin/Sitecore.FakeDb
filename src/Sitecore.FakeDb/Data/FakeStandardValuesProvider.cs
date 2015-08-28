@@ -1,6 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data
 {
-  using System.Threading;
+  using Sitecore.Common;
   using Sitecore.Data;
   using Sitecore.Data.Fields;
   using Sitecore.Data.Items;
@@ -9,14 +9,12 @@
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.StringExtensions;
 
+  // TODO: Remove the IRequireDataStorage interface
   public class FakeStandardValuesProvider : StandardValuesProvider, IRequireDataStorage
   {
-    private readonly ThreadLocal<DataStorage> storage = new ThreadLocal<DataStorage>();
-
     public DataStorage DataStorage
     {
-      get { return this.storage.Value; }
-      private set { this.storage.Value = value; }
+      get { return Switcher<DataStorage>.CurrentValue; }
     }
 
     public override string GetStandardValue(Field field)
@@ -41,9 +39,6 @@
 
     public void SetDataStorage(DataStorage dataStorage)
     {
-      Assert.ArgumentNotNull(dataStorage, "dataStorage");
-
-      this.DataStorage = dataStorage;
     }
 
     protected string ReplaceTokens(string standardValue, Item item)

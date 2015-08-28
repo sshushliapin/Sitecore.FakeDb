@@ -23,30 +23,18 @@
     }
 
     [Fact]
-    public void ShouldSetDataStorage()
-    {
-      // arrange
-      var storage = Substitute.For<DataStorage>(Database.GetDatabase("master"));
-      var sut = new FakeStandardValuesProvider();
-
-      // act
-      ((IRequireDataStorage)sut).SetDataStorage(storage);
-
-      // assert
-      ((IRequireDataStorage)sut).DataStorage.Should().BeSameAs(storage);
-    }
-
-    [Fact]
     public void ShouldReturnEmptyStringIfNoTemplateFound()
     {
       // arrange
       var storage = Substitute.For<DataStorage>(Database.GetDatabase("master"));
       var field = new Field(ID.NewID, ItemHelper.CreateInstance());
       var sut = new FakeStandardValuesProvider();
-      ((IRequireDataStorage)sut).SetDataStorage(storage);
 
-      // act & assert
-      sut.GetStandardValue(field).Should().BeEmpty();
+      using (new DataStorageSwitcher(storage))
+      {
+        // act & assert
+        sut.GetStandardValue(field).Should().BeEmpty();
+      }
     }
 
     [Fact]
