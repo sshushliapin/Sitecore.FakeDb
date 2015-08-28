@@ -1413,5 +1413,21 @@
         db.GetItem(this.itemId).Should().NotBeNull();
       }
     }
+
+    [Fact]
+    public void ShouldCloneItem()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+        var item = db.GetItem("/sitecore/content/home");
+
+        // act
+        var clone = item.CloneTo(item.Parent, "clone", true);
+
+        // assert
+        clone.SourceUri.Should().Be(item.Uri);
+      }
+    }
   }
 }

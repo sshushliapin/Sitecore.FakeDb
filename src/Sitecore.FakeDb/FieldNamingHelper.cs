@@ -25,6 +25,7 @@
             { FieldIDs.StandardValues, "__Standard values" },
             { FieldIDs.Updated, "__Updated" },
             { FieldIDs.UpdatedBy, "__Updated by" },
+            { FieldIDs.Source, "__Source" },
             { DbFieldIds.FinalLayoutField, "__Final Renderings" },
             { AnalyticsIds.PageLevelTestDefinitionField, "__Page Level Test Set Definition" },
             { AnalyticsIds.TrackingField, "__Tracking" }
