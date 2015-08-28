@@ -1,4 +1,8 @@
-﻿0.29.1
+﻿0.29.2
+* [FIX] #81: GetVersionsCommand fails with NullReferenceException if no DbItem found
+* [FIX] #82: Unable to set a cloned item source
+
+0.29.1
 * [FIX] #80: Creating an Template Field item
 
 0.29.0
