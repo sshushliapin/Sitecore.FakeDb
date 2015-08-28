@@ -4,11 +4,13 @@
   using System.Linq;
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
+  using Sitecore.Common;
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.Exceptions;
+  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Globalization;
   using Sitecore.Reflection;
@@ -1428,6 +1430,33 @@
         // assert
         clone.SourceUri.Should().Be(item.Uri);
       }
+    }
+
+    [Fact]
+    public void ShouldSwitchDataStorage()
+    {
+      // act
+      using (var db = new Db())
+      {
+        // assert
+        Switcher<DataStorage>.CurrentValue.Should().BeSameAs(db.DataStorage);
+      }
+    }
+
+    [Fact]
+    public void ShouldDisposeDataStorageSwitcher()
+    {
+      // arrange
+      DataStorage dataStorage;
+
+      // act
+      using (var db = new Db())
+      {
+        dataStorage = db.DataStorage;
+      }
+
+      // assert
+      Switcher<DataStorage>.CurrentValue.Should().NotBeSameAs(dataStorage);
     }
   }
 }

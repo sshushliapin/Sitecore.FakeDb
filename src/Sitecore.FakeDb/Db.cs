@@ -25,6 +25,8 @@
 
     private readonly DataStorage dataStorage;
 
+    private readonly DataStorageSwitcher dataStorageSwitcher;
+
     private readonly DatabaseSwitcher databaseSwitcher;
 
     private DbConfiguration configuration;
@@ -46,7 +48,7 @@
 
       this.database = Database.GetDatabase(databaseName);
       this.dataStorage = new DataStorage(this.database);
-
+      this.dataStorageSwitcher = new DataStorageSwitcher(this.dataStorage);
       this.databaseSwitcher = new DatabaseSwitcher(this.database);
 
       var args = new InitDbArgs(this.database, this.dataStorage);
@@ -178,6 +180,7 @@
 
       CorePipeline.Run("releaseFakeDb", new ReleaseDbArgs(this));
 
+      this.dataStorageSwitcher.Dispose();
       this.databaseSwitcher.Dispose();
 
       if (Monitor.IsEntered(Lock))
