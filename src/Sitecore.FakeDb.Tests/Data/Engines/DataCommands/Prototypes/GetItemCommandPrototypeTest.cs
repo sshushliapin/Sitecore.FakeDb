@@ -10,10 +10,8 @@ namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands.Prototypes
   public class GetItemCommandPrototypeTest
   {
     [Theory, DefaultAutoData]
-    public void ShouldCreateInstance(GetItemCommandPrototype sut, DataStorage dataStorage)
+    public void ShouldCreateInstance(GetItemCommandPrototype sut, DataStorageSwitcher switcher)
     {
-      sut.Initialize(dataStorage);
-
       ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<GetItemCommand>();
     }
   }

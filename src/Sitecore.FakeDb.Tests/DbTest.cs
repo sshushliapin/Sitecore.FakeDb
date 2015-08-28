@@ -772,7 +772,7 @@
       }
     }
 
-    [Fact]
+    [Fact(Skip = "No way to reset the Switcher<DataStorage>.CurrentValue without impacting other tests")]
     public void ShouldThrowIfNoDbInstanceInitialized()
     {
       // act

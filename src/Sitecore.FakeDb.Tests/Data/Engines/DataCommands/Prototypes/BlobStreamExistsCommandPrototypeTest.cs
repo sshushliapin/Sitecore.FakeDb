@@ -10,10 +10,8 @@ namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands.Prototypes
   public class BlobStreamExistsCommandPrototypeTest
   {
     [Theory, DefaultAutoData]
-    public void ShouldCreateInstance(BlobStreamExistsCommandPrototype sut, DataStorage dataStorage)
+    public void ShouldCreateInstance(BlobStreamExistsCommandPrototype sut, DataStorageSwitcher switcher)
     {
-      sut.Initialize(dataStorage);
-
       ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<BlobStreamExistsCommand>();
     }
   }

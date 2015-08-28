@@ -12,7 +12,7 @@
   // TODO: Remove the IRequireDataStorage interface
   public class FakeStandardValuesProvider : StandardValuesProvider, IRequireDataStorage
   {
-    public DataStorage DataStorage
+    public virtual DataStorage DataStorage
     {
       get { return Switcher<DataStorage>.CurrentValue; }
     }

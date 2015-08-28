@@ -3,6 +3,7 @@
   using System;
   using FluentAssertions;
   using NSubstitute;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Data.Fields;
   using Sitecore.FakeDb.Data;
@@ -22,27 +23,21 @@
       sut.Should().BeAssignableTo<IRequireDataStorage>();
     }
 
-    [Fact]
-    public void ShouldReturnEmptyStringIfNoTemplateFound()
+    [Theory, DefaultAutoData]
+    public void ShouldReturnEmptyStringIfNoTemplateFound(FakeStandardValuesProvider sut, [Greedy]Field field, DataStorageSwitcher switcher)
     {
-      // arrange
-      var storage = Substitute.For<DataStorage>(Database.GetDatabase("master"));
-      var field = new Field(ID.NewID, ItemHelper.CreateInstance());
-      var sut = new FakeStandardValuesProvider();
-
-      using (new DataStorageSwitcher(storage))
-      {
-        // act & assert
-        sut.GetStandardValue(field).Should().BeEmpty();
-      }
+      // act & assert
+      sut.GetStandardValue(field).Should().BeEmpty();
     }
 
     [Fact]
     public void ShouldThrowIfNoDataStorageSet()
     {
       // arrange
+      var sut = Substitute.ForPartsOf<FakeStandardValuesProvider>();
+      sut.DataStorage.Returns((DataStorage)null);
+      
       var field = new Field(ID.NewID, ItemHelper.CreateInstance());
-      var sut = new FakeStandardValuesProvider();
 
       // act
       Action action = () => sut.GetStandardValue(field);
