@@ -13,16 +13,11 @@
   using CallContext = Sitecore.Data.DataProviders.CallContext;
   using Version = Sitecore.Data.Version;
 
-  // TODO: Remove the IRequireDataStorage interface
-  public class FakeDataProvider : DataProvider, IRequireDataStorage
+  public class FakeDataProvider : DataProvider
   {
     public virtual DataStorage DataStorage
     {
       get { return Switcher<DataStorage>.CurrentValue; }
-    }
-
-    public virtual void SetDataStorage(DataStorage dataStorage)
-    {
     }
 
     public override IdCollection GetTemplateItemIds(CallContext context)

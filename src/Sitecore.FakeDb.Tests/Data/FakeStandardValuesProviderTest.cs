@@ -13,16 +13,6 @@
 
   public class FakeStandardValuesProviderTest
   {
-    [Fact]
-    public void ShouldRequireDataStorage()
-    {
-      // arrange
-      var sut = new FakeStandardValuesProvider();
-
-      // act & assert
-      sut.Should().BeAssignableTo<IRequireDataStorage>();
-    }
-
     [Theory, DefaultAutoData]
     public void ShouldReturnEmptyStringIfNoTemplateFound(FakeStandardValuesProvider sut, [Greedy]Field field, DataStorageSwitcher switcher)
     {
@@ -36,7 +26,7 @@
       // arrange
       var sut = Substitute.ForPartsOf<FakeStandardValuesProvider>();
       sut.DataStorage.Returns((DataStorage)null);
-      
+
       var field = new Field(ID.NewID, ItemHelper.CreateInstance());
 
       // act

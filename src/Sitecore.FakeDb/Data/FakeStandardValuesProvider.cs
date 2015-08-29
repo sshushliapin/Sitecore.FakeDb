@@ -9,8 +9,7 @@
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.StringExtensions;
 
-  // TODO: Remove the IRequireDataStorage interface
-  public class FakeStandardValuesProvider : StandardValuesProvider, IRequireDataStorage
+  public class FakeStandardValuesProvider : StandardValuesProvider
   {
     public virtual DataStorage DataStorage
     {
@@ -35,10 +34,6 @@
       var standardValue = this.FindStandardValueInTheTemplate(template, field.ID) ?? string.Empty;
 
       return this.ReplaceTokens(standardValue, field.Item);
-    }
-
-    public void SetDataStorage(DataStorage dataStorage)
-    {
     }
 
     protected string ReplaceTokens(string standardValue, Item item)

@@ -119,13 +119,6 @@
     }
 
     [Fact]
-    public void ShouldBeIRequireDataStorage()
-    {
-      // assert
-      this.dataProvider.Should().BeAssignableTo<IRequireDataStorage>();
-    }
-
-    [Fact]
     public void ShouldGetDefaultLanguage()
     {
       // arrange

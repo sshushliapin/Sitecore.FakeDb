@@ -215,7 +215,6 @@
     <Compile Include="Links\LinkDatabaseSwitcherTest.cs" />
     <Compile Include="Pipelines\PipelineWatcherProcessorTests.cs" />
     <Compile Include="Pipelines\PipelineWatcherTest.cs" />
-    <Compile Include="Pipelines\InitFakeDb\InitDataEngineCommandsTest.cs" />
     <Compile Include="Pipelines\InitFakeDb\InitDbArgsTest.cs" />
     <Compile Include="Pipelines\ReleaseDb\ReleasePipelineWatcherTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
