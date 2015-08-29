@@ -74,7 +74,6 @@
     <Compile Include="Data\Engines\DataCommands\Prototypes\GetRootItemCommandPrototype.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\GetVersionsCommandPrototype.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\HasChildrenCommandPrototype.cs" />
-    <Compile Include="Data\Engines\DataCommands\IDataEngineCommand.cs" />
     <Compile Include="Data\Engines\DataCommands\DataEngineCommand.cs" />
     <Compile Include="Configuration\DbConfiguration.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\MoveItemCommandPrototype.cs" />

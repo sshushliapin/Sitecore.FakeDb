@@ -7,10 +7,6 @@
   {
     private const string ExceptionText = "Sitecore.FakeDb.Db instance has not been initialized.";
 
-    public void Initialize(DataStorage dataStorage)
-    {
-    }
-
     public virtual DataStorage DataStorage
     {
       get
