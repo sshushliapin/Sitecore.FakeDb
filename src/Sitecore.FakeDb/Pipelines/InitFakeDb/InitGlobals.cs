@@ -1,8 +1,10 @@
 ﻿namespace Sitecore.FakeDb.Pipelines.InitFakeDb
 {
-  public class InitGlobals : InitDbProcessor
+  using Sitecore.Pipelines;
+
+  public class InitGlobals
   {
-    public override void Process(InitDbArgs args)
+    public void Process(PipelineArgs args)
     {
       Globals.Load();
     }

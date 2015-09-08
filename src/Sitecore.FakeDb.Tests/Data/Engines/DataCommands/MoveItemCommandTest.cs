@@ -4,6 +4,7 @@
   using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.Items;
+  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Engines.DataCommands.Prototypes;
   using Sitecore.Reflection;
   using Xunit;
@@ -12,10 +13,9 @@
   public class MoveItemCommandTest
   {
     [Theory, DefaultAutoData]
-    public void ShouldMoveItemToNewDestination(MoveItemCommand sut, GetParentCommandPrototype getParentCommand, Item item, Item destination, ID parentId)
+    public void ShouldMoveItemToNewDestination(MoveItemCommand sut, GetParentCommandPrototype getParentCommand, Item item, Item destination, ID parentId, DataStorageSwitcher switcher)
     {
       // arrange
-      getParentCommand.Initialize(sut.DataStorage);
       sut.Database.Engines.DataEngine.Commands.GetParentPrototype = getParentCommand;
 
       var fakeItem = new DbItem("item", item.ID) { ParentID = parentId };

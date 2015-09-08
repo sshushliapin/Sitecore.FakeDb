@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb.Data
 {
-  using System.Threading;
   using Sitecore.Data;
   using Sitecore.Data.Fields;
   using Sitecore.Data.Items;
@@ -9,14 +8,11 @@
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.StringExtensions;
 
-  public class FakeStandardValuesProvider : StandardValuesProvider, IRequireDataStorage
+  public class FakeStandardValuesProvider : StandardValuesProvider
   {
-    private readonly ThreadLocal<DataStorage> storage = new ThreadLocal<DataStorage>();
-
-    public DataStorage DataStorage
+    public virtual DataStorage DataStorage
     {
-      get { return this.storage.Value; }
-      private set { this.storage.Value = value; }
+      get { return DataStorageSwitcher.CurrentValue; }
     }
 
     public override string GetStandardValue(Field field)
@@ -37,13 +33,6 @@
       var standardValue = this.FindStandardValueInTheTemplate(template, field.ID) ?? string.Empty;
 
       return this.ReplaceTokens(standardValue, field.Item);
-    }
-
-    public void SetDataStorage(DataStorage dataStorage)
-    {
-      Assert.ArgumentNotNull(dataStorage, "dataStorage");
-
-      this.DataStorage = dataStorage;
     }
 
     protected string ReplaceTokens(string standardValue, Item item)

@@ -2,7 +2,6 @@
 {
   using System.Collections.Generic;
   using System.Linq;
-  using System.Threading;
   using Sitecore.Collections;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
@@ -13,29 +12,11 @@
   using CallContext = Sitecore.Data.DataProviders.CallContext;
   using Version = Sitecore.Data.Version;
 
-  public class FakeDataProvider : DataProvider, IRequireDataStorage
+  public class FakeDataProvider : DataProvider
   {
-    private readonly ThreadLocal<DataStorage> dataStorage;
-
-    public FakeDataProvider()
-    {
-      this.dataStorage = new ThreadLocal<DataStorage>();
-    }
-
-    internal FakeDataProvider(DataStorage dataStorage)
-      : this()
-    {
-      this.dataStorage.Value = dataStorage;
-    }
-
     public virtual DataStorage DataStorage
     {
-      get { return this.dataStorage.Value; }
-    }
-
-    public virtual void SetDataStorage(DataStorage dataStorage)
-    {
-      this.dataStorage.Value = dataStorage;
+      get { return DataStorageSwitcher.CurrentValue; }
     }
 
     public override IdCollection GetTemplateItemIds(CallContext context)
@@ -67,12 +48,12 @@
       var list = new List<VersionUri>();
       var versions = new VersionUriList();
 
-      if (this.DataStorage == null)
+      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
+      if (item == null)
       {
         return versions;
       }
 
-      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
       foreach (var field in item.Fields)
       {
         foreach (var fieldLang in field.Values)

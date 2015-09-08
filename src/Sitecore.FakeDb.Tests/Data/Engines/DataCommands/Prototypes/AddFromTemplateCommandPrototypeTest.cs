@@ -10,10 +10,8 @@ namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands.Prototypes
   public class AddFromTemplateCommandPrototypeTest
   {
     [Theory, DefaultAutoData]
-    public void ShouldCreateInstance(AddFromTemplateCommandPrototype sut, DataStorage dataStorage)
+    public void ShouldCreateInstance(AddFromTemplateCommandPrototype sut, DataStorageSwitcher switcher)
     {
-      sut.Initialize(dataStorage);
-
       ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<AddFromTemplateCommand>();
     }
   }

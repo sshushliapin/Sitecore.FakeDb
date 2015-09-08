@@ -8,7 +8,7 @@
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
 
-  public class DefaultAutoDataAttribute : AutoDataAttribute
+  public class  DefaultAutoDataAttribute : AutoDataAttribute
   {
     public DefaultAutoDataAttribute()
     {

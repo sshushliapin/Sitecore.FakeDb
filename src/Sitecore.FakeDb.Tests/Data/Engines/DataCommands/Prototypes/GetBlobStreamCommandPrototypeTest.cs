@@ -10,10 +10,8 @@
   public class GetBlobStreamCommandPrototypeTest
   {
     [Theory, DefaultAutoData]
-    public void ShouldCreateInstance(GetBlobStreamCommandPrototype sut, DataStorage dataStorage)
+    public void ShouldCreateInstance(GetBlobStreamCommandPrototype sut, DataStorageSwitcher switcher)
     {
-      sut.Initialize(dataStorage);
-
       ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<GetBlobStreamCommand>();
     }
   }
