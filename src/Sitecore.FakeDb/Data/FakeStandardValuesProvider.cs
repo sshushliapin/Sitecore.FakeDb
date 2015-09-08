@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb.Data
 {
-  using Sitecore.Common;
   using Sitecore.Data;
   using Sitecore.Data.Fields;
   using Sitecore.Data.Items;
@@ -13,7 +12,7 @@
   {
     public virtual DataStorage DataStorage
     {
-      get { return Switcher<DataStorage>.CurrentValue; }
+      get { return DataStorageSwitcher.CurrentValue; }
     }
 
     public override string GetStandardValue(Field field)

@@ -83,7 +83,6 @@
     <Compile Include="Data\Engines\DataCommands\Prototypes\SetBlobStreamCommandPrototype.cs" />
     <Compile Include="Data\Engines\DataStorageSwitcher.cs" />
     <Compile Include="Data\Engines\ItemNames.cs" />
-    <Compile Include="Data\Engines\SwitchingDataStorage.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
     <Compile Include="DbFieldIds.cs" />
     <Compile Include="DbItemChildCollection.cs" />

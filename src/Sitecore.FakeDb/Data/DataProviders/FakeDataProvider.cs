@@ -3,7 +3,6 @@
   using System.Collections.Generic;
   using System.Linq;
   using Sitecore.Collections;
-  using Sitecore.Common;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
   using Sitecore.Data.Query;
@@ -17,7 +16,7 @@
   {
     public virtual DataStorage DataStorage
     {
-      get { return Switcher<DataStorage>.CurrentValue; }
+      get { return DataStorageSwitcher.CurrentValue; }
     }
 
     public override IdCollection GetTemplateItemIds(CallContext context)

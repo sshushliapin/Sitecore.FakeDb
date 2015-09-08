@@ -435,10 +435,11 @@
     public void ShouldHaveDefaultMasterDatabase()
     {
       // arrange
-      var db = new Db();
-
-      // act & assert
-      db.Database.Name.Should().Be("master");
+      using (var db = new Db())
+      {
+        // act & assert
+        db.Database.Name.Should().Be("master");
+      }
     }
 
     [Fact]
@@ -772,7 +773,7 @@
       }
     }
 
-    [Fact(Skip = "No way to reset the Switcher<DataStorage>.CurrentValue without impacting other tests")]
+    [Fact]
     public void ShouldThrowIfNoDbInstanceInitialized()
     {
       // act

@@ -1,7 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System;
-  using Sitecore.Common;
 
   public class DataEngineCommand
   {
@@ -11,7 +10,7 @@
     {
       get
       {
-        var dataStorage = Switcher<DataStorage>.CurrentValue;
+        var dataStorage = DataStorageSwitcher.CurrentValue;
         if (dataStorage == null)
         {
           throw new InvalidOperationException(ExceptionText);

@@ -27,21 +27,11 @@ namespace Sitecore.FakeDb.Data.Engines
     private readonly IDictionary<Guid, Stream> blobs;
 
     public DataStorage(Database database)
-      : this(database, true)
-    {
-    }
-
-    protected DataStorage(Database database, bool initializeItems)
     {
       this.database = database;
 
       this.fakeItems = new Dictionary<ID, DbItem>();
       this.blobs = new Dictionary<Guid, Stream>();
-
-      if (!initializeItems)
-      {
-        return;
-      }
 
       this.FillDefaultFakeTemplates();
       this.FillDefaultFakeItems();

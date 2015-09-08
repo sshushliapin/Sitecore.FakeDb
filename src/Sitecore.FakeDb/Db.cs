@@ -51,7 +51,7 @@
       this.dataStorageSwitcher = new DataStorageSwitcher(this.dataStorage);
       this.databaseSwitcher = new DatabaseSwitcher(this.database);
 
-      var args = new InitDbArgs(this.database, new SwitchingDataStorage(this.database));
+      var args = new InitDbArgs(this.database, this.dataStorage);
       CorePipeline.Run("initFakeDb", args);
     }
 
