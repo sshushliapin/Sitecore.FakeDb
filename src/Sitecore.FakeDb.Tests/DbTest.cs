@@ -3,7 +3,6 @@
   using System;
   using System.Linq;
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Common;
   using Sitecore.Configuration;
   using Sitecore.Data;
@@ -1356,21 +1355,24 @@
       }
     }
 
-    [Theory, AutoData]
-    public void ShouldThrowIfNoParentFoundById(Db db)
+    [Fact]
+    public void ShouldThrowIfNoParentFoundById()
     {
       // arrange
       const string ParentId = "{483AE2C1-3494-4248-B591-030F2E2C9843}";
-      var homessItem = new DbItem("homeless") { ParentID = new ID(ParentId) };
 
-      // act
-      Action action = () => db.Add(homessItem);
+      using (var db = new Db())
+      {
+        var homessItem = new DbItem("homeless") { ParentID = new ID(ParentId) };
 
-      // assert
-      action.ShouldThrow<ItemNotFoundException>()
-            .WithMessage("The parent item \"{483AE2C1-3494-4248-B591-030F2E2C9843}\" was not found.");
+        // act
+        Action action = () => db.Add(homessItem);
+
+        // assert
+        action.ShouldThrow<ItemNotFoundException>()
+          .WithMessage("The parent item \"{483AE2C1-3494-4248-B591-030F2E2C9843}\" was not found.");
+      }
     }
-
 
     [Fact]
     public void ShouldGetBaseTemplates()
@@ -1480,6 +1482,29 @@
       using (var db = new Db { new DbItem("home") })
       {
         db.GetItem("/sitecore/content/home").Recycle();
+      }
+    }
+
+    [Fact]
+    public void ShouldChangeTemplate()
+    {
+      // arrange
+      var newTemplateId = ID.NewID;
+
+      using (var db = new Db
+        {
+          new DbItem("home", this.itemId, this.templateId),
+          new DbTemplate("new template", newTemplateId)
+        })
+      {
+        var item = db.GetItem(this.itemId);
+        var newTemplate = db.GetItem(newTemplateId);
+
+        // act
+        item.ChangeTemplate(newTemplate);
+
+        // assert
+        item.TemplateID.Should().Be(newTemplate.ID);
       }
     }
   }

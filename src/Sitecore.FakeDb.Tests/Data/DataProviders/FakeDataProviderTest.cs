@@ -6,9 +6,11 @@
   using NSubstitute;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
+  using Sitecore.Data.Templates;
   using Sitecore.FakeDb.Data.DataProviders;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Reflection;
+  using Sitecore.StringExtensions;
   using Xunit;
 
   public class FakeDataProviderTest : IDisposable
@@ -16,6 +18,7 @@
     private readonly FakeDataProvider dataProvider;
 
     private readonly DataStorage dataStorage;
+
     private readonly DataStorageSwitcher dataStorageSwitcher;
 
     public FakeDataProviderTest()
@@ -25,6 +28,39 @@
       this.dataStorageSwitcher = new DataStorageSwitcher(this.dataStorage);
       this.dataProvider = new FakeDataProvider();
       ReflectionUtil.CallMethod(database, "AddDataProvider", new object[] { this.dataProvider });
+    }
+
+    [Theory, DefaultAutoData]
+    public void ChangeTemplateThrowsIfItemDefinitionIsNull()
+    {
+      Action action = () => this.dataProvider.ChangeTemplate(null, null, null);
+      action.ShouldThrow<ArgumentNullException>();
+    }
+
+    [Theory, DefaultAutoData]
+    public void ChangeTemplateThrowsIfTemplateChangeListIsNull(ItemDefinition def)
+    {
+      Action action = () => this.dataProvider.ChangeTemplate(def, null, null);
+      action.ShouldThrow<ArgumentNullException>();
+    }
+
+    [Theory, DefaultAutoData]
+    public void ChangeTemplateThrowsIfNoDbItemFound(ItemDefinition def, TemplateChangeList changes)
+    {
+      Action action = () => this.dataProvider.ChangeTemplate(def, changes, null);
+      action.ShouldThrow<InvalidOperationException>()
+            .WithMessage("Unable to change item template. The item '{0}' is not found.".FormatWith(def.ID));
+    }
+
+    [Theory, DefaultAutoData]
+    public void ChangeTemplateThrowsIfNoTargetTemplateFound(ItemDefinition def, TemplateChangeList changes, DbItem item)
+    {
+      this.dataStorage.GetFakeItem(def.ID).Returns(item);
+
+      Action action = () => this.dataProvider.ChangeTemplate(def, changes, null);
+
+      action.ShouldThrow<InvalidOperationException>()
+            .WithMessage("Unable to change item template. The target template is not found.");
     }
 
     [Fact]
