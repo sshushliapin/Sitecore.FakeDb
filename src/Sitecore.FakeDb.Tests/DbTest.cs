@@ -1467,12 +1467,19 @@
       using (var db = new Db { new DbItem("home") })
       {
         // act
-        using (new Db())
-        {
-        }
+        using (new Db()) { }
 
         // assert
         db.GetItem("/sitecore/content/home").Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldRecycleItem()
+    {
+      using (var db = new Db { new DbItem("home") })
+      {
+        db.GetItem("/sitecore/content/home").Recycle();
       }
     }
   }
