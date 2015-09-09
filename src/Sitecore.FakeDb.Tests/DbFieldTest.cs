@@ -302,23 +302,39 @@
     }
 
     [Theory, AutoData]
-    public void ShouldGetEmptyValueForInvariantLanguageIfNotShared(DbField field)
+    public void ShouldGetEmptyValueForInvariantLanguageIfNotShared(DbField sut)
     {
       // arrange
-      field.Shared = false;
+      sut.Shared = false;
 
       // act & assert
-      field.GetValue(Language.Invariant.Name, 0).Should().BeEmpty();
+      sut.GetValue(Language.Invariant.Name, 0).Should().BeEmpty();
     }
 
     [Theory, AutoData]
-    public void ShouldGetSomeValueForInvariantLanguageIfShared(DbField field)
+    public void ShouldGetSomeValueForInvariantLanguageIfShared(DbField sut)
     {
       // arrange
-      field.Shared = true;
+      sut.Shared = true;
 
       // act & assert
-      field.GetValue(Language.Invariant.Name, 0).Should().NotBeEmpty();
+      sut.GetValue(Language.Invariant.Name, 0).Should().NotBeEmpty();
+    }
+
+    [Theory]
+    [InlineAutoData(true)]
+    [InlineAutoData(false)]
+    public void SetValueTwiceResetsExistingValue(bool shared, DbField sut, string oldValue, string newValue)
+    {
+      // arrange
+      sut.Shared = shared;
+      sut.SetValue("en", oldValue);
+
+      // act
+      sut.SetValue("en", newValue);
+
+      // assert
+      sut.Value.Should().Be(newValue);
     }
   }
 }

@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb
 {
-  using System.Collections;
   using System.Linq;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
@@ -87,11 +86,6 @@
       var field = new DbField(id);
 
       this.Add(field, standardValue);
-    }
-
-    public IEnumerator GetEnumerator()
-    {
-      return this.Fields.GetEnumerator();
     }
 
     protected void Add(DbField field, string standardValue)

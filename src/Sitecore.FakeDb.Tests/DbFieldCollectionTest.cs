@@ -1,128 +1,108 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
   using System;
+  using System.Collections;
   using System.Linq;
   using FluentAssertions;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Xunit;
 
   public class DbFieldCollectionTest
   {
-    [Fact]
-    public void ShouldAddDbField()
+    [Theory, AutoData]
+    public void AddField(DbFieldCollection sut, DbField field)
     {
-      // arrange
-      var collection = new DbFieldCollection { new DbField("Title") };
-
-      // act & assert
-      collection.Count().Should().Be(1);
+      sut.Add(field);
+      sut.Count().Should().Be(1);
     }
 
-    [Fact]
-    public void ShouldGetFieldById()
+    [Theory, AutoData]
+    public void AddFieldByName(DbFieldCollection sut, string fieldName)
     {
-      // arrange
-      var id = ID.NewID;
-      var field = new DbField("Title", id);
-      var collection = new DbFieldCollection { field };
-
-      // act & assert
-      collection[id].ShouldBeEquivalentTo(field);
+      sut.Add(fieldName);
+      sut.Single().Name.Should().Be(fieldName);
     }
 
-    [Fact]
-    public void ShouldSetFieldById()
+    [Theory, AutoData]
+    public void AddFieldByNameGeneratesNewId(DbFieldCollection sut, string fieldName)
     {
-      // arrange
-      var id = ID.NewID;
-      var originalField = new DbField("Title", id);
-      var newField = new DbField("Title", id);
-
-      var collection = new DbFieldCollection { originalField };
-
-      // act
-      collection[id] = newField;
-
-      // assert
-      collection[id].ShouldBeEquivalentTo(newField);
+      sut.Add(fieldName);
+      sut.Single().ID.Should().NotBe(ID.Null);
     }
 
-    [Fact]
-    public void ShouldAddFieldByName()
+    [Theory, AutoData]
+    public void AddFieldByNameSetsEmptyValue(DbFieldCollection sut, string fieldName)
     {
-      // arrange & act
-      var collection = new DbFieldCollection { "field1", "field2" };
-
-      // assert
-      collection.ElementAt(0).Name.Should().Be("field1");
-      collection.ElementAt(0).ID.Should().NotBeNull();
-      collection.ElementAt(0).Value.Should().BeEmpty();
-
-      collection.ElementAt(1).Name.Should().Be("field2");
-      collection.ElementAt(1).ID.Should().NotBeNull();
-      collection.ElementAt(1).Value.Should().BeEmpty();
+      sut.Add(fieldName);
+      sut.Single().Value.Should().BeEmpty();
     }
 
-    [Fact]
-    public void ShouldAddFieldByNameAndValue()
+    [Theory, AutoData]
+    public void AddFieldByNameAndValue(DbFieldCollection sut, string fieldName, string value)
     {
-      // arrange & act
-      var collection = new DbFieldCollection { { "field1", "value1" }, { "field2", "value2" } };
-
-      // assert
-      collection.ElementAt(0).Name.Should().Be("field1");
-      collection.ElementAt(0).ID.Should().NotBeNull();
-      collection.ElementAt(0).Value.Should().Be("value1");
-
-      collection.ElementAt(1).Name.Should().Be("field2");
-      collection.ElementAt(1).ID.Should().NotBeNull();
-      collection.ElementAt(1).Value.Should().Be("value2");
+      sut.Add(fieldName, value);
+      sut.Single().Value.Should().Be(value);
     }
 
-    [Fact]
-    public void ShouldThrowExceptionIfNoFieldIdPresent()
+    [Theory, AutoData]
+    public void GetFieldById(DbFieldCollection sut, DbField field)
     {
-      // arrange
-      var collection = new DbFieldCollection();
-      var missingFieldId = ID.NewID;
+      sut.Add(field);
+      sut[field.ID].ShouldBeEquivalentTo(field);
+    }
+
+    [Theory, AutoData]
+    public void SetFieldById(DbFieldCollection sut, [Frozen]ID id, DbField field)
+    {
+      sut[id] = field;
+      sut[id].Should().BeSameAs(field);
+    }
+
+    [Theory, AutoData]
+    public void ResetFieldById(DbFieldCollection sut, [Frozen]ID id, DbField originalField, DbField newField)
+    {
+      sut[id] = originalField;
+      sut[id] = newField;
+
+      sut[id].Should().BeSameAs(newField);
+    }
+
+    [Theory, AutoData]
+    public void GetFieldThrowsIfNoFieldIdFound(DbFieldCollection sut, ID missingFieldId)
+    {
       var expectedMessage = string.Format("The given field \"{0}\" is not present in the item.", missingFieldId);
 
-      // act & assert
-      Assert.Throws<InvalidOperationException>(() => collection[missingFieldId])
-        .Message.Should().Be(expectedMessage);
+      Assert.Throws<InvalidOperationException>(() => sut[missingFieldId])
+            .Message.Should().Be(expectedMessage);
     }
 
-    [Fact]
-    public void ShouldReturnTrueIfContainsField()
+    [Theory, AutoData]
+    public void ContainsFieldIsTrueIfExists(DbFieldCollection sut, DbField field)
     {
-      // arrange
-      var fieldId = ID.NewID;
-      var collection = new DbFieldCollection { new DbField(fieldId) };
-
-      // act & assert
-      collection.ContainsKey(fieldId).Should().BeTrue();
+      sut.Add(field);
+      sut.ContainsKey(field.ID).Should().BeTrue();
     }
 
-    [Fact]
-    public void ShouldReturnFalseIfNoField()
+    [Theory, AutoData]
+    public void ContainsKeyIsFalseIfNotFound(DbFieldCollection sut, ID missingFieldId)
     {
-      // arrange
-      var collection = new DbFieldCollection();
-
-      // act & assert
-      collection.ContainsKey(ID.NewID).Should().BeFalse();
+      sut.ContainsKey(missingFieldId).Should().BeFalse();
     }
 
-    [Fact]
-    public void ShouldGetValues()
+    [Theory, AutoData]
+    public void SutReturnsFields(DbFieldCollection sut, DbField field1, DbField field2)
     {
-      // arrange
-      var field1 = new DbField("field1");
-      var field2 = new DbField("field2");
-      var collection = new DbFieldCollection { field1, field2 };
+      sut.Add(field1);
+      sut.Add(field2);
 
-      // act & assert
-      collection.ShouldAllBeEquivalentTo(new[] { field1, field2 });
+      sut.ShouldAllBeEquivalentTo(new[] { field1, field2 });
+    }
+
+    [Theory, AutoData]
+    public void SutReturnsEnumerator(DbFieldCollection sut)
+    {
+      ((IEnumerable)sut).GetEnumerator().Should().NotBeNull();
     }
   }
 }
