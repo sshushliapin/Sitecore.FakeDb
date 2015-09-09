@@ -1,4 +1,8 @@
-﻿0.29.2
+﻿0.29.3
+* [FIX] #83:Calling item.Recycle() results in missing config node exception
+* [FIX] Cannot read items from 'outer' db if 'inner' db is disposed
+
+0.29.2
 * [FIX] #81: GetVersionsCommand fails with NullReferenceException if no DbItem found
 * [FIX] #82: Unable to set a cloned item source
 
