@@ -4,176 +4,174 @@
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
+  using Ploeh.AutoFixture;
+  using Ploeh.AutoFixture.AutoNSubstitute;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
+  using Sitecore.Data.Templates;
   using Sitecore.FakeDb.Data.DataProviders;
   using Sitecore.FakeDb.Data.Engines;
-  using Sitecore.Reflection;
+  using Sitecore.StringExtensions;
   using Xunit;
 
   public class FakeDataProviderTest : IDisposable
   {
     private readonly FakeDataProvider dataProvider;
 
-    private readonly DataStorage dataStorage;
     private readonly DataStorageSwitcher dataStorageSwitcher;
 
     public FakeDataProviderTest()
     {
-      var database = Database.GetDatabase("master");
-      this.dataStorage = Substitute.For<DataStorage>(database);
-      this.dataStorageSwitcher = new DataStorageSwitcher(this.dataStorage);
+      var fixture = new Fixture();
+      fixture.Customize(
+        new CompositeCustomization(
+          new DefaultConventions(),
+          new AutoNSubstituteCustomization(),
+          new AutoConfiguredNSubstituteCustomization()
+        ));
+
+      this.dataStorageSwitcher = fixture.Create<DataStorageSwitcher>();
       this.dataProvider = new FakeDataProvider();
-      ReflectionUtil.CallMethod(database, "AddDataProvider", new object[] { this.dataProvider });
     }
 
-    [Fact]
-    public void ShouldGetTemplateIds()
+    [Theory, DefaultAutoData]
+    public void ChangeTemplateThrowsIfItemDefinitionIsNull()
     {
-      // arrange
-      var template = this.CreateTestTemplateInDataStorage();
-
-      // act
-      var templateIds = this.dataProvider.GetTemplateItemIds(null);
-
-      // assert
-      templateIds.Should().Contain(template.ID);
+      Action action = () => this.dataProvider.ChangeTemplate(null, null, null);
+      action.ShouldThrow<ArgumentNullException>();
     }
 
-    [Fact]
-    public void ShouldGetTemplatesFromDataStorage()
+    [Theory, DefaultAutoData]
+    public void ChangeTemplateThrowsIfTemplateChangeListIsNull(ItemDefinition def)
     {
-      // arrange
-      var template = this.CreateTestTemplateInDataStorage();
-
-      // act
-      var templates = this.dataProvider.GetTemplates(null);
-
-      // assert
-      templates.GetTemplate(template.ID).Name.Should().Be(template.Name);
+      Action action = () => this.dataProvider.ChangeTemplate(def, null, null);
+      action.ShouldThrow<ArgumentNullException>();
     }
 
-    [Fact]
-    public void ShouldGetTemplatesWithDefaultDataSectionFromDataStorage()
+    [Theory, DefaultAutoData]
+    public void ChangeTemplateThrowsIfNoDbItemFound(ItemDefinition def, TemplateChangeList changes)
     {
-      // arrange
-      this.CreateTestTemplateInDataStorage();
+      Action action = () => this.dataProvider.ChangeTemplate(def, changes, null);
+
+      action.ShouldThrow<InvalidOperationException>()
+            .WithMessage("Unable to change item template. The item '{0}' is not found.".FormatWith(def.ID));
+    }
+
+    [Theory, DefaultAutoData]
+    public void ChangeTemplateThrowsIfNoTargetTemplateFound(ItemDefinition def, TemplateChangeList changes, DbItem item)
+    {
+      this.dataProvider.DataStorage.GetFakeItem(def.ID).Returns(item);
+
+      Action action = () => this.dataProvider.ChangeTemplate(def, changes, null);
+
+      action.ShouldThrow<InvalidOperationException>()
+            .WithMessage("Unable to change item template. The target template is not found.");
+    }
+
+    [Theory, AutoData]
+    public void ShouldGetTemplateIds(DbTemplate template)
+    {
+      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      this.dataProvider.GetTemplateItemIds(null).Should().Contain(template.ID);
+    }
+
+    [Theory, AutoData]
+    public void ShouldGetTemplatesFromDataStorage(DbTemplate template)
+    {
+      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      this.dataProvider.GetTemplates(null).Should().HaveCount(1);
+    }
+
+    [Theory, AutoData]
+    public void ShouldGetTemplatesWithDefaultDataSectionFromDataStorage(DbTemplate template)
+    {
+      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
 
       var result = this.dataProvider.GetTemplates(null).First();
 
-      // act & assert
       result.GetSection("Data").Should().NotBeNull();
     }
 
-    [Fact]
-    public void ShouldHaveStandardBaseTemplate()
+    [Theory, AutoData]
+    public void ShouldHaveStandardBaseTemplate([NoAutoProperties]DbTemplate template)
     {
-      // arrange
-      this.CreateTestTemplateInDataStorage();
+      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
 
-      // act
       var result = this.dataProvider.GetTemplates(null).First();
 
-      // assert
       result.BaseIDs.Single().Should().Be(TemplateIDs.StandardTemplate);
     }
 
-    [Fact]
-    public void ShouldGetTemplateFields()
+    [Theory, AutoData]
+    public void ShouldGetTemplateFields(DbTemplate template)
     {
-      // arrange
-      var template = this.CreateTestTemplateInDataStorage();
+      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
       template.Fields.Add("Title");
 
       var result = this.dataProvider.GetTemplates(null).First();
 
-      // act & assert
       result.GetField("Title").Should().NotBeNull();
     }
 
-    [Fact]
-    public void ShouldGetTemplateFieldType()
+    [Theory, AutoData]
+    public void ShouldGetTemplateFieldType(DbTemplate template)
     {
-      // arrange
-      var template = this.CreateTestTemplateInDataStorage();
+      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
       template.Fields.Add(new DbField("Link") { Type = "General Link" });
 
       var result = this.dataProvider.GetTemplates(null).First();
 
-      // act & assert
       result.GetField("Link").Type.Should().Be("General Link");
-      result.GetField("Link").TypeKey.Should().Be("general link");
     }
 
-    [Fact]
-    public void ShouldGetTemplateFieldIsShared()
+    [Theory, AutoData]
+    public void ShouldGetTemplateFieldIsShared(DbTemplate template)
     {
-      // arrange
-      var template = this.CreateTestTemplateInDataStorage();
+      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
       template.Fields.Add(new DbField("Title") { Shared = true });
 
       var result = this.dataProvider.GetTemplates(null).First();
 
-      // act & assert
       result.GetField("Title").IsShared.Should().BeTrue();
     }
 
-    [Fact]
-    public void ShouldGetDefaultLanguage()
+    [Theory, DefaultAutoData]
+    public void ShouldGetDefaultLanguage(CallContext context)
     {
-      // arrange
-      var db = this.dataStorage.Database;
+      var langs = this.dataProvider.GetLanguages(context);
 
-      // act
-      var langs = this.dataProvider.GetLanguages(new CallContext(db.DataManager, db.GetDataProviders().Count()));
-
-      // assert
       langs.Should().HaveCount(1);
       langs.First().Name.Should().Be("en");
     }
 
-    [Fact]
-    public void ShouldGetItemDefinition()
+    [Theory, DefaultAutoData]
+    public void ShouldGetItemDefinition(DbItem item, CallContext context)
     {
       // arrange
-      var itemId = ID.NewID;
-      var templateId = ID.NewID;
-      var callContext = this.GetCallContext();
-
-      this.dataStorage.GetFakeItem(itemId).Returns(new DbItem("home", itemId, templateId));
+      this.dataProvider.DataStorage.GetFakeItem(item.ID).Returns(item);
 
       // act
-      var definition = this.dataProvider.GetItemDefinition(itemId, callContext);
+      var definition = this.dataProvider.GetItemDefinition(item.ID, context);
 
       // assert
-      definition.ID.Should().Be(itemId);
-      definition.Name.Should().Be("home");
-      definition.TemplateID.Should().Be(templateId);
+      definition.ID.Should().Be(item.ID);
+      definition.Name.Should().Be(item.Name);
+      definition.TemplateID.Should().Be(item.TemplateID);
       definition.BranchId.Should().Be(ID.Null);
     }
 
-    [Fact]
-    public void ShouldGetNullItemDefinitionIfNoItemFound()
+    [Theory, DefaultAutoData]
+    public void ShouldGetNullItemDefinitionIfNoItemFound(ID itemId, CallContext context)
     {
-      // arrange
-      var itemId = ID.NewID;
-      var callContext = new CallContext(new DataManager(this.dataStorage.Database), 1);
-
-      // act & assert
-      this.dataProvider.GetItemDefinition(itemId, callContext).Should().BeNull();
+      this.dataProvider.GetItemDefinition(itemId, context).Should().BeNull();
     }
 
-    [Fact]
-    public void ShouldGetAllThePossibleItemVersions()
+    [Theory, DefaultAutoData]
+    public void ShouldGetAllThePossibleItemVersions(ItemDefinition def, CallContext context)
     {
       // arrange
-      var itemId = ID.NewID;
-      var templateId = ID.NewID;
-
-      var definition = new ItemDefinition(itemId, "home", templateId, ID.Null);
-      var callContext = this.GetCallContext();
-
-      var item = new DbItem("home", itemId, templateId)
+      var item = new DbItem("home", def.ID, def.TemplateID)
                    {
                      Fields =
                        {
@@ -182,10 +180,10 @@
                        }
                    };
 
-      this.dataStorage.GetFakeItem(itemId).Returns(item);
+      this.dataProvider.DataStorage.GetFakeItem(def.ID).Returns(item);
 
       // act
-      var versions = this.dataProvider.GetItemVersions(definition, callContext);
+      var versions = this.dataProvider.GetItemVersions(def, context);
 
       // assert
       versions.Count.Should().Be(4);
@@ -199,37 +197,15 @@
       versions[3].Version.Number.Should().Be(2);
     }
 
-    [Fact]
-    public void ShouldGetEmptyVersionsIfNoFakeItemFound()
+    [Theory, DefaultAutoData]
+    public void ShouldGetEmptyVersionsIfNoFakeItemFound(ItemDefinition def, CallContext context)
     {
-      // arrange
-      var itemId = ID.NewID;
-      var templateId = ID.NewID;
-
-      var definition = new ItemDefinition(itemId, "home", templateId, ID.Null);
-      var callContext = this.GetCallContext();
-
-      // act & assert
-      new FakeDataProvider().GetItemVersions(definition, callContext).Should().BeEmpty();
+      this.dataProvider.GetItemVersions(def, context).Should().BeEmpty();
     }
 
     public void Dispose()
     {
       this.dataStorageSwitcher.Dispose();
-    }
-
-    private DbTemplate CreateTestTemplateInDataStorage()
-    {
-      var templateId = ID.NewID;
-      var template = new DbTemplate(templateId.ToString(), templateId);
-      this.dataStorage.GetFakeTemplates().Returns(new[] { template });
-
-      return template;
-    }
-
-    private CallContext GetCallContext()
-    {
-      return new CallContext(new DataManager(this.dataStorage.Database), 1);
     }
   }
 }

@@ -7,6 +7,7 @@
   using Sitecore.Data.DataProviders;
   using Sitecore.Data.Query;
   using Sitecore.Data.Templates;
+  using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Globalization;
   using CallContext = Sitecore.Data.DataProviders.CallContext;
@@ -17,6 +18,19 @@
     public virtual DataStorage DataStorage
     {
       get { return DataStorageSwitcher.CurrentValue; }
+    }
+
+    public override bool ChangeTemplate(ItemDefinition itemDefinition, TemplateChangeList changes, CallContext context)
+    {
+      Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
+      Assert.ArgumentNotNull(changes, "changes");
+
+      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
+      Assert.IsNotNull(item, "Unable to change item template. The item '{0}' is not found.", itemDefinition.ID);
+      Assert.IsNotNull(changes.Target, "Unable to change item template. The target template is not found.");
+
+      item.TemplateID = changes.Target.ID;
+      return true;
     }
 
     public override IdCollection GetTemplateItemIds(CallContext context)
