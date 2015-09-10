@@ -8,15 +8,11 @@
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
 
-  public class  DefaultAutoDataAttribute : AutoDataAttribute
+  public class DefaultAutoDataAttribute : AutoDataAttribute
   {
     public DefaultAutoDataAttribute()
+      : base(new Fixture().Customize(new DefaultConventions()))
     {
-      var database = Database.GetDatabase("master");
-      this.Fixture.Inject(database);
-      this.Fixture.Inject(Substitute.For<DataStorage>(database));
-      this.Fixture.Register(ItemHelper.CreateInstance);
-      this.Fixture.Register(() => Language.Parse("en"));
     }
   }
 
@@ -25,6 +21,18 @@
     public InlineDefaultAutoDataAttribute(params object[] values)
       : base(new DefaultAutoDataAttribute(), values)
     {
+    }
+  }
+
+  internal class DefaultConventions : ICustomization
+  {
+    public void Customize(IFixture fixture)
+    {
+      var database = Database.GetDatabase("master");
+      fixture.Inject(database);
+      fixture.Inject(Substitute.For<DataStorage>(database));
+      fixture.Register(ItemHelper.CreateInstance);
+      fixture.Register(() => Language.Parse("en"));
     }
   }
 }
