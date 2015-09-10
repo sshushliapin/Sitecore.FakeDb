@@ -1,4 +1,4 @@
-namespace Sitecore.FakeDb.AutoFixture.Tests
+﻿namespace Sitecore.FakeDb.AutoFixture.Tests
 {
   using FluentAssertions;
   using Ploeh.AutoFixture;
@@ -6,29 +6,29 @@ namespace Sitecore.FakeDb.AutoFixture.Tests
   using Sitecore.Data.Items;
   using Xunit;
 
-  public class ItemSpecimenBuilderTest
+  public class TemplateItemSpecimenBuilderTest
   {
     [Fact]
     public void SutIsSpecimenBuilder()
     {
-      var sut = new ItemSpecimenBuilder();
+      var sut = new TemplateItemSpecimenBuilder();
       sut.Should().BeAssignableTo<ISpecimenBuilder>();
     }
 
     [Fact]
     public void CreateReturnsNoSpecimentIfNoItemRequested()
     {
-      var sut = new ItemSpecimenBuilder();
+      var sut = new TemplateItemSpecimenBuilder();
       sut.Create(new object(), null).Should().BeOfType<NoSpecimen>();
     }
 
     [Fact]
-    public void CreateReturnsItemInstance()
+    public void CreateReturnsTemplateItemInstance()
     {
       var fixture = new Fixture();
-      fixture.Customizations.Add(new ItemSpecimenBuilder());
+      fixture.Customizations.Add(new TemplateItemSpecimenBuilder());
 
-      fixture.Create<Item>().Should().NotBeNull();
-    }
+      fixture.Create<TemplateItem>().Should().NotBeNull();
+    } 
   }
 }

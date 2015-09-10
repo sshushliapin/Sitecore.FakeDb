@@ -53,15 +53,21 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="AddContentDbItemCommand.cs" />
+    <Compile Include="AddContentTemplateItemCommand.cs" />
+    <Compile Include="AutoContentDbItemCustomization.cs" />
+    <Compile Include="AutoContentTemplateItemCustomization.cs" />
+    <Compile Include="AutoContentItemCustomization.cs" />
     <Compile Include="AutoDbCustomization.cs" />
+    <Compile Include="TemplateItemSpecimenBuilder.cs" />
     <Compile Include="SetDefaultDbItemParentCommand.cs" />
-    <Compile Include="ContentItemCustomization.cs" />
+    <Compile Include="AutoContentCustomization.cs" />
     <Compile Include="AddContentItemCommand.cs" />
     <Compile Include="DatabaseSpecimenBuilder.cs" />
     <Compile Include="DbItemSpecification.cs" />
     <Compile Include="ItemSpecification.cs" />
     <Compile Include="ItemSpecimenBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TemplateItemSpecification.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sitecore.FakeDb\Sitecore.FakeDb.csproj">

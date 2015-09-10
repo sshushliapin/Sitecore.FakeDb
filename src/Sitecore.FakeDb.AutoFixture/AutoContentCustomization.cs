@@ -1,7 +1,6 @@
 ﻿namespace Sitecore.FakeDb.AutoFixture
 {
   using Ploeh.AutoFixture;
-  using Ploeh.AutoFixture.Kernel;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
@@ -19,22 +18,11 @@
     {
       Assert.ArgumentNotNull(fixture, "fixture");
 
-      var db = fixture.Create<Db>();
-
-      fixture.Customizations.Insert(
-        0,
-        new FilteringSpecimenBuilder(
-          new Postprocessor(
-            new ItemSpecimenBuilder(), new AddContentItemCommand(db)),
-            new ItemSpecification()));
-
-      fixture.Customizations.Insert(
-        0,
-        new FilteringSpecimenBuilder(
-          new Postprocessor(
-            new MethodInvoker(new ListFavoringConstructorQuery()),
-            new AddContentDbItemCommand(db)),
-          new DbItemSpecification()));
+      new CompositeCustomization(
+        new AutoContentItemCustomization(),
+        new AutoContentDbItemCustomization(),
+        new AutoContentTemplateItemCustomization())
+        .Customize(fixture);
     }
   }
 }

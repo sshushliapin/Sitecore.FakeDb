@@ -77,6 +77,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddContentDbItemCommandTest.cs" />
+    <Compile Include="AutoContentDbItemCustomizationTest.cs" />
+    <Compile Include="AutoContentTemplateItemCustomizationTest.cs" />
+    <Compile Include="AutoContentItemCustomizationTest.cs" />
     <Compile Include="AutoDbCustomizatonTest.cs" />
     <Compile Include="DbItemSpecificationTest.cs" />
     <Compile Include="Samples\AutoDbCustomizartionSamples.cs" />
@@ -84,13 +87,15 @@
     <Compile Include="Samples\AutoDbTemplateSamples.cs" />
     <Compile Include="Samples\ContentAttribute.cs" />
     <Compile Include="ContentAttributeTest.cs" />
-    <Compile Include="ContentItemCustomizationTest.cs" />
+    <Compile Include="AutoContentCustomizationTest.cs" />
     <Compile Include="AddContentItemCommandTest.cs" />
     <Compile Include="SetDefaultDbItemParentCommandTest.cs" />
     <Compile Include="DatabaseSpecimenBuilderTest.cs" />
     <Compile Include="ItemSpecimenBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Samples\AutoDbDataAttributeSamples.cs" />
+    <Compile Include="TemplateItemSpecificationTest.cs" />
+    <Compile Include="TemplateItemSpecimenBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

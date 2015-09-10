@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
 {
-  using FluentAssertions;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Xunit;
@@ -20,7 +19,7 @@
       }
 
       // assert
-      home["Title"].Should().Be("Welcome AutoFixture!");
+      Assert.Equal("Welcome AutoFixture!", home["Title"]);
     }
 
     public class MyHomeTemplate : DbTemplate

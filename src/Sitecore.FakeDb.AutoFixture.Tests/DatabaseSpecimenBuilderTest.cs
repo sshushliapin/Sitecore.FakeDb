@@ -10,26 +10,17 @@
   public class DatabaseSpecimenBuilderTest
   {
     [Fact]
-    public void ShouldBeISpecimenBuilder()
+    public void SutIsISpecimenBuilder()
     {
-      // arrange
-      var customization = new DatabaseSpecimenBuilder("master");
-
-      // assert
-      customization.Should().BeAssignableTo<ISpecimenBuilder>();
+      var sut = new DatabaseSpecimenBuilder("master");
+      sut.Should().BeAssignableTo<ISpecimenBuilder>();
     }
 
     [Fact]
-    public void ShouldReturnNoSpecimentIfNotDatabaseRequested()
+    public void CreateReturnsNoSpecimentIfNoDatabaseRequested()
     {
-      // arrange
-      var customization = new DatabaseSpecimenBuilder("master");
-
-      // act
-      var result = customization.Create(new object(), null);
-
-      // assert
-      result.Should().BeOfType<NoSpecimen>();
+      var sut = new DatabaseSpecimenBuilder("master");
+      sut.Create(new object(), null).Should().BeOfType<NoSpecimen>();
     }
 
     [Theory]
