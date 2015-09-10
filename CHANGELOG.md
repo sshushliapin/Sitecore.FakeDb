@@ -1,6 +1,11 @@
-﻿0.29.3
+﻿0.30.0
+* [FIX] #84: Changing a fake item's template does not work correctly
+* [NEW] #85: Rename ContentItemCustomization into AutoContentCustomization
+* [FIX] #86: AutoContentCustomization generates wrong item template
+
+0.29.3
 * [FIX] #83:Calling item.Recycle() results in missing config node exception
-* [FIX] Cannot read items from 'outer' db if 'inner' db is disposed
+* [FIX] #78: Cannot read items from 'outer' db if 'inner' db is disposed
 
 0.29.2
 * [FIX] #81: GetVersionsCommand fails with NullReferenceException if no DbItem found
