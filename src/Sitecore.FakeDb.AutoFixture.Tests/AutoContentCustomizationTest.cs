@@ -10,7 +10,7 @@
   public class AutoContentCustomizationTest
   {
     [Theory, AutoData]
-    public void SutThrowsIfFeatureIsNull(ContentItemCustomization sut)
+    public void SutThrowsIfFeatureIsNull(AutoContentCustomization sut)
     {
       Action action = () => sut.Customize(null);
       action.ShouldThrow<ArgumentNullException>().WithMessage("*fixture");
@@ -20,7 +20,7 @@
     public void CreatesTemplateItem()
     {
       var fixture = new Fixture();
-      fixture.Customize(new ContentItemCustomization());
+      fixture.Customize(new AutoContentCustomization());
 
       var template = fixture.Create<TemplateItem>();
 

@@ -8,7 +8,7 @@
   {
     public override ICustomization GetCustomization(ParameterInfo parameter)
     {
-      return new ContentItemCustomization();
+      return new AutoContentCustomization();
     }
   }
 }

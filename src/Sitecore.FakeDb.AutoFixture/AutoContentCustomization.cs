@@ -8,7 +8,7 @@
   /// A customization that adds items to the current <see cref="Database"/>.
   /// The default <see cref="Database"/> is "master".
   /// </summary>
-  public class ContentItemCustomization : ICustomization
+  public class AutoContentCustomization : ICustomization
   {
     /// <summary>
     /// Customizes the specified fixture by adding items to the current <see cref="Database"/>.

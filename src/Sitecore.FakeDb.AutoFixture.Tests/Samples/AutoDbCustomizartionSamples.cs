@@ -49,7 +49,7 @@
     {
       var fixture = new Fixture()
           .Customize(new AutoDbCustomization())
-          .Customize(new ContentItemCustomization());
+          .Customize(new AutoContentCustomization());
 
       var item = fixture.Create<Item>();
       var database = fixture.Create<Database>();
@@ -63,7 +63,7 @@
     {
       var fixture = new Fixture()
           .Customize(new AutoDbCustomization())
-          .Customize(new ContentItemCustomization());
+          .Customize(new AutoContentCustomization());
 
       var item = fixture.Create<DbItem>();
       var database = fixture.Create<Database>();

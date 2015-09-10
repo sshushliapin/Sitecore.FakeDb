@@ -27,7 +27,7 @@
       var customization = sut.GetCustomization(null);
 
       // assert
-      customization.Should().BeAssignableTo<ContentItemCustomization>();
+      customization.Should().BeAssignableTo<AutoContentCustomization>();
     }
   }
 }
