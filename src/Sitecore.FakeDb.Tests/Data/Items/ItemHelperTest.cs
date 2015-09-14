@@ -1,14 +1,12 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Items
 {
-  using System;
   using FluentAssertions;
-  using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data.Items;
   using Sitecore.Globalization;
   using Xunit;
 
-  public class ItemHelperTest : IDisposable
+  public class ItemHelperTest
   {
     private const string Name = "home";
 
@@ -44,11 +42,6 @@
       item.TemplateID.Should().Be(templateId, "templateId");
       item.Database.Should().Be(database, "database");
       item.Language.Should().Be(language, "language");
-    }
-
-    public void Dispose()
-    {
-      Factory.Reset();
     }
   }
 }
