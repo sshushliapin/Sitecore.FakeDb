@@ -2,6 +2,7 @@
 {
   using NSubstitute;
   using Ploeh.AutoFixture;
+  using Ploeh.AutoFixture.AutoNSubstitute;
   using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data.Engines;
@@ -33,6 +34,8 @@
       fixture.Inject(Substitute.For<DataStorage>(database));
       fixture.Register(ItemHelper.CreateInstance);
       fixture.Register(() => Language.Parse("en"));
+      fixture.Customize(new AutoNSubstituteCustomization());
+      fixture.Customize(new AutoConfiguredNSubstituteCustomization());
     }
   }
 }
