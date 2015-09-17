@@ -1,13 +1,20 @@
 ﻿namespace Sitecore.FakeDb.Tests.Links
 {
-  using System;
+  using System.Collections.Specialized;
+  using System.Web;
   using FluentAssertions;
+  using NSubstitute;
   using Ploeh.AutoFixture;
   using Ploeh.AutoFixture.AutoNSubstitute;
   using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Common;
+  using Sitecore.Data;
+  using Sitecore.Data.Items;
+  using Sitecore.FakeDb.Links;
   using Sitecore.Links;
+  using Sitecore.Web;
   using Xunit;
+  using StringDictionary = Sitecore.Collections.StringDictionary;
 
   public class SwitchingLinkProviderTest
   {
@@ -23,7 +30,7 @@
       sut.CurrentProvider.Should().BeSameAs(Switcher<LinkProvider>.CurrentValue);
     }
 
-    [Theory, AutoSwitchingData]
+    [Theory, SwitchingAutoData]
     public void SutCallsCurrentProviderProperties(SwitchingLinkProvider sut, [Substitute]LinkProvider current)
     {
       using (new Switcher<LinkProvider>(current))
@@ -41,8 +48,8 @@
       }
     }
 
-    [Theory, AutoSwitchingData]
-    public void SutCallsBaseProviderPropertiesIfNoCurrentSet(SwitchingLinkProvider sut)
+    [Theory, SwitchingAutoData]
+    public void SutCallsBaseProviderPropertiesIfCurrentNorSet(SwitchingLinkProvider sut)
     {
       sut.Name.Should().BeNull();
       sut.AddAspxExtension.Should().BeFalse();
@@ -56,9 +63,8 @@
       sut.UseDisplayName.Should().BeFalse();
     }
 
-
-    [Theory, AutoSwitchingData]
-    public void SutCallsCurrentProviderMethods(SwitchingLinkProvider sut, [Substitute]LinkProvider current)
+    [Theory, SwitchingAutoData]
+    public void GetDefaultUrlOptionsCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current)
     {
       using (new Switcher<LinkProvider>(current))
       {
@@ -66,113 +72,151 @@
       }
     }
 
-    public class AutoSwitchingDataAttribute : DefaultAutoDataAttribute
+    [Theory, SwitchingAutoData]
+    public void GetDefaultUrlOptionsCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut)
     {
-      public AutoSwitchingDataAttribute()
+      sut.GetDefaultUrlOptions().Should().NotBeNull();
+    }
+
+    [Theory, SwitchingAutoData]
+    public void GetDynamicUrlCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, Item item, LinkUrlOptions options)
+    {
+      using (new Switcher<LinkProvider>(current))
+      {
+        sut.GetDynamicUrl(item, options).Should().BeSameAs(current.GetDynamicUrl(item, options));
+      }
+    }
+
+    [Theory, SwitchingAutoData]
+    public void GetDynamicUrlCallsCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, Item item, LinkUrlOptions options)
+    {
+      sut.GetDynamicUrl(item, options).Should().NotBeEmpty();
+    }
+
+    [Theory, SwitchingAutoData]
+    public void GetItemUrlCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, Item item, UrlOptions options)
+    {
+      using (new Switcher<LinkProvider>(current))
+      {
+        sut.GetItemUrl(item, options).Should().BeSameAs(current.GetItemUrl(item, options));
+      }
+    }
+
+    [Theory, SwitchingAutoData]
+    public void GetItemUrlOptionsCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, Item item, UrlOptions options)
+    {
+      using (new Db())
+      {
+        sut.GetItemUrl(item, options).Should().NotBeNull();
+      }
+    }
+
+    [Theory, SwitchingAutoData]
+    public void InitializeCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, string name, NameValueCollection config)
+    {
+      using (new Switcher<LinkProvider>(current))
+      {
+        sut.Initialize(name, config);
+
+        current.Received().Initialize(name, config);
+      }
+    }
+
+    [Theory, SwitchingAutoData]
+    public void InitializeCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, string name, NameValueCollection config)
+    {
+      sut.Initialize(name, config);
+    }
+
+    [Theory, SwitchingAutoData]
+    public void IsDynamicLinkCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, string linkText)
+    {
+      using (new Switcher<LinkProvider>(current))
+      {
+        sut.IsDynamicLink(linkText).Should().Be(current.IsDynamicLink(linkText));
+      }
+    }
+
+    [Theory, SwitchingAutoData]
+    public void IsDynamicLinkCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, string linkText)
+    {
+      sut.IsDynamicLink(linkText).Should().BeFalse();
+    }
+
+    [Theory, SwitchingAutoData]
+    public void ParseDynamicLinkCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, ID id)
+    {
+      using (new Switcher<LinkProvider>(current))
+      {
+        var linkText = "~/link.aspx?_id=" + id;
+        sut.ParseDynamicLink(linkText).Should().Be(current.ParseDynamicLink(linkText));
+      }
+    }
+
+    [Theory, SwitchingAutoData]
+    public void ParseDynamicLinkCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, ID id)
+    {
+      var linkText = "~/link.aspx?_id=" + id;
+      sut.ParseDynamicLink(linkText).Should().NotBeNull();
+    }
+
+    [Theory, SwitchingAutoData]
+    public void ParseRequestUrlCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, HttpRequest request)
+    {
+      using (new Switcher<LinkProvider>(current))
+      {
+        sut.ParseRequestUrl(request).Should().Be(current.ParseRequestUrl(request));
+      }
+    }
+
+    [Theory, SwitchingAutoData]
+    public void ParseRequestUrlCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, HttpRequest request)
+    {
+      sut.ParseRequestUrl(request).Should().NotBeNull();
+    }
+
+    [Theory, SwitchingAutoData]
+    public void ResolveTargetSiteCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, Item item)
+    {
+      using (new Switcher<LinkProvider>(current))
+      {
+        sut.ResolveTargetSite(item).Should().Be(current.ResolveTargetSite(item));
+      }
+    }
+
+    [Theory, SwitchingAutoData]
+    public void ResolveTargetSiteCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, HttpRequest request, Item item)
+    {
+      sut.ResolveTargetSite(item);
+    }
+
+    [Theory, SwitchingAutoData]
+    public void ExpandDynamicLinksCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, string text, bool resolveSite)
+    {
+      using (new Switcher<LinkProvider>(current))
+      {
+        sut.ExpandDynamicLinks(text, resolveSite).Should().Be(current.ExpandDynamicLinks(text, resolveSite));
+      }
+    }
+
+    [Theory, SwitchingAutoData]
+    public void ExpandDynamicLinksCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, HttpRequest request, string text, bool resolveSites)
+    {
+      sut.ExpandDynamicLinks(text, resolveSites);
+    }
+
+    private class SwitchingAutoDataAttribute : DefaultAutoDataAttribute
+    {
+      public SwitchingAutoDataAttribute()
       {
         this.Fixture.Customize(new AutoNSubstituteCustomization())
                     .Customize(new AutoConfiguredNSubstituteCustomization());
 
         this.Fixture.Register(() => LanguageEmbedding.Never);
         this.Fixture.Register(() => LanguageLocation.QueryString);
-      }
-    }
-  }
-
-  public class SwitchingLinkProvider : LinkProvider
-  {
-    public LinkProvider CurrentProvider
-    {
-      get { return Switcher<LinkProvider>.CurrentValue; }
-    }
-
-    public override string Name
-    {
-      get
-      {
-        var current = this.CurrentProvider;
-        return current != null ? current.Name : base.Name;
-      }
-    }
-
-    public override bool AddAspxExtension
-    {
-      get
-      {
-        var current = this.CurrentProvider;
-        return current != null ? current.AddAspxExtension : base.AddAspxExtension;
-      }
-    }
-
-    public override bool AlwaysIncludeServerUrl
-    {
-      get
-      {
-        var current = this.CurrentProvider;
-        return current != null ? current.AlwaysIncludeServerUrl : base.AlwaysIncludeServerUrl;
-      }
-    }
-
-    public override string Description
-    {
-      get
-      {
-        var current = this.CurrentProvider;
-        return current != null ? current.Description : base.Description;
-      }
-    }
-
-    public override bool EncodeNames
-    {
-      get
-      {
-        var current = this.CurrentProvider;
-        return current != null ? current.EncodeNames : base.EncodeNames;
-      }
-    }
-
-    public override LanguageEmbedding LanguageEmbedding
-    {
-      get
-      {
-        var current = this.CurrentProvider;
-        return current != null ? current.LanguageEmbedding : base.LanguageEmbedding;
-      }
-    }
-
-    public override LanguageLocation LanguageLocation
-    {
-      get
-      {
-        var current = this.CurrentProvider;
-        return current != null ? current.LanguageLocation : base.LanguageLocation;
-      }
-    }
-
-    public override bool LowercaseUrls
-    {
-      get
-      {
-        var current = this.CurrentProvider;
-        return current != null ? current.LowercaseUrls : base.LowercaseUrls;
-      }
-    }
-
-    public override bool ShortenUrls
-    {
-      get
-      {
-        var current = this.CurrentProvider;
-        return current != null ? current.ShortenUrls : base.ShortenUrls;
-      }
-    }
-
-    public override bool UseDisplayName
-    {
-      get
-      {
-        var current = this.CurrentProvider;
-        return current != null ? current.UseDisplayName : base.UseDisplayName;
+        this.Fixture.Register(() => new HttpRequest("default.aspx", "http://google.com", null));
+        this.Fixture.Register(() => new SiteInfo(new StringDictionary()));
+        this.Fixture.Customize<UrlOptions>(x => x.OmitAutoProperties());
       }
     }
   }
