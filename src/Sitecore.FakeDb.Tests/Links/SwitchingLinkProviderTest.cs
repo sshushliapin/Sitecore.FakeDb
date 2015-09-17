@@ -31,11 +31,19 @@
     }
 
     [Theory, SwitchingAutoData]
+    public void SutUsesDefaultNameIfCurrentProviderSet(SwitchingLinkProvider sut, [Substitute] LinkProvider current)
+    {
+      using (new Switcher<LinkProvider>(current))
+      {
+        sut.Name.Should().BeNull();
+      }
+    }
+
+    [Theory, SwitchingAutoData]
     public void SutCallsCurrentProviderProperties(SwitchingLinkProvider sut, [Substitute]LinkProvider current)
     {
       using (new Switcher<LinkProvider>(current))
       {
-        sut.Name.Should().Be(current.Name);
         sut.AddAspxExtension.Should().Be(current.AddAspxExtension);
         sut.AlwaysIncludeServerUrl.Should().Be(current.AlwaysIncludeServerUrl);
         sut.Description.Should().Be(current.Description);
@@ -112,13 +120,12 @@
     }
 
     [Theory, SwitchingAutoData]
-    public void InitializeCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, string name, NameValueCollection config)
+    public void InitializeCallsBaseProviderIfCurrentSet(SwitchingLinkProvider sut, [Substitute] LinkProvider current, string name, NameValueCollection config)
     {
       using (new Switcher<LinkProvider>(current))
       {
         sut.Initialize(name, config);
-
-        current.Received().Initialize(name, config);
+        current.DidNotReceiveWithAnyArgs().Initialize(name, config);
       }
     }
 

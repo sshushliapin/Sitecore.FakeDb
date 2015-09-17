@@ -14,15 +14,6 @@ namespace Sitecore.FakeDb.Links
       get { return Switcher<LinkProvider>.CurrentValue; }
     }
 
-    public override string Name
-    {
-      get
-      {
-        var current = this.CurrentProvider;
-        return current != null ? current.Name : base.Name;
-      }
-    }
-
     public override bool AddAspxExtension
     {
       get
@@ -120,19 +111,6 @@ namespace Sitecore.FakeDb.Links
     {
       var current = this.CurrentProvider;
       return current != null ? current.GetItemUrl(item, options) : base.GetItemUrl(item, options);
-    }
-
-    public override void Initialize(string name, NameValueCollection config)
-    {
-      var current = this.CurrentProvider;
-      if (current != null)
-      {
-        current.Initialize(name, config);
-      }
-      else
-      {
-        base.Initialize(name, config);
-      }
     }
 
     public override bool IsDynamicLink(string linkText)

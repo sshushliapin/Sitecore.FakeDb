@@ -193,6 +193,7 @@
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
     <Compile Include="Links\LinkManagerTest.cs" />
+    <Compile Include="Links\LinkProviderSwitcherTest.cs" />
     <Compile Include="Links\SwitchingLinkProviderTest.cs" />
     <Compile Include="Pipelines\AddDbItem\AddVersionTest.cs" />
     <Compile Include="Pipelines\AddDbItem\CreateTemplateTest.cs" />
