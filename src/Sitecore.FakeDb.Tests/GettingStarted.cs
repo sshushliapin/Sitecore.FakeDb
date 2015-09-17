@@ -698,6 +698,33 @@
     }
 
     [Fact]
+    public void HowToSwitchLinkProvider()
+    {
+      // arrange
+      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        {
+          new Sitecore.FakeDb.DbItem("home")
+        })
+      {
+        Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
+
+        Sitecore.Links.LinkProvider provider = Substitute.For<Sitecore.Links.LinkProvider>();
+        provider.GetItemUrl(home, Arg.Is<Sitecore.Links.UrlOptions>(x => x.AlwaysIncludeServerUrl))
+          .Returns("http://myawesomeurl.com");
+
+        using (new Sitecore.FakeDb.Links.LinkProviderSwitcher(provider))
+        {
+          // act
+          var result = Sitecore.Links.LinkManager.GetItemUrl(home,
+            new Sitecore.Links.UrlOptions { AlwaysIncludeServerUrl = true });
+
+          // assert
+          Xunit.Assert.Equal("http://myawesomeurl.com", result);
+        }
+      }
+    }
+
+    [Fact]
     public void HowToMockMediaItemProvider()
     {
       const string MyImageUrl = "~/media/myimage.ashx";

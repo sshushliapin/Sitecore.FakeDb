@@ -2,31 +2,37 @@
 {
   using FluentAssertions;
   using NSubstitute;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Common;
   using Sitecore.Links;
   using Xunit;
+  using LinkProviderSwitcher = Sitecore.FakeDb.Links.LinkProviderSwitcher;
 
   public class LinkProviderSwitcherTest
   {
-    [Fact]
-    public void ShouldSwitchLinkProvider()
+    [Theory, AutoData]
+    public void SutIsSwitcher(LinkProviderSwitcher sut)
     {
-      // arrange
-      using (var db = new Db { new DbItem("home") })
-      {
-        var item = db.GetItem("/sitecore/content/home");
-        var options = new UrlOptions { AlwaysIncludeServerUrl = true };
+      sut.Should().BeAssignableTo<Switcher<LinkProvider>>();
+    }
 
-        var provider = Substitute.For<LinkProvider>();
-        provider.GetItemUrl(item, options).Returns("http://myawesomeurl");
+    [Theory, AutoData]
+    public void SutSwitchesSwitcherCurrentValue([Frozen]LinkProvider provider, LinkProviderSwitcher sut)
+    {
+      LinkProviderSwitcher.CurrentValue.Should().BeSameAs(provider);
+    }
 
-        using (new LinkProviderSwitcher("switcher"))
-        using (new Switcher<LinkProvider>(provider))
-        {
-          // act & assert
-          LinkManager.GetItemUrl(item, options).Should().Be("http://myawesomeurl");
-        }
-      }
+    [Theory, AutoData]
+    public void SutSwitchesSwitcherSitecoreLinkProvider([Frozen]LinkProvider provider, LinkProviderSwitcher sut)
+    {
+      LinkManager.Provider.Name.Should().Be("switcher");
+    }
+
+    [Theory, AutoData]
+    public void DisposeRestoresPreviousSitecoreLinkProvider([Frozen]LinkProvider provider, LinkProviderSwitcher sut)
+    {
+      sut.Dispose();
+      LinkManager.Provider.Name.Should().Be("sitecore");
     }
   }
 }
