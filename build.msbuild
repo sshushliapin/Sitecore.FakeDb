@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Versions" ToolsVersion="4.0">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <Import Project="Build.config" />
 
   <UsingTask TaskName="xunit" AssemblyFile="$(XUnitPath)\xunit.runner.msbuild.dll" />
+
+  <PropertyGroup>
+    <Versions>SC80;SC81</Versions>
+  </PropertyGroup>
+  <ItemGroup>
+    <Versions Include="$(Versions)" />
+  </ItemGroup>
 
   <PropertyGroup>
     <Lib>lib\$(Version)\*.dll</Lib>
@@ -12,14 +19,17 @@
   </ItemGroup>
 
   <Target Name="Clean">
-    <MSBuild Projects="@(ProjectToBuild)" Targets="Clean" Properties="Configuration=Debug" />
-    <MSBuild Projects="@(ProjectToBuild)" Targets="Clean" Properties="Configuration=Release" />
+    <MSBuild Projects="$(ProjectToBuild)" Targets="Clean" />
     <RemoveDir Directories="$(DeployFolder)" />
   </Target>
 
   <Target Name="Compile" DependsOnTargets="Clean">
     <Exec Command="$(NuGet) restore -PackagesDirectory $(PackagesDirectory)" WorkingDirectory="$(SourceFolder)" />
-    <MSBuild Projects="$(ProjectToBuild)" Properties="Configuration=Release" />
+    <Copy SourceFiles="@(Lib)" DestinationFolder="lib" />
+
+    <Message Text=" " />
+    <Message Text="=== BUILDING FOR $(Version) ===" Importance="high" />
+    <MSBuild Projects="$(ProjectToBuild)" Properties="DefineConstants=$(Version);TRACE" />
   </Target>
 
   <ItemGroup>
@@ -65,15 +75,8 @@
     <Delete Files="$(SerializationTestsDir)\App.config.transform" />
   </Target>
 
-  <Target  Name="Version">
-    <Copy SourceFiles="@(Lib)" DestinationFolder="lib" />
-    <CallTarget Targets="Packages" />
-  </Target>
-  
   <Target Name="Versions">
-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Version" Properties="Version=7.2"/>
-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Version" Properties="Version=8.0"/>
-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Version" Properties="Version=8.1"/>
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Packages" Properties="Version=%(Versions.Identity)" />
   </Target>
 
   <Target Name="Deploy" DependsOnTargets="Versions">

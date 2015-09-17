@@ -1,6 +1,5 @@
 namespace Sitecore.FakeDb.Links
 {
-  using System.Collections.Specialized;
   using System.Web;
   using Sitecore.Common;
   using Sitecore.Data.Items;
@@ -131,11 +130,13 @@ namespace Sitecore.FakeDb.Links
       return current != null ? current.ParseRequestUrl(request) : base.ParseRequestUrl(request);
     }
 
+#if SC81
     public override SiteInfo ResolveTargetSite(Item item)
     {
       var current = this.CurrentProvider;
       return current != null ? current.ResolveTargetSite(item) : base.ResolveTargetSite(item);
     }
+#endif
 
     public override string ExpandDynamicLinks(string text, bool resolveSites)
     {

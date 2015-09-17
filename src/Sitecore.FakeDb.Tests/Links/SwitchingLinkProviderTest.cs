@@ -182,6 +182,7 @@
       sut.ParseRequestUrl(request).Should().NotBeNull();
     }
 
+#if SC81
     [Theory, SwitchingAutoData]
     public void ResolveTargetSiteCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, Item item)
     {
@@ -196,6 +197,7 @@
     {
       sut.ResolveTargetSite(item);
     }
+#endif
 
     [Theory, SwitchingAutoData]
     public void ExpandDynamicLinksCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, string text, bool resolveSite)

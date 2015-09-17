@@ -1,7 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Links
 {
   using FluentAssertions;
-  using NSubstitute;
   using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Common;
   using Sitecore.Links;
