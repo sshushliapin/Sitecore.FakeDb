@@ -697,6 +697,7 @@
       }
     }
 
+#if !SC72
     [Fact]
     public void HowToSwitchLinkProvider()
     {
@@ -723,6 +724,7 @@
         }
       }
     }
+#endif
 
     [Fact]
     public void HowToMockMediaItemProvider()
