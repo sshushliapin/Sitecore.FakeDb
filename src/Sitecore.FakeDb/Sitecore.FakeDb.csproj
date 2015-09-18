@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SC81</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -95,6 +95,8 @@
     <Compile Include="IThreadLocalProvider.cs" />
     <Compile Include="Links\FakeLinkDatabase.cs" />
     <Compile Include="Links\LinkDatabaseSwitcher.cs" />
+    <Compile Include="Links\LinkProviderSwitcher.cs" />
+    <Compile Include="Links\SwitchingLinkProvider.cs" />
     <Compile Include="Pipelines\AddDbItem\AddVersion.cs" />
     <Compile Include="Pipelines\AddDbItem\SetAccess.cs" />
     <Compile Include="Pipelines\AddDbItem\AddDbItemArgs.cs" />
