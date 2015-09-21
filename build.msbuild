@@ -6,16 +6,13 @@
 
   <PropertyGroup>
     <Versions>SC72;SC80;SC81</Versions>
+    <References>lib\$(Version)\*.dll</References>
+    <CleanUp>lib\*.dll</CleanUp>
   </PropertyGroup>
   <ItemGroup>
     <Versions Include="$(Versions)" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <Lib>lib\$(Version)\*.dll</Lib>
-  </PropertyGroup>
-  <ItemGroup>
-    <Lib Include="$(Lib)" />
+    <References Include="$(References)" />
+    <CleanUp Include="$(CleanUp)" />
   </ItemGroup>
 
   <Target Name="Clean">
@@ -25,7 +22,8 @@
 
   <Target Name="Compile" DependsOnTargets="Clean">
     <Exec Command="$(NuGet) restore -PackagesDirectory $(PackagesDirectory)" WorkingDirectory="$(SourceFolder)" />
-    <Copy SourceFiles="@(Lib)" DestinationFolder="lib" />
+    <Delete Files="@(CleanUp)" />
+    <Copy SourceFiles="@(References)" DestinationFolder="lib" />
 
     <Message Text=" " />
     <Message Text="=== BUILDING FOR $(Version) ===" Importance="high" />
