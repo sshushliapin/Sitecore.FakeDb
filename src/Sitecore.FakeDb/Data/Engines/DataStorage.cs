@@ -4,7 +4,6 @@ namespace Sitecore.FakeDb.Data.Engines
   using System.Collections.Generic;
   using System.IO;
   using System.Linq;
-  using Sitecore.Analytics;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
@@ -295,8 +294,8 @@ namespace Sitecore.FakeDb.Data.Engines
             new DbField(FieldIDs.Hidden),
             new DbField(FieldIDs.ReadOnly),
             new DbField(FieldIDs.Source),
-            new DbField(AnalyticsIds.PageLevelTestDefinitionField) { Shared = true },
-            new DbField(AnalyticsIds.TrackingField) { Type = "Tracking", Shared = true }
+            new DbField(DbFieldIds.AnalyticsIds.PageLevelTestDefinitionField) { Shared = true },
+            new DbField(DbFieldIds.AnalyticsIds.TrackingField) { Type = "Tracking", Shared = true }
           });
 
       this.FakeItems.Add(
@@ -333,8 +332,8 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems.Add(TemplateIDs.TemplateSection, new DbTemplate(ItemNames.TemplateSection, TemplateIDs.TemplateSection, TemplateIDs.TemplateSection) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
       this.FakeItems.Add(TemplateIDs.BranchTemplate, new DbItem(ItemNames.Branch, TemplateIDs.BranchTemplate, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
 
-      this.AddFakeItem(new DbItem(ItemNames.DefinitionsRoot, Analytics.Data.Items.ItemIDs.DefinitionsRoot, TemplateIDs.Folder) { ParentID = ItemIDs.SystemRoot, FullPath = "/sitecore/system/Marketing Control Panel" });
-      this.AddFakeItem(new DbItem(ItemNames.Profiles, ItemIDs.Analytics.Profiles, TemplateIDs.Folder) { ParentID = Analytics.Data.Items.ItemIDs.DefinitionsRoot, FullPath = "/sitecore/system/Marketing Control Panel/Profiles" });
+      this.AddFakeItem(new DbItem(ItemNames.DefinitionsRoot, ItemIDs.Analytics.MarketingCenterItem, TemplateIDs.Folder) { ParentID = ItemIDs.SystemRoot, FullPath = "/sitecore/system/Marketing Control Panel" });
+      this.AddFakeItem(new DbItem(ItemNames.Profiles, ItemIDs.Analytics.Profiles, TemplateIDs.Folder) { ParentID = ItemIDs.Analytics.MarketingCenterItem, FullPath = "/sitecore/system/Marketing Control Panel/Profiles" });
 
       if (this.Database.Name == "core")
       {

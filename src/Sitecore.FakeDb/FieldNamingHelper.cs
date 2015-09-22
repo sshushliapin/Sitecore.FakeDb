@@ -3,7 +3,6 @@
   using System.Collections.Generic;
   using System.Collections.ObjectModel;
   using System.Linq;
-  using Sitecore.Analytics;
   using Sitecore.Data;
 
   public class FieldNamingHelper
@@ -27,8 +26,8 @@
             { FieldIDs.UpdatedBy, "__Updated by" },
             { FieldIDs.Source, "__Source" },
             { DbFieldIds.FinalLayoutField, "__Final Renderings" },
-            { AnalyticsIds.PageLevelTestDefinitionField, "__Page Level Test Set Definition" },
-            { AnalyticsIds.TrackingField, "__Tracking" }
+            { DbFieldIds.AnalyticsIds.PageLevelTestDefinitionField, "__Page Level Test Set Definition" },
+            { DbFieldIds.AnalyticsIds.TrackingField, "__Tracking" }
           });
 
     public KeyValuePair<ID, string> GetFieldIdNamePair(ID id, string name)
