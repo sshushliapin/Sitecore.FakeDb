@@ -1,4 +1,7 @@
-﻿0.30.0
+﻿0.31.0
+* [NEW] #89: Mocking the LinkProvider
+
+0.30.0
 * [FIX] #84: Changing a fake item's template does not work correctly
 * [NEW] #85: Rename ContentItemCustomization into AutoContentCustomization
 * [FIX] #86: AutoContentCustomization generates wrong item template
