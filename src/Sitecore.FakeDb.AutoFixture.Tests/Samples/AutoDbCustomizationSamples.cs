@@ -5,7 +5,7 @@
   using Sitecore.Data.Items;
   using Xunit;
 
-  public class AutoDbCustomizartionSamples
+  public class AutoDbCustomizationSamples
   {
     [Fact]
     public void ResolveMasterDatabase()
