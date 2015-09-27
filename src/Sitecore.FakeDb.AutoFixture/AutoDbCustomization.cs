@@ -6,7 +6,8 @@ namespace Sitecore.FakeDb.AutoFixture
   using Sitecore.Data.Items;
 
   /// <summary>
-  /// A customization that enables creation of Sitecore types such as <see cref="Database"/> or <see cref="Item"/>.
+  /// A customization that enables creation of Sitecore types such as <see cref="Database"/> 
+  /// or <see cref="Item"/>.
   /// </summary>
   public class AutoDbCustomization : ICustomization
   {
@@ -21,9 +22,7 @@ namespace Sitecore.FakeDb.AutoFixture
       fixture.Customizations.Add(new ItemSpecimenBuilder());
       fixture.Customizations.Add(
         new FilteringSpecimenBuilder(
-          new Postprocessor(
-            new MethodInvoker(new ListFavoringConstructorQuery()),
-            new SetDefaultDbItemParentCommand()),
+          new MethodInvoker(new ModestConstructorQuery()),
           new DbItemSpecification()));
     }
   }

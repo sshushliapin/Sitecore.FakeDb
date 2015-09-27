@@ -80,5 +80,19 @@
       // assert
       ruleContext.Should().NotBeNull();
     }
+
+    [Fact]
+    public void ShouldCreateAndAddDbItem()
+    {
+      // arrange
+      var fixture = new Fixture();
+      fixture.Customize(new AutoDbCustomization());
+
+      var db = fixture.Create<Db>();
+      var item = fixture.Create<DbItem>();
+
+      // act
+      db.Add(item);
+    }
   }
 }

@@ -102,7 +102,6 @@
     <Compile Include="AutoContentCustomizationTest.cs" />
     <Compile Include="AddContentItemCommandTest.cs" />
     <Compile Include="Samples\SwitchingLinkProviderSample.cs" />
-    <Compile Include="SetDefaultDbItemParentCommandTest.cs" />
     <Compile Include="DatabaseSpecimenBuilderTest.cs" />
     <Compile Include="ItemSpecimenBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
