@@ -2,7 +2,6 @@
 {
   using System;
   using FluentAssertions;
-  using Ploeh.AutoFixture;
   using Ploeh.AutoFixture.Kernel;
   using Sitecore.Data;
   using Xunit;
@@ -12,8 +11,13 @@
     [Fact]
     public void SutIsISpecimenBuilder()
     {
-      var sut = new DatabaseSpecimenBuilder("master");
-      sut.Should().BeAssignableTo<ISpecimenBuilder>();
+      Assert.IsAssignableFrom<ISpecimenBuilder>(new DatabaseSpecimenBuilder("master"));
+    }
+
+    [Fact]
+    public void SutThrowsIfDatabaseIsNull()
+    {
+      Assert.Throws<ArgumentNullException>(() => new DatabaseSpecimenBuilder(null));
     }
 
     [Fact]
@@ -27,27 +31,13 @@
     [InlineData("master")]
     [InlineData("web")]
     [InlineData("core")]
-    public void ShouldReturnDatabaseInstance(string databaseName)
+    public void CreateReturnsDatabaseInstance(string databaseName)
     {
-      // arrange
-      var fixture = new Fixture();
-      fixture.Customizations.Add(new DatabaseSpecimenBuilder(databaseName));
+      var sut = new DatabaseSpecimenBuilder(databaseName);
 
-      // act
-      var database = fixture.Create<Database>();
+      var database = sut.Create(typeof(Database), null);
 
-      // assert
       database.Should().Match<Database>(x => x.Name == databaseName);
-    }
-
-    [Fact]
-    public void ShouldThrowIfDatabaseIdNull()
-    {
-      // act
-      Action action = () => new DatabaseSpecimenBuilder(null);
-
-      // assert
-      action.ShouldThrow<ArgumentNullException>();
     }
   }
 }

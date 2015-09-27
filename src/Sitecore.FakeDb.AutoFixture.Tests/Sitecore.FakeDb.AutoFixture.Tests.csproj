@@ -91,7 +91,9 @@
     <Compile Include="AutoContentTemplateItemCustomizationTest.cs" />
     <Compile Include="AutoContentItemCustomizationTest.cs" />
     <Compile Include="AutoDbCustomizatonTest.cs" />
+    <Compile Include="ContextDatabaseSpecimenBuilderTest.cs" />
     <Compile Include="DbItemSpecificationTest.cs" />
+    <Compile Include="ContextDatabaseCustomizationTest.cs" />
     <Compile Include="Samples\AutoDbCustomizationSamples.cs" />
     <Compile Include="Samples\AutoDbDataAttribute.cs" />
     <Compile Include="Samples\AutoDbTemplateSamples.cs" />
