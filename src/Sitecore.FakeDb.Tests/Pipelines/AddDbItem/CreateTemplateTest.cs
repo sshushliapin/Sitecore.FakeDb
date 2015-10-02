@@ -6,7 +6,6 @@
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines.AddDbItem;
   using Xunit;
-  using Xunit.Extensions;
 
   public class CreateTemplateTest
   {

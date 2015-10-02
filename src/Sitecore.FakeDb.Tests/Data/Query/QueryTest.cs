@@ -5,7 +5,6 @@
   using Sitecore.Data.Items;
   using Sitecore.Data.Query;
   using Xunit;
-  using Xunit.Extensions;
 
   public class QueryTest
   {

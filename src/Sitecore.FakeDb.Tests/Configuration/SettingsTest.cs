@@ -4,7 +4,6 @@
   using FluentAssertions;
   using Sitecore.FakeDb.Configuration;
   using Xunit;
-  using Xunit.Extensions;
 
   public class SettingsTest
   {

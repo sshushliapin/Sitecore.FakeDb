@@ -8,7 +8,6 @@
   using Sitecore.FakeDb.Pipelines;
   using Sitecore.Pipelines;
   using Xunit;
-  using Xunit.Extensions;
 
   public class PipelineWatcherTest : IDisposable
   {

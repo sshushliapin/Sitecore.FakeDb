@@ -7,7 +7,6 @@
   using Sitecore.FakeDb.Security.Web;
   using Sitecore.Security.Accounts;
   using Xunit;
-  using Xunit.Extensions;
 
   public class UserTest
   {

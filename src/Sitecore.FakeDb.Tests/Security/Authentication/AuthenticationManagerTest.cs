@@ -5,7 +5,6 @@
   using Sitecore.Security.Accounts;
   using Sitecore.Security.Authentication;
   using Xunit;
-  using Xunit.Extensions;
 
   public class AuthenticationManagerTest
   {
