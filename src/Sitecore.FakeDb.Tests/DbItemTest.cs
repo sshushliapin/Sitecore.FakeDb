@@ -10,133 +10,117 @@
 
   public class DbItemTest
   {
-    [Fact]
-    public void ShouldGenerateNewIdsIfNotSet()
+    [Theory, AutoData]
+    public void SutGeneratesNewIdsIfNotSet(string name)
     {
-      // arrange & act
-      var item = new DbItem("my item");
-
-      // assert
-      item.ID.IsNull.Should().BeFalse();
-    }
-
-    [Fact]
-    public void ShouldGenerateNameBasedOnIdIfNotSet()
-    {
-      // arrange
-      var id = ID.NewID;
-      var item = new DbItem(null, id);
-
-      // act & assert
-      item.Name.Should().Be(id.ToShortID().ToString());
-    }
-
-    [Fact]
-    public void ShouldCreateNewDbItem()
-    {
-      // arrange & act
-      var item = new DbItem("home");
-
-      // assert
-      item.TemplateID.IsNull.Should().BeTrue();
-      item.Children.Should().BeEmpty();
-      item.Fields.Should().BeEmpty();
-      item.FullPath.Should().BeNull();
-      item.ParentID.Should().BeNull();
-    }
-
-    [Fact]
-    public void ShouldAddFieldByNameAndValue()
-    {
-      // arrange 
-      var item = new DbItem("home") { { "Title", "Welcome!" } };
-
-      // act & assert
-      item.Fields.Should().ContainSingle(f => f.Name == "Title" && f.Value == "Welcome!");
-    }
-
-    [Fact]
-    public void ShouldAddFieldByIdAndValue()
-    {
-      // arrange 
-      var item = new DbItem("home") { { FieldIDs.Hidden, "1" } };
-
-      // act & assert
-      item.Fields.Should().ContainSingle(f => f.ID == FieldIDs.Hidden && f.Value == "1");
-    }
-
-    [Fact]
-    public void ShouldAddChildItem()
-    {
-      // arrange
-      var parent = new DbItem("parent");
-      var child = new DbItem("child");
-
-      // act
-      parent.Add(child);
-
-      // assert
-      parent.Children.Single().Should().BeEquivalentTo(child);
-    }
-
-    [Fact]
-    public void ShouldCreateNewItemAccess()
-    {
-      // arrange
-      var item = new DbItem("home");
-
-      // act
-      item.Access.Should().BeOfType<DbItemAccess>();
-    }
-
-    [Fact]
-    public void ShouldSetItemAccess()
-    {
-      // arrange
-      var item = new DbItem("home") { Access = new DbItemAccess { CanRead = false } };
-
-      // act & assert
-      item.Access.CanRead.Should().BeFalse();
+      var sut = new DbItem(name);
+      sut.ID.IsNull.Should().BeFalse();
     }
 
     [Theory, AutoData]
-    public void ShouldThrowIfFieldNameIsNull(DbItem item, string value)
+    public void SutGeneratesNameBasedOnIdIfNotSet(ID id)
     {
-      // act
-      Action action = () => item.Add((string)null, value);
+      var sut = new DbItem(null, id);
+      sut.Name.Should().Be(id.ToShortID().ToString());
+    }
 
-      // assert
+    [Theory, AutoData]
+    public void SutSetsNullTemplate([NoAutoProperties]DbItem sut)
+    {
+      sut.TemplateID.IsNull.Should().BeTrue();
+    }
+
+    [Theory, AutoData]
+    public void SutSetsEmptyChildrenCollection([NoAutoProperties]DbItem sut)
+    {
+      sut.Children.Should().BeEmpty();
+    }
+
+    [Theory, AutoData]
+    public void SutSetsEmptyFieldsCollection([NoAutoProperties]DbItem sut)
+    {
+      sut.Fields.Should().BeEmpty();
+    }
+
+    [Theory, AutoData]
+    public void SutSetsNullFullPath([NoAutoProperties]DbItem sut)
+    {
+      sut.FullPath.Should().BeNull();
+    }
+
+    [Theory, AutoData]
+    public void SutSetsNullParentId([NoAutoProperties]DbItem sut)
+    {
+      sut.ParentID.Should().BeNull();
+    }
+
+    [Theory, AutoData]
+    public void SutAddsFieldByNameAndValue()
+    {
+      var sut = new DbItem("home") { { "Title", "Welcome!" } };
+      sut.Fields.Should().ContainSingle(f => f.Name == "Title" && f.Value == "Welcome!");
+    }
+
+    [Fact]
+    public void SutAddsFieldByIdAndValue()
+    {
+      var sut = new DbItem("home") { { FieldIDs.Hidden, "1" } };
+      sut.Fields.Should().ContainSingle(f => f.ID == FieldIDs.Hidden && f.Value == "1");
+    }
+
+    [Theory, AutoData]
+    public void SutAddsChildItem(DbItem sut, DbItem child)
+    {
+      sut.Add(child);
+      sut.Children.Single().Should().BeEquivalentTo(child);
+    }
+
+    [Theory, AutoData]
+    public void SutCreateNewItemAccess([NoAutoProperties]DbItem sut)
+    {
+      sut.Access.Should().BeOfType<DbItemAccess>();
+    }
+
+    [Fact]
+    public void SutSetsItemAccess()
+    {
+      var sut = new DbItem("home") { Access = new DbItemAccess { CanRead = false } };
+      sut.Access.CanRead.Should().BeFalse();
+    }
+
+    [Theory, AutoData]
+    public void AddThrowsIfFieldNameIsNull(DbItem sut, string value)
+    {
+      Action action = () => sut.Add((string)null, value);
       action.ShouldThrow<ArgumentNullException>().WithMessage("*fieldName");
     }
 
     [Theory, AutoData]
-    public void ShouldThrowIfFieldIdIsNull(DbItem item, string value)
+    public void AddThrowsIfFieldIdIsNull(DbItem sut, string value)
     {
-      // act
-      Action action = () => item.Add((ID)null, value);
-
-      // assert
+      Action action = () => sut.Add((ID)null, value);
       action.ShouldThrow<ArgumentNullException>().WithMessage("*fieldId");
     }
 
     [Theory, AutoData]
-    public void ShouldThrowIfFieldIsNull(DbItem item)
+    public void AddThrowsIfFieldIsNull(DbItem sut)
     {
-      // act
-      Action action = () => item.Add((DbField)null);
-
-      // assert
+      Action action = () => sut.Add((DbField)null);
       action.ShouldThrow<ArgumentNullException>().WithMessage("*field");
     }
 
     [Theory, AutoData]
-    public void ShouldThrowIChildItemIsNull(DbItem item)
+    public void AddThrowsIfChildItemIsNull(DbItem sut)
     {
-      // act
-      Action action = () => item.Add((DbItem)null);
-
-      // assert
+      Action action = () => sut.Add((DbItem)null);
       action.ShouldThrow<ArgumentNullException>().WithMessage("*child");
+    }
+
+    [Theory, AutoData]
+    public void GetVersionCountThrowsIfLanguageIsNull(DbItem sut)
+    {
+      Action action = () => sut.GetVersionCount(null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
     }
   }
 }

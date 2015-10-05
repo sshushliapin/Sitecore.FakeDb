@@ -3,6 +3,7 @@ namespace Sitecore.FakeDb
   using System.Collections;
   using System.Collections.Generic;
   using System.Diagnostics;
+  using System.Linq;
   using Sitecore.Data;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Security.AccessControl;
@@ -77,6 +78,34 @@ namespace Sitecore.FakeDb
       Assert.ArgumentNotNull(child, "child");
 
       this.Children.Add(child);
+    }
+
+    public int GetVersionCount(string language)
+    {
+      Assert.ArgumentNotNull(language, "language");
+
+      var versionsCount = 0;
+
+      if (this.VersionsCount.ContainsKey(language))
+      {
+        versionsCount = this.VersionsCount[language];
+      }
+
+      foreach (var field in this.Fields)
+      {
+        if (!field.Values.ContainsKey(language))
+        {
+          continue;
+        }
+
+        var maxVersion = field.Values[language].Keys.OrderBy(k => k).LastOrDefault();
+        if (maxVersion > versionsCount)
+        {
+          versionsCount = maxVersion;
+        }
+      }
+
+      return versionsCount;
     }
 
     IEnumerator IEnumerable.GetEnumerator()

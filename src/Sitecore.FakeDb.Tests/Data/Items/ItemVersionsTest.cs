@@ -54,5 +54,22 @@
         target.Versions.Count.Should().Be(0);
       }
     }
+
+    [Fact]
+    public void ShouldReturnLatestVersion()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home") { new DbField("Title") { { "en", 1, "Hi!" }, { "en", 2, "Hello!" } } }
+                        })
+      {
+        // act
+        var item = db.GetItem("/sitecore/content/home");
+
+        // assert
+        item.Version.Number.Should().Be(2);
+      }
+    }
   }
 }

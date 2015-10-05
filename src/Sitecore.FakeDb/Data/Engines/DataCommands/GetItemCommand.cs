@@ -3,6 +3,7 @@
   using System;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
+  using Version = Sitecore.Data.Version;
 
   public class GetItemCommand : Sitecore.Data.Engines.DataCommands.GetItemCommand
   {
@@ -27,7 +28,18 @@
 
     protected override Item DoExecute()
     {
-      return this.dataStorage.GetSitecoreItem(this.ItemId, this.Language, this.Version);
+      var version = this.Version;
+      if (version == Version.Latest)
+      {
+        var item = this.DataStorage.GetFakeItem(this.ItemId);
+        if (item != null)
+        {
+          var language = this.Language.Name;
+          version = Version.Parse(item.GetVersionCount(language));
+        }
+      }
+
+      return this.dataStorage.GetSitecoreItem(this.ItemId, this.Language, version);
     }
   }
 }
