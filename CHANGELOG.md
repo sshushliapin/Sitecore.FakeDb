@@ -1,4 +1,8 @@
-﻿0.31.0
+﻿0.31.1
+* [FIX] #90: Database.GetItem() should return latest version
+* [FIX] #91: item.Versions[Version.Latest] should return latest version
+
+0.31.0
 * [NEW] #89: Mocking the LinkProvider
 
 0.30.0
