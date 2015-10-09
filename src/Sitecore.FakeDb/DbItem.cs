@@ -108,6 +108,35 @@ namespace Sitecore.FakeDb
       return versionsCount;
     }
 
+    public bool RemoveVersion(string language)
+    {
+      Assert.ArgumentNotNull(language, "language");
+
+      var removed = false;
+
+      foreach (var field in this.Fields)
+      {
+        if (!field.Values.ContainsKey(language))
+        {
+          continue;
+        }
+
+        var langValues = field.Values[language];
+        var lastVersion = langValues.Last();
+
+        removed = langValues.Remove(lastVersion);
+      }
+
+      if (!this.VersionsCount.ContainsKey(language))
+      {
+        return removed;
+      }
+
+      this.VersionsCount[language] -= 1;
+
+      return true;
+    }
+
     IEnumerator IEnumerable.GetEnumerator()
     {
       return this.Children.GetEnumerator();

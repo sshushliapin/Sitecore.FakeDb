@@ -1,7 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
   using System;
-  using System.Linq;
   using Sitecore.Diagnostics;
 
   public class RemoveVersionCommand : Sitecore.Data.Engines.DataCommands.RemoveVersionCommand
@@ -30,28 +29,7 @@
       var dbitem = this.dataStorage.GetFakeItem(this.Item.ID);
       var language = this.Item.Language.Name;
 
-      var removed = false;
-
-      foreach (var field in dbitem.Fields)
-      {
-        if (!field.Values.ContainsKey(language))
-        {
-          continue;
-        }
-
-        var langValues = field.Values[language];
-        var lastVersion = langValues.Last();
-
-        removed = langValues.Remove(lastVersion);
-      }
-
-      if (!dbitem.VersionsCount.ContainsKey(language))
-      {
-        return removed;
-      }
-
-      dbitem.VersionsCount[language] -= 1;
-      return true;
+      return dbitem.RemoveVersion(language);
     }
   }
 }

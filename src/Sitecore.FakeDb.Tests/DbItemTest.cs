@@ -122,5 +122,12 @@
       Action action = () => sut.GetVersionCount(null);
       action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
     }
+
+    [Theory, AutoData]
+    public void RemoveVersionThrowsIfLanguageIsNull(DbItem sut)
+    {
+      Action action = () => sut.RemoveVersion(null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
+    }
   }
 }
