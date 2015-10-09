@@ -117,6 +117,20 @@
     }
 
     [Theory, AutoData]
+    public void AddVersionThrowsIfLanguageIsNull(DbItem sut)
+    {
+      Action action = () => sut.AddVersion(null, 0);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
+    }
+
+    [Theory, AutoData]
+    public void AddVersionThrowsIfVersionIsNegative(DbItem sut)
+    {
+      Action action = () => sut.AddVersion("en", -1);
+      action.ShouldThrow<ArgumentOutOfRangeException>().WithMessage("*version");
+    }
+
+    [Theory, AutoData]
     public void GetVersionCountThrowsIfLanguageIsNull(DbItem sut)
     {
       Action action = () => sut.GetVersionCount(null);

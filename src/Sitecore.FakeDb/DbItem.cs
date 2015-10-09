@@ -1,5 +1,6 @@
 namespace Sitecore.FakeDb
 {
+  using System;
   using System.Collections;
   using System.Collections.Generic;
   using System.Diagnostics;
@@ -78,6 +79,34 @@ namespace Sitecore.FakeDb
       Assert.ArgumentNotNull(child, "child");
 
       this.Children.Add(child);
+    }
+
+    public void AddVersion(string language)
+    {
+      this.AddVersion(language, 0);
+    }
+
+    public void AddVersion(string language, int currentVersion)
+    {
+      Assert.ArgumentNotNull(language, "language");
+      if (currentVersion < 0)
+      {
+        throw new ArgumentOutOfRangeException("currentVersion");
+      }
+
+      if (currentVersion == 0)
+      {
+        this.VersionsCount[language] = 1;
+        return;
+      }
+
+      foreach (var field in this.Fields)
+      {
+        var value = field.GetValue(language, currentVersion);
+        field.Add(language, value);
+      }
+
+      this.VersionsCount[language] = ++currentVersion;
     }
 
     public int GetVersionCount(string language)
