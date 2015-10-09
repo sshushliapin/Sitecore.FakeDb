@@ -79,7 +79,7 @@
       ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      dbItem.VersionsCount["en"].Should().Be(2);
+      dbItem.GetVersionCount("en").Should().Be(2);
     }
   }
 }

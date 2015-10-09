@@ -12,6 +12,8 @@ namespace Sitecore.FakeDb
   [DebuggerDisplay("{FullPath}, {ID.ToString()}")]
   public class DbItem : IEnumerable
   {
+    private readonly IDictionary<string, int> versionsCount;
+
     public DbItem(string name)
       : this(name, ID.NewID)
     {
@@ -30,7 +32,7 @@ namespace Sitecore.FakeDb
       this.Access = new DbItemAccess();
       this.Fields = new DbFieldCollection();
       this.Children = new DbItemChildCollection(this);
-      this.VersionsCount = new Dictionary<string, int>();
+      this.versionsCount = new Dictionary<string, int>();
     }
 
     public string Name { get; set; }
@@ -50,8 +52,6 @@ namespace Sitecore.FakeDb
     public ICollection<DbItem> Children { get; private set; }
 
     public DbItemAccess Access { get; set; }
-
-    public IDictionary<string, int> VersionsCount { get; private set; }
 
     public void Add(string fieldName, string fieldValue)
     {
@@ -96,7 +96,14 @@ namespace Sitecore.FakeDb
 
       if (currentVersion == 0)
       {
-        this.VersionsCount[language] = 1;
+        if (this.versionsCount.ContainsKey(language))
+        {
+          this.versionsCount[language] += 1;
+        }
+        else
+        {
+          this.versionsCount[language] = 1;
+        }
         return;
       }
 
@@ -106,7 +113,7 @@ namespace Sitecore.FakeDb
         field.Add(language, value);
       }
 
-      this.VersionsCount[language] = ++currentVersion;
+      this.versionsCount[language] = ++currentVersion;
     }
 
     public int GetVersionCount(string language)
@@ -115,9 +122,9 @@ namespace Sitecore.FakeDb
 
       var versionsCount = 0;
 
-      if (this.VersionsCount.ContainsKey(language))
+      if (this.versionsCount.ContainsKey(language))
       {
-        versionsCount = this.VersionsCount[language];
+        versionsCount = this.versionsCount[language];
       }
 
       foreach (var field in this.Fields)
@@ -156,12 +163,12 @@ namespace Sitecore.FakeDb
         removed = langValues.Remove(lastVersion);
       }
 
-      if (!this.VersionsCount.ContainsKey(language))
+      if (!this.versionsCount.ContainsKey(language))
       {
         return removed;
       }
 
-      this.VersionsCount[language] -= 1;
+      this.versionsCount[language] -= 1;
 
       return true;
     }

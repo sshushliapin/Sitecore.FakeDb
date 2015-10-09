@@ -131,6 +131,22 @@
     }
 
     [Theory, AutoData]
+    public void ShouldAddVersion(DbItem sut)
+    {
+      sut.AddVersion("en");
+      sut.GetVersionCount("en").Should().Be(1);
+    }
+
+    [Theory, AutoData]
+    public void ShouldAddFewVersions(DbItem sut)
+    {
+      sut.AddVersion("en");
+      sut.AddVersion("en");
+
+      sut.GetVersionCount("en").Should().Be(2);
+    }
+
+    [Theory, AutoData]
     public void GetVersionCountThrowsIfLanguageIsNull(DbItem sut)
     {
       Action action = () => sut.GetVersionCount(null);

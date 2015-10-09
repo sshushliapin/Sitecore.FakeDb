@@ -19,7 +19,7 @@
       processor.Process(args);
 
       // assert
-      args.DbItem.VersionsCount["en"].Should().Be(1);
+      args.DbItem.GetVersionCount("en").Should().Be(1);
     }
   }
 }

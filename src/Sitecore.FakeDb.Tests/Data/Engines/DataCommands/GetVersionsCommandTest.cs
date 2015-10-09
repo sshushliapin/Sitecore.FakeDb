@@ -46,7 +46,8 @@
     public void ShouldGetItemVersionsCount(GetVersionsCommand sut, Item item, Language language, DbItem versionedItem)
     {
       // arrange
-      versionedItem.VersionsCount.Add(language.Name, 2);
+      versionedItem.AddVersion(language.Name);
+      versionedItem.AddVersion(language.Name);
       sut.DataStorage.GetFakeItem(item.ID).Returns(versionedItem);
 
       sut.Initialize(item, language);

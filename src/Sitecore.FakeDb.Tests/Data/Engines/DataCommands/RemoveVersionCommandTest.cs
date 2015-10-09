@@ -47,7 +47,8 @@
     public void ShouldDecreaseFakeItemVersionCount(RemoveVersionCommand sut, Item item, DbItem dbItem)
     {
       // arrange
-      dbItem.VersionsCount.Add("en", 2);
+      dbItem.AddVersion("en");
+      dbItem.AddVersion("en");
       sut.DataStorage.GetFakeItem(item.ID).Returns(dbItem);
 
       sut.Initialize(item);
@@ -57,7 +58,7 @@
 
       // assert
       result.Should().BeTrue();
-      dbItem.VersionsCount["en"].Should().Be(1);
+      dbItem.GetVersionCount("en").Should().Be(1);
     }
   }
 }
