@@ -3,6 +3,7 @@
   using System;
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
+  using Sitecore.Globalization;
 
   public class CreateItemCommand : Sitecore.Data.Engines.DataCommands.CreateItemCommand
   {
@@ -29,7 +30,7 @@
     {
       var item = new DbItem(this.ItemName, this.ItemId, this.TemplateId) { ParentID = this.Destination.ID };
       this.dataStorage.AddFakeItem(item);
-      item.VersionsCount.Clear();
+      item.RemoveVersion(Language.Current.Name);
 
       return this.dataStorage.GetSitecoreItem(this.ItemId);
     }

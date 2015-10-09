@@ -33,13 +33,7 @@
       var currentVersion = this.Item.Version.Number;
       var nextVersion = new Version(currentVersion + 1);
 
-      foreach (var field in dbitem.Fields)
-      {
-        var value = field.GetValue(language, currentVersion);
-        field.Add(language, value);
-      }
-
-      dbitem.VersionsCount[language] = nextVersion.Number;
+      dbitem.AddVersion(language, currentVersion);
 
       return this.dataStorage.GetSitecoreItem(this.Item.ID, this.Item.Language, nextVersion);
     }

@@ -117,9 +117,46 @@
     }
 
     [Theory, AutoData]
+    public void AddVersionThrowsIfLanguageIsNull(DbItem sut)
+    {
+      Action action = () => sut.AddVersion(null, 0);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
+    }
+
+    [Theory, AutoData]
+    public void AddVersionThrowsIfVersionIsNegative(DbItem sut)
+    {
+      Action action = () => sut.AddVersion("en", -1);
+      action.ShouldThrow<ArgumentOutOfRangeException>().WithMessage("*version");
+    }
+
+    [Theory, AutoData]
+    public void ShouldAddVersion(DbItem sut)
+    {
+      sut.AddVersion("en");
+      sut.GetVersionCount("en").Should().Be(1);
+    }
+
+    [Theory, AutoData]
+    public void ShouldAddFewVersions(DbItem sut)
+    {
+      sut.AddVersion("en");
+      sut.AddVersion("en");
+
+      sut.GetVersionCount("en").Should().Be(2);
+    }
+
+    [Theory, AutoData]
     public void GetVersionCountThrowsIfLanguageIsNull(DbItem sut)
     {
       Action action = () => sut.GetVersionCount(null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
+    }
+
+    [Theory, AutoData]
+    public void RemoveVersionThrowsIfLanguageIsNull(DbItem sut)
+    {
+      Action action = () => sut.RemoveVersion(null);
       action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
     }
   }

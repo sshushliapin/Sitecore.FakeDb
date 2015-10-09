@@ -1,5 +1,6 @@
 namespace Sitecore.FakeDb
 {
+  using System;
   using System.Collections;
   using System.Collections.Generic;
   using System.Diagnostics;
@@ -11,6 +12,8 @@ namespace Sitecore.FakeDb
   [DebuggerDisplay("{FullPath}, {ID.ToString()}")]
   public class DbItem : IEnumerable
   {
+    private readonly IDictionary<string, int> versionsCount;
+
     public DbItem(string name)
       : this(name, ID.NewID)
     {
@@ -29,7 +32,7 @@ namespace Sitecore.FakeDb
       this.Access = new DbItemAccess();
       this.Fields = new DbFieldCollection();
       this.Children = new DbItemChildCollection(this);
-      this.VersionsCount = new Dictionary<string, int>();
+      this.versionsCount = new Dictionary<string, int>();
     }
 
     public string Name { get; set; }
@@ -49,8 +52,6 @@ namespace Sitecore.FakeDb
     public ICollection<DbItem> Children { get; private set; }
 
     public DbItemAccess Access { get; set; }
-
-    public IDictionary<string, int> VersionsCount { get; private set; }
 
     public void Add(string fieldName, string fieldValue)
     {
@@ -80,15 +81,50 @@ namespace Sitecore.FakeDb
       this.Children.Add(child);
     }
 
+    public void AddVersion(string language)
+    {
+      this.AddVersion(language, 0);
+    }
+
+    public void AddVersion(string language, int currentVersion)
+    {
+      Assert.ArgumentNotNull(language, "language");
+      if (currentVersion < 0)
+      {
+        throw new ArgumentOutOfRangeException("currentVersion");
+      }
+
+      if (currentVersion == 0)
+      {
+        if (this.versionsCount.ContainsKey(language))
+        {
+          this.versionsCount[language] += 1;
+        }
+        else
+        {
+          this.versionsCount[language] = 1;
+        }
+        return;
+      }
+
+      foreach (var field in this.Fields)
+      {
+        var value = field.GetValue(language, currentVersion);
+        field.Add(language, value);
+      }
+
+      this.versionsCount[language] = ++currentVersion;
+    }
+
     public int GetVersionCount(string language)
     {
       Assert.ArgumentNotNull(language, "language");
 
       var versionsCount = 0;
 
-      if (this.VersionsCount.ContainsKey(language))
+      if (this.versionsCount.ContainsKey(language))
       {
-        versionsCount = this.VersionsCount[language];
+        versionsCount = this.versionsCount[language];
       }
 
       foreach (var field in this.Fields)
@@ -106,6 +142,35 @@ namespace Sitecore.FakeDb
       }
 
       return versionsCount;
+    }
+
+    public bool RemoveVersion(string language)
+    {
+      Assert.ArgumentNotNull(language, "language");
+
+      var removed = false;
+
+      foreach (var field in this.Fields)
+      {
+        if (!field.Values.ContainsKey(language))
+        {
+          continue;
+        }
+
+        var langValues = field.Values[language];
+        var lastVersion = langValues.Last();
+
+        removed = langValues.Remove(lastVersion);
+      }
+
+      if (!this.versionsCount.ContainsKey(language))
+      {
+        return removed;
+      }
+
+      this.versionsCount[language] -= 1;
+
+      return true;
     }
 
     IEnumerator IEnumerable.GetEnumerator()
