@@ -10,14 +10,12 @@
     {
       Assert.ArgumentNotNull(fixture, "fixture");
 
-      var db = fixture.Create<Db>();
-
       fixture.Customizations.Insert(
         0,
         new FilteringSpecimenBuilder(
           new Postprocessor(
             new MethodInvoker(new ListFavoringConstructorQuery()),
-            new AddContentDbItemCommand(db)),
+            new AddContentDbItemCommand()),
           new DbItemSpecification()));
     }
   }

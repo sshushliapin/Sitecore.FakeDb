@@ -6,22 +6,19 @@
 
   public class AddContentItemCommand : ISpecimenCommand
   {
-    private readonly Db db;
-
-    public AddContentItemCommand(Db db)
-    {
-      Assert.ArgumentNotNull(db, "db");
-
-      this.db = db;
-    }
-
     public void Execute(object specimen, ISpecimenContext context)
     {
-      var scitem = specimen as Item;
-      if (scitem != null)
+      Assert.ArgumentNotNull(specimen, "specimen");
+      Assert.ArgumentNotNull(context, "context");
+
+      var item = specimen as Item;
+      if (item == null)
       {
-        this.db.Add(new DbItem(scitem.Name, scitem.ID, scitem.TemplateID));
+        return;
       }
+
+      var db = (Db)context.Resolve(typeof(Db));
+      db.Add(new DbItem(item.Name, item.ID, item.TemplateID));
     }
   }
 }

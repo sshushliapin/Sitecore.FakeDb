@@ -3,6 +3,7 @@
   using System;
   using FluentAssertions;
   using Ploeh.AutoFixture;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Pipelines;
@@ -11,88 +12,56 @@
 
   public class AutoDbCustomizatonTest
   {
-    [Fact]
-    public void ShouldReturnDatabaseInstance()
+    [Theory, AutoDbData]
+    public void ShouldReturnMasterDatabaseInstance(Database database)
     {
-      // arrange
-      var fixture = new Fixture();
-      fixture.Customize(new AutoDbCustomization());
-
-      // act
-      var database = fixture.Create<Database>();
-
-      // assert
       database.Name.Should().Be("master");
     }
 
-    [Fact]
-    public void ShouldInitializeDatabase()
+    [Theory, AutoDbData]
+    public void ShouldInitializeDatabase(Database database)
     {
-      // arrange
-      var fixture = new Fixture();
-      fixture.Customize(new AutoDbCustomization());
-
-      // act
       Action action = () => Database.GetDatabase("master").GetItem("/sitecore/content");
-
-      // assert
       action.ShouldNotThrow();
     }
 
-    [Fact]
-    public void ShouldCreateItemInstance()
+    [Theory, AutoDbData]
+    public void ShouldCreateItemInstance(Item item)
     {
-      // arrange
-      var fixture = new Fixture();
-      fixture.Customize(new AutoDbCustomization());
-
-      // act
-      var item = fixture.Create<Item>();
-
-      // assert
       item.Should().NotBeNull();
     }
 
-    [Fact]
-    public void ShouldCreatePipelineArgs()
+    [Theory, AutoDbData]
+    public void ShouldCreatePipelineArgs(PipelineArgs pipelineArgs)
     {
-      // arrange
-      var fixture = new Fixture();
-      fixture.Customize(new AutoDbCustomization());
-
-      // act
-      var pipelineArgs = fixture.Create<PipelineArgs>();
-
-      // assert
       pipelineArgs.Should().NotBeNull();
     }
 
-    [Fact]
-    public void ShouldCreateRuleContext()
+    [Theory, AutoDbData]
+    public void ShouldCreateRuleContext(RuleContext ruleContext)
     {
-      // arrange
-      var fixture = new Fixture();
-      fixture.Customize(new AutoDbCustomization());
-
-      // act
-      var ruleContext = fixture.Create<RuleContext>();
-
-      // assert
       ruleContext.Should().NotBeNull();
     }
 
-    [Fact]
-    public void ShouldCreateAndAddDbItem()
+    [Theory, AutoDbData]
+    public void ShouldCreateAndAddDbItem(Db db, DbItem item)
     {
-      // arrange
-      var fixture = new Fixture();
-      fixture.Customize(new AutoDbCustomization());
+      Action action = () => db.Add(item);
+      action.ShouldNotThrow();
+    }
 
-      var db = fixture.Create<Db>();
-      var item = fixture.Create<DbItem>();
+    [Theory, AutoDbData]
+    public void ShouldShareFrozenStringWhenCreateItem([Frozen]string frozenString, Item item)
+    {
+      item.Name.Should().Be(frozenString);
+    }
 
-      // act
-      db.Add(item);
+    private class AutoDbDataAttribute : AutoDataAttribute
+    {
+      public AutoDbDataAttribute()
+        : base(new Fixture().Customize(new AutoDbCustomization()))
+      {
+      }
     }
   }
 }

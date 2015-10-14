@@ -95,6 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddContentTemplateItemCommandTest.cs" />
     <Compile Include="AddContentDbItemCommandTest.cs" />
     <Compile Include="AutoContentDbItemCustomizationTest.cs" />
     <Compile Include="AutoContentTemplateItemCustomizationTest.cs" />

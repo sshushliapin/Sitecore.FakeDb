@@ -1,6 +1,7 @@
 namespace Sitecore.FakeDb.AutoFixture
 {
   using Ploeh.AutoFixture.Kernel;
+  using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Items;
 
@@ -13,7 +14,11 @@ namespace Sitecore.FakeDb.AutoFixture
         return new NoSpecimen(request);
       }
 
-      return ItemHelper.CreateInstance();
+      var database = (Database)context.Resolve(typeof(Database));
+      var name = (string)context.Resolve(typeof(string));
+      var id = (ID)context.Resolve(typeof(ID));
+
+      return ItemHelper.CreateInstance(database, name, id);
     }
   }
 }
