@@ -56,6 +56,18 @@
       item.Name.Should().Be(frozenString);
     }
 
+    [Theory, AutoDbData]
+    public void ShouldCreateContentItem([Content] Item item, Database database)
+    {
+      database.GetItem(item.ID).Should().NotBeNull();
+    }
+
+    [Theory, AutoDbData]
+    public void ShouldCreateContentDbItem([Content] DbItem item, Database database)
+    {
+      database.GetItem(item.ID).Should().NotBeNull();
+    }
+
     private class AutoDbDataAttribute : AutoDataAttribute
     {
       public AutoDbDataAttribute()

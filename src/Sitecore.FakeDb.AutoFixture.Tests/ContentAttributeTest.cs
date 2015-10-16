@@ -1,8 +1,9 @@
 ﻿namespace Sitecore.FakeDb.AutoFixture.Tests
 {
+  using System;
   using FluentAssertions;
+  using Ploeh.AutoFixture;
   using Ploeh.AutoFixture.Xunit2;
-  using Sitecore.FakeDb.AutoFixture.Tests.Samples;
   using Xunit;
 
   public class ContentAttributeTest
@@ -10,24 +11,32 @@
     [Fact]
     public void ShouldBeCustomizeAttribute()
     {
-      // arrange & act
       var sut = new ContentAttribute();
+      sut.Should().BeAssignableTo<Attribute>();
+    }
 
-      // assert
-      sut.Should().BeAssignableTo<CustomizeAttribute>();
+    [Theory, AutoDbData]
+    public void ShouldAddDbItem(Db db, [Content]DbItem item)
+    {
+      db.GetItem(item.ID).Should().NotBeNull();
+    }
+
+    [Theory, AutoDbData]
+    public void ShouldNotAddItemsNotMarkedAsContent(Db db, [Content]DbItem item, DbItem foreigner)
+    {
+      db.GetItem(foreigner.ID).Should().BeNull();
     }
 
     [Fact]
-    public void ShouldGetContentCustomization()
+    public void ShouldBePropertyAttribute()
     {
-      // arrange
-      var sut = new ContentAttribute();
+      typeof(ContentAttribute).GetCustomAttributes(false).Should().BeEquivalentTo(new AttributeUsageAttribute(AttributeTargets.Parameter));
+    }
 
-      // act
-      var customization = sut.GetCustomization(null);
-
-      // assert
-      customization.Should().BeAssignableTo<AutoContentCustomization>();
+    private class AutoDbDataAttribute : AutoDataAttribute
+    {
+      public AutoDbDataAttribute()
+        : base(new Fixture().Customize(new AutoDbCustomization())) { }
     }
   }
 }

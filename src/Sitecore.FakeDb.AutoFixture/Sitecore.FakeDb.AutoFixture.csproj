@@ -58,8 +58,12 @@
     <Compile Include="AutoContentTemplateItemCustomization.cs" />
     <Compile Include="AutoContentItemCustomization.cs" />
     <Compile Include="AutoDbCustomization.cs" />
+    <Compile Include="ContentAttribute.cs" />
+    <Compile Include="ContentAttributeRelay.cs" />
     <Compile Include="ContextDatabaseCustomization.cs" />
     <Compile Include="ContextDatabaseSpecimenBuilder.cs" />
+    <Compile Include="DbItemParameterSpecification.cs" />
+    <Compile Include="ItemParameterSpecification.cs" />
     <Compile Include="TemplateItemSpecimenBuilder.cs" />
     <Compile Include="AutoContentCustomization.cs" />
     <Compile Include="AddContentItemCommand.cs" />

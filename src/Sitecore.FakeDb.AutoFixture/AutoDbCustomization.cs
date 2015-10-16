@@ -19,10 +19,23 @@ namespace Sitecore.FakeDb.AutoFixture
     {
       fixture.Freeze<Db>();
       fixture.Customize(new ContextDatabaseCustomization());
+      fixture.Customizations.Add(
+        new FilteringSpecimenBuilder(
+          new Postprocessor(
+            new ContentAttributeRelay(),
+            new AddContentDbItemCommand()),
+          new DbItemParameterSpecification()));
+      fixture.Customizations.Add(
+        new FilteringSpecimenBuilder(
+          new Postprocessor(
+            new ContentAttributeRelay(),
+            new AddContentItemCommand()),
+          new ItemParameterSpecification()));
       fixture.Customizations.Add(new ItemSpecimenBuilder());
       fixture.Customizations.Add(
         new FilteringSpecimenBuilder(
-          new MethodInvoker(new ModestConstructorQuery()),
+          new MethodInvoker(
+            new ModestConstructorQuery()),
           new DbItemSpecification()));
     }
   }
