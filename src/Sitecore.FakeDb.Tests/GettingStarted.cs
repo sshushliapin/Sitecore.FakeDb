@@ -697,7 +697,7 @@
       }
     }
 
-#if !SC72
+#if SC80 || SC81
     [Fact]
     public void HowToSwitchLinkProvider()
     {
@@ -762,7 +762,7 @@
     {
       const string Query = "/sitecore/content/*[@@key = 'home']";
 
-      using (new Sitecore.FakeDb.Db 
+      using (new Sitecore.FakeDb.Db
         {
           new Sitecore.FakeDb.DbItem("home")
         })

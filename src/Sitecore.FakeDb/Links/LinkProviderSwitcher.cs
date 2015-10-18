@@ -5,21 +5,21 @@
 
   public class LinkProviderSwitcher : Switcher<LinkProvider>
   {
-#if !SC72
+#if SC80 || SC81
     private readonly Sitecore.Links.LinkProviderSwitcher providerSwitcher;
 #endif
 
     public LinkProviderSwitcher(LinkProvider linkProviderToSwitchTo)
       : base(linkProviderToSwitchTo)
     {
-#if !SC72
+#if SC80 || SC81
       this.providerSwitcher = new Sitecore.Links.LinkProviderSwitcher("switcher");
 #endif
     }
 
     public override void Dispose()
     {
-#if !SC72
+#if SC80 || SC81
       this.providerSwitcher.Dispose();
 #endif
       base.Dispose();
