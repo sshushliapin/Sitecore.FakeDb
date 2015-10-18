@@ -149,7 +149,8 @@
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
-    <XslTransformation XslInputPath="App.config.transform.xslt" XmlInputPaths="$(SolutionDir)\Sitecore.FakeDb.Tests\App.config" OutputPaths="$(OutDir)\$(TargetFileName).config" />
+    <XslTransformation XslInputPath="App.config.transform.xslt" XmlInputPaths="$(SolutionDir)\Sitecore.FakeDb.Tests\App.config" OutputPaths="$(OutDir)\$(TargetFileName).config" UseTrustedSettings="true" Condition="$(MSBuildToolsVersion) &gt; 13" />
+    <XslTransformation XslInputPath="App.config.transform.xslt" XmlInputPaths="$(SolutionDir)\Sitecore.FakeDb.Tests\App.config" OutputPaths="$(OutDir)\$(TargetFileName).config" Condition="$(MSBuildToolsVersion) &lt; 13"/>
   </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
