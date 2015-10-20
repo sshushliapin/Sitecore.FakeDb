@@ -17,6 +17,9 @@
   using Sitecore.Pipelines;
   using Version = Sitecore.Data.Version;
 
+  /// <summary>
+  /// Creates Sitecore items in memory.
+  /// </summary>
   public class Db : IDisposable, IEnumerable
   {
     private static readonly object Lock = new object();
@@ -37,11 +40,18 @@
 
     private bool disposed;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Db"/> class with the "master" database.
+    /// </summary>
     public Db()
       : this("master")
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Db"/> class with the specified database.
+    /// </summary>
+    /// <param name="databaseName">The database name.</param>
     public Db(string databaseName)
     {
       Assert.ArgumentNotNullOrEmpty(databaseName, "databaseName");
@@ -108,6 +118,10 @@
       return this.DataStorage.GetFakeItems().GetEnumerator();
     }
 
+    /// <summary>
+    /// Adds a <see cref="DbItem" /> to the current database.
+    /// </summary>
+    /// <param name="item">The item to add.</param>
     public void Add(DbItem item)
     {
       Assert.ArgumentNotNull(item, "item");
@@ -115,11 +129,22 @@
       this.DataStorage.AddFakeItem(item);
     }
 
+    /// <summary>
+    /// Gets an <see cref="Item"/> by id.
+    /// </summary>
+    /// <param name="id">The item id.</param>
+    /// <returns>The item.</returns>
     public Item GetItem(ID id)
     {
       return this.Database.GetItem(id);
     }
 
+    /// <summary>
+    /// Gets an <see cref="Item"/> by id and language.
+    /// </summary>
+    /// <param name="id">The item id.</param>
+    /// <param name="language">The item language.</param>
+    /// <returns>The item.</returns>
     public Item GetItem(ID id, string language)
     {
       Assert.ArgumentNotNullOrEmpty(language, "language");
@@ -127,6 +152,13 @@
       return this.Database.GetItem(id, Language.Parse(language));
     }
 
+    /// <summary>
+    /// Gets an <see cref="Item"/> by id, language and version number.
+    /// </summary>
+    /// <param name="id">The item id.</param>
+    /// <param name="language">The item language.</param>
+    /// <param name="version">The item version.</param>
+    /// <returns>The item.</returns>
     public Item GetItem(ID id, string language, int version)
     {
       Assert.ArgumentNotNullOrEmpty(language, "language");
@@ -134,6 +166,11 @@
       return this.Database.GetItem(id, Language.Parse(language), Version.Parse(version));
     }
 
+    /// <summary>
+    /// Gets an <see cref="Item" /> by path.
+    /// </summary>
+    /// <param name="path">The item path.</param>
+    /// <returns>The item.</returns>
     public Item GetItem(string path)
     {
       Assert.ArgumentNotNullOrEmpty(path, "path");
@@ -141,6 +178,12 @@
       return this.Database.GetItem(path);
     }
 
+    /// <summary>
+    /// Gets an <see cref="Item"/> by path and language.
+    /// </summary>
+    /// <param name="path">The item path.</param>
+    /// <param name="language">The item language.</param>
+    /// <returns>The item.</returns>
     public Item GetItem(string path, string language)
     {
       Assert.ArgumentNotNullOrEmpty(path, "path");
@@ -149,6 +192,13 @@
       return this.Database.GetItem(path, Language.Parse(language));
     }
 
+    /// <summary>
+    /// Gets an <see cref="Item"/> by path, language and version number.
+    /// </summary>
+    /// <param name="path">The item path.</param>
+    /// <param name="language">The item language.</param>
+    /// <param name="version">The item version.</param>
+    /// <returns>The item.</returns>
     public Item GetItem(string path, string language, int version)
     {
       Assert.ArgumentNotNullOrEmpty(path, "path");
