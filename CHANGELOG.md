@@ -1,4 +1,9 @@
-﻿0.31.1
+﻿0.31.2
+* [FIX] #95: Auto generated item properties ignore [Frozen] attribute
+* [FIX] #94: The [Content] attribute adds all DbItem patameters to database
+* [FIX] #92: Common methods to maintain DbItem versions 
+
+0.31.1
 * [FIX] #90: Database.GetItem() should return latest version
 * [FIX] #91: item.Versions[Version.Latest] should return latest version
 
