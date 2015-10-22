@@ -1,4 +1,7 @@
-﻿0.31.2
+﻿0.31.3
+* [FIX] #96: Referencing latest versions of AutoFixture causes version conflicts when updating Nuget packages
+
+0.31.2
 * [FIX] #95: Auto generated item properties ignore [Frozen] attribute
 * [FIX] #94: The [Content] attribute adds all DbItem patameters to database
 * [FIX] #92: Common methods to maintain DbItem versions 
