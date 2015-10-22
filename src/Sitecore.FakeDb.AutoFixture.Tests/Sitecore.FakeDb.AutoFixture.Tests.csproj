@@ -105,6 +105,7 @@
     <Compile Include="ContextDatabaseSpecimenBuilderTest.cs" />
     <Compile Include="DbItemSpecificationTest.cs" />
     <Compile Include="ContextDatabaseCustomizationTest.cs" />
+    <Compile Include="ReferencesTest.cs" />
     <Compile Include="Samples\AutoDbCustomizationSamples.cs" />
     <Compile Include="Samples\AutoDbDataAttribute.cs" />
     <Compile Include="Samples\AutoDbTemplateSamples.cs" />
