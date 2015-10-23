@@ -20,23 +20,28 @@ namespace Sitecore.FakeDb.AutoFixture
       fixture.Freeze<Db>();
       fixture.Customize(new ContextDatabaseCustomization());
       fixture.Customizations.Add(
-        new FilteringSpecimenBuilder(
-          new Postprocessor(
-            new ContentAttributeRelay(),
-            new AddContentDbItemCommand()),
-          new DbItemParameterSpecification()));
-      fixture.Customizations.Add(
-        new FilteringSpecimenBuilder(
-          new Postprocessor(
-            new ContentAttributeRelay(),
-            new AddContentItemCommand()),
-          new ItemParameterSpecification()));
-      fixture.Customizations.Add(new ItemSpecimenBuilder());
-      fixture.Customizations.Add(
-        new FilteringSpecimenBuilder(
-          new MethodInvoker(
-            new ModestConstructorQuery()),
-          new DbItemSpecification()));
+        new CompositeSpecimenBuilder(
+          new ItemSpecimenBuilder(),
+          new FilteringSpecimenBuilder(
+            new Postprocessor(
+              new ContentAttributeRelay(),
+              new AddContentDbItemCommand()),
+            new DbItemParameterSpecification()),
+          new FilteringSpecimenBuilder(
+            new Postprocessor(
+              new ContentAttributeRelay(),
+              new AddContentItemCommand()),
+            new ItemParameterSpecification()),
+          new FilteringSpecimenBuilder(
+            new Omitter(),
+            new PropertySpecification(typeof(ID), "ParentID")),
+          new FilteringSpecimenBuilder(
+            new Omitter(),
+            new PropertySpecification(typeof(ID), "TemplateID")),
+          new FilteringSpecimenBuilder(
+            new Omitter(),
+            new PropertySpecification(typeof(ID[]), "BaseIDs"))
+          ));
     }
   }
 }

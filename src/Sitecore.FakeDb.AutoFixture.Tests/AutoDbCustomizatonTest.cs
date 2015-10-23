@@ -68,6 +68,12 @@
       database.GetItem(item.ID).Should().NotBeNull();
     }
 
+    [Theory, AutoDbData]
+    public void ShouldGenerateBranchId(DbItem item)
+    {
+      item.BranchId.Should().NotBeNull();
+    }
+    
     private class AutoDbDataAttribute : AutoDataAttribute
     {
       public AutoDbDataAttribute()

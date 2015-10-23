@@ -103,6 +103,7 @@
     <Compile Include="AutoDbCustomizatonTest.cs" />
     <Compile Include="ContentAttributeRelayTest.cs" />
     <Compile Include="ContextDatabaseSpecimenBuilderTest.cs" />
+    <Compile Include="CustomTemplateTest.cs" />
     <Compile Include="DbItemSpecificationTest.cs" />
     <Compile Include="ContextDatabaseCustomizationTest.cs" />
     <Compile Include="ReferencesTest.cs" />
