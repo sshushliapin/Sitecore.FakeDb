@@ -3,8 +3,10 @@ namespace Sitecore.FakeDb.AutoFixture.Tests
   using FluentAssertions;
   using Ploeh.AutoFixture;
   using Ploeh.AutoFixture.Kernel;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Data.Items;
+  using Sitecore.Globalization;
   using Xunit;
 
   public class ItemSpecimenBuilderTest
@@ -43,26 +45,55 @@ namespace Sitecore.FakeDb.AutoFixture.Tests
       fixture.Create<Item>().Database.Name.Should().Be("core");
     }
 
-    [Fact]
-    public void CreateResolvesItemNameFromContext()
+    [Theory, ItemSpecimenBuilderAutoData]
+    public void CreateResolvesItemNameFromContext([Frozen] string name, Item item)
     {
-      var fixture = new Fixture();
-      fixture.Customizations.Add(new DatabaseSpecimenBuilder("master"));
-      fixture.Customizations.Add(new ItemSpecimenBuilder());
-
-      var frozenString = fixture.Freeze<string>();
-      fixture.Create<Item>().Name.Should().Be(frozenString);
+      item.Name.Should().Be(name);
     }
 
-    [Fact]
-    public void CreateResolvesItemIdFromContext()
+    [Theory, ItemSpecimenBuilderAutoData]
+    public void CreateResolvesItemIdFromContext([Frozen] ID id, Item item)
     {
-      var fixture = new Fixture();
-      fixture.Customizations.Add(new DatabaseSpecimenBuilder("master"));
-      fixture.Customizations.Add(new ItemSpecimenBuilder());
+      item.ID.Should().BeSameAs(id);
+    }
 
-      var frozenId = fixture.Freeze<ID>();
-      fixture.Create<Item>().ID.Should().BeSameAs(frozenId);
+    [Theory, ItemSpecimenBuilderAutoData]
+    public void CreateResolveTemplateIdFromContext([Frozen] ID id, Item item)
+    {
+      item.TemplateID.Should().BeSameAs(id);
+    }
+
+    [Theory, ItemSpecimenBuilderAutoData]
+    public void CreateResolveBranchIdFromContext([Frozen] ID id, Item item)
+    {
+      item.BranchId.Should().BeSameAs(id);
+    }
+
+    [Theory, ItemSpecimenBuilderAutoData]
+    public void CreateResolveFieldListFromContext([Frozen] FieldList fields, Item item)
+    {
+      item.InnerData.Fields.Should().BeSameAs(fields);
+    }
+
+    [Theory, ItemSpecimenBuilderAutoData]
+    public void CreateResolveLanguageFromContext([Frozen] Language language, Item item)
+    {
+      item.Language.Should().BeSameAs(language);
+    }
+
+    [Theory, ItemSpecimenBuilderAutoData]
+    public void CreateResolveVersionFromContext([Frozen] Version version, Item item)
+    {
+      item.Version.Should().BeSameAs(version);
+    }
+
+    private class ItemSpecimenBuilderAutoDataAttribute : AutoDataAttribute
+    {
+      public ItemSpecimenBuilderAutoDataAttribute()
+      {
+        this.Fixture.Customizations.Add(new DatabaseSpecimenBuilder("master"));
+        this.Fixture.Customizations.Add(new ItemSpecimenBuilder());
+      }
     }
   }
 }

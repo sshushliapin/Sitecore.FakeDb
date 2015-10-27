@@ -68,6 +68,18 @@
       database.GetItem(item.ID).Should().NotBeNull();
     }
 
+    [Theory, AutoDbData]
+    public void ShouldGenerateBranchId(DbItem item)
+    {
+      item.BranchId.Should().NotBeNull();
+    }
+
+    [Theory, AutoDbData]
+    public void ShouldGetPreviouslyGeneratedBranchIdWhenUseContentAttribute([Content]Item item)
+    {
+      item.BranchId.Should().BeSameAs(item.Database.GetItem(item.ID).BranchId);
+    }
+
     private class AutoDbDataAttribute : AutoDataAttribute
     {
       public AutoDbDataAttribute()
