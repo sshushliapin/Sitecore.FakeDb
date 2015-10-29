@@ -1,4 +1,7 @@
-﻿0.31.3
+﻿0.31.4
+* [FIX] #97: Generating items using the 'modest' constructor prevents dependencies from being instantiated using AutoFixture
+
+0.31.3
 * [FIX] #96: Referencing latest versions of AutoFixture causes version conflicts when updating Nuget packages
 
 0.31.2
