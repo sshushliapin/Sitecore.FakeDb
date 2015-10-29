@@ -25,23 +25,6 @@
       }
     }
 
-    [Fact(Skip = "To be implemented.")]
-    public void ShouldCreateBranchIfBranchIdIsSet()
-    {
-      // act
-      using (var db = new Db
-                        {
-                          new DbItem("home") { BranchId = this.branchId }
-                        })
-      {
-        var branch = db.Database.Branches[this.branchId];
-
-        // assert
-        branch.Should().NotBeNull();
-        branch.Name.Should().Be("home");
-      }
-    }
-
     [Fact]
     public void ShouldResolveAndSetBranchIdIfExists()
     {
@@ -75,23 +58,6 @@
         // assert
         db.Database.Branches["/sitecore/templates/branches/Sample Branch"].Should().NotBeNull();
         db.Database.Branches[this.branchId].Should().NotBeNull();
-      }
-    }
-
-    [Fact(Skip = "To be implemented.")]
-    public void ShouldCreateItemFromBranch()
-    {
-      // arrange
-      using (var db = new Db { new DbItem("home") })
-      {
-        var item = db.GetItem("/sitecore/content/home");
-
-        // act
-        var child = item.Add("child", new BranchId(this.branchId));
-
-        // assert
-        child.BranchId.Should().Be(this.branchId);
-        child.TemplateID.Should().NotBe(this.branchId);
       }
     }
   }

@@ -150,26 +150,5 @@
       t1.Wait();
       t2.Wait();
     }
-
-    [Fact(Skip = "To be implemented.")]
-    public void ShouldBeThreadSafeFactoryConfiguration()
-    {
-      var t1 = Task.Factory.StartNew(() =>
-      {
-        using (var db = new Db())
-        {
-          db.PipelineWatcher.Expects("mypipeline");
-
-          Thread.Sleep(1000);
-
-          CorePipeline.Run("mypipeline", new PipelineArgs());
-          db.PipelineWatcher.EnsureExpectations();
-        }
-      });
-
-      Task.Factory.StartNew(Factory.Reset);
-
-      t1.Wait();
-    }
   }
 }
