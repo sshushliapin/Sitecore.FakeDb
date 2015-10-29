@@ -218,6 +218,7 @@
     <Compile Include="Security\MembershipSwitcherTest.cs" />
     <Compile Include="Security\FakeMembershipProviderTest.cs" />
     <Compile Include="Security\RoleProviderSwitcherTest.cs" />
+    <Compile Include="Security\Web\FakeProfileProviderTest.cs" />
     <Compile Include="Sites\FakeSiteContextTest.cs" />
     <Compile Include="Sites\SiteContextSwitcherTest.cs" />
     <Compile Include="StringExtensions.cs" />

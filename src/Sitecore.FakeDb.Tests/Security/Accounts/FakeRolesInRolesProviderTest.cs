@@ -2,9 +2,12 @@
 {
   using System;
   using System.Collections.Generic;
+  using System.Linq;
   using FluentAssertions;
   using NSubstitute;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.FakeDb.Security.Accounts;
+  using Sitecore.Reflection;
   using Sitecore.Security.Accounts;
   using Sitecore.Security.Domains;
   using Xunit;
@@ -75,6 +78,7 @@
       stubProvider.RemoveRolesFromRoles(null, null);
     }
 
+    [Fact]
     public void ShouldGetDefaultValuesIfNoBefaviourSet()
     {
       // arrange
@@ -104,15 +108,11 @@
     }
 
     [Theory]
-    [InlineData("Everyone", true)]
-    [InlineData("Somebody", false)]
-    public void ShouldCheckIfEveryoneRole(string roleName, bool expectedResult)
+    [InlineAutoData("Everyone", true)]
+    [InlineAutoData("Somebody", false)]
+    public void ShouldCheckIfEveryoneRole(string roleName, bool expectedResult, FakeRolesInRolesProvider sut)
     {
-      // arrange
-      var stubProvider = new FakeRolesInRolesProvider();
-
-      // act & assert
-      stubProvider.IsEveryoneRole(roleName).Should().Be(expectedResult);
+      sut.IsEveryoneRole(roleName).Should().Be(expectedResult);
     }
 
     [Theory]
@@ -120,250 +120,211 @@
     [InlineData(@"extranet\Somebody", false)]
     public void ShouldCheckIfDomainEveryoneRole(string roleName, bool expectedResult)
     {
-      // arrange
       var stubProvider = new FakeRolesInRolesProvider();
       var domain = Domain.GetDomain("extranet");
 
-      // act & assert
       stubProvider.IsEveryoneRole(roleName, domain).Should().Be(expectedResult);
     }
 
     [Fact]
     public void ShouldBeThreadLocalProvider()
     {
-      // act & assert
       this.provider.Should().BeAssignableTo<IThreadLocalProvider<RolesInRolesProvider>>();
     }
 
     [Fact]
     public void ShouldAddRolesToRoles()
     {
-      // act
       this.provider.AddRolesToRoles(this.memberRoles, this.targetRoles);
-
-      // assert
       this.localProvider.Received().AddRolesToRoles(this.memberRoles, this.targetRoles);
     }
 
     [Fact]
     public void ShouldFindRolesInRole()
     {
-      // arrange
       this.localProvider.FindRolesInRole(this.targetRole, RoleName, true).Returns(this.resultRoles);
-
-      // act & assert
       this.provider.FindRolesInRole(this.targetRole, RoleName, true).Should().BeSameAs(this.resultRoles);
+    }
+
+    [Theory, AutoData]
+    public void ShouldFindRolesInRoleByTargetRoleAndRoleToMatch(string targetRole, string roleToMatch)
+    {
+      this.localProvider.FindRolesInRole(this.targetRole, RoleName, true).Returns(this.resultRoles);
+      ReflectionUtil.CallMethod(this.provider, "FindRolesInRole", new object[] { targetRole, roleToMatch }).Should().Be(Enumerable.Empty<Role>());
     }
 
     [Fact]
     public void ShouldFindUsersInRole()
     {
-      // arrange
       this.localProvider.FindUsersInRole(this.targetRole, UserName, true).Returns(this.resultRoles);
-
-      // act & assert
       this.provider.FindUsersInRole(this.targetRole, UserName, true).Should().BeSameAs(this.resultRoles);
     }
 
     [Fact]
     public void ShouldGetAllRoles()
     {
-      // arrange
       this.localProvider.GetAllRoles(true).Returns(this.resultRoles);
-
-      // act & assert
       this.provider.GetAllRoles(true).Should().BeSameAs(this.resultRoles);
     }
 
     [Fact]
     public void ShouldGetCreatorOwnerRole()
     {
-      // arrange
       this.localProvider.GetCreatorOwnerRole().Returns(this.resultRole);
-
-      // act & assert
       this.provider.GetCreatorOwnerRole().Should().BeSameAs(this.resultRole);
     }
 
     [Fact]
     public void ShouldGetEveryoneRole()
     {
-      // arrange
       this.localProvider.GetEveryoneRole().Returns(this.resultRole);
-
-      // act & assert
       this.provider.GetEveryoneRole().Should().BeSameAs(this.resultRole);
+    }
+
+    [Theory, AutoData]
+    public void ShouldGetEveryoneRoleForDomain(Domain domain)
+    {
+      this.localProvider.GetEveryoneRole(domain).Returns(this.resultRole);
+      this.provider.GetEveryoneRole(domain).Should().BeSameAs(this.resultRole);
     }
 
     [Fact]
     public void ShouldGetEveryoneRoles()
     {
-      // arrange
       this.localProvider.GetEveryoneRoles().Returns(this.resultRoles);
-
-      // act & assert
       this.provider.GetEveryoneRoles().Should().BeSameAs(this.resultRoles);
     }
 
     [Fact]
     public void ShouldGetGlobalRoles()
     {
-      // arrange
       this.localProvider.GetGlobalRoles().Returns(this.resultRoles);
-
-      // act & assert
       this.provider.GetGlobalRoles().Should().BeSameAs(this.resultRoles);
     }
 
     [Fact]
     public void ShouldGetRoleMembers()
     {
-      // arrange
       this.localProvider.GetRoleMembers(this.role, true).Returns(this.resultRoles);
-
-      // act & assert
       this.provider.GetRoleMembers(this.role, true).Should().BeSameAs(this.resultRoles);
     }
 
     [Fact]
     public void ShouldGetRolesForRole()
     {
-      // arrange
       this.localProvider.GetRolesForRole(this.role, true).Returns(this.resultRoles);
-
-      // act & assert
       this.provider.GetRolesForRole(this.role, true).Should().BeSameAs(this.resultRoles);
+    }
+
+    [Theory, AutoData]
+    public void ShouldGetRolesForRoleByTargeRole(string targetRole)
+    {
+      this.localProvider.FindRolesInRole(this.targetRole, RoleName, true).Returns(this.resultRoles);
+      ReflectionUtil.CallMethod(this.provider, "GetRolesForRole", new object[] { targetRole }).Should().Be(Enumerable.Empty<Role>());
     }
 
     [Fact]
     public void ShouldGetRolesForUser()
     {
-      // arrange
       this.localProvider.GetRolesForUser(this.user, true).Returns(this.resultRoles);
-
-      // act & assert
       this.provider.GetRolesForUser(this.user, true).Should().BeSameAs(this.resultRoles);
     }
 
     [Fact]
     public void ShouldGetRolesInRole()
     {
-      // arrange
       this.localProvider.GetRolesInRole(this.role, true).Returns(this.resultRoles);
-
-      // act & assert
       this.provider.GetRolesInRole(this.role, true).Should().BeSameAs(this.resultRoles);
+    }
+
+    [Theory, AutoData]
+    public void ShouldGetRolesInRoleByTargeRole(string targetRole)
+    {
+      this.localProvider.FindRolesInRole(this.targetRole, RoleName, true).Returns(this.resultRoles);
+      ReflectionUtil.CallMethod(this.provider, "GetRolesInRole", new object[] { targetRole }).Should().Be(Enumerable.Empty<Role>());
     }
 
     [Fact]
     public void ShouldGetSystemRoles()
     {
-      // arrange
       this.localProvider.GetSystemRoles().Returns(this.resultRoles);
-
-      // act & assert
       this.provider.GetSystemRoles().Should().BeSameAs(this.resultRoles);
     }
 
-    [Fact]
-    public void ShouldGetUsersInRole()
+    [Theory, AutoData]
+    public void ShouldGetUsersInRole(List<User> users)
     {
-      // arrange
-      var users = new List<User>();
       this.localProvider.GetUsersInRole(this.role, true).Returns(users);
-
-      // act & assert
       this.provider.GetUsersInRole(this.role, true).Should().BeSameAs(users);
     }
 
     [Fact]
     public void ShouldCallIsCreatorOwnerRole()
     {
-      // arrange
       this.localProvider.IsCreatorOwnerRole(RoleName).Returns(true);
-
-      // act & assert
       this.provider.IsCreatorOwnerRole(RoleName).Should().BeTrue();
     }
 
     [Fact]
     public void ShouldCallIsEveryoneRole()
     {
-      // arrange
       this.localProvider.IsEveryoneRole(RoleName).Returns(true);
-
-      // act & assert
       this.provider.IsEveryoneRole(RoleName).Should().BeTrue();
     }
 
-    [Fact]
-    public void ShouldCallIsEveryoneRoleWithDomain()
+    [Theory, AutoData]
+    public void ShouldCallIsEveryoneRoleWithDomain(Domain domain)
     {
-      // arrange
-      var domain = new Domain();
       this.localProvider.IsEveryoneRole(RoleName, domain).Returns(true);
-
-      // act & assert
       this.provider.IsEveryoneRole(RoleName, domain).Should().BeTrue();
     }
 
     [Fact]
     public void ShouldCallIsGlobalRole()
     {
-      // arrange
       this.localProvider.IsGlobalRole(this.role).Returns(true);
-
-      // act & assert
       this.provider.IsGlobalRole(this.role).Should().BeTrue();
     }
 
     [Fact]
     public void ShouldCallIsRoleInRole()
     {
-      // arrange
       this.localProvider.IsRoleInRole(this.memberRole, this.targetRole, true).Returns(true);
-
-      // act & assert
       this.provider.IsRoleInRole(this.memberRole, this.targetRole, true).Should().BeTrue();
+    }
+
+    [Theory, AutoData]
+    public void ShouldCallIsRoleInRoleWithMemberAndTargetRoles(string memberRole, string targetRole)
+    {
+      this.localProvider.FindRolesInRole(this.targetRole, RoleName, true).Returns(this.resultRoles);
+      ReflectionUtil.CallMethod(this.provider, "IsRoleInRole", new object[] { memberRole, targetRole }).Should().Be(false);
     }
 
     [Fact]
     public void ShouldCallIsSystemRole()
     {
-      // arrange
       this.localProvider.IsSystemRole(RoleName).Returns(true);
-
-      // act & assert
       this.provider.IsSystemRole(RoleName).Should().BeTrue();
     }
 
     [Fact]
     public void ShouldCallIsUserInRole()
     {
-      // arrange
       this.localProvider.IsUserInRole(this.user, this.targetRole, true).Returns(true);
-
-      // act & assert
       this.provider.IsUserInRole(this.user, this.targetRole, true).Should().BeTrue();
     }
 
     [Fact]
     public void ShouldCallRemoveRoleRelations()
     {
-      // act
       this.provider.RemoveRoleRelations(RoleName);
-
-      // assert
       this.localProvider.Received().RemoveRoleRelations(RoleName);
     }
 
     [Fact]
     public void ShouldCallRemoveRolesFromRoles()
     {
-      // act
       this.provider.RemoveRolesFromRoles(this.memberRoles, this.targetRoles);
-
-      // assert
       this.localProvider.Received().RemoveRolesFromRoles(this.memberRoles, this.targetRoles);
     }
 

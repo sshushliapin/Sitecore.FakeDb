@@ -20,11 +20,6 @@
       get { return this.localProvider; }
     }
 
-    public ItemAuthorizationHelper ItemHelper
-    {
-      get { return this.itemHelper; }
-    }
-
     public FakeAuthorizationProvider()
       : this(new ItemAuthorizationHelper())
     {
