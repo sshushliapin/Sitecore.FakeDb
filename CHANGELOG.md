@@ -1,4 +1,7 @@
-﻿0.31.4
+﻿0.31.5
+* [FIX] #99: Adding an item under /sitecore/templates
+
+0.31.4
 * [FIX] #97: Generating items using the 'modest' constructor prevents dependencies from being instantiated using AutoFixture
 
 0.31.3
