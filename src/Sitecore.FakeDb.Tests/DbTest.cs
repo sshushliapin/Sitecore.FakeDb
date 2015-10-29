@@ -1507,21 +1507,5 @@
         item.TemplateID.Should().Be(newTemplate.ID);
       }
     }
-
-    [Fact]
-    public void ShouldGetFirstItemByPathIfThereAreTwoSiblingsWithTheSameName()
-    {
-      // arrange
-      var firstId = ID.NewID;
-      using (var db = new Db
-                        {
-                          new DbItem("one-of-two", firstId),
-                          new DbItem("one-of-two")
-                        })
-      {
-        // act & assert
-        db.GetItem("/sitecore/content/one-of-two").ID.Should().Be(firstId);
-      }
-    }
   }
 }

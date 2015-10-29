@@ -15,47 +15,37 @@
     [InlineDefaultAutoData("/Sitecore/Content/Home/")]
     public void ShouldResolvePath(string path, ResolvePathCommand sut, DbItem item)
     {
-      // arrange
       item.FullPath = "/sitecore/content/home";
       sut.DataStorage.GetFakeItems().Returns(new[] { item });
-
       sut.Initialize(path);
 
-      // act
-      var result = ReflectionUtil.CallMethod(sut, "DoExecute");
-
-      // assert
-      result.Should().Be(item.ID);
+      ReflectionUtil.CallMethod(sut, "DoExecute").Should().Be(item.ID);
     }
 
     [Theory, DefaultAutoData]
-    public void ShouldReturnNullIfNoItemFound(ResolvePathCommand sut)
+    public void ShouldReturnNullIfNoItemFound(ResolvePathCommand sut, string path)
     {
-      // arrange
-      const string Path = "/sitecore/content/some path";
-
-      sut.Initialize(Path);
-
-      // act
-      var result = ReflectionUtil.CallMethod(sut, "DoExecute");
-
-      // assert
-      result.Should().BeNull();
+      sut.Initialize(path);
+      ReflectionUtil.CallMethod(sut, "DoExecute").Should().BeNull();
     }
 
     [Theory, DefaultAutoData]
     public void ShouldReturnIdIfPathIsId(ResolvePathCommand sut, ID itemId)
     {
-      // arrange
-      var path = itemId.ToString();
+      sut.Initialize(itemId.ToString());
+      ReflectionUtil.CallMethod(sut, "DoExecute").Should().Be(itemId);
+    }
 
+    [Theory, DefaultAutoData]
+    public void ShouldResolveFirstItemId(ResolvePathCommand sut, DbItem item1, DbItem item2)
+    {
+      const string path = "/sitecore/content/home";
+      item1.FullPath = path;
+      item2.FullPath = path;
+      sut.DataStorage.GetFakeItems().Returns(new[] { item1, item2 });
       sut.Initialize(path);
 
-      // act
-      var result = ReflectionUtil.CallMethod(sut, "DoExecute");
-
-      // assert
-      result.Should().Be(itemId);
+      ReflectionUtil.CallMethod(sut, "DoExecute").Should().Be(item1.ID);
     }
   }
 }
