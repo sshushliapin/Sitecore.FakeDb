@@ -34,7 +34,7 @@
       }
 
       var itemPath = StringUtil.RemovePostfix("/", this.ItemPath);
-      var item = this.dataStorage.GetFakeItems().SingleOrDefault(fi => string.Compare(fi.FullPath, itemPath, StringComparison.OrdinalIgnoreCase) == 0);
+      var item = this.dataStorage.GetFakeItems().FirstOrDefault(fi => string.Compare(fi.FullPath, itemPath, StringComparison.OrdinalIgnoreCase) == 0);
 
       return item != null ? item.ID : null;
     }

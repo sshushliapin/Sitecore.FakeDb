@@ -1492,10 +1492,10 @@
       var newTemplateId = ID.NewID;
 
       using (var db = new Db
-        {
-          new DbItem("home", this.itemId, this.templateId),
-          new DbTemplate("new template", newTemplateId)
-        })
+                        {
+                          new DbItem("home", this.itemId, this.templateId),
+                          new DbTemplate("new template", newTemplateId)
+                        })
       {
         var item = db.GetItem(this.itemId);
         var newTemplate = db.GetItem(newTemplateId);
@@ -1505,6 +1505,22 @@
 
         // assert
         item.TemplateID.Should().Be(newTemplate.ID);
+      }
+    }
+
+    [Fact]
+    public void ShouldGetFirstItemByPathIfThereAreTwoSiblingsWithTheSameName()
+    {
+      // arrange
+      var firstId = ID.NewID;
+      using (var db = new Db
+                        {
+                          new DbItem("one-of-two", firstId),
+                          new DbItem("one-of-two")
+                        })
+      {
+        // act & assert
+        db.GetItem("/sitecore/content/one-of-two").ID.Should().Be(firstId);
       }
     }
   }
