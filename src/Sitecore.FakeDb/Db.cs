@@ -216,6 +216,10 @@
       GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    /// <param name="disposing">True if disposing, otherwise false.</param>
     protected virtual void Dispose(bool disposing)
     {
       if (this.disposed)
