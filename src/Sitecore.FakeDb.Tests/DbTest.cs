@@ -1054,7 +1054,7 @@
         var root = db.Database.GetItem("/sitecore/content");
 
         // act
-        var item = ItemManager.CreateItem("Home", root, this.templateId, this.itemId);
+        var item = ItemManager.AddFromTemplate("Home", this.templateId, root, this.itemId);
 
         // assert
         item[FieldIDs.Created].Should().NotBeEmpty();

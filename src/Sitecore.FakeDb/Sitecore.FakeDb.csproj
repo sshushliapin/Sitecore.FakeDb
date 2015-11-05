@@ -91,13 +91,14 @@
     <Compile Include="Data\Engines\DataStorageSwitcher.cs" />
     <Compile Include="Data\Engines\ItemNames.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
-    <Compile Include="DbFieldIds.cs" />
     <Compile Include="DbItemChildCollection.cs" />
-    <Compile Include="FieldNamingHelper.cs" />
+    <Compile Include="DbFieldBuilder.cs" />
     <Compile Include="Data\IDTables\IDTableProviderSwitcher.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />
     <Compile Include="Data\IDTables\FakeIDTableProvider.cs" />
     <Compile Include="DbLinkField.cs" />
+    <Compile Include="FieldInfo.cs" />
+    <Compile Include="FieldInfoReference.cs" />
     <Compile Include="IDsDbItem.cs" />
     <Compile Include="IThreadLocalProvider.cs" />
     <Compile Include="Links\FakeLinkDatabase.cs" />

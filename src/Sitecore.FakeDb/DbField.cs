@@ -12,6 +12,8 @@
   [DebuggerDisplay("ID = {ID}, Name = {Name}, Value = {Value}")]
   public class DbField : IEnumerable
   {
+    private static readonly DbFieldBuilder FieldBuilder = new DbFieldBuilder();
+
     private readonly IDictionary<string, IDictionary<int, string>> values = new Dictionary<string, IDictionary<int, string>>();
 
     private string sharedValue = string.Empty;
@@ -22,26 +24,16 @@
     }
 
     public DbField(string name)
-      : this(name, ID.Null)
+      : this(name, null)
     {
     }
 
     public DbField(string name, ID id)
     {
-      var idNamePair = new FieldNamingHelper().GetFieldIdNamePair(id, name);
-      this.ID = idNamePair.Key;
-      this.Name = idNamePair.Value;
+      this.ID = id;
+      this.Name = name;
 
-      if (!this.IsStandard())
-      {
-        return;
-      }
-
-      // TODO: Determine which of the standard fields should be shared.
-      if (this.ID != FieldIDs.DisplayName)
-      {
-        this.Shared = true;
-      }
+      FieldBuilder.Build(this);
     }
 
     public ID ID { get; internal set; }

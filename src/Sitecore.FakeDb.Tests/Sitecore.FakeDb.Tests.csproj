@@ -118,6 +118,7 @@
     <Compile Include="Data\Engines\DataCommands\CommonCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\CommonCommandPrototypeTest.cs" />
     <Compile Include="Data\Engines\DataStorageSwitcherTest.cs" />
+    <Compile Include="DbFieldBuilderTest.cs" />
     <Compile Include="DefaultAutoDataAttribute.cs" />
     <Compile Include="AutoFixture\AutoFixtrureTest.cs" />
     <Compile Include="Data\BranchRecordsTest.cs" />
@@ -199,7 +200,8 @@
     <Compile Include="DbItemTest.cs" />
     <Compile Include="Data\Query\FastQueryTest.cs" />
     <Compile Include="FieldCollectionExtensions.cs" />
-    <Compile Include="FieldNamingHelperTest.cs" />
+    <Compile Include="FieldInfoReferenceTest.cs" />
+    <Compile Include="FieldInfoTest.cs" />
     <Compile Include="GettingStarted.cs" />
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
