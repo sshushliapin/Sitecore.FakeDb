@@ -67,6 +67,9 @@
     <Reference Include="Sitecore.Analytics">
       <HintPath>..\..\lib\Sitecore.Analytics.dll</HintPath>
     </Reference>
+    <Reference Include="Sitecore.Buckets">
+      <HintPath>..\..\lib\Sitecore.Buckets.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.ContentSearch">
       <HintPath>..\..\Lib\Sitecore.ContentSearch.dll</HintPath>
     </Reference>
@@ -110,6 +113,7 @@
     <Compile Include="..\Sitecore.FakeDb\Properties\AssemblyVersionInfo.cs">
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
+    <Compile Include="Buckets\BucketProviderSwitcherTest.cs" />
     <Compile Include="Data\Engines\DataCommands\CommonCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\CommonCommandPrototypeTest.cs" />
     <Compile Include="Data\Engines\DataStorageSwitcherTest.cs" />

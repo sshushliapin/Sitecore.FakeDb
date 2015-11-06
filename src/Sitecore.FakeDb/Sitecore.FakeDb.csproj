@@ -37,12 +37,19 @@
       <HintPath>..\..\Lib\Lucene.Net.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Sitecore.ContentSearch">
+      <HintPath>..\..\Lib\Sitecore.ContentSearch.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\..\Lib\Sitecore.Kernel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="sitecore.nexus">
       <HintPath>..\..\Lib\sitecore.nexus.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sitecore.Buckets">
+      <HintPath>..\..\Lib\Sitecore.Buckets.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -57,6 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Buckets\BucketProviderSwitcher.cs" />
+    <Compile Include="Buckets\SwitchingBucketProvider.cs" />
     <Compile Include="Configuration\ConfigReader.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\AddFromTemplateCommandPrototype.cs" />
