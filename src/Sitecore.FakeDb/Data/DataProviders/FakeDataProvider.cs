@@ -137,7 +137,18 @@
     protected virtual Template BuildTemplate(DbTemplate ft, TemplateCollection templates)
     {
       var builder = new Template.Builder(ft.Name, ft.ID, templates);
-      var section = builder.AddSection("Data", ID.NewID);
+
+      var sectionName = "Data";
+      var sectionId = ID.NewID;
+
+      var sectionItem = ft.Children.FirstOrDefault(i => i.TemplateID == TemplateIDs.TemplateSection);
+      if (sectionItem != null)
+      {
+        sectionName = sectionItem.Name;
+        sectionId = sectionItem.ID;
+      }
+
+      var section = builder.AddSection(sectionName, sectionId);
 
       foreach (var field in ft.Fields)
       {
