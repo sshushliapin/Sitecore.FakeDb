@@ -136,6 +136,18 @@
       result.GetField("Title").IsShared.Should().BeTrue();
     }
 
+    [Theory, AutoData]
+    public void ShouldGetTemplateFieldSource(DbTemplate template)
+    {
+      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      template.Fields.Add(new DbField("Multilist") { Source = "/sitecore/content" });
+
+      var result = this.dataProvider.GetTemplates(null).First();
+
+      result.GetField("Multilist").Source.Should().Be("/sitecore/content");
+    }
+
+
     [Theory, DefaultAutoData]
     public void ShouldGetDefaultLanguage(CallContext context)
     {

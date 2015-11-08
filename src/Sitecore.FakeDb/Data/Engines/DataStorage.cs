@@ -307,7 +307,8 @@ namespace Sitecore.FakeDb.Data.Engines
             Fields =
               {
                 new DbField(TemplateFieldIDs.Type),
-                new DbField(TemplateFieldIDs.Shared)
+                new DbField(TemplateFieldIDs.Shared),
+                new DbField(TemplateFieldIDs.Source)
               }
           });
     }
