@@ -1,8 +1,10 @@
 ﻿namespace Sitecore.FakeDb.Tests.Pipelines.AddDbItem
 {
+  using System.Linq;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
+  using Sitecore.Data.Managers;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines.AddDbItem;
   using Xunit;
@@ -81,6 +83,42 @@
         var outside = db.GetItem("/sitecore/content/outside");
 
         outside.TemplateID.Should().NotBe(myId); // <-- Fails
+      }
+    }
+
+    [Fact]
+    public void ShouldBeAbleToReadTemplateFieldViaTemplateAndTemplateItem()
+    {
+      // arrange
+      var titleFieldId = ID.NewID;
+      var descriptionFieldId = ID.NewID;
+
+      // act
+      using (var db = new Db
+      {
+        new DbItem("home")
+        {
+          new DbField("Title", titleFieldId) { Value = "Title" },
+          new DbField("Description", descriptionFieldId) { Value = "Description" }
+        }
+      })
+      {
+        var home = db.GetItem("/sitecore/content/home");
+
+        // assert
+
+        // via Template API 
+        var template = TemplateManager.GetTemplate(home.TemplateID, db.Database);
+        template.GetFields(true).Count(f => f.Name == "Title").Should().Be(1);
+        template.GetFields(true).Count(f => f.Name == "Description").Should().Be(1);
+        template.GetFields(true).Count(f => f.ID == titleFieldId).Should().Be(1);
+        template.GetFields(true).Count(f => f.ID == descriptionFieldId).Should().Be(1);
+
+        // via TemplateItem API
+        home.Template.Fields.Count(f => f.Name == "Title").Should().Be(1);
+        home.Template.Fields.Count(f => f.Name == "Description").Should().Be(1);
+        home.Template.Fields.Count(f => f.ID == titleFieldId).Should().Be(1);
+        home.Template.Fields.Count(f => f.ID == descriptionFieldId).Should().Be(1);
       }
     }
   }
