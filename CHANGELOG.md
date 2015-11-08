@@ -1,4 +1,7 @@
-﻿0.31.5
+﻿0.35.6
+* [FIX] #100: Item.Template.Fields randomly fails assertions for generated templates (thanks to @pveller)
+
+0.31.5
 * [FIX] #99: Adding an item under /sitecore/templates
 
 0.31.4
