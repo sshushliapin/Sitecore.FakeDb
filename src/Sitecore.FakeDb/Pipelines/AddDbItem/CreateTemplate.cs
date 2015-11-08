@@ -39,7 +39,8 @@
         var templatefield = new DbField(itemField.Name, itemField.ID)
                               {
                                 Shared = itemField.Shared,
-                                Type = itemField.Type
+                                Type = itemField.Type,
+                                Source = itemField.Source
                               };
         template.Add(templatefield);
       }

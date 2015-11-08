@@ -35,6 +35,16 @@
     }
 
     [Fact]
+    public void ShouldSetSource()
+    {
+      // arrange
+      this.field.Source = "/sitecore/content";
+
+      // act & assert
+      this.field.Source.Should().Be("/sitecore/content");
+    }
+
+    [Fact]
     public void ShouldInstantiateVersionsAsSortedDictionary()
     {
       // act

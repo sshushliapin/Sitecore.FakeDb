@@ -160,6 +160,7 @@
         var newField = section.AddField(field.Name, field.ID);
         newField.SetShared(field.Shared);
         newField.SetType(field.Type);
+        newField.SetSource(field.Source);
       }
 
       if (ft.ID != TemplateIDs.StandardTemplate)

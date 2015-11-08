@@ -66,5 +66,18 @@
       var fieldItem = section.Children.Single();
       fieldItem.Fields[TemplateFieldIDs.Type].Value.Should().Be("General Link");
     }
+
+    [Theory, DefaultAutoData]
+    public void ShouldSaveFieldSource(TemplateTreeBuilder sut, DbTemplate template, DbField field)
+    {
+      field.Source = "/sitecore/content";
+      template.Add(field);
+
+      sut.Build(template);
+
+      var section = template.Children.Single();
+      var fieldItem = section.Children.Single();
+      fieldItem.Fields[TemplateFieldIDs.Source].Value.Should().Be("/sitecore/content");
+    }
   }
 }
