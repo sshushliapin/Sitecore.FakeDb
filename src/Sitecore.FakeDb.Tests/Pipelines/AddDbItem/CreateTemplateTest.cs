@@ -87,7 +87,7 @@
     }
 
     [Fact]
-    public void ShouldBeAbleToReadTemplateFieldViaTemplateAndTemplateItem()
+    public void ShouldBeAbleToReadTemplateFieldsViaTemplateAndTemplateItem()
     {
       // arrange
       var titleFieldId = ID.NewID;
@@ -119,6 +119,48 @@
         home.Template.Fields.Count(f => f.Name == "Description").Should().Be(1);
         home.Template.Fields.Count(f => f.ID == titleFieldId).Should().Be(1);
         home.Template.Fields.Count(f => f.ID == descriptionFieldId).Should().Be(1);
+      }
+    }
+
+    [Fact]
+    public void ShouldPropagateFieldSourceToTemplateFieldsForNonGeneratedTemplates()
+    {
+      // arrange
+      var templateId = ID.NewID;
+      using (var db = new Db()
+        {
+          new DbTemplate("Page", templateId) {new DbField("Reference") {Source = "/sitecore"}},
+          new DbItem("page", ID.NewID, templateId) {{"Reference", "set"}},
+        })
+      {
+        // act
+        var page = db.GetItem("/sitecore/content/page");
+        var pageTemplate = TemplateManager.GetTemplate(templateId, db.Database);
+
+        // assert
+        pageTemplate.GetFields(true).Single(f => f.Name == "Reference").Source.Should().Be("/sitecore");
+        page.Template.Fields.Single(f => f.Name == "Reference").Source.Should().Be("/sitecore");
+        page.Fields["Reference"].Source.Should().Be("/sitecore");
+      }
+    }
+
+    [Fact]
+    public void ShouldPropagateFieldSourceToTemplateFieldsForGeneratedTemplates()
+    {
+      // arrange
+      using (var db = new Db()
+        {
+          new DbItem("home") { new DbField("Reference") { Source = "/sitecore" } }
+        })
+      {
+        // act
+        var home = db.GetItem("/sitecore/content/home");
+        var homeTemplate = TemplateManager.GetTemplate(home.TemplateID, db.Database);
+
+        // assert
+        homeTemplate.GetFields(true).Single(f => f.Name == "Reference").Source.Should().Be("/sitecore");
+        home.Template.Fields.Single(f => f.Name == "Reference").Source.Should().Be("/sitecore");
+        home.Fields["Reference"].Source.Should().Be("/sitecore");
       }
     }
   }

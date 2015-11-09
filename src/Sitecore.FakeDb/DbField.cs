@@ -52,6 +52,8 @@
 
     public string Type { get; set; }
 
+    public string Source { get; set; }
+
     public string Value
     {
       get { return this.GetValue(Language.Current.Name, Sitecore.Data.Version.Latest.Number); }
