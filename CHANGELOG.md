@@ -1,5 +1,8 @@
-﻿0.35.6
-* [FIX] #100: Item.Template.Fields randomly fails assertions for generated templates (thanks to @pveller)
+﻿0.36.0
+* [NEW] #102: Add support for template field's Source field (thanks to [@pveller](https://github.com/pveller))
+
+0.35.6
+* [FIX] #100: Item.Template.Fields randomly fails assertions for generated templates (thanks to [@pveller](https://github.com/pveller))
 
 0.31.5
 * [FIX] #99: Adding an item under /sitecore/templates
