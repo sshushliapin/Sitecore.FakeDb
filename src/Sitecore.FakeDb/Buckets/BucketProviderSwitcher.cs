@@ -1,13 +1,13 @@
 ﻿namespace Sitecore.FakeDb.Buckets
 {
-    using Sitecore.Buckets.Managers;
-    using Sitecore.Common;
+  using Sitecore.Buckets.Managers;
+  using Sitecore.Common;
 
-    public class BucketProviderSwitcher : Switcher<PipelineBasedBucketProvider>
+  public class BucketProviderSwitcher : Switcher<BucketProvider>
+  {
+    public BucketProviderSwitcher(BucketProvider bucketProviderToSwitchTo)
+      : base(bucketProviderToSwitchTo)
     {
-        public BucketProviderSwitcher(PipelineBasedBucketProvider bucketProviderToSwitchTo)
-            : base(bucketProviderToSwitchTo)
-        {
-        }
     }
+  }
 }
