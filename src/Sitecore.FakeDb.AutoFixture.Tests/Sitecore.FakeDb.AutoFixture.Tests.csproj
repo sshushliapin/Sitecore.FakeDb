@@ -62,6 +62,9 @@
     <Reference Include="Sitecore.Analytics">
       <HintPath>..\..\lib\Sitecore.Analytics.dll</HintPath>
     </Reference>
+    <Reference Include="Sitecore.Buckets">
+      <HintPath>..\..\lib\Sitecore.Buckets.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.Kernel, Version=8.0.5138.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Sitecore.Kernel.dll</HintPath>
@@ -113,6 +116,7 @@
     <Compile Include="ContentAttributeTest.cs" />
     <Compile Include="AutoContentCustomizationTest.cs" />
     <Compile Include="AddContentItemCommandTest.cs" />
+    <Compile Include="Samples\SwitchingBucketProviderSample.cs" />
     <Compile Include="Samples\SwitchingLinkProviderSample.cs" />
     <Compile Include="DatabaseSpecimenBuilderTest.cs" />
     <Compile Include="ItemSpecimenBuilderTest.cs" />
