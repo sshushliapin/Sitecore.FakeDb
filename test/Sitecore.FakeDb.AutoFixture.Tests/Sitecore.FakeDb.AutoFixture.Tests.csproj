@@ -137,6 +137,8 @@
     <Compile Include="ItemSpecimenBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Samples\AutoDbDataAttributeSamples.cs" />
+    <Compile Include="SwitchedAttributeTest.cs" />
+    <Compile Include="SwitchingSpecimenBuilderTest.cs" />
     <Compile Include="TemplateItemSpecificationTest.cs" />
     <Compile Include="TemplateItemSpecimenBuilderTest.cs" />
   </ItemGroup>

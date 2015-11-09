@@ -40,7 +40,7 @@
     }
 
     [Fact]
-    public void CreateReturnsNoSpecimenIfRequestIsNotPropertyInfo()
+    public void CreateReturnsNoSpecimenIfRequestIsNotParameterInfo()
     {
       var sut = new ContentAttributeRelay();
       var request = Substitute.For<ICustomAttributeProvider>();

@@ -56,6 +56,7 @@
       <Link>Properties\AssemblyVersionInfo.cs</Link>
     </Compile>
     <Compile Include="AddContentDbItemCommand.cs" />
+    <Compile Include="SwitchCommand.cs" />
     <Compile Include="AddContentTemplateItemCommand.cs" />
     <Compile Include="AutoContentDbItemCustomization.cs" />
     <Compile Include="AutoContentTemplateItemCustomization.cs" />
@@ -67,6 +68,8 @@
     <Compile Include="ContextDatabaseSpecimenBuilder.cs" />
     <Compile Include="DbItemParameterSpecification.cs" />
     <Compile Include="ItemParameterSpecification.cs" />
+    <Compile Include="SwitchedAttribute.cs" />
+    <Compile Include="SwitchingSpecimenBuilder.cs" />
     <Compile Include="TemplateItemSpecimenBuilder.cs" />
     <Compile Include="AutoContentCustomization.cs" />
     <Compile Include="AddContentItemCommand.cs" />

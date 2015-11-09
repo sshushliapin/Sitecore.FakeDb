@@ -40,8 +40,10 @@ namespace Sitecore.FakeDb.AutoFixture
             new PropertySpecification(typeof(ID), "TemplateID")),
           new FilteringSpecimenBuilder(
             new Omitter(),
-            new PropertySpecification(typeof(ID[]), "BaseIDs"))
-          ));
+            new PropertySpecification(typeof(ID[]), "BaseIDs")),
+          new Postprocessor(
+            new SwitchingSpecimenBuilder(),
+            new SwitchCommand())));
     }
   }
 }

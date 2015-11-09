@@ -9,10 +9,15 @@
   public class ContentAttributeTest
   {
     [Fact]
-    public void ShouldBeCustomizeAttribute()
+    public void ShouldBeAttribute()
     {
-      var sut = new ContentAttribute();
-      sut.Should().BeAssignableTo<Attribute>();
+      new ContentAttribute().Should().BeAssignableTo<Attribute>();
+    }
+
+    [Fact]
+    public void ShouldBeParameterAttribute()
+    {
+      typeof(ContentAttribute).GetCustomAttributes(false).Should().BeEquivalentTo(new AttributeUsageAttribute(AttributeTargets.Parameter));
     }
 
     [Theory, AutoDbData]
@@ -25,12 +30,6 @@
     public void ShouldNotAddItemsNotMarkedAsContent(Db db, [Content]DbItem item, DbItem foreigner)
     {
       db.GetItem(foreigner.ID).Should().BeNull();
-    }
-
-    [Fact]
-    public void ShouldBePropertyAttribute()
-    {
-      typeof(ContentAttribute).GetCustomAttributes(false).Should().BeEquivalentTo(new AttributeUsageAttribute(AttributeTargets.Parameter));
     }
 
     private class AutoDbDataAttribute : AutoDataAttribute

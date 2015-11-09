@@ -10,17 +10,23 @@
   public class AutoContentCustomizationTest
   {
     [Theory, AutoData]
-    public void SutThrowsIfFeatureIsNull(AutoContentCustomization sut)
+    public void ShouldBeICustomization(AutoContentCustomization sut)
+    {
+      sut.Should().BeAssignableTo<ICustomization>();
+    }
+
+    [Theory, AutoData]
+    public void ShouldThrowIfFeatureIsNull(AutoContentCustomization sut)
     {
       Action action = () => sut.Customize(null);
       action.ShouldThrow<ArgumentNullException>().WithMessage("*fixture");
     }
 
-    [Fact]
-    public void CreatesTemplateItem()
+    [Theory, AutoData]
+    public void ShouldCreateTemplateItem(AutoContentCustomization sut)
     {
       var fixture = new Fixture();
-      fixture.Customize(new AutoContentCustomization());
+      fixture.Customize(sut);
 
       var template = fixture.Create<TemplateItem>();
 
