@@ -160,6 +160,7 @@ license.xml
 
 # DLLs from the Lib/
 lib/**/*.dll
+lib/**/*.xml
 
 # Deploy
 deploy/
