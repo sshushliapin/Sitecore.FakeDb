@@ -10,6 +10,10 @@
   using Sitecore.Data;
   using Sitecore.Data.Items;
 
+  /// <summary>
+  /// Delegates calls to a mocked <see cref="BucketProvider"/> if it is set using 
+  /// the <see cref="BucketProviderSwitcher"/>. Otherwise behaves like a stub.
+  /// </summary>
   public class SwitchingBucketProvider : BucketProvider
   {
     public BucketProvider CurrentProvider
