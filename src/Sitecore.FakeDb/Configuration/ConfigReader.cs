@@ -27,25 +27,25 @@
     {
       var commands = e.Database.Engines.DataEngine.Commands;
 
-      commands.AddFromTemplatePrototype = new AddFromTemplateCommandPrototype();
-      commands.AddVersionPrototype = new AddVersionCommandProtoype();
-      commands.BlobStreamExistsPrototype = new BlobStreamExistsCommandPrototype();
-      commands.CopyItemPrototype = new CopyItemCommandPrototype();
-      commands.CreateItemPrototype = new CreateItemCommandPrototype();
-      commands.DeletePrototype = new DeleteItemCommandPrototype();
-      commands.GetBlobStreamPrototype = new GetBlobStreamCommandPrototype();
-      commands.GetChildrenPrototype = new GetChildrenCommandPrototype();
-      commands.GetItemPrototype = new GetItemCommandPrototype();
-      commands.GetParentPrototype = new GetParentCommandPrototype();
-      commands.GetRootItemPrototype = new GetRootItemCommandPrototype();
-      commands.GetVersionsPrototype = new GetVersionsCommandPrototype();
-      commands.HasChildrenPrototype = new HasChildrenCommandPrototype();
-      commands.MoveItemPrototype = new MoveItemCommandPrototype();
-      commands.RemoveDataPrototype = new RemoveDataCommandPrototype();
-      commands.RemoveVersionPrototype = new RemoveVersionCommandPrototype();
-      commands.ResolvePathPrototype = new ResolvePathCommandPrototype();
-      commands.SaveItemPrototype = new SaveItemCommandPrototype();
-      commands.SetBlobStreamPrototype = new SetBlobStreamCommandPrototype();
+      commands.AddFromTemplatePrototype = new AddFromTemplateCommandPrototype(e.Database);
+      commands.AddVersionPrototype = new AddVersionCommandProtoype(e.Database);
+      commands.BlobStreamExistsPrototype = new BlobStreamExistsCommandPrototype(e.Database);
+      commands.CopyItemPrototype = new CopyItemCommandPrototype(e.Database);
+      commands.CreateItemPrototype = new CreateItemCommandPrototype(e.Database);
+      commands.DeletePrototype = new DeleteItemCommandPrototype(e.Database);
+      commands.GetBlobStreamPrototype = new GetBlobStreamCommandPrototype(e.Database);
+      commands.GetChildrenPrototype = new GetChildrenCommandPrototype(e.Database);
+      commands.GetItemPrototype = new GetItemCommandPrototype(e.Database);
+      commands.GetParentPrototype = new GetParentCommandPrototype(e.Database);
+      commands.GetRootItemPrototype = new GetRootItemCommandPrototype(e.Database);
+      commands.GetVersionsPrototype = new GetVersionsCommandPrototype(e.Database);
+      commands.HasChildrenPrototype = new HasChildrenCommandPrototype(e.Database);
+      commands.MoveItemPrototype = new MoveItemCommandPrototype(e.Database);
+      commands.RemoveDataPrototype = new RemoveDataCommandPrototype(e.Database);
+      commands.RemoveVersionPrototype = new RemoveVersionCommandPrototype(e.Database);
+      commands.ResolvePathPrototype = new ResolvePathCommandPrototype(e.Database);
+      commands.SaveItemPrototype = new SaveItemCommandPrototype(e.Database);
+      commands.SetBlobStreamPrototype = new SetBlobStreamCommandPrototype(e.Database);
     }
 
     private static void SetAppDomainAppPath()

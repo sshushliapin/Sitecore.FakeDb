@@ -10,18 +10,18 @@
 
   public class FakeStandardValuesProvider : StandardValuesProvider
   {
-    public virtual DataStorage DataStorage
+    public virtual DataStorage DataStorage(string databaseName)
     {
-      get { return DataStorageSwitcher.CurrentValue; }
+      return DataStorageSwitcher.CurrentValue(databaseName);
     }
 
     public override string GetStandardValue(Field field)
     {
       var templateId = field.Item.TemplateID;
 
-      Assert.IsNotNull(this.DataStorage, "DataStorage cannot be null.");
+      Assert.IsNotNull(this.DataStorage(field.Database.Name), "DataStorage cannot be null.");
 
-      var template = this.DataStorage.GetFakeTemplate(templateId);
+      var template = this.DataStorage(field.Database.Name).GetFakeTemplate(templateId);
 
       if (template == null)
       {
@@ -62,7 +62,7 @@
           continue;
         }
 
-        var baseTemplate = this.DataStorage.GetFakeTemplate(baseId);
+        var baseTemplate = this.DataStorage(template.Database.Name).GetFakeTemplate(baseId);
         if (baseTemplate == null)
         {
           throw new TemplateNotFoundException("The template \"{0}\" was not found.".FormatWith(baseId.ToString()));
