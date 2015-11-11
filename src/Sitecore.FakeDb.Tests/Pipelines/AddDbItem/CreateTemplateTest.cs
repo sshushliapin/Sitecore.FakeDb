@@ -128,10 +128,10 @@
       // arrange
       var templateId = ID.NewID;
       using (var db = new Db()
-        {
-          new DbTemplate("Page", templateId) {new DbField("Reference") {Source = "/sitecore"}},
-          new DbItem("page", ID.NewID, templateId) {{"Reference", "set"}},
-        })
+      {
+        new DbTemplate("Page", templateId) {new DbField("Reference") {Source = "/sitecore"}},
+        new DbItem("page", ID.NewID, templateId) {{"Reference", "set"}},
+      })
       {
         // act
         var page = db.GetItem("/sitecore/content/page");
@@ -149,9 +149,9 @@
     {
       // arrange
       using (var db = new Db()
-        {
-          new DbItem("home") { new DbField("Reference") { Source = "/sitecore" } }
-        })
+      {
+        new DbItem("home") { new DbField("Reference") { Source = "/sitecore" } }
+      })
       {
         // act
         var home = db.GetItem("/sitecore/content/home");
@@ -161,6 +161,29 @@
         homeTemplate.GetFields(true).Single(f => f.Name == "Reference").Source.Should().Be("/sitecore");
         home.Template.Fields.Single(f => f.Name == "Reference").Source.Should().Be("/sitecore");
         home.Fields["Reference"].Source.Should().Be("/sitecore");
+      }
+    }
+
+    [Fact]
+    public void ShouldNotBreakOverStandardFieldsWhenBuildingATemplate()
+    {
+      // arrange
+      using (var db = new Db()
+      {
+        new DbItem("home")
+        {
+          {Sitecore.FieldIDs.DefaultWorkflow, ""},
+          new DbItem("page")
+          {
+            {Sitecore.FieldIDs.DefaultWorkflow, ""}, // <-- Fails Here
+            {Sitecore.FieldIDs.Workflow, ""},
+          }
+        }
+      })
+      {
+        // act & assert
+        db.GetItem("/sitecore/content/home").Should().NotBeNull();
+        db.GetItem("/sitecore/content/home/page").Should().NotBeNull();
       }
     }
   }
