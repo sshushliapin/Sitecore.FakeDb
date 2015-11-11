@@ -1,4 +1,9 @@
-﻿0.32.0
+﻿0.33.0
+* [NEW] #103: FakeDb should support multiple parallel databases and not be affected by mocked HttpContext (thanks to [@pveller](https://github.com/pveller))
+* [NEW] #107: FakeDb should treat workflow fields as standard template fields and don't generate templates and field items for them (thanks to [@pveller](https://github.com/pveller))
+* [NEW] #104: Mocking the Bucket Manager (thanks to [@michaelthyregod](https://github.com/michaelthyregod))
+
+0.32.0
 * [NEW] #102: Add support for template field's Source field (thanks to [@pveller](https://github.com/pveller))
 
 0.31.6
