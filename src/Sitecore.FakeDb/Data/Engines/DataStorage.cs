@@ -84,7 +84,6 @@ namespace Sitecore.FakeDb.Data.Engines
       }
 
       this.FakeItems[item.ID] = item;
-      item.Database = this.database;
 
       if (item as DbTemplate != null)
       {

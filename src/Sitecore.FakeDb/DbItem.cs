@@ -73,11 +73,6 @@ namespace Sitecore.FakeDb
     public DbItemAccess Access { get; set; }
 
     /// <summary>
-    /// Similar to Item.Database to know at runtime what Database instance a DbItem belongs to
-    /// </summary>
-    internal Database Database { get; set; }
-
-    /// <summary>
     /// Adds a new field to the item.
     /// </summary>
     /// <param name="fieldName">The field name.</param>

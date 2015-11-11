@@ -25,7 +25,7 @@
     {
       // arrange
       var sut = Substitute.ForPartsOf<FakeStandardValuesProvider>();
-      sut.DataStorage(Arg.Any<string>()).Returns((DataStorage)null);
+      sut.DataStorage(Arg.Any<Database>()).Returns((DataStorage)null);
 
       var field = new Field(ID.NewID, ItemHelper.CreateInstance());
 

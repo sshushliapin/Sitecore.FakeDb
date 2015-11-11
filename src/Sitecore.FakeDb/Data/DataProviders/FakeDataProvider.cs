@@ -17,7 +17,14 @@
   {
     public virtual DataStorage DataStorage()
     {
-      return DataStorageSwitcher.CurrentValue(this.Database.Name);
+      return this.DataStorage(this.Database);
+    }
+
+    public virtual DataStorage DataStorage(Database database)
+    {
+      Assert.IsNotNull(database, "database");
+
+      return DataStorageSwitcher.CurrentValue(database.Name);
     }
 
     public override bool ChangeTemplate(ItemDefinition itemDefinition, TemplateChangeList changes, CallContext context)

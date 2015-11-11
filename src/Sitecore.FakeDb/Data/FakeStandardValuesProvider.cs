@@ -10,18 +10,20 @@
 
   public class FakeStandardValuesProvider : StandardValuesProvider
   {
-    public virtual DataStorage DataStorage(string databaseName)
+    public virtual DataStorage DataStorage(Database database)
     {
-      return DataStorageSwitcher.CurrentValue(databaseName);
+      Assert.IsNotNull(database, "database");
+
+      return DataStorageSwitcher.CurrentValue(database.Name);
     }
 
     public override string GetStandardValue(Field field)
     {
       var templateId = field.Item.TemplateID;
 
-      Assert.IsNotNull(this.DataStorage(field.Database.Name), "DataStorage cannot be null.");
+      Assert.IsNotNull(this.DataStorage(field.Database), "DataStorage cannot be null.");
 
-      var template = this.DataStorage(field.Database.Name).GetFakeTemplate(templateId);
+      var template = this.DataStorage(field.Database).GetFakeTemplate(templateId);
 
       if (template == null)
       {
@@ -30,7 +32,7 @@
         return string.Empty;
       }
 
-      var standardValue = this.FindStandardValueInTheTemplate(template, field.ID) ?? string.Empty;
+      var standardValue = this.FindStandardValueInTheTemplate(template, field) ?? string.Empty;
 
       return this.ReplaceTokens(standardValue, field.Item);
     }
@@ -43,11 +45,11 @@
       return standardValue.Replace("$name", item.Name);
     }
 
-    protected string FindStandardValueInTheTemplate(DbTemplate template, ID fieldId)
+    protected string FindStandardValueInTheTemplate(DbTemplate template, Field field)
     {
-      if (template.StandardValues.ContainsKey(fieldId))
+      if (template.StandardValues.ContainsKey(field.ID))
       {
-        return template.StandardValues[fieldId].Value;
+        return template.StandardValues[field.ID].Value;
       }
 
       if (template.BaseIDs == null || template.BaseIDs.Length <= 0)
@@ -62,13 +64,13 @@
           continue;
         }
 
-        var baseTemplate = this.DataStorage(template.Database.Name).GetFakeTemplate(baseId);
+        var baseTemplate = this.DataStorage(field.Database).GetFakeTemplate(baseId);
         if (baseTemplate == null)
         {
           throw new TemplateNotFoundException("The template \"{0}\" was not found.".FormatWith(baseId.ToString()));
         }
 
-        var value = this.FindStandardValueInTheTemplate(baseTemplate, fieldId);
+        var value = this.FindStandardValueInTheTemplate(baseTemplate, field);
         if (value != null)
         {
           return value;
