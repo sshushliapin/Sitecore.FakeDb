@@ -167,6 +167,7 @@
     [Fact]
     public void ShouldNotBreakOverStandardFieldsWhenBuildingATemplate()
     {
+      // arrange
       using (var db = new Db()
       {
         new DbItem("home")
@@ -180,7 +181,9 @@
         }
       })
       {
-        // ...
+        // act & assert
+        db.GetItem("/sitecore/content/home").Should().NotBeNull();
+        db.GetItem("/sitecore/content/home/page").Should().NotBeNull();
       }
     }
   }

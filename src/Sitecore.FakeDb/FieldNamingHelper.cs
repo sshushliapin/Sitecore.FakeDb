@@ -27,7 +27,10 @@
             { FieldIDs.Source, "__Source" },
             { DbFieldIds.FinalLayoutField, "__Final Renderings" },
             { DbFieldIds.AnalyticsIds.PageLevelTestDefinitionField, "__Page Level Test Set Definition" },
-            { DbFieldIds.AnalyticsIds.TrackingField, "__Tracking" }
+            { DbFieldIds.AnalyticsIds.TrackingField, "__Tracking" },
+            { FieldIDs.DefaultWorkflow, "__Default workflow" },
+            { FieldIDs.Workflow, "__Workflow" },
+            { FieldIDs.WorkflowState, "__Workflow state"}
           });
 
     public KeyValuePair<ID, string> GetFieldIdNamePair(ID id, string name)
