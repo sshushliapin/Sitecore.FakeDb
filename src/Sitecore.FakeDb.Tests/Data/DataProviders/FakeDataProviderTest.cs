@@ -32,7 +32,9 @@
         ));
 
       this.dataStorageSwitcher = fixture.Create<DataStorageSwitcher>();
-      this.dataProvider = new FakeDataProvider();
+      this.dataProvider = Substitute.ForPartsOf<FakeDataProvider>();
+      this.dataProvider.When(provider => provider.DataStorage()).DoNotCallBase();
+      this.dataProvider.DataStorage().Returns(info => fixture.Create<DataStorage>());
     }
 
     [Theory, DefaultAutoData]
@@ -61,7 +63,7 @@
     [Theory, DefaultAutoData]
     public void ChangeTemplateThrowsIfNoTargetTemplateFound(ItemDefinition def, TemplateChangeList changes, DbItem item)
     {
-      this.dataProvider.DataStorage.GetFakeItem(def.ID).Returns(item);
+      this.dataProvider.DataStorage().GetFakeItem(def.ID).Returns(item);
 
       Action action = () => this.dataProvider.ChangeTemplate(def, changes, null);
 
@@ -72,21 +74,21 @@
     [Theory, AutoData]
     public void ShouldGetTemplateIds(DbTemplate template)
     {
-      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
       this.dataProvider.GetTemplateItemIds(null).Should().Contain(template.ID);
     }
 
     [Theory, AutoData]
     public void ShouldGetTemplatesFromDataStorage(DbTemplate template)
     {
-      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
       this.dataProvider.GetTemplates(null).Should().HaveCount(1);
     }
 
     [Theory, AutoData]
     public void ShouldGetTemplatesWithDefaultDataSectionFromDataStorage(DbTemplate template)
     {
-      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
 
       var result = this.dataProvider.GetTemplates(null).First();
 
@@ -96,7 +98,7 @@
     [Theory, AutoData]
     public void ShouldHaveStandardBaseTemplate([NoAutoProperties]DbTemplate template)
     {
-      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
 
       var result = this.dataProvider.GetTemplates(null).First();
 
@@ -106,7 +108,7 @@
     [Theory, AutoData]
     public void ShouldGetTemplateFields(DbTemplate template)
     {
-      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
       template.Fields.Add("Title");
 
       var result = this.dataProvider.GetTemplates(null).First();
@@ -117,7 +119,7 @@
     [Theory, AutoData]
     public void ShouldGetTemplateFieldType(DbTemplate template)
     {
-      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
       template.Fields.Add(new DbField("Link") { Type = "General Link" });
 
       var result = this.dataProvider.GetTemplates(null).First();
@@ -128,7 +130,7 @@
     [Theory, AutoData]
     public void ShouldGetTemplateFieldIsShared(DbTemplate template)
     {
-      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
       template.Fields.Add(new DbField("Title") { Shared = true });
 
       var result = this.dataProvider.GetTemplates(null).First();
@@ -139,7 +141,7 @@
     [Theory, AutoData]
     public void ShouldGetTemplateFieldSource(DbTemplate template)
     {
-      this.dataProvider.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
       template.Fields.Add(new DbField("Multilist") { Source = "/sitecore/content" });
 
       var result = this.dataProvider.GetTemplates(null).First();
@@ -161,7 +163,7 @@
     public void ShouldGetItemDefinition(DbItem item, CallContext context)
     {
       // arrange
-      this.dataProvider.DataStorage.GetFakeItem(item.ID).Returns(item);
+      this.dataProvider.DataStorage().GetFakeItem(item.ID).Returns(item);
 
       // act
       var definition = this.dataProvider.GetItemDefinition(item.ID, context);
@@ -192,7 +194,7 @@
                        }
                    };
 
-      this.dataProvider.DataStorage.GetFakeItem(def.ID).Returns(item);
+      this.dataProvider.DataStorage().GetFakeItem(def.ID).Returns(item);
 
       // act
       var versions = this.dataProvider.GetItemVersions(def, context);

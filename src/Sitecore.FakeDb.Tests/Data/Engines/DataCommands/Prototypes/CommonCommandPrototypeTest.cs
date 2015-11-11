@@ -4,6 +4,7 @@
   using System.Reflection;
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
+  using Sitecore.Data;
   using Sitecore.FakeDb.Data.Engines.DataCommands.Prototypes;
   using Sitecore.Reflection;
   using Xunit;
@@ -32,7 +33,7 @@
     [InlineAutoData(typeof(SetBlobStreamCommandPrototype))]
     public void DoExecuteThrowsNotSupportedException(Type prototype)
     {
-      var sut = Activator.CreateInstance(prototype);
+      var sut = Activator.CreateInstance(prototype, Database.GetDatabase("master"));
 
       Action action = () => ReflectionUtil.CallMethod(sut, "DoExecute");
 

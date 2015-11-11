@@ -8,15 +8,9 @@
   public class DataStorageSwitcherTest
   {
     [Theory, DefaultAutoData]
-    public void ShouldBeSwitcher(DataStorageSwitcher sut)
-    {
-      Assert.IsAssignableFrom<Switcher<DataStorage>>(sut);
-    }
-
-    [Theory, DefaultAutoData]
     public void ShouldSwitchDataStorage([Frozen]DataStorage dataStorage, DataStorageSwitcher sut)
     {
-      Assert.Same(dataStorage, Switcher<DataStorage>.CurrentValue);
+      Assert.Same(dataStorage, DataStorageSwitcher.CurrentValue(dataStorage.Database.Name));
     }
   }
 }

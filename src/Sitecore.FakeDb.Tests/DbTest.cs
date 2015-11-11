@@ -1,7 +1,9 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
   using System;
+  using System.IO;
   using System.Linq;
+  using System.Web;
   using FluentAssertions;
   using Sitecore.Common;
   using Sitecore.Configuration;
@@ -1442,7 +1444,7 @@
       using (var db = new Db())
       {
         // assert
-        Switcher<DataStorage>.CurrentValue.Should().BeSameAs(db.DataStorage);
+        DataStorageSwitcher.CurrentValue(db.Database.Name).Should().BeSameAs(db.DataStorage);
       }
     }
 
@@ -1505,6 +1507,49 @@
 
         // assert
         item.TemplateID.Should().Be(newTemplate.ID);
+      }
+    }
+
+    [Fact]
+    public void ShouldSupportMuiltipleParallelDatabases()
+    {
+      // arrange
+      using (var core = new Db("core") { new DbItem("core") })
+      using (var master = new Db("master") { new DbItem("master") })
+      {
+        // act
+        var coreHome = core.GetItem("/sitecore/content/core");
+        var masterHome = master.GetItem("/sitecore/content/master");
+
+        // assert
+        coreHome.Should().NotBeNull(); // <-- Fails here
+        masterHome.Should().NotBeNull();
+      }
+    }
+
+    [Fact]
+    public void ShouldNotBeAffectedByMockedHttpContext()
+    {
+      // arrange
+      using (var db = new Db { new DbItem("home") })
+      {
+
+        var request = new HttpRequest("", "http://mysite", "");
+        var response = new HttpResponse(new StringWriter());
+
+        HttpContext.Current = new HttpContext(request, response);
+        try
+        {
+          // act
+          var page = db.GetItem("/sitecore/content/home"); // <-- Fails here
+
+          // assert
+          page.Should().NotBeNull();
+        }
+        finally
+        {
+          HttpContext.Current = null;
+        }
       }
     }
   }
