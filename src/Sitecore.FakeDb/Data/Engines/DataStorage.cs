@@ -294,6 +294,7 @@ namespace Sitecore.FakeDb.Data.Engines
             new DbField(FieldIDs.Hidden),
             new DbField(FieldIDs.ReadOnly),
             new DbField(FieldIDs.Source),
+            new DbField(DbFieldIds.SourceItem),
             new DbField(DbFieldIds.AnalyticsIds.PageLevelTestDefinitionField) { Shared = true },
             new DbField(DbFieldIds.AnalyticsIds.TrackingField) { Type = "Tracking", Shared = true },
             new DbField(FieldIDs.DefaultWorkflow) { Shared = true },

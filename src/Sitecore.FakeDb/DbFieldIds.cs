@@ -5,6 +5,7 @@
   internal static class DbFieldIds
   {
     public static readonly ID FinalLayoutField = new ID("{04BF00DB-F5FB-41F7-8AB7-22408372A981}");
+    public static readonly ID SourceItem = new ID("{19B597D3-2EDD-4AE2-AEFE-4A94C7F10E31}");
 
     internal static class AnalyticsIds
     {
