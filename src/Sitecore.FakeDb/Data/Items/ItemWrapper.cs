@@ -36,5 +36,11 @@
     {
       return ID.GetHashCode();
     }
+
+    public override string ToString()
+    {
+      // that's as much as we know without expecting Db initiatlized and all
+      return string.Format("Item {0}:/{1} {2}", this.Database.Name, this.Name, this.ID) ;
+    }
   }
 }
