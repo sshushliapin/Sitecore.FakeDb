@@ -280,26 +280,112 @@ namespace Sitecore.FakeDb.Data.Engines
         TemplateIDs.StandardTemplate,
         new DbTemplate(TemplateIDs.StandardTemplate)
           {
-            new DbField(FieldIDs.BaseTemplate) { Shared = true },
-            new DbField(FieldIDs.Lock) { Shared = true },
-            new DbField(FieldIDs.Security) { Shared = true },
-            new DbField(FieldIDs.Created),
-            new DbField(FieldIDs.CreatedBy),
-            new DbField(FieldIDs.Updated),
-            new DbField(FieldIDs.UpdatedBy),
-            new DbField(FieldIDs.Revision),
-            new DbField(FieldIDs.LayoutField) { Type = "Layout" },
-            new DbField(DbFieldIds.FinalLayoutField),
-            new DbField(FieldIDs.DisplayName),
-            new DbField(FieldIDs.Hidden),
-            new DbField(FieldIDs.ReadOnly),
-            new DbField(FieldIDs.Source),
-            new DbField(DbFieldIds.SourceItem),
-            new DbField(DbFieldIds.AnalyticsIds.PageLevelTestDefinitionField) { Shared = true },
-            new DbField(DbFieldIds.AnalyticsIds.TrackingField) { Type = "Tracking", Shared = true },
-            new DbField(FieldIDs.DefaultWorkflow) { Shared = true },
-            new DbField(FieldIDs.Workflow) { Shared = true },
-            new DbField(FieldIDs.WorkflowState)
+            new DbField("__Base template"),
+
+            // Advanced
+            new DbField("__Source"),
+            new DbField("__Source Item"),
+            new DbField("__Enable item fallback"),
+            new DbField("__Enforce version presence"),
+            new DbField("__Standard values"),
+            new DbField("__Tracking"),
+
+            // Appearance
+            new DbField("__Context Menu"),
+            new DbField("__Display name"),
+            new DbField("__Editor"),
+            new DbField("__Editors"),
+            new DbField("__Hidden"),
+            new DbField("__Icon"),
+            new DbField("__Read Only"),
+            new DbField("__Ribbon"),
+            new DbField("__Skin"),
+            new DbField("__Sortorder"),
+            new DbField("__Style"),
+            new DbField("__Subitems Sorting"),
+            new DbField("__Thumbnail"),
+            new DbField("__Originator"),
+            new DbField("__Preview"),
+
+            // Help
+            new DbField("__Help link"),
+            new DbField("__Long description"),
+            new DbField("__Short description"),
+
+            // Layout
+            new DbField("__Renderings"),
+            new DbField("__Final Renderings"),
+            new DbField("__Renderers"),
+            new DbField("__Controller"),
+            new DbField("__Controller Action"),
+            new DbField("__Presets"),
+            new DbField("__Page Level Test Set Definition"),
+            new DbField("__Content Test"),
+
+            // Lifetime
+            new DbField("__Valid to"),
+            new DbField("__Hide version"),
+            new DbField("__Valid from"),
+
+            // Indexing
+            new DbField("__Boost"),
+            new DbField("__Boosting Rules"),
+            new DbField("__Facets"),
+
+            // Insert Options
+            new DbField("__Insert Rules"),
+            new DbField("__Masters"),
+
+            // Item Buckets
+            new DbField("__Bucket Parent Reference"),
+            new DbField("__Is Bucket"),
+            new DbField("__Bucketable"),
+            new DbField("__Should Not Organize In Bucket"),
+            new DbField("__Default Bucket Query"),
+            new DbField("__Persistent Bucket Filter"),
+            new DbField("__Enabled Views"),
+            new DbField("__Default View"),
+            new DbField("__Quick Actions"),
+
+            // Publishing
+            new DbField("__Publish"),
+            new DbField("__Unpublish"),
+            new DbField("__Publishing groups"),
+            new DbField("__Never publish"),
+
+            // Security
+            new DbField("__Owner"),
+            new DbField("__Security"),
+
+            // Statistics
+            new DbField("__Created"),
+            new DbField("__Created by"),
+            new DbField("__Revision"),
+            new DbField("__Updated"),
+            new DbField("__Updated by"),
+
+            // Tagging
+            new DbField("__Semantics"),
+
+            // Tasks
+            new DbField("__Archive date"),
+            new DbField("__Archive Version date"),
+            new DbField("__Reminder date"),
+            new DbField("__Reminder recipients"),
+            new DbField("__Reminder text"),
+
+            // Validation Rules
+            new DbField("__Quick Action Bar Validation Rules"),
+            new DbField("__Validate Button Validation Rules"),
+            new DbField("__Validator Bar Validation Rules"),
+            new DbField("__Workflow Validation Rules"),
+            new DbField("__Suppressed Validation Rules"),
+
+            // Workflow
+            new DbField("__Workflow"),
+            new DbField("__Workflow state"),
+            new DbField("__Lock"),
+            new DbField("__Default workflow"),
           });
 
       this.FakeItems.Add(
