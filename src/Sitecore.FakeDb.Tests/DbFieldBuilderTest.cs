@@ -19,5 +19,11 @@
     {
       new DbField("__Renderings").Type.Should().Be("layout");
     }
+
+    [Theory, DefaultSubstituteAutoData]
+    public void ShouldSetInnerBuilder([Frozen]IDbFieldBuilder builder, DbFieldBuilder sut)
+    {
+      sut.Builder.Should().BeSameAs(builder);
+    }
   }
 }

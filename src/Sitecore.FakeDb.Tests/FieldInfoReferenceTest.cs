@@ -1,8 +1,8 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
-  using System;
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
+  using Sitecore.Data;
   using Xunit;
 
   public class FieldInfoReferenceTest
@@ -22,13 +22,13 @@
     [Theory, AutoData]
     internal void ShouldReturnEmptyFieldInfoForUnknownId(FieldInfoReference sut)
     {
-      sut[Guid.NewGuid()].Should().Be(FieldInfo.Empty);
+      sut[ID.NewID].Should().Be(FieldInfo.Empty);
     }
 
     [Theory, AutoData]
     internal void ShouldReturnFieldInfoForKnownId(FieldInfoReference sut)
     {
-      sut[FieldIDs.DisplayName.Guid].Should().NotBe(FieldInfo.Empty);
+      sut[FieldIDs.DisplayName].Should().NotBe(FieldInfo.Empty);
     }
   }
 }

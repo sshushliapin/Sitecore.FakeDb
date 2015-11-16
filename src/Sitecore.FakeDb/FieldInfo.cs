@@ -1,25 +1,46 @@
 namespace Sitecore.FakeDb
 {
   using System;
+  using Sitecore.Data;
 
-  internal struct FieldInfo : IEquatable<FieldInfo>
+  public struct FieldInfo : IEquatable<FieldInfo>
   {
     public static readonly FieldInfo Empty = new FieldInfo();
 
-    public readonly string Name;
+    private readonly string name;
 
-    public readonly Guid Id;
+    private readonly ID id;
 
-    public readonly bool Shared;
+    private readonly bool shared;
 
-    public readonly string Type;
+    private readonly string type;
 
-    public FieldInfo(string name, Guid id, bool shared, string type)
+    public string Name
     {
-      this.Name = name;
-      this.Id = id;
-      this.Shared = shared;
-      this.Type = type;
+      get { return this.name; }
+    }
+
+    public ID Id
+    {
+      get { return this.id ?? ID.Null; }
+    }
+
+    public bool Shared
+    {
+      get { return this.shared; }
+    }
+
+    public string Type
+    {
+      get { return this.type; }
+    }
+
+    public FieldInfo(string name, ID id, bool shared, string type)
+    {
+      this.name = name;
+      this.id = id;
+      this.shared = shared;
+      this.type = type;
     }
 
     public bool Equals(FieldInfo other)
@@ -44,7 +65,7 @@ namespace Sitecore.FakeDb
     {
       unchecked
       {
-        var hashCode = (this.Name != null ? this.Name.GetHashCode() : 0);
+        var hashCode = this.Name != null ? this.Name.GetHashCode() : 0;
         hashCode = (hashCode * 397) ^ this.Id.GetHashCode();
         hashCode = (hashCode * 397) ^ this.Shared.GetHashCode();
         hashCode = (hashCode * 397) ^ (this.Type != null ? this.Type.GetHashCode() : 0);

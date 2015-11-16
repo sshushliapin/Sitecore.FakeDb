@@ -115,6 +115,7 @@
     </Compile>
     <Compile Include="Buckets\BucketProviderSwitcherTest.cs" />
     <Compile Include="Buckets\SwitchingBucketProviderTest.cs" />
+    <Compile Include="CompositeFieldBuilderTest.cs" />
     <Compile Include="Data\Engines\DataCommands\CommonCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\CommonCommandPrototypeTest.cs" />
     <Compile Include="Data\Engines\DataStorageSwitcherTest.cs" />
@@ -208,6 +209,12 @@
     <Compile Include="Links\LinkManagerTest.cs" />
     <Compile Include="Links\LinkProviderSwitcherTest.cs" />
     <Compile Include="Links\SwitchingLinkProviderTest.cs" />
+    <Compile Include="MixedFieldBuilderTest.cs" />
+    <Compile Include="RandomIdFieldBuilderTest.cs" />
+    <Compile Include="IdNameFieldBuilderTest.cs" />
+    <Compile Include="RandomNameFieldBuilderTest.cs" />
+    <Compile Include="StandardIdFieldBuilderTest.cs" />
+    <Compile Include="StandardNameFieldBuilderTest.cs" />
     <Compile Include="Pipelines\AddDbItem\AddVersionTest.cs" />
     <Compile Include="Pipelines\AddDbItem\CreateTemplateTest.cs" />
     <Compile Include="Pipelines\AddDbItem\SetParentTest.cs" />

@@ -1,43 +1,59 @@
 ﻿namespace Sitecore.FakeDb
 {
-  using Sitecore.Data;
+  using Sitecore.Diagnostics;
 
-  internal class DbFieldBuilder
+  public class DbFieldBuilder
   {
-    private static readonly FieldInfoReference Fields = new FieldInfoReference();
+    public static readonly DbFieldBuilder Default;
 
-    public void Build(DbField field)
+    static DbFieldBuilder()
     {
-      var fieldInfo = new FieldInfo();
-      if (!string.IsNullOrEmpty(field.Name) && field.Name.StartsWith("__"))
-      {
-        fieldInfo = Fields[field.Name];
-      }
+      var fields = new FieldInfoReference();
+      Default = new DbFieldBuilder(
+                  new CompositeFieldBuilder(
+                    new MixedFieldBuilder(
+                      new StandardNameFieldBuilder(fields)),
+                    new MixedFieldBuilder(
+                      new StandardIdFieldBuilder(fields)),
+                    new IdNameFieldBuilder(
+                      new RandomNameFieldBuilder(),
+                      new RandomIdFieldBuilder())));
+    }
 
-      if (fieldInfo == FieldInfo.Empty && field.ID != (ID)null)
-      {
-        fieldInfo = Fields[field.ID.Guid];
-      }
+    public DbFieldBuilder(IDbFieldBuilder builder)
+    {
+      this.Builder = builder;
+    }
 
-      if (fieldInfo == FieldInfo.Empty)
-      {
-        if (ID.IsNullOrEmpty(field.ID))
-        {
-          field.ID = ID.NewID;
-        }
+    public IDbFieldBuilder Builder { get; private set; }
 
-        if (string.IsNullOrEmpty(field.Name) && field.ID != (ID)null)
-        {
-          field.Name = field.ID.ToShortID().ToString();
-        }
-      }
-      else
-      {
-        field.ID = ID.Parse(fieldInfo.Id);
-        field.Name = fieldInfo.Name;
-        field.Shared = fieldInfo.Shared;
-        field.Type = fieldInfo.Type;
-      }
+    public static DbFieldBuilder FromName()
+    {
+      return new DbFieldBuilder(
+        new CompositeFieldBuilder(
+          new StandardNameFieldBuilder(new FieldInfoReference()),
+          new RandomNameFieldBuilder()));
+    }
+
+
+    public static DbFieldBuilder FromId()
+    {
+      return new DbFieldBuilder(
+        new CompositeFieldBuilder(
+          new StandardIdFieldBuilder(new FieldInfoReference()),
+          new RandomIdFieldBuilder()));
+    }
+
+    public void Build(object request, DbField field)
+    {
+      Assert.ArgumentNotNull(field, "field");
+
+      var fieldInfo = this.Builder.Build(request);
+
+      field.ID = fieldInfo.Id;
+      field.Name = fieldInfo.Name;
+      field.Shared = fieldInfo.Shared;
+      field.Type = fieldInfo.Type;
     }
   }
 }

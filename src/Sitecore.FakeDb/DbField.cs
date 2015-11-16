@@ -12,28 +12,23 @@
   [DebuggerDisplay("ID = {ID}, Name = {Name}, Value = {Value}")]
   public class DbField : IEnumerable
   {
-    private static readonly DbFieldBuilder FieldBuilder = new DbFieldBuilder();
-
     private readonly IDictionary<string, IDictionary<int, string>> values = new Dictionary<string, IDictionary<int, string>>();
 
     private string sharedValue = string.Empty;
 
     public DbField(ID id)
-      : this(null, id)
     {
+      DbFieldBuilder.FromId().Build(id, this);
     }
 
     public DbField(string name)
-      : this(name, null)
     {
+      DbFieldBuilder.FromName().Build(name, this);
     }
 
     public DbField(string name, ID id)
     {
-      this.ID = id;
-      this.Name = name;
-
-      FieldBuilder.Build(this);
+      DbFieldBuilder.Default.Build(new object[] { name, id }, this);
     }
 
     public ID ID { get; internal set; }

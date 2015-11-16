@@ -3,6 +3,7 @@ namespace Sitecore.FakeDb.Tests
   using System;
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
+  using Sitecore.Data;
   using Xunit;
 
   public class FieldInfoTest
@@ -16,7 +17,7 @@ namespace Sitecore.FakeDb.Tests
     [Fact]
     public void EmptyFieldInfoIdIsEmptyGuid()
     {
-      FieldInfo.Empty.Id.Should().BeEmpty();
+      FieldInfo.Empty.Id.Guid.Should().BeEmpty();
     }
 
     [Fact]
@@ -32,7 +33,7 @@ namespace Sitecore.FakeDb.Tests
     }
 
     [Theory, AutoData]
-    public void ShouldBeEqualIfAllParametersAreEqual(string name, Guid id, bool shared, string type)
+    public void ShouldBeEqualIfAllParametersAreEqual(string name, ID id, bool shared, string type)
     {
       var field1 = new FieldInfo(name, id, shared, type);
       var field2 = new FieldInfo(name, id, shared, type);
@@ -43,7 +44,7 @@ namespace Sitecore.FakeDb.Tests
     }
 
     [Theory, AutoData]
-    public void ShouldNotBeEqualIfNameDiffers(string name, Guid id, bool shared, string type, string smth)
+    public void ShouldNotBeEqualIfNameDiffers(string name, ID id, bool shared, string type, string smth)
     {
       var field1 = new FieldInfo(name, id, shared, type);
       var field2 = new FieldInfo(smth, id, shared, type);
@@ -53,7 +54,7 @@ namespace Sitecore.FakeDb.Tests
     }
 
     [Theory, AutoData]
-    public void ShouldNotBeEqualIfIdDiffers(string name, Guid id, bool shared, string type, Guid smth)
+    public void ShouldNotBeEqualIfIdDiffers(string name, ID id, bool shared, string type, ID smth)
     {
       var field1 = new FieldInfo(name, id, shared, type);
       var field2 = new FieldInfo(name, smth, shared, type);
@@ -63,7 +64,7 @@ namespace Sitecore.FakeDb.Tests
     }
 
     [Theory, AutoData]
-    public void ShouldNotBeEqualIfSharedDiffers(string name, Guid id, bool shared, string type, bool smth)
+    public void ShouldNotBeEqualIfSharedDiffers(string name, ID id, bool shared, string type, bool smth)
     {
       var field1 = new FieldInfo(name, id, shared, type);
       var field2 = new FieldInfo(name, id, smth, type);
@@ -73,7 +74,7 @@ namespace Sitecore.FakeDb.Tests
     }
 
     [Theory, AutoData]
-    public void ShouldNotBeEqualIfTypeDiffers(string name, Guid id, bool shared, string type, string smth)
+    public void ShouldNotBeEqualIfTypeDiffers(string name, ID id, bool shared, string type, string smth)
     {
       var field1 = new FieldInfo(name, id, shared, type);
       var field2 = new FieldInfo(name, id, shared, smth);
@@ -95,7 +96,7 @@ namespace Sitecore.FakeDb.Tests
     }
 
     [Theory, AutoData]
-    public void ShouldGetHashCode(string name, Guid id, bool shared, string type)
+    public void ShouldGetHashCode(string name, ID id, bool shared, string type)
     {
       new FieldInfo(name, id, shared, type).GetHashCode().Should().NotBe(0);
     }

@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Buckets\BucketProviderSwitcher.cs" />
     <Compile Include="Buckets\SwitchingBucketProvider.cs" />
+    <Compile Include="CompositeFieldBuilder.cs" />
     <Compile Include="Configuration\ConfigReader.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\AddFromTemplateCommandPrototype.cs" />
@@ -99,12 +100,19 @@
     <Compile Include="DbLinkField.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldInfoReference.cs" />
+    <Compile Include="IDbFieldBuilder.cs" />
     <Compile Include="IDsDbItem.cs" />
     <Compile Include="IThreadLocalProvider.cs" />
     <Compile Include="Links\FakeLinkDatabase.cs" />
     <Compile Include="Links\LinkDatabaseSwitcher.cs" />
     <Compile Include="Links\LinkProviderSwitcher.cs" />
     <Compile Include="Links\SwitchingLinkProvider.cs" />
+    <Compile Include="MixedFieldBuilder.cs" />
+    <Compile Include="RandomIdFieldBuilder.cs" />
+    <Compile Include="IdNameFieldBuilder.cs" />
+    <Compile Include="RandomNameFieldBuilder.cs" />
+    <Compile Include="StandardIdFieldBuilder.cs" />
+    <Compile Include="StandardNameFieldBuilder.cs" />
     <Compile Include="Pipelines\AddDbItem\AddVersion.cs" />
     <Compile Include="Pipelines\AddDbItem\SetAccess.cs" />
     <Compile Include="Pipelines\AddDbItem\AddDbItemArgs.cs" />
