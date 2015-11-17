@@ -334,5 +334,19 @@
       // assert
       sut.Value.Should().Be(newValue);
     }
+
+    [Theory]
+    [InlineAutoData("__Renderings", true)]
+    [InlineAutoData("__Final Renderings", false)]
+    public void ShouldSetFieldShared(string fieldName, bool shared)
+    {
+      new DbField(fieldName).Shared.Should().Be(shared);
+    }
+
+    [Fact]
+    public void ShouldSetFieldType()
+    {
+      new DbField("__Renderings").Type.Should().Be("layout");
+    }
   }
 }

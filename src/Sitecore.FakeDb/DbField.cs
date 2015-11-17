@@ -6,9 +6,15 @@
   using System.Diagnostics;
   using System.Linq;
   using Sitecore.Data;
+  using Sitecore.Data.Fields;
   using Sitecore.Diagnostics;
   using Sitecore.Globalization;
 
+  /// <summary>
+  /// Represents a lightweight version of the <see cref="Field"/> class.
+  /// If the field name or id match one of the standard fields, additional field properties 
+  /// such as Shared or Type are filled automatically. 
+  /// </summary>
   [DebuggerDisplay("ID = {ID}, Name = {Name}, Value = {Value}")]
   public class DbField : IEnumerable
   {
@@ -17,18 +23,26 @@
     private string sharedValue = string.Empty;
 
     public DbField(ID id)
+      : this(Builder.FromId().Build(id))
     {
-      DbFieldBuilder.FromId().Build(id, this);
     }
 
     public DbField(string name)
+      : this(Builder.FromName().Build(name))
     {
-      DbFieldBuilder.FromName().Build(name, this);
     }
 
     public DbField(string name, ID id)
+      : this(Builder.FromNameAndId().Build(new object[] { name, id }))
     {
-      DbFieldBuilder.Default.Build(new object[] { name, id }, this);
+    }
+
+    protected DbField(FieldInfo fieldInfo)
+    {
+      this.ID = fieldInfo.Id;
+      this.Name = fieldInfo.Name;
+      this.Shared = fieldInfo.Shared;
+      this.Type = fieldInfo.Type;
     }
 
     public ID ID { get; internal set; }
@@ -190,6 +204,37 @@
       var langValues = this.values[language];
 
       return langValues.Any() ? langValues.Last().Key : 0;
+    }
+
+    private static class Builder
+    {
+      private static readonly FieldInfoReference FieldReference = new FieldInfoReference();
+
+      public static IDbFieldBuilder FromId()
+      {
+        return new CompositeFieldBuilder(
+                 new StandardIdFieldBuilder(FieldReference),
+                 new RandomIdFieldBuilder());
+      }
+
+      public static IDbFieldBuilder FromName()
+      {
+        return new CompositeFieldBuilder(
+                 new StandardNameFieldBuilder(FieldReference),
+                 new RandomNameFieldBuilder());
+      }
+
+      public static IDbFieldBuilder FromNameAndId()
+      {
+        return new CompositeFieldBuilder(
+                 new MixedFieldBuilder(
+                   new StandardNameFieldBuilder(FieldReference)),
+                 new MixedFieldBuilder(
+                   new StandardIdFieldBuilder(FieldReference)),
+                 new IdNameFieldBuilder(
+                   new RandomNameFieldBuilder(),
+                   new RandomIdFieldBuilder()));
+      }
     }
   }
 }
