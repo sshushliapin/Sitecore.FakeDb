@@ -4,168 +4,145 @@
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture;
-  using Ploeh.AutoFixture.AutoNSubstitute;
   using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
   using Sitecore.Data.Templates;
   using Sitecore.FakeDb.Data.DataProviders;
-  using Sitecore.FakeDb.Data.Engines;
   using Sitecore.StringExtensions;
   using Xunit;
 
-  public class FakeDataProviderTest : IDisposable
+  public class FakeDataProviderTest
   {
-    private readonly FakeDataProvider dataProvider;
-
-    private readonly DataStorageSwitcher dataStorageSwitcher;
-
-    public FakeDataProviderTest()
-    {
-      var fixture = new Fixture();
-      fixture.Customize(
-        new CompositeCustomization(
-          new DefaultConventions(),
-          new AutoNSubstituteCustomization(),
-          new AutoConfiguredNSubstituteCustomization()));
-
-      this.dataStorageSwitcher = fixture.Create<DataStorageSwitcher>();
-      this.dataProvider = Substitute.ForPartsOf<FakeDataProvider>();
-      this.dataProvider.When(provider => provider.DataStorage()).DoNotCallBase();
-      this.dataProvider.DataStorage().Returns(info => fixture.Create<DataStorage>());
-    }
-
     [Theory, DefaultAutoData]
-    public void ChangeTemplateThrowsIfItemDefinitionIsNull()
+    public void ChangeTemplateThrowsIfItemDefinitionIsNull(FakeDataProvider sut)
     {
-      Action action = () => this.dataProvider.ChangeTemplate(null, null, null);
+      Action action = () => sut.ChangeTemplate(null, null, null);
       action.ShouldThrow<ArgumentNullException>();
     }
 
     [Theory, DefaultAutoData]
-    public void ChangeTemplateThrowsIfTemplateChangeListIsNull(ItemDefinition def)
+    public void ChangeTemplateThrowsIfTemplateChangeListIsNull(FakeDataProvider sut, ItemDefinition def)
     {
-      Action action = () => this.dataProvider.ChangeTemplate(def, null, null);
+      Action action = () => sut.ChangeTemplate(def, null, null);
       action.ShouldThrow<ArgumentNullException>();
     }
 
     [Theory, DefaultAutoData]
-    public void ChangeTemplateThrowsIfNoDbItemFound(ItemDefinition def, TemplateChangeList changes)
+    public void ChangeTemplateThrowsIfNoDbItemFound([Greedy]FakeDataProvider sut, ItemDefinition def, TemplateChangeList changes)
     {
-      Action action = () => this.dataProvider.ChangeTemplate(def, changes, null);
+      Action action = () => sut.ChangeTemplate(def, changes, null);
 
       action.ShouldThrow<InvalidOperationException>()
             .WithMessage("Unable to change item template. The item '{0}' is not found.".FormatWith(def.ID));
     }
 
     [Theory, DefaultAutoData]
-    public void ChangeTemplateThrowsIfNoTargetTemplateFound(ItemDefinition def, TemplateChangeList changes, DbItem item)
+    public void ChangeTemplateThrowsIfNoTargetTemplateFound([Greedy]FakeDataProvider sut, ItemDefinition def, TemplateChangeList changes, DbItem item)
     {
-      this.dataProvider.DataStorage().GetFakeItem(def.ID).Returns(item);
+      sut.DataStorage.GetFakeItem(def.ID).Returns(item);
 
-      Action action = () => this.dataProvider.ChangeTemplate(def, changes, null);
+      Action action = () => sut.ChangeTemplate(def, changes, null);
 
       action.ShouldThrow<InvalidOperationException>()
             .WithMessage("Unable to change item template. The target template is not found.");
     }
 
-    [Theory, AutoData]
-    public void ShouldGetTemplateIds(DbTemplate template)
+    [Theory, DefaultAutoData]
+    public void ShouldGetTemplateIds([Greedy]FakeDataProvider sut, DbTemplate template)
     {
-      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
-      this.dataProvider.GetTemplateItemIds(null).Should().Contain(template.ID);
+      sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      sut.GetTemplateItemIds(null).Should().Contain(template.ID);
     }
 
-    [Theory, AutoData]
-    public void ShouldGetTemplatesFromDataStorage(DbTemplate template)
+    [Theory, DefaultAutoData]
+    public void ShouldGetTemplatesFromDataStorage([Greedy]FakeDataProvider sut, DbTemplate template)
     {
-      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
-      this.dataProvider.GetTemplates(null).Should().HaveCount(1);
+      sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
+      sut.GetTemplates(null).Should().HaveCount(1);
     }
 
-    [Theory, AutoData]
-    public void ShouldGetTemplatesWithDefaultDataSectionFromDataStorage(DbTemplate template)
+    [Theory, DefaultAutoData]
+    public void ShouldGetTemplatesWithDefaultDataSectionFromDataStorage([Greedy]FakeDataProvider sut, DbTemplate template)
     {
-      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
+      sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
 
-      var result = this.dataProvider.GetTemplates(null).First();
+      var result = sut.GetTemplates(null).First();
 
       result.GetSection("Data").Should().NotBeNull();
     }
 
-    [Theory, AutoData]
-    public void ShouldHaveStandardBaseTemplate([NoAutoProperties]DbTemplate template)
+    [Theory, DefaultAutoData]
+    public void ShouldHaveStandardBaseTemplate([Greedy]FakeDataProvider sut, [NoAutoProperties]DbTemplate template)
     {
-      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
+      sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
 
-      var result = this.dataProvider.GetTemplates(null).First();
+      var result = sut.GetTemplates(null).First();
 
       result.BaseIDs.Single().Should().Be(TemplateIDs.StandardTemplate);
     }
 
-    [Theory, AutoData]
-    public void ShouldGetTemplateFields(DbTemplate template)
+    [Theory, DefaultAutoData]
+    public void ShouldGetTemplateFields([Greedy]FakeDataProvider sut, DbTemplate template)
     {
-      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
+      sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
       template.Fields.Add("Title");
 
-      var result = this.dataProvider.GetTemplates(null).First();
+      var result = sut.GetTemplates(null).First();
 
       result.GetField("Title").Should().NotBeNull();
     }
 
-    [Theory, AutoData]
-    public void ShouldGetTemplateFieldType(DbTemplate template)
+    [Theory, DefaultAutoData]
+    public void ShouldGetTemplateFieldType([Greedy]FakeDataProvider sut, DbTemplate template)
     {
-      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
+      sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
       template.Fields.Add(new DbField("Link") { Type = "General Link" });
 
-      var result = this.dataProvider.GetTemplates(null).First();
+      var result = sut.GetTemplates(null).First();
 
       result.GetField("Link").Type.Should().Be("General Link");
     }
 
-    [Theory, AutoData]
-    public void ShouldGetTemplateFieldIsShared(DbTemplate template)
+    [Theory, DefaultAutoData]
+    public void ShouldGetTemplateFieldIsShared([Greedy]FakeDataProvider sut, DbTemplate template)
     {
-      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
+      sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
       template.Fields.Add(new DbField("Title") { Shared = true });
 
-      var result = this.dataProvider.GetTemplates(null).First();
+      var result = sut.GetTemplates(null).First();
 
       result.GetField("Title").IsShared.Should().BeTrue();
     }
 
-    [Theory, AutoData]
-    public void ShouldGetTemplateFieldSource(DbTemplate template)
+    [Theory, DefaultAutoData]
+    public void ShouldGetTemplateFieldSource([Greedy]FakeDataProvider sut, DbTemplate template)
     {
-      this.dataProvider.DataStorage().GetFakeTemplates().Returns(new[] { template });
+      sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
       template.Fields.Add(new DbField("Multilist") { Source = "/sitecore/content" });
 
-      var result = this.dataProvider.GetTemplates(null).First();
+      var result = sut.GetTemplates(null).First();
 
       result.GetField("Multilist").Source.Should().Be("/sitecore/content");
     }
 
-
     [Theory, DefaultAutoData]
-    public void ShouldGetDefaultLanguage(CallContext context)
+    public void ShouldGetDefaultLanguage([Greedy]FakeDataProvider sut, CallContext context)
     {
-      var langs = this.dataProvider.GetLanguages(context);
+      var langs = sut.GetLanguages(context);
 
       langs.Should().HaveCount(1);
       langs.First().Name.Should().Be("en");
     }
 
     [Theory, DefaultAutoData]
-    public void ShouldGetItemDefinition(DbItem item, CallContext context)
+    public void ShouldGetItemDefinition([Greedy]FakeDataProvider sut, DbItem item, CallContext context)
     {
       // arrange
-      this.dataProvider.DataStorage().GetFakeItem(item.ID).Returns(item);
+      sut.DataStorage.GetFakeItem(item.ID).Returns(item);
 
       // act
-      var definition = this.dataProvider.GetItemDefinition(item.ID, context);
+      var definition = sut.GetItemDefinition(item.ID, context);
 
       // assert
       definition.ID.Should().Be(item.ID);
@@ -175,13 +152,13 @@
     }
 
     [Theory, DefaultAutoData]
-    public void ShouldGetNullItemDefinitionIfNoItemFound(ID itemId, CallContext context)
+    public void ShouldGetNullItemDefinitionIfNoItemFound([Greedy]FakeDataProvider sut, ID itemId, CallContext context)
     {
-      this.dataProvider.GetItemDefinition(itemId, context).Should().BeNull();
+      sut.GetItemDefinition(itemId, context).Should().BeNull();
     }
 
     [Theory, DefaultAutoData]
-    public void ShouldGetAllThePossibleItemVersions(ItemDefinition def, CallContext context)
+    public void ShouldGetAllThePossibleItemVersions([Greedy]FakeDataProvider sut, ItemDefinition def, CallContext context)
     {
       // arrange
       var item = new DbItem("home", def.ID, def.TemplateID)
@@ -193,10 +170,10 @@
                        }
       };
 
-      this.dataProvider.DataStorage().GetFakeItem(def.ID).Returns(item);
+      sut.DataStorage.GetFakeItem(def.ID).Returns(item);
 
       // act
-      var versions = this.dataProvider.GetItemVersions(def, context);
+      var versions = sut.GetItemVersions(def, context);
 
       // assert
       versions.Count.Should().Be(4);
@@ -211,9 +188,9 @@
     }
 
     [Theory, DefaultAutoData]
-    public void ShouldGetEmptyVersionsIfNoFakeItemFound(ItemDefinition def, CallContext context)
+    public void ShouldGetEmptyVersionsIfNoFakeItemFound([Greedy]FakeDataProvider sut, ItemDefinition def, CallContext context)
     {
-      this.dataProvider.GetItemVersions(def, context).Should().BeEmpty();
+      sut.GetItemVersions(def, context).Should().BeEmpty();
     }
 
     [Theory, DefaultAutoData]
@@ -255,11 +232,6 @@
       sut.SetProperty(name, value1, context);
       sut.SetProperty(name, value2, context);
       sut.GetProperty(name, context).Should().Be(value2);
-    }
-
-    public void Dispose()
-    {
-      this.dataStorageSwitcher.Dispose();
     }
   }
 }

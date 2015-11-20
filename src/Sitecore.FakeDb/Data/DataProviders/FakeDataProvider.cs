@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb.Data.DataProviders
 {
-  using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading;
@@ -19,16 +18,20 @@
   {
     private readonly ThreadLocal<Dictionary<string, string>> properties = new ThreadLocal<Dictionary<string, string>>();
 
-    public virtual DataStorage DataStorage()
+    private readonly DataStorage dataStorage;
+
+    public FakeDataProvider()
     {
-      return this.DataStorage(this.Database);
     }
 
-    public virtual DataStorage DataStorage(Database database)
+    public FakeDataProvider(DataStorage dataStorage)
     {
-      Assert.IsNotNull(database, "database");
+      this.dataStorage = dataStorage;
+    }
 
-      return DataStorageSwitcher.CurrentValue(database.Name);
+    public virtual DataStorage DataStorage
+    {
+      get { return this.dataStorage ?? DataStorageSwitcher.CurrentValue(this.Database.Name); }
     }
 
     public override bool ChangeTemplate(ItemDefinition itemDefinition, TemplateChangeList changes, CallContext context)
@@ -36,7 +39,7 @@
       Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
       Assert.ArgumentNotNull(changes, "changes");
 
-      var item = this.DataStorage().GetFakeItem(itemDefinition.ID);
+      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
       Assert.IsNotNull(item, "Unable to change item template. The item '{0}' is not found.", itemDefinition.ID);
       Assert.IsNotNull(changes.Target, "Unable to change item template. The target template is not found.");
 
@@ -46,24 +49,24 @@
 
     public override IdCollection GetTemplateItemIds(CallContext context)
     {
-      if (this.DataStorage() == null)
+      if (this.DataStorage == null)
       {
         return new IdCollection();
       }
 
-      var ids = this.DataStorage().GetFakeTemplates().Select(t => t.ID).ToArray();
+      var ids = this.DataStorage.GetFakeTemplates().Select(t => t.ID).ToArray();
 
       return new IdCollection { ids };
     }
 
     public override ItemDefinition GetItemDefinition(ID itemId, CallContext context)
     {
-      if (this.DataStorage() == null)
+      if (this.DataStorage == null)
       {
         return null;
       }
 
-      var item = this.DataStorage().GetFakeItem(itemId);
+      var item = this.DataStorage.GetFakeItem(itemId);
 
       return item != null ? new ItemDefinition(itemId, item.Name, item.TemplateID, ID.Null) : null;
     }
@@ -73,7 +76,7 @@
       var list = new List<VersionUri>();
       var versions = new VersionUriList();
 
-      var item = this.DataStorage().GetFakeItem(itemDefinition.ID);
+      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
       if (item == null)
       {
         return versions;
@@ -111,12 +114,12 @@
     {
       var templates = new TemplateCollection();
 
-      if (this.DataStorage() == null)
+      if (this.DataStorage == null)
       {
         return templates;
       }
 
-      foreach (var ft in this.DataStorage().GetFakeTemplates())
+      foreach (var ft in this.DataStorage.GetFakeTemplates())
       {
         templates.Add(this.BuildTemplate(ft, templates));
       }
