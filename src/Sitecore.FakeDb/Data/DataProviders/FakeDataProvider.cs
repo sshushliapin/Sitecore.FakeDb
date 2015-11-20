@@ -1,7 +1,9 @@
 ﻿namespace Sitecore.FakeDb.Data.DataProviders
 {
+  using System;
   using System.Collections.Generic;
   using System.Linq;
+  using System.Threading;
   using Sitecore.Collections;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
@@ -15,7 +17,7 @@
 
   public class FakeDataProvider : DataProvider
   {
-    private readonly IDictionary<string, string> properties = new Dictionary<string, string>();
+    private readonly ThreadLocal<Dictionary<string, string>> properties = new ThreadLocal<Dictionary<string, string>>();
 
     public virtual DataStorage DataStorage()
     {
@@ -153,8 +155,16 @@
     public override bool SetProperty(string name, string value, CallContext context)
     {
       Assert.ArgumentNotNull(name, "name");
+      var currentProp = this.properties.Value;
+      if (currentProp == null)
+      {
+        this.properties.Value = new Dictionary<string, string> { { name, value } };
+      }
+      else
+      {
+        this.properties.Value[name] = value;
+      }
 
-      this.properties[name] = value;
       return true;
     }
 
@@ -167,8 +177,13 @@
     public override string GetProperty(string name, CallContext context)
     {
       Assert.ArgumentNotNull(name, "name");
+      var currentProp = this.properties.Value;
+      if (currentProp == null)
+      {
+        return null;
+      }
 
-      return this.properties.ContainsKey(name) ? this.properties[name] : null;
+      return currentProp.ContainsKey(name) ? currentProp[name] : null;
     }
 
     protected virtual Template BuildTemplate(DbTemplate ft, TemplateCollection templates)

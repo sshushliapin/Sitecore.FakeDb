@@ -249,6 +249,14 @@
       sut.GetProperty(name, context).Should().BeNull();
     }
 
+    [Theory, DefaultAutoData]
+    public void ShouldResetPropertyAndReturnTheLatestValue(FakeDataProvider sut, string name, string value1, string value2, CallContext context)
+    {
+      sut.SetProperty(name, value1, context);
+      sut.SetProperty(name, value2, context);
+      sut.GetProperty(name, context).Should().Be(value2);
+    }
+
     public void Dispose()
     {
       this.dataStorageSwitcher.Dispose();
