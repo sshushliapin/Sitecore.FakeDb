@@ -15,6 +15,8 @@
 
   public class FakeDataProvider : DataProvider
   {
+    private readonly IDictionary<string, string> properties = new Dictionary<string, string>();
+
     public virtual DataStorage DataStorage()
     {
       return this.DataStorage(this.Database);
@@ -139,6 +141,34 @@
       var items = Query.SelectItems(query, this.Database);
 
       return items != null ? IDList.Build(items.Select(i => i.ID).ToArray()) : new IDList();
+    }
+
+    /// <summary>
+    /// Sets the property.
+    /// </summary>
+    /// <param name="name">The property name.</param>
+    /// <param name="value">The property value.</param>
+    /// <param name="context">The context. Ignored.</param>
+    /// <returns>Always True.</returns>
+    public override bool SetProperty(string name, string value, CallContext context)
+    {
+      Assert.ArgumentNotNull(name, "name");
+
+      this.properties[name] = value;
+      return true;
+    }
+
+    /// <summary>
+    /// Get the property.
+    /// </summary>
+    /// <param name="name">The property name.</param>
+    /// <param name="context">The context. Ignored.</param>
+    /// <returns>The property value if exists. Otherwise null.</returns>
+    public override string GetProperty(string name, CallContext context)
+    {
+      Assert.ArgumentNotNull(name, "name");
+
+      return this.properties.ContainsKey(name) ? this.properties[name] : null;
     }
 
     protected virtual Template BuildTemplate(DbTemplate ft, TemplateCollection templates)

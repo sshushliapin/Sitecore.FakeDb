@@ -28,8 +28,7 @@
         new CompositeCustomization(
           new DefaultConventions(),
           new AutoNSubstituteCustomization(),
-          new AutoConfiguredNSubstituteCustomization()
-        ));
+          new AutoConfiguredNSubstituteCustomization()));
 
       this.dataStorageSwitcher = fixture.Create<DataStorageSwitcher>();
       this.dataProvider = Substitute.ForPartsOf<FakeDataProvider>();
@@ -186,13 +185,13 @@
     {
       // arrange
       var item = new DbItem("home", def.ID, def.TemplateID)
-                   {
-                     Fields =
+      {
+        Fields =
                        {
                          new DbField("Field 1") { { "en", 1, string.Empty }, { "en", 2, string.Empty }, { "da", 1, string.Empty } },
                          new DbField("Field 2") { { "en", 1, string.Empty }, { "da", 1, string.Empty }, { "da", 2, string.Empty } }
                        }
-                   };
+      };
 
       this.dataProvider.DataStorage().GetFakeItem(def.ID).Returns(item);
 
@@ -215,6 +214,39 @@
     public void ShouldGetEmptyVersionsIfNoFakeItemFound(ItemDefinition def, CallContext context)
     {
       this.dataProvider.GetItemVersions(def, context).Should().BeEmpty();
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldSetPropertyAndReturnTrue(FakeDataProvider sut, string name, string value, CallContext context)
+    {
+      sut.SetProperty(name, value, context).Should().BeTrue();
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldThrowIfNameIsNullOnSetProperty(FakeDataProvider sut)
+    {
+      Action action = () => sut.SetProperty(null, null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*name");
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldGetProperty(FakeDataProvider sut, string name, string value, CallContext context)
+    {
+      sut.SetProperty(name, value, context);
+      sut.GetProperty(name, context).Should().Be(value);
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldThrowIfNameIsNullOnGetProperty(FakeDataProvider sut)
+    {
+      Action action = () => sut.GetProperty(null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*name");
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldreturnNullIfNoPropertySet(FakeDataProvider sut, string name, CallContext context)
+    {
+      sut.GetProperty(name, context).Should().BeNull();
     }
 
     public void Dispose()
