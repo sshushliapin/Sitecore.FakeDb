@@ -3,6 +3,7 @@
   using System.Threading;
   using System.Threading.Tasks;
   using FluentAssertions;
+  using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Pipelines;
@@ -146,6 +147,32 @@
            Settings.GetSetting("mysetting").Should().Be("abc");
          }
        });
+
+      t1.Wait();
+      t2.Wait();
+    }
+
+    [Theory, AutoData]
+    public void ShouldBeThreadLocalDatabaseProperties(string propertyName, string expectedValue, string unexpectedValue)
+    {
+      var t1 = Task.Factory.StartNew(() =>
+      {
+        using (var db = new Db())
+        {
+          db.Database.Properties[propertyName] = expectedValue;
+          Thread.Sleep(1000);
+          db.Database.Properties[propertyName].Should().Be(expectedValue);
+        }
+      });
+
+      var t2 = Task.Factory.StartNew(() =>
+      {
+        using (var db = new Db())
+        {
+          db.Database.Properties[propertyName].Should().BeEmpty("the property is not expected");
+          db.Database.Properties[propertyName] = unexpectedValue;
+        }
+      });
 
       t1.Wait();
       t2.Wait();
