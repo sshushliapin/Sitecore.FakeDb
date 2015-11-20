@@ -1,4 +1,7 @@
-﻿0.33.0
+﻿0.34.0
+* [NEW] #113: Setting Database.Properties
+
+0.33.0
 * [NEW] #103: FakeDb should support multiple parallel databases and not be affected by mocked HttpContext (thanks to [@pveller](https://github.com/pveller))
 * [NEW] #107: FakeDb should treat workflow fields as standard template fields and don't generate templates and field items for them (thanks to [@pveller](https://github.com/pveller))
 * [NEW] #104: Mocking the Bucket Manager (thanks to [@michaelthyregod](https://github.com/michaelthyregod))
