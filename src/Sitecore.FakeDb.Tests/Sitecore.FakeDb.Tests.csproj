@@ -208,12 +208,11 @@
     <Compile Include="Links\LinkManagerTest.cs" />
     <Compile Include="Links\LinkProviderSwitcherTest.cs" />
     <Compile Include="Links\SwitchingLinkProviderTest.cs" />
-    <Compile Include="MixedFieldBuilderTest.cs" />
-    <Compile Include="RandomIdFieldBuilderTest.cs" />
+    <Compile Include="IdBasedFieldGeneratorTest.cs" />
     <Compile Include="IdNameFieldBuilderTest.cs" />
-    <Compile Include="RandomNameFieldBuilderTest.cs" />
-    <Compile Include="StandardIdFieldBuilderTest.cs" />
-    <Compile Include="StandardNameFieldBuilderTest.cs" />
+    <Compile Include="NameBasedFieldGeneratorTest.cs" />
+    <Compile Include="IdBasedStandardFieldResolverTest.cs" />
+    <Compile Include="NameBasedStandardFieldResolverTest.cs" />
     <Compile Include="Pipelines\AddDbItem\AddVersionTest.cs" />
     <Compile Include="Pipelines\AddDbItem\CreateTemplateTest.cs" />
     <Compile Include="Pipelines\AddDbItem\SetParentTest.cs" />

@@ -5,8 +5,17 @@ namespace Sitecore.FakeDb
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
+  /// <summary>
+  /// Builds a <see cref="FieldInfo"/> to be used in the <see cref="DbField"/> creation based on the
+  /// predefined name and auto-generated <see cref="ID"/>.
+  /// </summary>
   public class IdNameFieldBuilder : IDbFieldBuilder
   {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IdBasedStandardFieldResolver"/> class.
+    /// </summary>
+    /// <param name="nameBuilder">The name field info builder.</param>
+    /// <param name="idBuilder">The id field info builder.</param>
     public IdNameFieldBuilder(IDbFieldBuilder nameBuilder, IDbFieldBuilder idBuilder)
     {
       Assert.ArgumentNotNull(nameBuilder, "nameBuilder");
@@ -16,8 +25,14 @@ namespace Sitecore.FakeDb
       this.IdBuilder = idBuilder;
     }
 
+    /// <summary>
+    /// Gets the name field info builder.
+    /// </summary>
     public IDbFieldBuilder NameBuilder { get; private set; }
 
+    /// <summary>
+    /// Gets the id field info builder.
+    /// </summary>
     public IDbFieldBuilder IdBuilder { get; private set; }
 
     public FieldInfo Build(object request)
@@ -37,7 +52,7 @@ namespace Sitecore.FakeDb
         return FieldInfo.Empty;
       }
 
-      return new FieldInfo(nameInfo.Name, idInfo.Id, false, "text");
+      return new FieldInfo(nameInfo.Name, idInfo.Id, nameInfo.Shared, nameInfo.Type);
     }
   }
 }

@@ -2,7 +2,11 @@ namespace Sitecore.FakeDb
 {
   using Sitecore.Data;
 
-  public class RandomNameFieldBuilder : IDbFieldBuilder
+  /// <summary>
+  /// Generates a <see cref="FieldInfo"/> to be used in the <see cref="DbField"/> creation based on the
+  /// predefined name and auto-generated <see cref="ID"/>.
+  /// </summary>
+  public class NameBasedFieldGenerator : IDbFieldBuilder
   {
     public FieldInfo Build(object request)
     {

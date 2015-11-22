@@ -98,7 +98,7 @@
     <Compile Include="Data\IDTables\FakeIDTableProvider.cs" />
     <Compile Include="DbLinkField.cs" />
     <Compile Include="FieldInfo.cs" />
-    <Compile Include="FieldInfoReference.cs" />
+    <Compile Include="StandardFieldsReference.cs" />
     <Compile Include="IDbFieldBuilder.cs" />
     <Compile Include="IDsDbItem.cs" />
     <Compile Include="IThreadLocalProvider.cs" />
@@ -106,12 +106,11 @@
     <Compile Include="Links\LinkDatabaseSwitcher.cs" />
     <Compile Include="Links\LinkProviderSwitcher.cs" />
     <Compile Include="Links\SwitchingLinkProvider.cs" />
-    <Compile Include="MixedFieldBuilder.cs" />
-    <Compile Include="RandomIdFieldBuilder.cs" />
+    <Compile Include="IdBasedFieldGenerator.cs" />
     <Compile Include="IdNameFieldBuilder.cs" />
-    <Compile Include="RandomNameFieldBuilder.cs" />
-    <Compile Include="StandardIdFieldBuilder.cs" />
-    <Compile Include="StandardNameFieldBuilder.cs" />
+    <Compile Include="NameBasedFieldGenerator.cs" />
+    <Compile Include="IdBasedStandardFieldResolver.cs" />
+    <Compile Include="NameBasedStandardFieldResolver.cs" />
     <Compile Include="Pipelines\AddDbItem\AddVersion.cs" />
     <Compile Include="Pipelines\AddDbItem\SetAccess.cs" />
     <Compile Include="Pipelines\AddDbItem\AddDbItemArgs.cs" />

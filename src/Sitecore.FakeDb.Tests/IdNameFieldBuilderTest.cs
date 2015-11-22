@@ -70,11 +70,35 @@ namespace Sitecore.FakeDb.Tests
     }
 
     [Theory, DefaultSubstituteAutoData]
-    public void ShouldReturnCompositeFieldInfo(IdNameFieldBuilder sut, string name, ID id, FieldInfo nameInfo, FieldInfo idInfo)
+    public void ShouldReturnFieldInfoWithNameFromNameFieldBuilder(IdNameFieldBuilder sut, string name, ID id, FieldInfo nameInfo, FieldInfo idInfo)
     {
       sut.NameBuilder.Build(name).Returns(nameInfo);
       sut.IdBuilder.Build(id).Returns(idInfo);
-      sut.Build(new object[] { name, id }).Should().Be(new FieldInfo(nameInfo.Name, idInfo.Id, false, "text"));
+      sut.Build(new object[] { name, id }).Name.Should().Be(nameInfo.Name);
+    }
+
+    [Theory, DefaultSubstituteAutoData]
+    public void ShouldReturnFieldInfoWithIdFromIdFieldBuilder(IdNameFieldBuilder sut, string name, ID id, FieldInfo nameInfo, FieldInfo idInfo)
+    {
+      sut.NameBuilder.Build(name).Returns(nameInfo);
+      sut.IdBuilder.Build(id).Returns(idInfo);
+      sut.Build(new object[] { name, id }).Id.Should().Be(idInfo.Id);
+    }
+
+    [Theory, DefaultSubstituteAutoData]
+    public void ShouldReturnFieldInfoWithSharedFromNameFieldBuilder(IdNameFieldBuilder sut, string name, ID id, FieldInfo nameInfo, FieldInfo idInfo)
+    {
+      sut.NameBuilder.Build(name).Returns(nameInfo);
+      sut.IdBuilder.Build(id).Returns(idInfo);
+      sut.Build(new object[] { name, id }).Shared.Should().Be(nameInfo.Shared);
+    }
+
+    [Theory, DefaultSubstituteAutoData]
+    public void ShouldReturnFieldInfoWithTypeFromNameFieldBuilder(IdNameFieldBuilder sut, string name, ID id, FieldInfo nameInfo, FieldInfo idInfo)
+    {
+      sut.NameBuilder.Build(name).Returns(nameInfo);
+      sut.IdBuilder.Build(id).Returns(idInfo);
+      sut.Build(new object[] { name, id }).Type.Should().Be(nameInfo.Type);
     }
 
     [Theory, DefaultSubstituteAutoData]

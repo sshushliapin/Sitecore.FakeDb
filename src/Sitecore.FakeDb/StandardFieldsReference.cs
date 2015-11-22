@@ -4,7 +4,10 @@ namespace Sitecore.FakeDb
   using System.Linq;
   using Sitecore.Data;
 
-  public class FieldInfoReference
+  /// <summary>
+  /// Contains information about all the standard fields.
+  /// </summary>
+  public class StandardFieldsReference
   {
     private static readonly IEnumerable<FieldInfo> Fields = new List<FieldInfo>
       {
@@ -117,11 +120,19 @@ namespace Sitecore.FakeDb
         new FieldInfo("__Default workflow", new ID("{CA9B9F52-4FB0-4F87-A79F-24DEA62CDA65}"), true, "reference")
       };
 
+    /// <summary>
+    /// Returns a standard field info if matched by name. Otherwise <see cref="FieldInfo.Empty"/>.
+    /// </summary>
+    /// <param name="name">The field name.</param>
     public FieldInfo this[string name]
     {
       get { return Fields.FirstOrDefault(x => x.Name == name); }
     }
 
+    /// <summary>
+    /// Returns a standard field info if matched by id. Otherwise <see cref="FieldInfo.Empty"/>.
+    /// </summary>
+    /// <param name="id">The field id.</param>
     public FieldInfo this[ID id]
     {
       get { return Fields.FirstOrDefault(x => x.Id == id); }

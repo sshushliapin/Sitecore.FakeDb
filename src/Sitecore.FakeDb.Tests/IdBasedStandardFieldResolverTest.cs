@@ -5,16 +5,16 @@ namespace Sitecore.FakeDb.Tests
   using Ploeh.AutoFixture.Xunit2;
   using Xunit;
 
-  public class StandardIdFieldBuilderTest
+  public class IdBasedStandardFieldResolverTest
   {
     [Theory, AutoData]
-    public void ShouldBeIDbFieldBuilder(StandardIdFieldBuilder sut)
+    public void ShouldBeIDbFieldBuilder(IdBasedStandardFieldResolver sut)
     {
       sut.Should().BeAssignableTo<IDbFieldBuilder>();
     }
 
     [Theory, AutoData]
-    public void ShouldSetFieldInfoReference([Frozen]FieldInfoReference fields, StandardIdFieldBuilder sut)
+    public void ShouldSetFieldInfoReference([Frozen]StandardFieldsReference fields, IdBasedStandardFieldResolver sut)
     {
       sut.FieldReference.Should().BeSameAs(fields);
     }
@@ -22,24 +22,24 @@ namespace Sitecore.FakeDb.Tests
     [Fact]
     public void ShouldThrowIfFieldInfoReferenceIsNull()
     {
-      Action action = () => new StandardIdFieldBuilder(null);
+      Action action = () => new IdBasedStandardFieldResolver(null);
       action.ShouldThrow<ArgumentNullException>().WithMessage("*fieldReference");
     }
 
     [Theory, AutoData]
-    public void ShouldReturnEmptyInfoIfRequestIsNull(StandardIdFieldBuilder sut)
+    public void ShouldReturnEmptyInfoIfRequestIsNull(IdBasedStandardFieldResolver sut)
     {
       sut.Build(null).Should().Be(FieldInfo.Empty);
     }
 
     [Theory, AutoData]
-    public void ShouldReturnEmptyInfoIfRequestIsNotId(StandardIdFieldBuilder sut, object request)
+    public void ShouldReturnEmptyInfoIfRequestIsNotId(IdBasedStandardFieldResolver sut, object request)
     {
       sut.Build(request).Should().Be(FieldInfo.Empty);
     }
 
     [Theory, AutoData]
-    public void ShouldGetFieldFromStandardById(StandardIdFieldBuilder sut)
+    public void ShouldGetFieldFromStandardById(IdBasedStandardFieldResolver sut)
     {
       sut.Build(FieldIDs.BaseTemplate).Should().NotBe(FieldInfo.Empty);
     }

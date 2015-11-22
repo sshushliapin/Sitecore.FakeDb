@@ -208,32 +208,25 @@
 
     private static class Builder
     {
-      private static readonly FieldInfoReference FieldReference = new FieldInfoReference();
+      private static readonly StandardFieldsReference FieldReference = new StandardFieldsReference();
 
       public static IDbFieldBuilder FromId()
       {
         return new CompositeFieldBuilder(
-                 new StandardIdFieldBuilder(FieldReference),
-                 new RandomIdFieldBuilder());
+                 new IdBasedStandardFieldResolver(FieldReference),
+                 new IdBasedFieldGenerator());
       }
 
       public static IDbFieldBuilder FromName()
       {
         return new CompositeFieldBuilder(
-                 new StandardNameFieldBuilder(FieldReference),
-                 new RandomNameFieldBuilder());
+                 new NameBasedStandardFieldResolver(FieldReference),
+                 new NameBasedFieldGenerator());
       }
 
       public static IDbFieldBuilder FromNameAndId()
       {
-        return new CompositeFieldBuilder(
-                 new MixedFieldBuilder(
-                   new StandardNameFieldBuilder(FieldReference)),
-                 new MixedFieldBuilder(
-                   new StandardIdFieldBuilder(FieldReference)),
-                 new IdNameFieldBuilder(
-                   new RandomNameFieldBuilder(),
-                   new RandomIdFieldBuilder()));
+        return new IdNameFieldBuilder(FromName(), FromId());
       }
     }
   }
