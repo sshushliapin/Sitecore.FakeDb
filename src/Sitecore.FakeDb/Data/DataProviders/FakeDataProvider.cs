@@ -20,6 +20,7 @@
 
     private readonly DataStorage dataStorage;
 
+
     public FakeDataProvider()
     {
     }
@@ -108,6 +109,18 @@
       }
 
       return versions;
+    }
+
+    public override FieldList GetItemFields(ItemDefinition itemDefinition, VersionUri versionUri, CallContext context)
+    {
+      var storage = this.DataStorage;
+      var item = storage.GetFakeItem(itemDefinition.ID);
+      if (item == null)
+      {
+        return null;
+      }
+
+      return storage.BuildItemFieldList(item, itemDefinition.TemplateID, versionUri.Language, versionUri.Version);
     }
 
     public override TemplateCollection GetTemplates(CallContext context)

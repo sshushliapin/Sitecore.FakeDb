@@ -1552,5 +1552,25 @@
         }
       }
     }
+
+    [Fact]
+    public void ShouldReadFieldsFromClonedItem()
+    {
+      // arrange
+      using (var db = new Db
+        {
+          new DbItem("source") { { "Title", "SourceTitle" } }
+        })
+      {
+        var contentRoot = db.GetItem("/sitecore/content/");
+        var source = db.GetItem("/sitecore/content/source");
+
+        // act
+        var clone = source.CloneTo(contentRoot, "clone", true);
+
+        // assert
+        clone["Title"].Should().Be("SourceTitle");
+      }
+    }
   }
 }

@@ -9,8 +9,10 @@
   using Sitecore.Data.DataProviders;
   using Sitecore.Data.Templates;
   using Sitecore.FakeDb.Data.DataProviders;
+  using Sitecore.Globalization;
   using Sitecore.StringExtensions;
   using Xunit;
+  using Version = Sitecore.Data.Version;
 
   public class FakeDataProviderTest
   {
@@ -232,6 +234,29 @@
       sut.SetProperty(name, value1, context);
       sut.SetProperty(name, value2, context);
       sut.GetProperty(name, context).Should().Be(value2);
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldGetNullItemFieldsIfNoItemFound([Greedy]FakeDataProvider sut, ItemDefinition def, VersionUri versionUri, CallContext context)
+    {
+      sut.GetItemFields(def, versionUri, context).Should().BeNull();
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldGetItemFields([Greedy] FakeDataProvider sut, DbTemplate template, DbItem item, DbField field, Language language, Version version,
+      CallContext context)
+    {
+      template.Fields.Add(field);
+      item.Fields.Add(field); // ?
+      item.TemplateID = template.ID;
+
+      sut.DataStorage.GetFakeTemplate(template.ID).Returns(template);
+      sut.DataStorage.GetFakeItem(item.ID).Returns(item);
+
+      var def = new ItemDefinition(item.ID, item.Name, item.TemplateID, item.BranchId);
+      var versionUri = new VersionUri(language, version);
+
+      sut.GetItemFields(def, versionUri, context).Should().HaveCount(1);
     }
   }
 }
