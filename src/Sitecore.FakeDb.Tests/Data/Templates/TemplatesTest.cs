@@ -188,6 +188,16 @@
       using (var db = new Db())
       {
         var template = db.Database.GetTemplate(TemplateIDs.StandardTemplate);
+
+        // TODO: In some rare cases the template variable is null. The templates is the only known area in
+        //       FakeDb that has not been properly 'isolated' using the thread-local providers due to 
+        //       configuration limitations. 
+        if (template == null)
+        {
+          db.Database.Engines.TemplateEngine.Reset();
+          template = db.Database.GetTemplate(TemplateIDs.StandardTemplate);
+        }
+
         var field = template.GetField(fieldName);
 
         field.Should().NotBeNull(fieldName);
