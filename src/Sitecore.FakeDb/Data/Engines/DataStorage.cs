@@ -19,6 +19,8 @@ namespace Sitecore.FakeDb.Data.Engines
   {
     private static readonly ID TemplateIdSitecore = new ID("{C6576836-910C-4A3D-BA03-C277DBD3B827}");
 
+    private static readonly ID SourceFieldId = new ID("{1B86697D-60CA-4D80-83FB-7555A2E6CE1C}");
+
     private readonly Database database;
 
     private readonly IDictionary<ID, DbItem> fakeItems;
@@ -167,7 +169,7 @@ namespace Sitecore.FakeDb.Data.Engines
       return this.Blobs.ContainsKey(blobId) ? this.Blobs[blobId] : null;
     }
 
-    protected FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
+    public FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
     {
       // build a sequence of templates that the item inherits from
       var templates = this.ExpandTemplatesSequence(templateId);
@@ -218,18 +220,28 @@ namespace Sitecore.FakeDb.Data.Engines
 
     protected void AddFieldsFromTemplate(FieldList allFields, DbItem fakeItem, DbTemplate fakeTemplate, Language language, Version version)
     {
+      var sourceItem = this.GetSourceItem(fakeItem);
+
       foreach (var templateField in fakeTemplate.Fields)
       {
         var fieldId = templateField.ID;
-        var itemField = this.FindItemDbField(fakeItem, templateField);
 
+        var itemField = this.FindItemDbField(fakeItem, templateField);
         if (itemField == null)
         {
           continue;
         }
 
-        var value = itemField.GetValue(language.Name, version.Number) ?? string.Empty;
-        allFields.Add(fieldId, value);
+        var value = itemField.GetValue(language.Name, version.Number);
+        if (sourceItem != null && string.IsNullOrWhiteSpace(value))
+        {
+          continue;
+        }
+
+        if (value != null)
+        {
+          allFields.Add(fieldId, value);
+        }
       }
 
       foreach (var template in fakeTemplate.BaseIDs.Select(this.GetFakeTemplate).Where(t => t != null))
@@ -268,11 +280,11 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems.Add(
         TemplateIDs.Template,
         new DbTemplate(ItemNames.Template, TemplateIDs.Template)
-          {
-            ParentID = ItemIDs.TemplateRoot,
-            FullPath = "/sitecore/templates/template",
-            Fields = { new DbField(FieldIDs.BaseTemplate) }
-          });
+        {
+          ParentID = ItemIDs.TemplateRoot,
+          FullPath = "/sitecore/templates/template",
+          Fields = { new DbField(FieldIDs.BaseTemplate) }
+        });
 
       this.FakeItems.Add(TemplateIDs.Folder, new DbTemplate(ItemNames.Folder, TemplateIDs.Folder));
 
@@ -391,16 +403,16 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems.Add(
         TemplateIDs.TemplateField,
         new DbTemplate(ItemNames.TemplateField, TemplateIDs.TemplateField, TemplateIDs.TemplateField)
-          {
-            ParentID = ItemIDs.TemplateRoot,
-            FullPath = "/sitecore/templates/template field",
-            Fields =
+        {
+          ParentID = ItemIDs.TemplateRoot,
+          FullPath = "/sitecore/templates/template field",
+          Fields =
               {
                 new DbField(TemplateFieldIDs.Type),
                 new DbField(TemplateFieldIDs.Shared),
                 new DbField(TemplateFieldIDs.Source)
               }
-          });
+        });
     }
 
     protected void FillDefaultFakeItems()
@@ -430,10 +442,10 @@ namespace Sitecore.FakeDb.Data.Engines
       {
         this.AddFakeItem(
           new DbItem(ItemNames.FieldTypes, new ID("{76E6D8C7-1F93-4712-872B-DA3C96B808F2}"), TemplateIDs.Node)
-            {
-              ParentID = ItemIDs.SystemRoot,
-              Children = { new DbItem("text") { { "Control", "Text" } } }
-            });
+          {
+            ParentID = ItemIDs.SystemRoot,
+            Children = { new DbItem("text") { { "Control", "Text" } } }
+          });
       }
     }
 
@@ -461,6 +473,22 @@ namespace Sitecore.FakeDb.Data.Engines
       }
 
       throw new InvalidOperationException(message);
+    }
+
+    private DbItem GetSourceItem(DbItem fakeItem)
+    {
+      if (!fakeItem.Fields.ContainsKey(SourceFieldId))
+      {
+        return null;
+      }
+
+      var sourceUri = fakeItem.Fields[SourceFieldId].Value;
+      if (!ItemUri.IsItemUri(sourceUri))
+      {
+        return null;
+      }
+
+      return this.GetFakeItem(new ItemUri(sourceUri).ItemID);
     }
   }
 }

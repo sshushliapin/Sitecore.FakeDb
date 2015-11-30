@@ -196,7 +196,7 @@
       // arrange & act
       using (var db = new Db
                     {
-                      new DbItem("home") { new DbField("Title") { { "", "Hello!" } } }
+                      new DbItem("home") { new DbField("Title") { { string.Empty, "Hello!" } } }
                     })
       {
         db.Database.GetItem("/sitecore/content/home", Language.Invariant)["Title"].Should().Be("Hello!");
@@ -1422,22 +1422,6 @@
     }
 
     [Fact]
-    public void ShouldCloneItem()
-    {
-      // arrange
-      using (var db = new Db { new DbItem("home") })
-      {
-        var item = db.GetItem("/sitecore/content/home");
-
-        // act
-        var clone = item.CloneTo(item.Parent, "clone", true);
-
-        // assert
-        clone.SourceUri.Should().Be(item.Uri);
-      }
-    }
-
-    [Fact]
     public void ShouldSwitchDataStorage()
     {
       // act
@@ -1471,7 +1455,9 @@
       using (var db = new Db { new DbItem("home") })
       {
         // act
-        using (new Db()) { }
+        using (new Db())
+        {
+        }
 
         // assert
         db.GetItem("/sitecore/content/home").Should().NotBeNull();
@@ -1533,8 +1519,7 @@
       // arrange
       using (var db = new Db { new DbItem("home") })
       {
-
-        var request = new HttpRequest("", "http://mysite", "");
+        var request = new HttpRequest(string.Empty, "http://mysite", string.Empty);
         var response = new HttpResponse(new StringWriter());
 
         HttpContext.Current = new HttpContext(request, response);
