@@ -19,6 +19,8 @@ namespace Sitecore.FakeDb.Data.Engines
   {
     private static readonly ID TemplateIdSitecore = new ID("{C6576836-910C-4A3D-BA03-C277DBD3B827}");
 
+    private static readonly ID SourceItemFieldId = new ID("{19B597D3-2EDD-4AE2-AEFE-4A94C7F10E31}");
+
     private readonly Database database;
 
     private readonly IDictionary<ID, DbItem> fakeItems;
@@ -389,12 +391,12 @@ namespace Sitecore.FakeDb.Data.Engines
 
     private DbItem GetSourceItem(DbItem fakeItem)
     {
-      if (!fakeItem.Fields.ContainsKey(FieldIDs.SourceItem))
+      if (!fakeItem.Fields.ContainsKey(SourceItemFieldId))
       {
         return null;
       }
 
-      var sourceUri = fakeItem.Fields[FieldIDs.SourceItem].Value;
+      var sourceUri = fakeItem.Fields[SourceItemFieldId].Value;
       if (!ItemUri.IsItemUri(sourceUri))
       {
         return null;
