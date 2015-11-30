@@ -115,6 +115,7 @@
     </Compile>
     <Compile Include="Buckets\BucketProviderSwitcherTest.cs" />
     <Compile Include="Buckets\SwitchingBucketProviderTest.cs" />
+    <Compile Include="CompositeFieldBuilderTest.cs" />
     <Compile Include="Data\Engines\DataCommands\CommonCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\CommonCommandPrototypeTest.cs" />
     <Compile Include="Data\Engines\DataStorageSwitcherTest.cs" />
@@ -199,13 +200,19 @@
     <Compile Include="DbItemTest.cs" />
     <Compile Include="Data\Query\FastQueryTest.cs" />
     <Compile Include="FieldCollectionExtensions.cs" />
-    <Compile Include="FieldNamingHelperTest.cs" />
+    <Compile Include="FieldInfoReferenceTest.cs" />
+    <Compile Include="FieldInfoTest.cs" />
     <Compile Include="GettingStarted.cs" />
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
     <Compile Include="Links\LinkManagerTest.cs" />
     <Compile Include="Links\LinkProviderSwitcherTest.cs" />
     <Compile Include="Links\SwitchingLinkProviderTest.cs" />
+    <Compile Include="IdBasedFieldGeneratorTest.cs" />
+    <Compile Include="IdNameFieldBuilderTest.cs" />
+    <Compile Include="NameBasedFieldGeneratorTest.cs" />
+    <Compile Include="IdBasedStandardFieldResolverTest.cs" />
+    <Compile Include="NameBasedStandardFieldResolverTest.cs" />
     <Compile Include="Pipelines\AddDbItem\AddVersionTest.cs" />
     <Compile Include="Pipelines\AddDbItem\CreateTemplateTest.cs" />
     <Compile Include="Pipelines\AddDbItem\SetParentTest.cs" />

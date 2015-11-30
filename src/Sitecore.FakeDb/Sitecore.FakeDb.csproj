@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Buckets\BucketProviderSwitcher.cs" />
     <Compile Include="Buckets\SwitchingBucketProvider.cs" />
+    <Compile Include="CompositeFieldBuilder.cs" />
     <Compile Include="Configuration\ConfigReader.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\AddFromTemplateCommandPrototype.cs" />
@@ -91,19 +92,25 @@
     <Compile Include="Data\Engines\DataStorageSwitcher.cs" />
     <Compile Include="Data\Engines\ItemNames.cs" />
     <Compile Include="Data\FakeStandardValuesProvider.cs" />
-    <Compile Include="DbFieldIds.cs" />
     <Compile Include="DbItemChildCollection.cs" />
-    <Compile Include="FieldNamingHelper.cs" />
     <Compile Include="Data\IDTables\IDTableProviderSwitcher.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />
     <Compile Include="Data\IDTables\FakeIDTableProvider.cs" />
     <Compile Include="DbLinkField.cs" />
+    <Compile Include="FieldInfo.cs" />
+    <Compile Include="StandardFieldsReference.cs" />
+    <Compile Include="IDbFieldBuilder.cs" />
     <Compile Include="IDsDbItem.cs" />
     <Compile Include="IThreadLocalProvider.cs" />
     <Compile Include="Links\FakeLinkDatabase.cs" />
     <Compile Include="Links\LinkDatabaseSwitcher.cs" />
     <Compile Include="Links\LinkProviderSwitcher.cs" />
     <Compile Include="Links\SwitchingLinkProvider.cs" />
+    <Compile Include="IdBasedFieldGenerator.cs" />
+    <Compile Include="IdNameFieldBuilder.cs" />
+    <Compile Include="NameBasedFieldGenerator.cs" />
+    <Compile Include="IdBasedStandardFieldResolver.cs" />
+    <Compile Include="NameBasedStandardFieldResolver.cs" />
     <Compile Include="Pipelines\AddDbItem\AddVersion.cs" />
     <Compile Include="Pipelines\AddDbItem\SetAccess.cs" />
     <Compile Include="Pipelines\AddDbItem\AddDbItemArgs.cs" />

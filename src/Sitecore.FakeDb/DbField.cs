@@ -6,9 +6,15 @@
   using System.Diagnostics;
   using System.Linq;
   using Sitecore.Data;
+  using Sitecore.Data.Fields;
   using Sitecore.Diagnostics;
   using Sitecore.Globalization;
 
+  /// <summary>
+  /// Represents a lightweight version of the <see cref="Field"/> class.
+  /// If the field name or id match one of the standard fields, additional field properties 
+  /// such as Shared or Type are filled automatically. 
+  /// </summary>
   [DebuggerDisplay("ID = {ID}, Name = {Name}, Value = {Value}")]
   public class DbField : IEnumerable
   {
@@ -17,31 +23,26 @@
     private string sharedValue = string.Empty;
 
     public DbField(ID id)
-      : this(null, id)
+      : this(Builder.FromId().Build(id))
     {
     }
 
     public DbField(string name)
-      : this(name, ID.Null)
+      : this(Builder.FromName().Build(name))
     {
     }
 
     public DbField(string name, ID id)
+      : this(Builder.FromNameAndId().Build(new object[] { name, id }))
     {
-      var idNamePair = new FieldNamingHelper().GetFieldIdNamePair(id, name);
-      this.ID = idNamePair.Key;
-      this.Name = idNamePair.Value;
+    }
 
-      if (!this.IsStandard())
-      {
-        return;
-      }
-
-      // TODO: Determine which of the standard fields should be shared.
-      if (this.ID != FieldIDs.DisplayName)
-      {
-        this.Shared = true;
-      }
+    protected DbField(FieldInfo fieldInfo)
+    {
+      this.ID = fieldInfo.Id;
+      this.Name = fieldInfo.Name;
+      this.Shared = fieldInfo.Shared;
+      this.Type = fieldInfo.Type;
     }
 
     public ID ID { get; internal set; }
@@ -203,6 +204,30 @@
       var langValues = this.values[language];
 
       return langValues.Any() ? langValues.Last().Key : 0;
+    }
+
+    private static class Builder
+    {
+      private static readonly StandardFieldsReference FieldReference = new StandardFieldsReference();
+
+      public static IDbFieldBuilder FromId()
+      {
+        return new CompositeFieldBuilder(
+                 new IdBasedStandardFieldResolver(FieldReference),
+                 new IdBasedFieldGenerator());
+      }
+
+      public static IDbFieldBuilder FromName()
+      {
+        return new CompositeFieldBuilder(
+                 new NameBasedStandardFieldResolver(FieldReference),
+                 new NameBasedFieldGenerator());
+      }
+
+      public static IDbFieldBuilder FromNameAndId()
+      {
+        return new IdNameFieldBuilder(FromName(), FromId());
+      }
     }
   }
 }

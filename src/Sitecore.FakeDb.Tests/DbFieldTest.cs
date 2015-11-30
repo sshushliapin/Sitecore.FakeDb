@@ -232,18 +232,6 @@
     }
 
     [Theory]
-    [InlineData("__Some Standard Field", true)]
-    [InlineData("Not Standard Field", false)]
-    public void ShouldMarkStandardFieldsSharedByDefault(string fieldName, bool shared)
-    {
-      // arrange & act
-      var dbfield = new DbField(fieldName);
-
-      // assert
-      dbfield.Shared.Should().Be(shared);
-    }
-
-    [Theory]
     [InlineData("{12C33F3F-86C5-43A5-AEB4-5598CEC45116}", "__Base template")]
     [InlineData("{25BED78C-4957-4165-998A-CA1B52F67497}", "__Created")]
     [InlineData("{5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}", "__Created by")]
@@ -345,6 +333,20 @@
 
       // assert
       sut.Value.Should().Be(newValue);
+    }
+
+    [Theory]
+    [InlineAutoData("__Renderings", true)]
+    [InlineAutoData("__Final Renderings", false)]
+    public void ShouldSetFieldShared(string fieldName, bool shared)
+    {
+      new DbField(fieldName).Shared.Should().Be(shared);
+    }
+
+    [Fact]
+    public void ShouldSetFieldType()
+    {
+      new DbField("__Renderings").Type.Should().Be("layout");
     }
   }
 }

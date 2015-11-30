@@ -83,7 +83,7 @@
           var language = fieldValue.Key;
           var versions = fieldValue.Value.ToDictionary(v => v.Key, v => v.Value);
 
-          copy.Fields[field.ID].Values.Add(language, versions);
+          copy.Fields[field.ID].Values[language] = versions;
         }
       }
     }
