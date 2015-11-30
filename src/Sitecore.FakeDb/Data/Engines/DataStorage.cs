@@ -218,11 +218,18 @@ namespace Sitecore.FakeDb.Data.Engines
 
     protected void AddFieldsFromTemplate(FieldList allFields, DbItem fakeItem, DbTemplate fakeTemplate, Language language, Version version)
     {
+      var isCloneItem = this.IsCloneItem(fakeItem);
+
       foreach (var templateField in fakeTemplate.Fields)
       {
         var fieldId = templateField.ID;
-        var itemField = this.FindItemDbField(fakeItem, templateField);
 
+        if (IsInheritedField(fieldId, isCloneItem))
+        {
+          continue;
+        }
+
+        var itemField = this.FindItemDbField(fakeItem, templateField);
         if (itemField == null)
         {
           continue;
@@ -378,6 +385,27 @@ namespace Sitecore.FakeDb.Data.Engines
       }
 
       throw new InvalidOperationException(message);
+    }
+
+    private bool IsCloneItem(DbItem fakeItem)
+    {
+      if (!fakeItem.Fields.ContainsKey(FieldIDs.SourceItem))
+      {
+        return false;
+      }
+
+      var sourceUri = fakeItem.Fields[FieldIDs.SourceItem].Value;
+      if (!ItemUri.IsItemUri(sourceUri))
+      {
+        return false;
+      }
+
+      return this.GetFakeItem(new ItemUri(sourceUri).ItemID) != null;
+    }
+
+    private static bool IsInheritedField(ID fieldId, bool isClone)
+    {
+      return fieldId != FieldIDs.SourceItem && isClone;
     }
   }
 }
