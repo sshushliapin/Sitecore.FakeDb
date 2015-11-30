@@ -1,4 +1,8 @@
-﻿0.34.0
+﻿0.35.0
+* [NEW] #65: Add all the Sitecore Standard fields to the FakeDb Standard Template
+* [FIX] #115: Cloning support
+
+0.34.0
 * [NEW] #113: Setting Database.Properties
 
 0.33.0
