@@ -122,7 +122,7 @@
     <Compile Include="Data\Engines\DataStorageSwitcherTest.cs" />
     <Compile Include="DefaultAutoDataAttribute.cs" />
     <Compile Include="AutoFixture\AutoFixtrureTest.cs" />
-    <Compile Include="ContentSearch\FakeSearchProviderTest.cs" />
+    <Compile Include="ContentSearch\SwitchingSearchProviderTest.cs" />
     <Compile Include="Data\BranchRecordsTest.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\RemoveDataCommandPrototypeTest.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\AddFromTemplateCommandPrototypeTest.cs" />
