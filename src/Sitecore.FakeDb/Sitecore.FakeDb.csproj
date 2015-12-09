@@ -37,8 +37,11 @@
       <HintPath>..\..\Lib\Lucene.Net.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Sitecore.Abstractions">
+      <HintPath>..\..\Lib\Sitecore.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.ContentSearch">
-      <HintPath>..\..\Lib\Sitecore.ContentSearch.dll</HintPath>
+      <HintPath>..\..\lib\Sitecore.ContentSearch.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\..\Lib\Sitecore.Kernel.dll</HintPath>
@@ -69,6 +72,7 @@
     <Compile Include="CompositeFieldBuilder.cs" />
     <Compile Include="Configuration\ConfigReader.cs" />
     <Compile Include="Configuration\Settings.cs" />
+    <Compile Include="ContentSearch\SwitchingSearchProvider.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\AddFromTemplateCommandPrototype.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\AddVersionCommandProtoype.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\BlobStreamExistsCommandPrototype.cs" />

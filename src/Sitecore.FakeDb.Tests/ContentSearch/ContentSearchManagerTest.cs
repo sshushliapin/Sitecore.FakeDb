@@ -5,15 +5,12 @@
   using Sitecore.ContentSearch;
   using Xunit;
 
-  public class ContentSearchConfigurationTest
+  public class ContentSearchManagerTest
   {
     [Fact]
     public void ShouldGetContentSearchConfiguration()
     {
-      // act
       Action a = () => { var c = ContentSearchManager.SearchConfiguration; };
-
-      // assert
       a.ShouldNotThrow();
     }
   }
