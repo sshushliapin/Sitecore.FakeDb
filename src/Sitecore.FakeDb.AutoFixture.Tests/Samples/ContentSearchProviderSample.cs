@@ -13,7 +13,14 @@
   using Xunit;
 
   /// <summary>
-  /// Inspired by http://ctor.io/create-simple-unit-tests-for-the-sitecore-content-search/?utm_campaign=twitter&utm_medium=twitter&utm_source=twitter
+  /// Inspired by the Kevin Brechbühl's post "Create simple Unit Tests for the Sitecore Content Search"
+  /// http://ctor.io/create-simple-unit-tests-for-the-sitecore-content-search/?utm_campaign=twitter&utm_medium=twitter&utm_source=twitter
+  ///
+  /// NuGet packages required:
+  /// PM> Install-Package xunit
+  /// PM> Install-Package NSubstitute
+  /// PM> Install-Package AutoFixture.Xunit2
+  /// PM> Install-Package AutoFixture.AutoNSubstitute
   /// </summary>
   public class ContentSearchProviderSample
   {
