@@ -193,6 +193,7 @@
     <Compile Include="Security\Web\RoleProviderSwitcher.cs" />
     <Compile Include="Tasks\FakeTaskDatabase.cs" />
     <Compile Include="Tasks\TaskDatabaseSwitcher.cs" />
+    <Compile Include="UnversionedDbField.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

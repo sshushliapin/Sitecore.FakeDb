@@ -267,6 +267,7 @@
     <Compile Include="Globalization\Translate\AutoTranslateEnabledWithLanguagePrefix.cs" />
     <Compile Include="Globalization\Translate\AutoTranslateEnabledWithLanguageSuffix.cs" />
     <Compile Include="Globalization\Translate\AutoTranslateDisabled.cs" />
+    <Compile Include="UnversionedDbFieldTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
