@@ -44,41 +44,6 @@
     }
 
     [Theory, AutoData]
-    public void AddThrowsIfValueIsNull([NoAutoProperties] UnversionedDbField sut, string language)
-    {
-      Action action = () => sut.Add(language, null);
-      action.ShouldThrow<ArgumentNullException>().WithMessage("*value");
-    }
-
-    [Theory, AutoData]
-    public void AddThrowsIfSpecificVersionIsSet([NoAutoProperties] UnversionedDbField sut, string language, int version, string value)
-    {
-      Action action = () => sut.Add(language, version, value);
-      action.ShouldThrow<NotSupportedException>().WithMessage("You cannot add a version to the Unversioned field.");
-    }
-
-    [Theory, AutoData]
-    public void GetValueThrowsIfLanguageIsNull([NoAutoProperties] UnversionedDbField sut, int version)
-    {
-      Action action = () => sut.GetValue(null, version);
-      action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
-    }
-
-    [Theory, AutoData]
-    public void SetValueThrowsIfLanguageIsNull([NoAutoProperties] UnversionedDbField sut)
-    {
-      Action action = () => sut.SetValue(null, null);
-      action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
-    }
-
-    [Theory, AutoData]
-    public void SetValueThrowsIfValueIsNull([NoAutoProperties] UnversionedDbField sut, string language)
-    {
-      Action action = () => sut.SetValue(language, null);
-      action.ShouldThrow<ArgumentNullException>().WithMessage("*value");
-    }
-
-    [Theory, AutoData]
     public void ShouldRetunEmptyValueForLanguage([NoAutoProperties] UnversionedDbField sut)
     {
       sut.GetValue("en", 1).Should().BeEmpty();
@@ -89,16 +54,6 @@
     {
       sut.Add("en", value1);
       sut.Add("en", expected);
-
-      sut.GetValue("en", 1).Should().Be(expected);
-      sut.GetValue("en", 2).Should().Be(expected);
-    }
-
-    [Theory, AutoData]
-    public void ShouldRetunLastValueSetPerLanguage([NoAutoProperties] UnversionedDbField sut, string value1, string expected)
-    {
-      sut.SetValue("en", value1);
-      sut.SetValue("en", expected);
 
       sut.GetValue("en", 1).Should().Be(expected);
       sut.GetValue("en", 2).Should().Be(expected);

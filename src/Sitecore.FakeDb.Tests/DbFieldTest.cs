@@ -348,5 +348,19 @@
     {
       new DbField("__Renderings").Type.Should().Be("layout");
     }
+
+    [Theory, AutoData]
+    public void GetValueThrowsIfLanguageIsNull([NoAutoProperties] DbField sut, int version)
+    {
+      Action action = () => sut.GetValue(null, version);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
+    }
+
+    [Theory, AutoData]
+    public void SetValueThrowsIfLanguageIsNull([NoAutoProperties] DbField sut)
+    {
+      Action action = () => sut.SetValue(null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
+    }
   }
 }

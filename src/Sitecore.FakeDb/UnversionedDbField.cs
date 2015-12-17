@@ -1,7 +1,5 @@
 namespace Sitecore.FakeDb
 {
-  using System;
-  using System.Collections.Generic;
   using Sitecore.Data;
 
   public class UnversionedDbField : DbField
@@ -21,40 +19,13 @@ namespace Sitecore.FakeDb
     {
     }
 
-    public override void Add(string language, string value)
-    {
-      this.SetValue(language, value);
-    }
-
     public override void Add(string language, int version, string value)
     {
-      throw new NotSupportedException("You cannot add a version to the Unversioned field.");
-    }
+      base.Add(language, version, value);
 
-    public override string GetValue(string language, int version)
-    {
-      Diagnostics.Assert.ArgumentNotNull(language, "language");
-
-      if (!this.Values.ContainsKey(language))
+      for (var i = version - 1; i > 0; --i)
       {
-        return string.Empty;
-      }
-
-      return this.Values[language][0];
-    }
-
-    public override void SetValue(string language, string value)
-    {
-      Diagnostics.Assert.ArgumentNotNull(language, "language");
-      Diagnostics.Assert.ArgumentNotNull(value, "value");
-
-      if (!this.Values.ContainsKey(language))
-      {
-        this.Values.Add(language, new Dictionary<int, string> { { 0, value } });
-      }
-      else
-      {
-        this.Values[language][0] = value;
+        this.Values[language][i] = value;
       }
     }
   }

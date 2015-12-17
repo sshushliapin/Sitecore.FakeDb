@@ -125,6 +125,8 @@
 
     public virtual string GetValue(string language, int version)
     {
+      Assert.ArgumentNotNull(language, "language");
+
       if (this.Shared)
       {
         return this.sharedValue;
@@ -153,6 +155,8 @@
 
     public virtual void SetValue(string language, string value)
     {
+      Assert.ArgumentNotNull(language, "language");
+
       if (this.Shared)
       {
         this.sharedValue = value;

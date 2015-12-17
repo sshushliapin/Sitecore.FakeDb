@@ -1537,5 +1537,48 @@
         }
       }
     }
+
+    [Fact]
+    public void ShouldCreateUnversionedField()
+    {
+      using (var db = new Db
+        {
+          new DbItem("home")
+            {
+              new UnversionedDbField("Field")
+                {
+                  { "en", 1, "en value initial" },
+                  { "en", 2, "en value expected" },
+                  { "da", 1, "da value initial" },
+                  { "da", 2, "da value expected" }
+                }
+            }
+        })
+      {
+        db.GetItem("/sitecore/content/home", "en", 1)["Field"].Should().Be("en value expected");
+        db.GetItem("/sitecore/content/home", "en", 2)["Field"].Should().Be("en value expected");
+        db.GetItem("/sitecore/content/home", "da", 1)["Field"].Should().Be("da value expected");
+        db.GetItem("/sitecore/content/home", "da", 2)["Field"].Should().Be("da value expected");
+      }
+    }
+
+    [Fact]
+    public void ShouldAddVersionsToUnversionedField()
+    {
+      using (var db = new Db
+        {
+          new DbItem("home")
+            {
+              new UnversionedDbField("Field")
+                {
+                  { "en", 1, "en value initial" },
+                  { "en", 2, "en value expected" },
+                }
+            }
+        })
+      {
+        db.GetItem("/sitecore/content/home").Versions.Count.Should().Be(2);
+      }
+    }
   }
 }
