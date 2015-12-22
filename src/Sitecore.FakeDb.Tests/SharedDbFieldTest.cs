@@ -1,6 +1,5 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
-  using System.Collections.Generic;
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
