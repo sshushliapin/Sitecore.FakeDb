@@ -53,6 +53,8 @@
 
     public string Source { get; set; }
 
+    public bool Unversioned { get; set; }
+
     public string Value
     {
       get { return this.GetValue(Language.Current.Name, Sitecore.Data.Version.Latest.Number); }
@@ -92,6 +94,15 @@
       else
       {
         this.values[language] = new SortedDictionary<int, string> { { version, value } };
+      }
+
+      if (this.Unversioned)
+      {
+        var langVersions = this.values[language];
+        for (var i = langVersions.Count; i > 0; --i)
+        {
+          langVersions[i] = value;
+        }
       }
 
       if (this.Shared)
