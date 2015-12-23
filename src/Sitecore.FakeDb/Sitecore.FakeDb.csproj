@@ -102,6 +102,7 @@
     <Compile Include="Data\IDTables\FakeIDTableProvider.cs" />
     <Compile Include="DbLinkField.cs" />
     <Compile Include="FieldInfo.cs" />
+    <Compile Include="SharedDbField.cs" />
     <Compile Include="StandardFieldsReference.cs" />
     <Compile Include="IDbFieldBuilder.cs" />
     <Compile Include="IDsDbItem.cs" />
