@@ -1,4 +1,4 @@
-﻿#if SC81
+﻿#if SC81 || SC811
 namespace Sitecore.FakeDb.ContentSearch
 {
   using Sitecore.Abstractions;

@@ -6,13 +6,13 @@
          For example, the `Sitecore.FakeDb.ContentSearch.SwitchingSearchProvider` class requires Sitecore 8.1 or later
          and will be ignored for Sitecore 7.2 and 8.0.
          
-         Possible values: "SC72", "SC80", "SC81".
+         Possible values: "SC72", "SC80", "SC81", "SC811".
     -->
     <VSDebugSitecoreVersion></VSDebugSitecoreVersion>
 
     <!-- This setting allows to specify list of Sitecore versions to build and run tests against before publishing 
          the NuGet packages.
     -->
-    <SupportedSitecoreVersions>SC72;SC80;SC81</SupportedSitecoreVersions>
+    <SupportedSitecoreVersions>SC72;SC80;SC81;SC811</SupportedSitecoreVersions>
   </PropertyGroup>
 </Project>
