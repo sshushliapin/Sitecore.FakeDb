@@ -47,13 +47,12 @@
 
     public string Name { get; set; }
 
+    [Obsolete("Plese use the SharedDbField class instead.")]
     public bool Shared { get; set; }
 
     public string Type { get; set; }
 
     public string Source { get; set; }
-
-    public bool Unversioned { get; set; }
 
     public string Value
     {
@@ -94,15 +93,6 @@
       else
       {
         this.values[language] = new SortedDictionary<int, string> { { version, value } };
-      }
-
-      if (this.Unversioned)
-      {
-        var langVersions = this.values[language];
-        for (var i = langVersions.Count; i > 0; --i)
-        {
-          langVersions[i] = value;
-        }
       }
 
       if (this.Shared)

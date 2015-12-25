@@ -365,46 +365,12 @@
     [Theory, AutoData]
     public void ShouldUpdateAllValuesForSharedField([NoAutoProperties] DbField sut, string value1, string expected)
     {
-      // arrange
       sut.Shared = true;
       sut.Add("en", 1, value1);
-
-      // act
       sut.Add("en", 2, expected);
 
-      // assert
       sut.Values["en"][1].Should().Be(expected);
       sut.Values["en"][2].Should().Be(expected);
-    }
-
-    [Theory, AutoData]
-    public void ShouldUpdateAllValuesPerLanguageForUnversionedField([NoAutoProperties] DbField sut, string value1, string expected)
-    {
-      // arrange
-      sut.Unversioned = true;
-      sut.Add("en", value1);
-
-      // act
-      sut.Add("en", expected);
-
-      // assert
-      sut.Values["en"][1].Should().Be(expected);
-      sut.Values["en"][2].Should().Be(expected);
-    }
-
-    [Theory, AutoData]
-    public void ShouldSetValuePerLanguageForUnversionedField([NoAutoProperties] DbField sut, string value1, string value2)
-    {
-      // arrange
-      sut.Unversioned = true;
-
-      // act
-      sut.Add("en", value1);
-      sut.Add("dk", value2);
-
-      // assert
-      sut.Values["en"][1].Should().Be(value1);
-      sut.Values["dk"][1].Should().Be(value2);
     }
   }
 }

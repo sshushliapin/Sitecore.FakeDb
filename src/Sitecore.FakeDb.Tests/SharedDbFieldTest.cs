@@ -36,11 +36,9 @@
     }
 
     [Theory, AutoData]
-    public void ShouldSetObsoleteSharedField(string name, ID id)
+    public void ShouldRetrunEmptyValueByDegault([NoAutoProperties] SharedDbField sut)
     {
-      new SharedDbField(id).Shared.Should().BeTrue();
-      new SharedDbField(name).Shared.Should().BeTrue();
-      new SharedDbField(name, id).Shared.Should().BeTrue();
+      sut.Value.Should().BeEmpty();
     }
 
     [Theory, AutoData]
