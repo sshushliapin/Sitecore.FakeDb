@@ -1,4 +1,5 @@
-﻿namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
+﻿#if SC81
+namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
 {
   using System.Collections.Generic;
   using System.Linq;
@@ -83,3 +84,4 @@
     }
   }
 }
+#endif

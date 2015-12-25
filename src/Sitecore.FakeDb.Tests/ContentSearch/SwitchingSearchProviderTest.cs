@@ -1,4 +1,5 @@
-﻿namespace Sitecore.FakeDb.Tests.ContentSearch
+﻿#if SC81
+namespace Sitecore.FakeDb.Tests.ContentSearch
 {
   using FluentAssertions;
   using NSubstitute;
@@ -49,3 +50,4 @@
     }
   }
 }
+#endif

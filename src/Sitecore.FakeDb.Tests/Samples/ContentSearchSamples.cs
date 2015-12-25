@@ -1,4 +1,5 @@
-﻿namespace Sitecore.FakeDb.Tests.Samples
+﻿#if SC81
+namespace Sitecore.FakeDb.Tests.Samples
 {
   using System.Collections.Generic;
   using System.Linq;
@@ -69,3 +70,4 @@
     }
   }
 }
+#endif

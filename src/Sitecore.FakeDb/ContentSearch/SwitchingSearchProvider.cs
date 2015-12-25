@@ -1,4 +1,5 @@
-﻿namespace Sitecore.FakeDb.ContentSearch
+﻿#if SC81
+namespace Sitecore.FakeDb.ContentSearch
 {
   using Sitecore.Abstractions;
   using Sitecore.Common;
@@ -25,3 +26,4 @@
     }
   }
 }
+#endif
