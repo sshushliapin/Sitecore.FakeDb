@@ -204,7 +204,6 @@
 
       // assert
       this.field.Value.Should().Be("shared value");
-      this.field.Values.Should().BeEmpty("Localized values should not be used for shared fields");
     }
 
     [Fact]
@@ -347,6 +346,31 @@
     public void ShouldSetFieldType()
     {
       new DbField("__Renderings").Type.Should().Be("layout");
+    }
+
+    [Theory, AutoData]
+    public void GetValueThrowsIfLanguageIsNull([NoAutoProperties] DbField sut, int version)
+    {
+      Action action = () => sut.GetValue(null, version);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
+    }
+
+    [Theory, AutoData]
+    public void SetValueThrowsIfLanguageIsNull([NoAutoProperties] DbField sut)
+    {
+      Action action = () => sut.SetValue(null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
+    }
+
+    [Theory, AutoData]
+    public void ShouldUpdateAllValuesForSharedField([NoAutoProperties] DbField sut, string value1, string expected)
+    {
+      sut.Shared = true;
+      sut.Add("en", 1, value1);
+      sut.Add("en", 2, expected);
+
+      sut.Values["en"][1].Should().Be(expected);
+      sut.Values["en"][2].Should().Be(expected);
     }
   }
 }

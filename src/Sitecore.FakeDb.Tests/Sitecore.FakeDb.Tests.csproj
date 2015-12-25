@@ -235,6 +235,7 @@
     <Compile Include="Security\FakeMembershipProviderTest.cs" />
     <Compile Include="Security\RoleProviderSwitcherTest.cs" />
     <Compile Include="Security\Web\FakeProfileProviderTest.cs" />
+    <Compile Include="SharedDbFieldTest.cs" />
     <Compile Include="Sites\FakeSiteContextTest.cs" />
     <Compile Include="Sites\SiteContextSwitcherTest.cs" />
     <Compile Include="StringExtensions.cs" />
@@ -267,6 +268,7 @@
     <Compile Include="Globalization\Translate\AutoTranslateEnabledWithLanguagePrefix.cs" />
     <Compile Include="Globalization\Translate\AutoTranslateEnabledWithLanguageSuffix.cs" />
     <Compile Include="Globalization\Translate\AutoTranslateDisabled.cs" />
+    <Compile Include="UnversionedDbFieldTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

@@ -20,8 +20,6 @@
   {
     private readonly IDictionary<string, IDictionary<int, string>> values = new Dictionary<string, IDictionary<int, string>>();
 
-    private string sharedValue = string.Empty;
-
     public DbField(ID id)
       : this(Builder.FromId().Build(id))
     {
@@ -49,6 +47,7 @@
 
     public string Name { get; set; }
 
+    [Obsolete("Plese use the SharedDbField class instead.")]
     public bool Shared { get; set; }
 
     public string Type { get; set; }
@@ -77,24 +76,18 @@
     {
       Assert.ArgumentNotNull(language, "language");
 
-      if (this.Shared)
-      {
-        this.sharedValue = value;
-        return;
-      }
-
       if (version <= 0)
       {
         throw new ArgumentOutOfRangeException("version", "Version cannot be zero or negative.");
       }
 
+      if (this.values.ContainsKey(language) && this.values[language].ContainsKey(version))
+      {
+        throw new ArgumentException("An item with the same version has already been added.");
+      }
+
       if (this.values.ContainsKey(language))
       {
-        if (this.values[language].ContainsKey(version))
-        {
-          throw new ArgumentException("An item with the same version has already been added.");
-        }
-
         this.values[language].Add(version, value);
       }
       else
@@ -102,20 +95,18 @@
         this.values[language] = new SortedDictionary<int, string> { { version, value } };
       }
 
-      if (this.values[language].Count >= version)
+      if (this.Shared)
       {
-        return;
-      }
-
-      for (var i = version - 1; i > 0; --i)
-      {
-        if (this.values[language].ContainsKey(i))
+        foreach (var langVersions in this.values.Select(l => l.Value))
         {
-          break;
+          for (var i = langVersions.Count; i > 0; --i)
+          {
+            langVersions[i] = value;
+          }
         }
-
-        this.values[language].Add(i, string.Empty);
       }
+
+      this.WireUpDefaultFieldValues(language, version);
     }
 
     public IEnumerator GetEnumerator()
@@ -125,14 +116,19 @@
 
     public virtual string GetValue(string language, int version)
     {
-      if (this.Shared)
-      {
-        return this.sharedValue;
-      }
+      Assert.ArgumentNotNull(language, "language");
 
       if (version == 0)
       {
         version = this.GetLatestVersion(language);
+      }
+
+      if (this.Shared)
+      {
+        foreach (var lv in this.Values.SelectMany(l => l.Value))
+        {
+          return lv.Value;
+        }
       }
 
       var hasValueForLanguage = this.values.ContainsKey(language);
@@ -153,35 +149,22 @@
 
     public virtual void SetValue(string language, string value)
     {
-      if (this.Shared)
-      {
-        this.sharedValue = value;
-        return;
-      }
-
-      var newVersion = !this.values.ContainsKey(language);
-      if (newVersion)
-      {
-        this.Add(language, 1, value);
-        return;
-      }
+      Assert.ArgumentNotNull(language, "language");
 
       var latestVersion = this.GetLatestVersion(language);
+      if (latestVersion == 0)
+      {
+        latestVersion = 1;
+      }
+
       this.SetValue(language, latestVersion, value);
     }
 
     public virtual void SetValue(string language, int version, string value)
     {
-      if (this.Shared)
-      {
-        this.sharedValue = value;
-        return;
-      }
-
       if (!this.values.ContainsKey(language))
       {
-        var langValue = new Dictionary<int, string> { { version, value } };
-        this.values.Add(language, langValue);
+        this.Add(language, version, value);
       }
 
       this.values[language][version] = value;
@@ -192,7 +175,7 @@
       return this.Name.StartsWith("__");
     }
 
-    protected virtual int GetLatestVersion(string language)
+    private int GetLatestVersion(string language)
     {
       Assert.ArgumentNotNull(language, "language");
 
@@ -206,6 +189,19 @@
       return langValues.Any() ? langValues.Last().Key : 0;
     }
 
+    private void WireUpDefaultFieldValues(string language, int version)
+    {
+      for (var i = version - 1; i > 0; --i)
+      {
+        if (this.values[language].ContainsKey(i))
+        {
+          break;
+        }
+
+        this.values[language].Add(i, string.Empty);
+      }
+    }
+
     private static class Builder
     {
       private static readonly StandardFieldsReference FieldReference = new StandardFieldsReference();
@@ -213,15 +209,15 @@
       public static IDbFieldBuilder FromId()
       {
         return new CompositeFieldBuilder(
-                 new IdBasedStandardFieldResolver(FieldReference),
-                 new IdBasedFieldGenerator());
+          new IdBasedStandardFieldResolver(FieldReference),
+          new IdBasedFieldGenerator());
       }
 
       public static IDbFieldBuilder FromName()
       {
         return new CompositeFieldBuilder(
-                 new NameBasedStandardFieldResolver(FieldReference),
-                 new NameBasedFieldGenerator());
+          new NameBasedStandardFieldResolver(FieldReference),
+          new NameBasedFieldGenerator());
       }
 
       public static IDbFieldBuilder FromNameAndId()
