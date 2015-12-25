@@ -1,4 +1,9 @@
-﻿0.35.0
+﻿0.36.0
+* [NEW] #71: Configure ContentSearchManager in unit tests (Sitecore 8.1 or later)
+* [NEW] #117: Unversioned fields
+* [NEW] #47: Wish: Add support of versioned/unversioned fields with a type
+
+0.35.0
 * [NEW] #65: Add all the Sitecore Standard fields to the FakeDb Standard Template
 * [FIX] #115: Cloning support
 
