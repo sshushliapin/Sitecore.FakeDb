@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{61B65D79
 	ProjectSection(SolutionItems) = preProject
 		..\build.config = ..\build.config
 		..\build.msbuild = ..\build.msbuild
+		..\version.props = ..\version.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{D5B7F1D4-7020-4F1B-B281-6621CF343FC5}"

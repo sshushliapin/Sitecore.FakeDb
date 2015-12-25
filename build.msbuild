@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <Import Project="Build.config" />
+  <Import Project="version.props" />
 
   <UsingTask TaskName="xunit" AssemblyFile="$(XUnitPath)\xunit.runner.msbuild.dll" />
 
   <PropertyGroup>
-    <Versions>SC72;SC80;SC81</Versions>
     <References>lib\$(Version)\*.dll</References>
     <CleanUp>lib\*.dll</CleanUp>
   </PropertyGroup>
   <ItemGroup>
-    <Versions Include="$(Versions)" />
+    <Versions Include="$(SupportedSitecoreVersions)" />
     <References Include="$(References)" />
     <CleanUp Include="$(CleanUp)" />
   </ItemGroup>

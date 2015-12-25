@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!-- This setting allows to set the Sitecore version conditional compilation symbols to complile FakeDb against 
+         different Sitecore versions that may have incompatible API.
+         For example, the `Sitecore.FakeDb.ContentSearch.SwitchingSearchProvider` class requires Sitecore 8.1 or later
+         and will be ignored for Sitecore 7.2 and 8.0.
+         
+         Possible values: "SC72", "SC80", "SC81".
+    -->
+    <VSDebugSitecoreVersion></VSDebugSitecoreVersion>
+
+    <!-- This setting allows to specify list of Sitecore versions to build and run tests against before publishing 
+         the NuGet packages.
+    -->
+    <SupportedSitecoreVersions>SC72;SC80;SC81</SupportedSitecoreVersions>
+  </PropertyGroup>
+</Project>
