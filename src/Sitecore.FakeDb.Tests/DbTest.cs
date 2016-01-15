@@ -1580,5 +1580,17 @@
         db.GetItem("/sitecore/content/home").Versions.Count.Should().Be(2);
       }
     }
+
+    [Fact]
+    public void ShouldAddVersionForSpecificLanguage()
+    {
+      using (var db = new Db { new DbItem("home") })
+      {
+        var homeDe = db.GetItem("/sitecore/content/home", "de");
+        homeDe.Versions.AddVersion();
+
+        homeDe.Versions.Count.Should().Be(1);
+      }
+    }
   }
 }
