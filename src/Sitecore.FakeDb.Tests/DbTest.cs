@@ -1592,5 +1592,39 @@
         homeDe.Versions.Count.Should().Be(1);
       }
     }
+
+    [Fact]
+    public void ShouldCloneVersionedItem()
+    {
+      // arrange
+      using (var db = new Db
+        {
+          new DbItem("source")
+            {
+              new DbField("Title") { {"en", "Hello!"}, {"de", "Servus!"} }
+            }
+        })
+      {
+        var source = db.GetItem("/sitecore/content/source");
+
+        // act
+        var clone = source.CloneTo(source.Parent, "clone", false);
+
+        // assert
+        db.GetItem(clone.ID, "en")["Title"].Should().Be("Hello!");
+        db.GetItem(clone.ID, "de")["Title"].Should().Be("Servus!");
+      }
+    }
+
+    [Theory]
+    [InlineData("en", 1)]
+    [InlineData("de", 0)]
+    public void ShouldGetItemOfSpecificVersionPerLanguage(string language, int expecteVersion)
+    {
+      using (var db = new Db { new DbItem("home") })
+      {
+        db.GetItem("/sitecore/content/home", language).Version.Number.Should().Be(expecteVersion);
+      }
+    }
   }
 }
