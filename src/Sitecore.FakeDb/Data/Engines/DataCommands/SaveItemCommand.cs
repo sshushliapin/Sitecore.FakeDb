@@ -49,14 +49,19 @@
 
       fakeItem.Name = this.Item.Name;
       var fullPath = fakeItem.FullPath;
-      if (!string.IsNullOrEmpty(fullPath))
+      if (!string.IsNullOrEmpty(fullPath) && fullPath.Contains(oldName))
       {
-        fakeItem.FullPath = fullPath.Substring(0, fullPath.LastIndexOf(oldName, System.StringComparison.Ordinal)) + newName;
+        fakeItem.FullPath = fullPath.Substring(0, fullPath.LastIndexOf(oldName, StringComparison.Ordinal)) + newName;
       }
     }
 
     protected virtual void UpdateFields(DbItem fakeItem)
     {
+      if (this.Item.Version.Number == 0)
+      {
+        return;
+      }
+
       var template = this.dataStorage.GetFakeTemplate(fakeItem.TemplateID);
       Assert.IsNotNull(template, "Item template not found. Item: '{0}', '{1}'; template: '{2}'.", this.Item.Name, this.Item.ID, this.Item.TemplateID);
 
