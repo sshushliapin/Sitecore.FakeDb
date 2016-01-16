@@ -6,10 +6,12 @@
   using NSubstitute;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data.Items;
+  using Sitecore.Globalization;
   using Sitecore.Reflection;
   using Sitecore.StringExtensions;
   using Xunit;
   using SaveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.SaveItemCommand;
+  using Version = Sitecore.Data.Version;
 
   public class SaveItemCommandTest
   {
@@ -120,6 +122,22 @@
       // assert
       originalItem.Name.Should().Be("updated item");
       originalItem.Fields[fieldId].Value.Should().Be("updated title");
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldNotUpdateFieldsIfItemVersionIsZero(SaveItemCommand sut, DbItem item, FieldList fields, Language language)
+    {
+      // arrange
+      sut.DataStorage.GetFakeItem(item.ID).Returns(item);
+      var updatedItem = ItemHelper.CreateInstance(sut.Database, "updated item", item.ID, ID.NewID, ID.Null, fields, language, new Version(0));
+
+      sut.Initialize(updatedItem);
+
+      // act
+      Action action = () => ReflectionUtil.CallMethod(sut, "DoExecute");
+
+      // assert
+      action.ShouldNotThrow();
     }
   }
 }

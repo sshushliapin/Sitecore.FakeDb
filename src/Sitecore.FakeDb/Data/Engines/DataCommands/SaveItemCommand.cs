@@ -49,7 +49,7 @@
 
       fakeItem.Name = this.Item.Name;
       var fullPath = fakeItem.FullPath;
-      if (!string.IsNullOrEmpty(fullPath))
+      if (!string.IsNullOrEmpty(fullPath) && fullPath.Contains(oldName))
       {
         fakeItem.FullPath = fullPath.Substring(0, fullPath.LastIndexOf(oldName, StringComparison.Ordinal)) + newName;
       }
