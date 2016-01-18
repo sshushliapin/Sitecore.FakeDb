@@ -1669,5 +1669,23 @@
         homeDe["Title"].Should().Be("Servus!");
       }
     }
+
+    [Fact]
+    public void ShouldSetItemWorkflow()
+    {
+      // arrange & act
+      using (var db = new Db
+        {
+          new DbTemplate(this.templateId) { { FieldIDs.DefaultWorkflow, "{E02A54E4-1037-4569-A735-F582B8ABA8A4}" } },
+          new DbItem("home", ID.NewID, this.templateId)
+        })
+      {
+        var home = db.GetItem("/sitecore/content/home");
+
+        // assert
+        Assert.Equal("{E02A54E4-1037-4569-A735-F582B8ABA8A4}", home[FieldIDs.DefaultWorkflow]);
+        Assert.Equal("{E02A54E4-1037-4569-A735-F582B8ABA8A4}", home[FieldIDs.Workflow]);
+      }
+    }
   }
 }
