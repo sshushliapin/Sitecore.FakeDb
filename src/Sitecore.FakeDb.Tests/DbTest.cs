@@ -1582,11 +1582,41 @@
     }
 
     [Fact]
-    public void ShouldAddVersionForSpecificLanguage()
+    public void ShouldHaveOneVersionInDefaultLanguage()
+    {
+      using (var db = new Db { new DbItem("home") })
+      {
+        db.GetItem("/sitecore/content/home").Versions.Count.Should().Be(1);
+      }
+    }
+
+    [Fact]
+    public void ShouldHaveNoVersionsInCustomLanguage()
+    {
+      using (var db = new Db { new DbItem("home") })
+      {
+        db.GetItem("/sitecore/content/home", "de").Versions.Count.Should().Be(0);
+      }
+    }
+
+    [Theory]
+    [InlineData("en")]
+    [InlineData("de")]
+    public void ShouldAlwaysReturnFirstVersionEvenIfNoVersionExists(string language)
+    {
+      using (var db = new Db { new DbItem("home") })
+      {
+        db.GetItem("/sitecore/content/home", language).Version.Should().Be(Version.First);
+      }
+    }
+
+    [Fact]
+    public void ShouldAddVersionForCustomLanguage()
     {
       using (var db = new Db { new DbItem("home") })
       {
         var homeDe = db.GetItem("/sitecore/content/home", "de");
+
         homeDe.Versions.AddVersion();
 
         homeDe.Versions.Count.Should().Be(1);
@@ -1616,14 +1646,27 @@
       }
     }
 
-    [Theory]
-    [InlineData("en", 1)]
-    [InlineData("de", 0)]
-    public void ShouldGetItemOfSpecificVersionPerLanguage(string language, int expecteVersion)
+    [Fact]
+    public void ShouldCreateVersionAutomaticallyOnEditing()
     {
-      using (var db = new Db { new DbItem("home") })
+      // arrange
+      using (var db = new Db
+        {
+          new DbItem("home") { new DbField("Title") }
+        })
       {
-        db.GetItem("/sitecore/content/home", language).Version.Number.Should().Be(expecteVersion);
+        var homeDe = db.GetItem("/sitecore/content/home", "de");
+        homeDe.Versions.Count.Should().Be(0);
+
+        // act
+        using (new EditContext(homeDe))
+        {
+          homeDe.Fields["Title"].SetValue("Servus!", true);
+        }
+
+        // assert
+        homeDe.Versions.Count.Should().Be(1);
+        homeDe["Title"].Should().Be("Servus!");
       }
     }
   }

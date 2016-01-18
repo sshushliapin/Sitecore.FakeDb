@@ -30,7 +30,7 @@
     {
       var dbitem = this.dataStorage.GetFakeItem(this.Item.ID);
       var language = this.Item.Language.Name;
-      var currentVersion = this.Item.Version.Number;
+      var currentVersion = dbitem.GetVersionCount(language) != 0 ? this.Item.Version.Number : 0;
       var nextVersion = new Version(currentVersion + 1);
 
       dbitem.AddVersion(language, currentVersion);

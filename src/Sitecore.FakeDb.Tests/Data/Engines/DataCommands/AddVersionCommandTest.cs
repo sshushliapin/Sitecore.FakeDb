@@ -53,7 +53,7 @@
     }
 
     [Theory, DefaultAutoData]
-    public void ShouldAddVersionIfNoVersionExistsInSpecificLanguage(AddVersionCommand sut, Item item)
+    public void ShouldNotAddVersionIfNoVersionExistsInSpecificLanguage(AddVersionCommand sut, Item item)
     {
       // arrange
       var dbitem = new DbItem("item") { Fields = { new DbField("Title") } };
@@ -65,7 +65,7 @@
       ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      dbitem.Fields.Single().Values["en"][1].Should().BeEmpty();
+      dbitem.Fields.Single().Values.Should().BeEmpty();
     }
 
     [Theory, DefaultAutoData]
@@ -79,7 +79,7 @@
       ReflectionUtil.CallMethod(sut, "DoExecute");
 
       // assert
-      dbItem.GetVersionCount("en").Should().Be(2);
+      dbItem.GetVersionCount("en").Should().Be(1);
     }
   }
 }
