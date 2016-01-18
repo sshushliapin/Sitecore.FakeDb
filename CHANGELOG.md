@@ -1,4 +1,7 @@
-﻿0.36.0
+﻿0.36.1
+* [FIX] #119: Adding Version/Cloning a language without a version creates 2 versions
+
+0.36.0
 * [NEW] #71: Configure ContentSearchManager in unit tests (Sitecore 8.1 or later)
 * [NEW] #117: Unversioned fields
 * [NEW] #47: Wish: Add support of versioned/unversioned fields with a type
