@@ -1,4 +1,7 @@
-﻿0.36.1
+﻿0.36.2
+* [FIX] #120: Cloning of a multi-language item
+
+0.36.1
 * [FIX] #119: Adding Version/Cloning a language without a version creates 2 versions
 
 0.36.0
