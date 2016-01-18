@@ -6,8 +6,16 @@ namespace Sitecore.FakeDb.Pipelines.AddDbItem
     {
       var item = args.DbItem;
       var template = args.DataStorage.GetFakeTemplate(item.TemplateID);
-      var defaultWorkflow = template.Fields[FieldIDs.DefaultWorkflow].Value;
-      item.Fields.Add(FieldIDs.Workflow, defaultWorkflow);
+      if (template == null)
+      {
+        return;
+      }
+
+      string defaultWorkflow;
+      if (template.StandardValues.TryGetValue(FieldIDs.DefaultWorkflow, out defaultWorkflow))
+      {
+        item.Fields.Add(FieldIDs.Workflow, defaultWorkflow);
+      }
     }
   }
 }

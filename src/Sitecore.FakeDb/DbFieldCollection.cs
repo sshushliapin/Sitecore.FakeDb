@@ -73,5 +73,17 @@
     {
       return this.GetEnumerator();
     }
+
+    public bool TryGetValue(ID fieldId, out string value)
+    {
+      if (this.fields.ContainsKey(fieldId))
+      {
+        value = this.fields[fieldId].Value;
+        return true;
+      }
+
+      value = string.Empty;
+      return false;
+    }
   }
 }

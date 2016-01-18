@@ -53,14 +53,14 @@
     }
 
     [Theory, AutoData]
-    public void SetFieldById(DbFieldCollection sut, [Frozen]ID id, DbField field)
+    public void SetFieldById(DbFieldCollection sut, [Frozen] ID id, DbField field)
     {
       sut[id] = field;
       sut[id].Should().BeSameAs(field);
     }
 
     [Theory, AutoData]
-    public void ResetFieldById(DbFieldCollection sut, [Frozen]ID id, DbField originalField, DbField newField)
+    public void ResetFieldById(DbFieldCollection sut, [Frozen] ID id, DbField originalField, DbField newField)
     {
       sut[id] = originalField;
       sut[id] = newField;
@@ -74,7 +74,7 @@
       var expectedMessage = string.Format("The given field \"{0}\" is not present in the item.", missingFieldId);
 
       Assert.Throws<InvalidOperationException>(() => sut[missingFieldId])
-            .Message.Should().Be(expectedMessage);
+        .Message.Should().Be(expectedMessage);
     }
 
     [Theory, AutoData]
@@ -103,6 +103,24 @@
     public void SutReturnsEnumerator(DbFieldCollection sut)
     {
       ((IEnumerable)sut).GetEnumerator().Should().NotBeNull();
+    }
+
+    [Theory, AutoData]
+    public void TryGetValueReturnsFalseAndEmptyStringIfNoValueFound(DbFieldCollection sut, ID fieldId)
+    {
+      string value;
+      sut.TryGetValue(fieldId, out value).Should().BeFalse();
+      value.Should().BeEmpty();
+    }
+
+    [Theory, AutoData]
+    public void TryGetValueReturnsTrueAndValue(DbFieldCollection sut, ID fieldId, string expected)
+    {
+      sut.Add(fieldId, expected);
+
+      string value;
+      sut.TryGetValue(fieldId, out value).Should().BeTrue();
+      value.Should().Be(expected);
     }
   }
 }
