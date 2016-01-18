@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Pipelines.AddDbItem
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Ploeh.AutoFixture.AutoNSubstitute;
@@ -47,6 +48,13 @@
     {
       sut.Process(args);
       item.Fields.ContainsKey(FieldIDs.Workflow).Should().BeFalse();
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldThrowIfArgsParameterIsNull(SetWorkflow sut)
+    {
+      Action action = () => sut.Process(null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*args");
     }
   }
 }
