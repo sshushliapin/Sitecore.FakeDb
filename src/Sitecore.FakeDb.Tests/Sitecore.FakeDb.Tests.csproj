@@ -220,6 +220,7 @@
     <Compile Include="Pipelines\AddDbItem\AddVersionTest.cs" />
     <Compile Include="Pipelines\AddDbItem\CreateTemplateTest.cs" />
     <Compile Include="Pipelines\AddDbItem\SetParentTest.cs" />
+    <Compile Include="Pipelines\AddDbItem\SetWorkflowTest.cs" />
     <Compile Include="Pipelines\CorePipelineFactoryTest.cs" />
     <Compile Include="Pipelines\CorePipelineTest.cs" />
     <Compile Include="Profile\UserProfileTest.cs" />
