@@ -214,7 +214,7 @@ namespace Sitecore.FakeDb
         }
 
         var langValues = field.Values[language];
-        var lastVersion = langValues.Last();
+        var lastVersion = langValues.LastOrDefault();
 
         removed = langValues.Remove(lastVersion);
       }

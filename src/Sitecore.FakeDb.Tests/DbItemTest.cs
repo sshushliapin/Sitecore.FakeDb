@@ -1,6 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
   using System;
+  using System.Collections.Generic;
   using System.Linq;
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
@@ -158,6 +159,15 @@
     {
       Action action = () => sut.RemoveVersion(null);
       action.ShouldThrow<ArgumentNullException>().WithMessage("*language");
+    }
+
+    [Theory, AutoData]
+    public void ShouldReturnFalseIfNoValueFoundForLanguage(DbItem sut, DbField field, string language)
+    {
+      field.Values[language] = new Dictionary<int, string>();
+      sut.Add(field);
+
+      sut.RemoveVersion(language).Should().BeFalse();
     }
   }
 }
