@@ -1,4 +1,8 @@
-﻿0.36.2
+﻿0.37.0
+* [NEW] #118: Missing workflow initialisation
+* [FIX] #121: Issue with removing all versions of a second language
+
+0.36.2
 * [FIX] #120: Cloning of a multi-language item
 
 0.36.1
