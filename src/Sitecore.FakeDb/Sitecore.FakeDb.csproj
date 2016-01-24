@@ -105,6 +105,7 @@
     <Compile Include="FieldInfo.cs" />
     <Compile Include="Pipelines\AddDbItem\SetWorkflow.cs" />
     <Compile Include="SharedDbField.cs" />
+    <Compile Include="Sites\FakeSiteContextSwitcher.cs" />
     <Compile Include="StandardFieldsReference.cs" />
     <Compile Include="IDbFieldBuilder.cs" />
     <Compile Include="IDsDbItem.cs" />

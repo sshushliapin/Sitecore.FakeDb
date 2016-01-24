@@ -239,6 +239,7 @@
     <Compile Include="Security\RoleProviderSwitcherTest.cs" />
     <Compile Include="Security\Web\FakeProfileProviderTest.cs" />
     <Compile Include="SharedDbFieldTest.cs" />
+    <Compile Include="Sites\FakeSiteContextSwitcherTest.cs" />
     <Compile Include="Sites\FakeSiteContextTest.cs" />
     <Compile Include="Sites\SiteContextSwitcherTest.cs" />
     <Compile Include="StringExtensions.cs" />
