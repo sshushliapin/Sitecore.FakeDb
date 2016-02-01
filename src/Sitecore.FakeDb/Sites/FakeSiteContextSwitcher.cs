@@ -18,7 +18,7 @@ namespace Sitecore.FakeDb.Sites
 
         public FakeSiteContextSwitcher(SiteContext site) : base(site)
         {
-            if (site == null) throw new ArgumentNullException(nameof(site));
+            if (site == null) throw new ArgumentNullException("site");
 
             _pocket.AddRange(SiteContextFactory.Sites);
             //SiteContextFactory stores cashed data in _searchTable so clearing .Sites is not enough
