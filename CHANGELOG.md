@@ -1,4 +1,7 @@
-﻿0.37.0
+﻿0.38.0
+* [NEW] #123: Context Site should be visible through Factory.GetSite()
+
+0.37.0
 * [NEW] #118: Missing workflow initialisation
 * [FIX] #121: Issue with removing all versions of a second language
 
