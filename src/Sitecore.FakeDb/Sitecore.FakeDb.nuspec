@@ -14,6 +14,5 @@
   </metadata>
   <files>
     <file src="App.config" target="content" />
-    <file src="App_Config\FieldTypes.config" target="content\App_Config" />
   </files>
 </package>
