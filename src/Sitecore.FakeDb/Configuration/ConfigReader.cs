@@ -75,13 +75,13 @@
       using (var stream = typeof(Db).Assembly.GetManifestResourceStream("Sitecore.FakeDb.Sitecore.config"))
       using (var reader = new StreamReader(stream))
       {
-        var patch = XmlUtil.GetXmlNode(reader.ReadToEnd()).SelectSingleNode("sitecore");
+        var main = XmlUtil.GetXmlNode(reader.ReadToEnd()).SelectSingleNode("sitecore");
         var patcher = new XmlPatcher("s", "p");
-        patcher.Merge(section, patch);
-      }
+        patcher.Merge(main, section);
 
-      var configReader = new Sitecore.Configuration.ConfigReader();
-      return ((IConfigurationSectionHandler)configReader).Create(parent, configContext, section);
+        var configReader = new Sitecore.Configuration.ConfigReader();
+        return ((IConfigurationSectionHandler)configReader).Create(parent, configContext, main);
+      }
     }
   }
 }
