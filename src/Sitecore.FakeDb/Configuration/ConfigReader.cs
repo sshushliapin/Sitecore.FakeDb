@@ -72,7 +72,7 @@
 
     public object Create(object parent, object configContext, XmlNode section)
     {
-      using (var stream = typeof(Db).Assembly.GetManifestResourceStream("Sitecore.FakeDb.App.config"))
+      using (var stream = typeof(Db).Assembly.GetManifestResourceStream("Sitecore.FakeDb.Sitecore.config"))
       using (var reader = new StreamReader(stream))
       {
         var patch = XmlUtil.GetXmlNode(reader.ReadToEnd()).SelectSingleNode("sitecore");
