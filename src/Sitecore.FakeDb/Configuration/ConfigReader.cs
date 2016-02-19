@@ -1,20 +1,23 @@
 ﻿namespace Sitecore.FakeDb.Configuration
 {
   using System;
+  using System.Configuration;
   using System.IO;
   using System.Reflection;
+  using System.Xml;
   using Sitecore.Data;
   using Sitecore.Data.Events;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Engines.DataCommands.Prototypes;
   using Sitecore.IO;
+  using Sitecore.Xml;
+  using Sitecore.Xml.Patch;
 
-  public class ConfigReader : Sitecore.Configuration.ConfigReader
+  public class ConfigReader : IConfigurationSectionHandler
   {
     static ConfigReader()
     {
       SetAppDomainAppPath();
-
       Database.InstanceCreated += DatabaseInstanceCreated;
     }
 
@@ -65,6 +68,20 @@
       }
 
       Sitecore.Configuration.State.HttpRuntime.AppDomainAppPath = directoryName;
+    }
+
+    public object Create(object parent, object configContext, XmlNode section)
+    {
+      using (var stream = typeof(Db).Assembly.GetManifestResourceStream("Sitecore.FakeDb.App.config"))
+      using (var reader = new StreamReader(stream))
+      {
+        var patch = XmlUtil.GetXmlNode(reader.ReadToEnd()).SelectSingleNode("sitecore");
+        var patcher = new XmlPatcher("s", "p");
+        patcher.Merge(section, patch);
+      }
+
+      var configReader = new Sitecore.Configuration.ConfigReader();
+      return ((IConfigurationSectionHandler)configReader).Create(parent, configContext, section);
     }
   }
 }
