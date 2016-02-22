@@ -1,4 +1,7 @@
-﻿0.38.0
+﻿1.0.0
+* [NEW] #125: Embed Sitecore configuration into FakeDb assembly
+
+0.38.0
 * [NEW] #123: Context Site should be visible through Factory.GetSite()
 
 0.37.0
