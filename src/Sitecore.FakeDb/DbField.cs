@@ -47,7 +47,6 @@
 
     public string Name { get; set; }
 
-    [Obsolete("Plese use the SharedDbField class instead.")]
     public bool Shared { get; set; }
 
     public string Type { get; set; }
