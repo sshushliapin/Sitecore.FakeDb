@@ -65,9 +65,6 @@
     <Reference Include="Sitecore.Abstractions">
       <HintPath>..\..\lib\Sitecore.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Sitecore.Analytics">
-      <HintPath>..\..\lib\Sitecore.Analytics.dll</HintPath>
-    </Reference>
     <Reference Include="Sitecore.Buckets">
       <HintPath>..\..\lib\Sitecore.Buckets.dll</HintPath>
     </Reference>

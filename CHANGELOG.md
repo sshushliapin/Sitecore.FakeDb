@@ -1,4 +1,7 @@
-﻿1.0.0
+﻿1.0.1
+* [FIX] #126: Remove `Tracking` field from the default configuration
+
+1.0.0
 * [NEW] #125: Embed Sitecore configuration into FakeDb assembly
 
 0.38.0
