@@ -5,23 +5,19 @@
 
   <UsingTask TaskName="xunit" AssemblyFile="$(XUnitPath)\xunit.runner.msbuild.dll" />
 
-  <PropertyGroup>
-    <References>lib\$(Version)\*.dll</References>
-    <CleanUp>lib\*.dll</CleanUp>
-  </PropertyGroup>
   <ItemGroup>
     <Versions Include="$(SupportedSitecoreVersions)" />
-    <References Include="$(References)" />
-    <CleanUp Include="$(CleanUp)" />
+    <References Include="lib\$(Version)\*.dll" />
+    <CleanUp Include="lib\*.dll" />
   </ItemGroup>
 
   <Target Name="Clean">
     <MSBuild Projects="$(ProjectToBuild)" Targets="Clean" />
-    <RemoveDir Directories="$(DeployFolder)" />
+    <RemoveDir Directories="$(OutputDirectory)" />
   </Target>
 
   <Target Name="Compile" DependsOnTargets="Clean">
-    <Exec Command="$(NuGet) restore -PackagesDirectory $(PackagesDirectory)" WorkingDirectory="$(SourceFolder)" />
+    <Exec Command="$(NuGet) restore" />
     <Delete Files="@(CleanUp)" />
     <Copy SourceFiles="@(References)" DestinationFolder="lib" />
 
@@ -51,17 +47,17 @@
   </Target>
 
   <Target Name="Packages" DependsOnTargets="Tests">
-    <MakeDir Directories="$(DeployFolder)" />
+    <MakeDir Directories="$(OutputDirectory)" />
 
     <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(FakeDbTestsDir)\App.config" OutputPaths="$(FakeDbDir)\App.config" />
     <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(AutoFixtureTestsDir)\App.config" OutputPaths="$(AutoFixtureTestsDir)\App.config.transform" />
     <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(NSubstituteTestsDir)\App.config" OutputPaths="$(NSubstituteTestsDir)\App.config.transform" />
     <XslTransformation XslInputPath="$(NuGetXslt)" XmlInputPaths="$(SerializationTestsDir)\App.config" OutputPaths="$(SerializationTestsDir)\App.config.transform" />
 
-    <Exec Command="$(NuGet) pack Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
-    <Exec Command="$(NuGet) pack Sitecore.FakeDb.AutoFixture/Sitecore.FakeDb.AutoFixture.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
-    <Exec Command="$(NuGet) pack Sitecore.FakeDb.NSubstitute/Sitecore.FakeDb.NSubstitute.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
-    <Exec Command="$(NuGet) pack Sitecore.FakeDb.Serialization/Sitecore.FakeDb.Serialization.csproj -Properties Configuration=Release -OutputDirectory ..\$(DeployFolder) -Build -Symbols" WorkingDirectory="$(SourceFolder)" />
+    <Exec Command="$(NuGet) pack src/Sitecore.FakeDb/Sitecore.FakeDb.csproj -Properties Configuration=Release -OutputDirectory $(OutputDirectory) -Build -Symbols" />
+    <Exec Command="$(NuGet) pack src/Sitecore.FakeDb.AutoFixture/Sitecore.FakeDb.AutoFixture.csproj -Properties Configuration=Release -OutputDirectory $(OutputDirectory) -Build -Symbols" />
+    <Exec Command="$(NuGet) pack src/Sitecore.FakeDb.NSubstitute/Sitecore.FakeDb.NSubstitute.csproj -Properties Configuration=Release -OutputDirectory $(OutputDirectory) -Build -Symbols" />
+    <Exec Command="$(NuGet) pack src/Sitecore.FakeDb.Serialization/Sitecore.FakeDb.Serialization.csproj -Properties Configuration=Release -OutputDirectory $(OutputDirectory) -Build -Symbols" />
 
     <Delete Files="$(FakeDbDir)\App.config" />
     <RemoveDir Directories="$(FakeDbDir)\App_Config\" />
@@ -76,9 +72,9 @@
   </Target>
 
   <Target Name="Deploy" DependsOnTargets="Versions">
-    <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
-    <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.AutoFixture.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
-    <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.NSubstitute.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
-    <Exec Command="$(NuGet) push ..\$(DeployFolder)\Sitecore.FakeDb.Serialization.?.*.?.nupkg" WorkingDirectory="$(SourceFolder)" />
+    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.?.*.?.nupkg" />
+    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.AutoFixture.?.*.?.nupkg" />
+    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.NSubstitute.?.*.?.nupkg" />
+    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.Serialization.?.*.?.nupkg" />
   </Target>
 </Project>

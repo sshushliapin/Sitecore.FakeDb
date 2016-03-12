@@ -16,6 +16,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\Sitecore.FakeDb.NSubstitute.Tests\App.config.transform" target="content" />
+    <file src="..\..\test\Sitecore.FakeDb.NSubstitute.Tests\App.config.transform" target="content" />
   </files>
 </package>
