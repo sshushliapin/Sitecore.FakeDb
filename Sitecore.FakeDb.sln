@@ -1,0 +1,110 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb", "src\Sitecore.FakeDb\Sitecore.FakeDb.csproj", "{B1B3C599-9284-4653-9F22-FD0F726984BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.Tests", "test\Sitecore.FakeDb.Tests\Sitecore.FakeDb.Tests.csproj", "{D7EE44EE-1306-4EB6-9514-471905AAA493}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.NSubstitute", "src\Sitecore.FakeDb.NSubstitute\Sitecore.FakeDb.NSubstitute.csproj", "{A18A0482-9918-4AB7-9991-E2909E98D1C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.NSubstitute.Tests", "test\Sitecore.FakeDb.NSubstitute.Tests\Sitecore.FakeDb.NSubstitute.Tests.csproj", "{792EFC20-811C-44B3-9C93-C3BDE717AEC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.Serialization", "src\Sitecore.FakeDb.Serialization\Sitecore.FakeDb.Serialization.csproj", "{8958B567-7955-4714-B3A8-BCFB43B0A588}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.Serialization.Tests", "test\Sitecore.FakeDb.Serialization.Tests\Sitecore.FakeDb.Serialization.Tests.csproj", "{FD78101C-A600-4962-B425-5BA86AB3DD41}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{61B65D79-BB0C-4A89-A410-E5C90A646ED6}"
+	ProjectSection(SolutionItems) = preProject
+		CHANGELOG.md = CHANGELOG.md
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.AutoFixture", "src\Sitecore.FakeDb.AutoFixture\Sitecore.FakeDb.AutoFixture.csproj", "{E1503D66-F2EB-4EC0-829E-F29447DBF92A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.AutoFixture.Tests", "test\Sitecore.FakeDb.AutoFixture.Tests\Sitecore.FakeDb.AutoFixture.Tests.csproj", "{DB78AA82-9043-443E-8D23-6E1478C84820}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{35A6099E-448B-4A31-A752-C555082ECADF}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+		src\Sitecore.FakeDb.AutoFixture\Sitecore.FakeDb.AutoFixture.nuspec = src\Sitecore.FakeDb.AutoFixture\Sitecore.FakeDb.AutoFixture.nuspec
+		src\Sitecore.FakeDb.NSubstitute\Sitecore.FakeDb.NSubstitute.nuspec = src\Sitecore.FakeDb.NSubstitute\Sitecore.FakeDb.NSubstitute.nuspec
+		src\Sitecore.FakeDb\Sitecore.FakeDb.nuspec = src\Sitecore.FakeDb\Sitecore.FakeDb.nuspec
+		src\Sitecore.FakeDb.Serialization\Sitecore.FakeDb.Serialization.nuspec = src\Sitecore.FakeDb.Serialization\Sitecore.FakeDb.Serialization.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{97486A34-37A8-40EA-AFB1-4E03C8F4091D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5A777D0E-BC4F-4CAD-AE83-F95BC7A0788C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git", "Git", "{0B2F0F76-81D1-4F50-BF26-1452F7A5092F}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{0083BA04-3D78-4E08-B178-DFDA4632E2C0}"
+	ProjectSection(SolutionItems) = preProject
+		build.config = build.config
+		build.msbuild = build.msbuild
+		version.props = version.props
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1B3C599-9284-4653-9F22-FD0F726984BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1B3C599-9284-4653-9F22-FD0F726984BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1B3C599-9284-4653-9F22-FD0F726984BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1B3C599-9284-4653-9F22-FD0F726984BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7EE44EE-1306-4EB6-9514-471905AAA493}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7EE44EE-1306-4EB6-9514-471905AAA493}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7EE44EE-1306-4EB6-9514-471905AAA493}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7EE44EE-1306-4EB6-9514-471905AAA493}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A18A0482-9918-4AB7-9991-E2909E98D1C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A18A0482-9918-4AB7-9991-E2909E98D1C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A18A0482-9918-4AB7-9991-E2909E98D1C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A18A0482-9918-4AB7-9991-E2909E98D1C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{792EFC20-811C-44B3-9C93-C3BDE717AEC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{792EFC20-811C-44B3-9C93-C3BDE717AEC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{792EFC20-811C-44B3-9C93-C3BDE717AEC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{792EFC20-811C-44B3-9C93-C3BDE717AEC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8958B567-7955-4714-B3A8-BCFB43B0A588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8958B567-7955-4714-B3A8-BCFB43B0A588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8958B567-7955-4714-B3A8-BCFB43B0A588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8958B567-7955-4714-B3A8-BCFB43B0A588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD78101C-A600-4962-B425-5BA86AB3DD41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD78101C-A600-4962-B425-5BA86AB3DD41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD78101C-A600-4962-B425-5BA86AB3DD41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD78101C-A600-4962-B425-5BA86AB3DD41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1503D66-F2EB-4EC0-829E-F29447DBF92A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1503D66-F2EB-4EC0-829E-F29447DBF92A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1503D66-F2EB-4EC0-829E-F29447DBF92A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1503D66-F2EB-4EC0-829E-F29447DBF92A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB78AA82-9043-443E-8D23-6E1478C84820}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB78AA82-9043-443E-8D23-6E1478C84820}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB78AA82-9043-443E-8D23-6E1478C84820}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB78AA82-9043-443E-8D23-6E1478C84820}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B1B3C599-9284-4653-9F22-FD0F726984BB} = {97486A34-37A8-40EA-AFB1-4E03C8F4091D}
+		{D7EE44EE-1306-4EB6-9514-471905AAA493} = {5A777D0E-BC4F-4CAD-AE83-F95BC7A0788C}
+		{A18A0482-9918-4AB7-9991-E2909E98D1C3} = {97486A34-37A8-40EA-AFB1-4E03C8F4091D}
+		{792EFC20-811C-44B3-9C93-C3BDE717AEC7} = {5A777D0E-BC4F-4CAD-AE83-F95BC7A0788C}
+		{8958B567-7955-4714-B3A8-BCFB43B0A588} = {97486A34-37A8-40EA-AFB1-4E03C8F4091D}
+		{FD78101C-A600-4962-B425-5BA86AB3DD41} = {5A777D0E-BC4F-4CAD-AE83-F95BC7A0788C}
+		{E1503D66-F2EB-4EC0-829E-F29447DBF92A} = {97486A34-37A8-40EA-AFB1-4E03C8F4091D}
+		{DB78AA82-9043-443E-8D23-6E1478C84820} = {5A777D0E-BC4F-4CAD-AE83-F95BC7A0788C}
+		{35A6099E-448B-4A31-A752-C555082ECADF} = {61B65D79-BB0C-4A89-A410-E5C90A646ED6}
+		{0B2F0F76-81D1-4F50-BF26-1452F7A5092F} = {61B65D79-BB0C-4A89-A410-E5C90A646ED6}
+		{0083BA04-3D78-4E08-B178-DFDA4632E2C0} = {61B65D79-BB0C-4A89-A410-E5C90A646ED6}
+	EndGlobalSection
+EndGlobal

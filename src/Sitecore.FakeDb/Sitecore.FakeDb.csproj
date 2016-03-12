@@ -35,25 +35,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Lucene.Net">
-      <HintPath>..\..\Lib\Lucene.Net.dll</HintPath>
+      <HintPath>..\..\lib\Lucene.Net.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sitecore.Abstractions">
-      <HintPath>..\..\Lib\Sitecore.Abstractions.dll</HintPath>
+      <HintPath>..\..\lib\Sitecore.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.ContentSearch">
       <HintPath>..\..\lib\Sitecore.ContentSearch.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Kernel">
-      <HintPath>..\..\Lib\Sitecore.Kernel.dll</HintPath>
+      <HintPath>..\..\lib\Sitecore.Kernel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="sitecore.nexus">
-      <HintPath>..\..\Lib\sitecore.nexus.dll</HintPath>
+      <HintPath>..\..\lib\sitecore.nexus.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sitecore.Buckets">
-      <HintPath>..\..\Lib\Sitecore.Buckets.dll</HintPath>
+      <HintPath>..\..\lib\Sitecore.Buckets.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -68,6 +68,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyVersionInfo.cs">
+      <Link>Properties\AssemblyVersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Buckets\BucketProviderSwitcher.cs" />
     <Compile Include="Buckets\SwitchingBucketProvider.cs" />
     <Compile Include="CompositeFieldBuilder.cs" />
@@ -141,7 +144,6 @@
     <Compile Include="Pipelines\ReleaseFakeDb\ResetSettings.cs" />
     <Compile Include="Pipelines\ReleaseFakeDb\ResetTemplateEngine.cs" />
     <Compile Include="Profile\FakeUserProfile.cs" />
-    <Compile Include="Properties\AssemblyVersionInfo.cs" />
     <Compile Include="Security\AccessControl\AllowAccessResult.cs" />
     <Compile Include="Security\AccessControl\AuthorizationSwitcher.cs" />
     <Compile Include="Security\AccessControl\DenyAccessResult.cs" />
