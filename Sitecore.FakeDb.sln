@@ -52,6 +52,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{0083
 		version.props = version.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NCrunch", "NCrunch", "{3017ED04-3340-4971-8B4C-7A00E4B5D435}"
+	ProjectSection(SolutionItems) = preProject
+		test\Sitecore.FakeDb.Serialization.Tests\Sitecore.FakeDb.Serialization.Tests.v2.ncrunchproject = test\Sitecore.FakeDb.Serialization.Tests\Sitecore.FakeDb.Serialization.Tests.v2.ncrunchproject
+		test\Sitecore.FakeDb.Tests\Sitecore.FakeDb.Tests.v2.ncrunchproject = test\Sitecore.FakeDb.Tests\Sitecore.FakeDb.Tests.v2.ncrunchproject
+		Sitecore.FakeDb.v2.ncrunchsolution = Sitecore.FakeDb.v2.ncrunchsolution
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,5 +113,6 @@ Global
 		{35A6099E-448B-4A31-A752-C555082ECADF} = {61B65D79-BB0C-4A89-A410-E5C90A646ED6}
 		{0B2F0F76-81D1-4F50-BF26-1452F7A5092F} = {61B65D79-BB0C-4A89-A410-E5C90A646ED6}
 		{0083BA04-3D78-4E08-B178-DFDA4632E2C0} = {61B65D79-BB0C-4A89-A410-E5C90A646ED6}
+		{3017ED04-3340-4971-8B4C-7A00E4B5D435} = {61B65D79-BB0C-4A89-A410-E5C90A646ED6}
 	EndGlobalSection
 EndGlobal
