@@ -17,7 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.Serializati
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{61B65D79-BB0C-4A89-A410-E5C90A646ED6}"
 	ProjectSection(SolutionItems) = preProject
+		build.bat = build.bat
 		CHANGELOG.md = CHANGELOG.md
+		deploy.bat = deploy.bat
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -32,6 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{35A6099E
 		.nuget\packages.config = .nuget\packages.config
 		src\Sitecore.FakeDb.AutoFixture\Sitecore.FakeDb.AutoFixture.nuspec = src\Sitecore.FakeDb.AutoFixture\Sitecore.FakeDb.AutoFixture.nuspec
 		src\Sitecore.FakeDb.NSubstitute\Sitecore.FakeDb.NSubstitute.nuspec = src\Sitecore.FakeDb.NSubstitute\Sitecore.FakeDb.NSubstitute.nuspec
+		Sitecore.FakeDb.nuget.xslt = Sitecore.FakeDb.nuget.xslt
 		src\Sitecore.FakeDb\Sitecore.FakeDb.nuspec = src\Sitecore.FakeDb\Sitecore.FakeDb.nuspec
 		src\Sitecore.FakeDb.Serialization\Sitecore.FakeDb.Serialization.nuspec = src\Sitecore.FakeDb.Serialization\Sitecore.FakeDb.Serialization.nuspec
 	EndProjectSection
