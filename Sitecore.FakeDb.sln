@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb", "src\Sitecore.FakeDb\Sitecore.FakeDb.csproj", "{B1B3C599-9284-4653-9F22-FD0F726984BB}"
 EndProject
@@ -28,6 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.AutoFixture
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{35A6099E-448B-4A31-A752-C555082ECADF}"
 	ProjectSection(SolutionItems) = preProject
+		NuGet.Config = NuGet.Config
 		.nuget\packages.config = .nuget\packages.config
 		src\Sitecore.FakeDb.AutoFixture\Sitecore.FakeDb.AutoFixture.nuspec = src\Sitecore.FakeDb.AutoFixture\Sitecore.FakeDb.AutoFixture.nuspec
 		src\Sitecore.FakeDb.NSubstitute\Sitecore.FakeDb.NSubstitute.nuspec = src\Sitecore.FakeDb.NSubstitute\Sitecore.FakeDb.NSubstitute.nuspec
