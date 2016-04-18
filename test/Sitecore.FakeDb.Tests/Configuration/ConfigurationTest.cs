@@ -17,7 +17,6 @@
     [InlineData("CopyItemPrototype", typeof(CopyItemCommandPrototype))]
     [InlineData("CreateItemPrototype", typeof(CreateItemCommandPrototype))]
     [InlineData("DeletePrototype", typeof(DeleteItemCommandPrototype))]
-    [InlineData("GetChildrenPrototype", typeof(GetChildrenCommandPrototype))]
     [InlineData("GetItemPrototype", typeof(GetItemCommandPrototype))]
     [InlineData("GetVersionsPrototype", typeof(GetVersionsCommandPrototype))]
     [InlineData("MoveItemPrototype", typeof(MoveItemCommandPrototype))]

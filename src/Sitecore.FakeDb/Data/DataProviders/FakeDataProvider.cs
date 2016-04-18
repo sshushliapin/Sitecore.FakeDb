@@ -68,6 +68,25 @@
       return true;
     }
 
+    public override IDList GetChildIDs(ItemDefinition itemDefinition, CallContext context)
+    {
+      Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
+
+      var childIds = new IDList();
+      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
+      if (item == null)
+      {
+        return childIds;
+      }
+
+      foreach (var child in item.Children)
+      {
+        childIds.Add(child.ID);
+      }
+
+      return childIds;
+    }
+
     public override IdCollection GetTemplateItemIds(CallContext context)
     {
       if (this.DataStorage == null)

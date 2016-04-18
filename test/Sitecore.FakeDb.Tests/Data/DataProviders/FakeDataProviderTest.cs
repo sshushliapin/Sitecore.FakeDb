@@ -6,6 +6,7 @@
   using FluentAssertions;
   using NSubstitute;
   using Ploeh.AutoFixture.Xunit2;
+  using Sitecore.Collections;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
   using Sitecore.Data.Templates;
@@ -69,6 +70,41 @@
       CallContext context)
     {
       sut.GetBlobStream(blobId, context).Should().BeNull();
+    }
+
+    [Theory, DefaultAutoData]
+    public void GetChildIdsThrowsIfItemDefinitionIsNull(
+      [Greedy] FakeDataProvider sut,
+      CallContext context)
+    {
+      Action action = () => sut.GetChildIDs(null, context);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*itemDefinition");
+    }
+
+    [Theory, DefaultAutoData]
+    public void GetChildIdsReturnsEmptyListIfNoItemFound(
+      [Greedy] FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      CallContext context)
+    {
+      sut.GetChildIDs(itemDefinition, context).Should().BeEmpty();
+    }
+
+    [Theory, DefaultAutoData]
+    public void GetChildIdsReturnsChildIds(
+      [Greedy] FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      DbItem parent,
+      DbItem child1,
+      DbItem child2,
+      CallContext context)
+    {
+      sut.DataStorage.GetFakeItem(itemDefinition.ID).Returns(parent);
+      parent.Children.Add(child1);
+      parent.Children.Add(child2);
+      var expected = new IDList { child1.ID, child2.ID };
+
+      sut.GetChildIDs(itemDefinition, context).ShouldBeEquivalentTo(expected);
     }
 
     [Theory, DefaultAutoData]
