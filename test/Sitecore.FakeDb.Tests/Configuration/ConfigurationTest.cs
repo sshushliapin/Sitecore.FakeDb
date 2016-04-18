@@ -13,7 +13,6 @@
   {
     [Theory]
     [InlineData("AddFromTemplatePrototype", typeof(AddFromTemplateCommandPrototype))]
-    [InlineData("AddVersionPrototype", typeof(AddVersionCommandProtoype))]
     [InlineData("CopyItemPrototype", typeof(CopyItemCommandPrototype))]
     [InlineData("CreateItemPrototype", typeof(CreateItemCommandPrototype))]
     [InlineData("DeletePrototype", typeof(DeleteItemCommandPrototype))]
