@@ -56,6 +56,18 @@
     }
 #endif
 
+    public override int AddVersion(ItemDefinition itemDefinition, VersionUri baseVersion, CallContext context)
+    {
+      Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
+      Assert.ArgumentNotNull(baseVersion, "baseVersion");
+
+      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
+      Assert.IsNotNull(item, "Unable to add item version. The item '{0}' is not found.", itemDefinition.ID);
+
+      item.AddVersion(baseVersion.Language.Name, baseVersion.Version.Number);
+      return item.GetVersionCount(baseVersion.Language.Name);
+    }
+
     public override bool ChangeTemplate(ItemDefinition itemDefinition, TemplateChangeList changes, CallContext context)
     {
       Assert.ArgumentNotNull(itemDefinition, "itemDefinition");

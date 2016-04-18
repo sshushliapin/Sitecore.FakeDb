@@ -19,6 +19,49 @@
   public class FakeDataProviderTest
   {
     [Theory, DefaultAutoData]
+    public void AddVersionThrowsIfItemDefinitionIsNull(FakeDataProvider sut, VersionUri baseVersion)
+    {
+      Action action = () => sut.AddVersion(null, baseVersion, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*itemDefinition");
+    }
+
+    [Theory, DefaultAutoData]
+    public void AddVersionThrowsIfBaseVersionIsNull(FakeDataProvider sut, ItemDefinition itemDefinition)
+    {
+      Action action = () => sut.AddVersion(itemDefinition, null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*baseVersion");
+    }
+
+    [Theory, DefaultAutoData]
+    public void AddVersionThrowsIfItemDefinitionNotFound(
+      [Greedy]FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      VersionUri baseVersion)
+    {
+      Action action = () => sut.AddVersion(itemDefinition, baseVersion, null);
+      action.ShouldThrow<InvalidOperationException>()
+        .WithMessage("Unable to add item version. The item '{0}' is not found.".FormatWith(itemDefinition.ID));
+    }
+
+    [Theory, DefaultAutoData]
+    public void AddVersionAddsNewVersionAndReturnsNewVersionNumber(
+      [Greedy]FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      Language language,
+      int version,
+      DbItem item)
+    {
+      sut.DataStorage.GetFakeItem(itemDefinition.ID).Returns(item);
+      var baseVersion = new VersionUri(language, new Version(version));
+      var expectedVersion = version + 1;
+
+      var result = sut.AddVersion(itemDefinition, baseVersion, null);
+
+      result.Should().Be(expectedVersion);
+      item.GetVersionCount(language.Name).Should().Be(expectedVersion);
+    }
+
+    [Theory, DefaultAutoData]
     public void ChangeTemplateThrowsIfItemDefinitionIsNull(FakeDataProvider sut)
     {
       Action action = () => sut.ChangeTemplate(null, null, null);
@@ -36,7 +79,6 @@
     public void ChangeTemplateThrowsIfNoDbItemFound([Greedy]FakeDataProvider sut, ItemDefinition def, TemplateChangeList changes)
     {
       Action action = () => sut.ChangeTemplate(def, changes, null);
-
       action.ShouldThrow<InvalidOperationException>()
             .WithMessage("Unable to change item template. The item '{0}' is not found.".FormatWith(def.ID));
     }
@@ -45,9 +87,7 @@
     public void ChangeTemplateThrowsIfNoTargetTemplateFound([Greedy]FakeDataProvider sut, ItemDefinition def, TemplateChangeList changes, DbItem item)
     {
       sut.DataStorage.GetFakeItem(def.ID).Returns(item);
-
       Action action = () => sut.ChangeTemplate(def, changes, null);
-
       action.ShouldThrow<InvalidOperationException>()
             .WithMessage("Unable to change item template. The target template is not found.");
     }
