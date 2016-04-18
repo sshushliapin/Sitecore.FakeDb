@@ -35,7 +35,6 @@
       commands.CopyItemPrototype = new CopyItemCommandPrototype(e.Database);
       commands.CreateItemPrototype = new CreateItemCommandPrototype(e.Database);
       commands.DeletePrototype = new DeleteItemCommandPrototype(e.Database);
-      commands.GetChildrenPrototype = new GetChildrenCommandPrototype(e.Database);
       commands.GetItemPrototype = new GetItemCommandPrototype(e.Database);
       commands.GetVersionsPrototype = new GetVersionsCommandPrototype(e.Database);
       commands.MoveItemPrototype = new MoveItemCommandPrototype(e.Database);
