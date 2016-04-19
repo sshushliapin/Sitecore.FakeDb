@@ -20,7 +20,6 @@
     [InlineData("GetVersionsPrototype", typeof(GetVersionsCommandPrototype))]
     [InlineData("MoveItemPrototype", typeof(MoveItemCommandPrototype))]
     [InlineData("RemoveDataPrototype", typeof(RemoveDataCommandPrototype))]
-    [InlineData("RemoveVersionPrototype", typeof(RemoveVersionCommandPrototype))]
     [InlineData("SaveItemPrototype", typeof(SaveItemCommandPrototype))]
     public void ShouldRegisterFakeCommand(string propertyName, Type propertyType)
     {

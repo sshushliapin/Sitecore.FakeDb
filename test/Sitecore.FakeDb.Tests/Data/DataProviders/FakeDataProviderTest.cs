@@ -447,5 +447,60 @@
 
       sut.ResolvePath(path, context).Should().Be(item1.ID);
     }
+
+    [Theory, DefaultAutoData]
+    public void RemoveVersionThrowsIfItemDefinitionIsNull(FakeDataProvider sut, VersionUri baseVersion)
+    {
+      Action action = () => sut.RemoveVersion(null, baseVersion, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*itemDefinition");
+    }
+
+    [Theory, DefaultAutoData]
+    public void RemoveVersionThrowsIfBaseVersionIsNull(FakeDataProvider sut, ItemDefinition itemDefinition)
+    {
+      Action action = () => sut.RemoveVersion(itemDefinition, null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*version");
+    }
+
+    [Theory, DefaultAutoData]
+    public void RemoveVersionThrowsIfItemDefinitionNotFound(
+      [Greedy]FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      VersionUri baseVersion)
+    {
+      Action action = () => sut.RemoveVersion(itemDefinition, baseVersion, null);
+      action.ShouldThrow<InvalidOperationException>()
+        .WithMessage("Unable to remove item version. The item '{0}' is not found.".FormatWith(itemDefinition.ID));
+    }
+
+    [Theory, DefaultAutoData]
+    public void RemoveVersionReturnsFalseIfNoVersionFound(
+      [Greedy]FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      VersionUri version,
+      DbItem item)
+    {
+      sut.DataStorage.GetFakeItem(itemDefinition.ID).Returns(item);
+      sut.RemoveVersion(itemDefinition, version, null).Should().BeFalse();
+    }
+
+    [Theory, DefaultAutoData]
+    public void RemoveVersionRemovesVersionAndReturnsTrue(
+      [Greedy]FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      Language language,
+      DbItem item)
+    {
+      sut.DataStorage.GetFakeItem(itemDefinition.ID).Returns(item);
+      item.AddVersion(language.Name);
+      item.AddVersion(language.Name);
+      var version = new VersionUri(language, Version.Latest);
+      var expectedVersionCount = 1;
+
+      var result = sut.RemoveVersion(itemDefinition, version, null);
+
+      result.Should().BeTrue();
+      item.GetVersionCount(language.Name).Should().Be(expectedVersionCount);
+    }
   }
 }

@@ -196,6 +196,17 @@
       return new LanguageCollection { Language.Parse("en") };
     }
 
+    public override bool RemoveVersion(ItemDefinition itemDefinition, VersionUri version, CallContext context)
+    {
+      Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
+      Assert.ArgumentNotNull(version, "version");
+
+      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
+      Assert.IsNotNull(item, "Unable to remove item version. The item '{0}' is not found.", itemDefinition.ID);
+
+      return item.RemoveVersion(version.Language.Name, version.Version.Number);
+    }
+
     public override ID ResolvePath(string itemPath, CallContext context)
     {
       var storage = this.DataStorage;
