@@ -4,6 +4,7 @@
   using Sitecore.Data.Items;
   using Sitecore.Diagnostics;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class GetRootItemCommand : Sitecore.Data.Engines.DataCommands.GetRootItemCommand
   {
     private readonly DataStorage dataStorage;

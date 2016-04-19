@@ -40,7 +40,6 @@
       commands.GetChildrenPrototype = new GetChildrenCommandPrototype(e.Database);
       commands.GetItemPrototype = new GetItemCommandPrototype(e.Database);
       commands.GetParentPrototype = new GetParentCommandPrototype(e.Database);
-      commands.GetRootItemPrototype = new GetRootItemCommandPrototype(e.Database);
       commands.GetVersionsPrototype = new GetVersionsCommandPrototype(e.Database);
       commands.HasChildrenPrototype = new HasChildrenCommandPrototype(e.Database);
       commands.MoveItemPrototype = new MoveItemCommandPrototype(e.Database);

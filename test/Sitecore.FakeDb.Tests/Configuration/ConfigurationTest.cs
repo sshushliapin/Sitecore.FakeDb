@@ -22,7 +22,6 @@
     [InlineData("GetChildrenPrototype", typeof(GetChildrenCommandPrototype))]
     [InlineData("GetItemPrototype", typeof(GetItemCommandPrototype))]
     [InlineData("GetParentPrototype", typeof(GetParentCommandPrototype))]
-    [InlineData("GetRootItemPrototype", typeof(GetRootItemCommandPrototype))]
     [InlineData("GetVersionsPrototype", typeof(GetVersionsCommandPrototype))]
     [InlineData("HasChildrenPrototype", typeof(HasChildrenCommandPrototype))]
     [InlineData("MoveItemPrototype", typeof(MoveItemCommandPrototype))]
