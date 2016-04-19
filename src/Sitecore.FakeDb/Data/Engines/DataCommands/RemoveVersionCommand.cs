@@ -28,8 +28,9 @@
     {
       var dbitem = this.dataStorage.GetFakeItem(this.Item.ID);
       var language = this.Item.Language.Name;
+      var version = this.Item.Version.Number;
 
-      return dbitem.RemoveVersion(language);
+      return dbitem.RemoveVersion(language, version);
     }
   }
 }

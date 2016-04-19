@@ -574,6 +574,29 @@
     }
 
     [Fact]
+    public void ShouldRemoveSpecificVersion()
+    {
+      // arrange
+      using (var db = new Db
+        {
+          new DbItem("home")
+            {
+              new DbField("Title") { { "en", 1, "v1" }, { "en", 2, "v2" } }
+            }
+        })
+      {
+        var item = db.GetItem("/sitecore/content/home", "en", 1);
+
+        // act
+        item.Versions.RemoveVersion();
+
+        // assert
+        db.GetItem("/sitecore/content/home", "en", 1)["Title"].Should().BeEmpty();
+        db.GetItem("/sitecore/content/home", "en", 2)["Title"].Should().Be("v2");
+      }
+    }
+
+    [Fact]
     public void ShouldRenameItem()
     {
       // arrange
