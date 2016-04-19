@@ -72,6 +72,48 @@
     }
 
     [Theory, DefaultAutoData]
+    public void GetParendIdThrowsIfItemDefinitionIsNull([Greedy] FakeDataProvider sut, CallContext context)
+    {
+      Action action = () => sut.GetParentID(null, context);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*itemDefinition");
+    }
+
+    [Theory, DefaultAutoData]
+    public void GetParendIdReturnsParentId(
+      [Greedy] FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      DbItem item,
+      CallContext context)
+    {
+      sut.DataStorage.GetFakeItem(itemDefinition.ID).Returns(item);
+      var result = sut.GetParentID(itemDefinition, context);
+      result.Should().Be(item.ParentID);
+    }
+
+    [Theory, DefaultAutoData]
+    public void GetParendIdReturnsNullIfNoItemFound(
+      [Greedy] FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      CallContext context)
+    {
+      var result = sut.GetParentID(itemDefinition, context);
+      result.Should().BeNull();
+    }
+
+    [Theory, DefaultAutoData]
+    public void GetParendIdReturnsNullForSitecoreRootItem(
+      [Greedy] FakeDataProvider sut,
+      string itemName,
+      ID id,
+      ID templateId,
+      CallContext context)
+    {
+      var itemDefinition = new ItemDefinition(ItemIDs.RootID, itemName, id, templateId);
+      var result = sut.GetParentID(itemDefinition, context);
+      result.Should().BeNull();
+    }
+
+    [Theory, DefaultAutoData]
     public void ShouldGetTemplateIds([Greedy]FakeDataProvider sut, DbTemplate template)
     {
       sut.DataStorage.GetFakeTemplates().Returns(new[] { template });

@@ -37,7 +37,6 @@
       commands.DeletePrototype = new DeleteItemCommandPrototype(e.Database);
       commands.GetChildrenPrototype = new GetChildrenCommandPrototype(e.Database);
       commands.GetItemPrototype = new GetItemCommandPrototype(e.Database);
-      commands.GetParentPrototype = new GetParentCommandPrototype(e.Database);
       commands.GetVersionsPrototype = new GetVersionsCommandPrototype(e.Database);
       commands.MoveItemPrototype = new MoveItemCommandPrototype(e.Database);
       commands.RemoveDataPrototype = new RemoveDataCommandPrototype(e.Database);

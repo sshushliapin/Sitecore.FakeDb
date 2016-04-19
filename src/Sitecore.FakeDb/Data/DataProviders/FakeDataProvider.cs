@@ -42,6 +42,19 @@
       return this.DataStorage.GetBlobStream(blobId);
     }
 
+    public override ID GetParentID(ItemDefinition itemDefinition, CallContext context)
+    {
+      Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
+
+      if (itemDefinition.ID == ItemIDs.RootID)
+      {
+        return null;
+      }
+
+      var fakeItem = this.DataStorage.GetFakeItem(itemDefinition.ID);
+      return fakeItem != null ? fakeItem.ParentID : null;
+    }
+
     public override bool ChangeTemplate(ItemDefinition itemDefinition, TemplateChangeList changes, CallContext context)
     {
       Assert.ArgumentNotNull(itemDefinition, "itemDefinition");

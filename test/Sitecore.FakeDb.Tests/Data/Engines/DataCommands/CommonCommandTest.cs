@@ -18,7 +18,6 @@
     [InlineDefaultAutoData(typeof(DeleteItemCommand))]
     [InlineDefaultAutoData(typeof(GetChildrenCommand))]
     [InlineDefaultAutoData(typeof(GetItemCommand))]
-    [InlineDefaultAutoData(typeof(GetParentCommand))]
     [InlineDefaultAutoData(typeof(GetVersionsCommand))]
     [InlineDefaultAutoData(typeof(MoveItemCommand))]
     [InlineDefaultAutoData(typeof(RemoveVersionCommand))]

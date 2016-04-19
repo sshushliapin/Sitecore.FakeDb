@@ -19,7 +19,6 @@
     [InlineAutoData(typeof(DeleteItemCommandPrototype))]
     [InlineAutoData(typeof(GetChildrenCommandPrototype))]
     [InlineAutoData(typeof(GetItemCommandPrototype))]
-    [InlineAutoData(typeof(GetParentCommandPrototype))]
     [InlineAutoData(typeof(GetVersionsCommandPrototype))]
     [InlineAutoData(typeof(MoveItemCommandPrototype))]
     [InlineAutoData(typeof(RemoveDataCommandPrototype))]
