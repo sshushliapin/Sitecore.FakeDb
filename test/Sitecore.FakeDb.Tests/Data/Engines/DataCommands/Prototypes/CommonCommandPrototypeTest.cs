@@ -23,7 +23,6 @@
     [InlineAutoData(typeof(GetItemCommandPrototype))]
     [InlineAutoData(typeof(GetParentCommandPrototype))]
     [InlineAutoData(typeof(GetVersionsCommandPrototype))]
-    [InlineAutoData(typeof(HasChildrenCommandPrototype))]
     [InlineAutoData(typeof(MoveItemCommandPrototype))]
     [InlineAutoData(typeof(RemoveDataCommandPrototype))]
     [InlineAutoData(typeof(RemoveVersionCommandPrototype))]
