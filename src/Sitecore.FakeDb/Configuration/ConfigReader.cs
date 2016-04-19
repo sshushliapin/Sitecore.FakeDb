@@ -38,7 +38,6 @@
       commands.GetVersionsPrototype = new GetVersionsCommandPrototype(e.Database);
       commands.MoveItemPrototype = new MoveItemCommandPrototype(e.Database);
       commands.RemoveDataPrototype = new RemoveDataCommandPrototype(e.Database);
-      commands.RemoveVersionPrototype = new RemoveVersionCommandPrototype(e.Database);
       commands.SaveItemPrototype = new SaveItemCommandPrototype(e.Database);
     }
 
