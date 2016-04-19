@@ -14,11 +14,9 @@
     [Theory]
     [InlineAutoData(typeof(AddFromTemplateCommandPrototype))]
     [InlineAutoData(typeof(AddVersionCommandProtoype))]
-    [InlineAutoData(typeof(BlobStreamExistsCommandPrototype))]
     [InlineAutoData(typeof(CopyItemCommandPrototype))]
     [InlineAutoData(typeof(CreateItemCommandPrototype))]
     [InlineAutoData(typeof(DeleteItemCommandPrototype))]
-    [InlineAutoData(typeof(GetBlobStreamCommandPrototype))]
     [InlineAutoData(typeof(GetChildrenCommandPrototype))]
     [InlineAutoData(typeof(GetItemCommandPrototype))]
     [InlineAutoData(typeof(GetParentCommandPrototype))]
@@ -28,7 +26,6 @@
     [InlineAutoData(typeof(RemoveVersionCommandPrototype))]
     [InlineAutoData(typeof(ResolvePathCommandPrototype))]
     [InlineAutoData(typeof(SaveItemCommandPrototype))]
-    [InlineAutoData(typeof(SetBlobStreamCommandPrototype))]
     public void DoExecuteThrowsNotSupportedException(Type prototype)
     {
       var sut = Activator.CreateInstance(prototype, Database.GetDatabase("master"));

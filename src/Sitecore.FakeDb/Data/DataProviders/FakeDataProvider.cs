@@ -2,6 +2,7 @@
 {
   using System;
   using System.Collections.Generic;
+  using System.IO;
   using System.Linq;
   using System.Threading;
   using Sitecore.Collections;
@@ -66,6 +67,11 @@
 
       item.TemplateID = changes.Target.ID;
       return true;
+    }
+
+    public override Stream GetBlobStream(Guid blobId, CallContext context)
+    {
+      return this.DataStorage.GetBlobStream(blobId);
     }
 
     public override IDList GetPublishQueue(DateTime @from, DateTime to, CallContext context)
@@ -194,6 +200,13 @@
       var items = Query.SelectItems(query, this.Database);
 
       return items != null ? IDList.Build(items.Select(i => i.ID).ToArray()) : new IDList();
+    }
+
+    public override bool SetBlobStream(Stream stream, Guid blobId, CallContext context)
+    {
+      this.DataStorage.SetBlobStream(blobId, stream);
+
+      return true;
     }
 
     /// <summary>

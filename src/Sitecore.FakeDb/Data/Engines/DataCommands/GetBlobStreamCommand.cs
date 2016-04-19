@@ -4,6 +4,7 @@
   using System.IO;
   using Sitecore.Diagnostics;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class GetBlobStreamCommand : Sitecore.Data.Engines.DataCommands.GetBlobStreamCommand
   {
     private readonly DataStorage dataStorage;

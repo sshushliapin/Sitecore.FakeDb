@@ -3,6 +3,7 @@
   using System;
   using Sitecore.Diagnostics;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class BlobStreamExistsCommand : Sitecore.Data.Engines.DataCommands.BlobStreamExistsCommand
   {
     private readonly DataStorage dataStorage;
