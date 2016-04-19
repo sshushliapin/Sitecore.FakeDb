@@ -13,11 +13,9 @@
     [Theory]
     [InlineDefaultAutoData(typeof(AddFromTemplateCommand))]
     [InlineDefaultAutoData(typeof(AddVersionCommand))]
-    [InlineDefaultAutoData(typeof(BlobStreamExistsCommand))]
     [InlineDefaultAutoData(typeof(CopyItemCommand))]
     [InlineDefaultAutoData(typeof(CreateItemCommand))]
     [InlineDefaultAutoData(typeof(DeleteItemCommand))]
-    [InlineDefaultAutoData(typeof(GetBlobStreamCommand))]
     [InlineDefaultAutoData(typeof(GetChildrenCommand))]
     [InlineDefaultAutoData(typeof(GetItemCommand))]
     [InlineDefaultAutoData(typeof(GetParentCommand))]
@@ -26,7 +24,6 @@
     [InlineDefaultAutoData(typeof(RemoveVersionCommand))]
     [InlineDefaultAutoData(typeof(ResolvePathCommand))]
     [InlineDefaultAutoData(typeof(SaveItemCommand))]
-    [InlineDefaultAutoData(typeof(SetBlobStreamCommand))]
     public void DoExecuteThrowsNotSupportedException(Type command, DataStorage dataStorage)
     {
       var sut = ReflectionUtil.CreateObject(command, new object[] { dataStorage });

@@ -1,6 +1,8 @@
 ﻿namespace Sitecore.FakeDb.Data.DataProviders
 {
+  using System;
   using System.Collections.Generic;
+  using System.IO;
   using System.Linq;
   using System.Threading;
   using Sitecore.Collections;
@@ -33,6 +35,11 @@
     public virtual DataStorage DataStorage
     {
       get { return this.dataStorage ?? DataStorageSwitcher.CurrentValue(this.Database.Name); }
+    }
+
+    public override Stream GetBlobStream(Guid blobId, CallContext context)
+    {
+      return this.DataStorage.GetBlobStream(blobId);
     }
 
     public override bool ChangeTemplate(ItemDefinition itemDefinition, TemplateChangeList changes, CallContext context)
@@ -159,6 +166,13 @@
       var items = Query.SelectItems(query, this.Database);
 
       return items != null ? IDList.Build(items.Select(i => i.ID).ToArray()) : new IDList();
+    }
+
+    public override bool SetBlobStream(Stream stream, Guid blobId, CallContext context)
+    {
+      this.DataStorage.SetBlobStream(blobId, stream);
+
+      return true;
     }
 
     /// <summary>

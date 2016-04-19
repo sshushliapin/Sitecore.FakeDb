@@ -4,6 +4,7 @@ namespace Sitecore.FakeDb.Data.Engines.DataCommands.Prototypes
   using System.IO;
   using Sitecore.Data;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class GetBlobStreamCommandPrototype : Sitecore.Data.Engines.DataCommands.GetBlobStreamCommand
   {
     private readonly DataEngineCommand innerCommand;

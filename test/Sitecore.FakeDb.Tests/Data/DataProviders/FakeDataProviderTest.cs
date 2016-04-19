@@ -1,6 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.DataProviders
 {
   using System;
+  using System.IO;
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
@@ -48,6 +49,26 @@
 
       action.ShouldThrow<InvalidOperationException>()
             .WithMessage("Unable to change item template. The target template is not found.");
+    }
+
+    [Theory, DefaultAutoData]
+    public void GetBlobStreamReturnsBlobStreamFromDataStorage(
+      [Greedy] FakeDataProvider sut,
+      Guid blobId,
+      [Modest] MemoryStream stream,
+      CallContext context)
+    {
+      sut.DataStorage.GetBlobStream(blobId).Returns(stream);
+      sut.GetBlobStream(blobId, context).Should().BeSameAs(stream);
+    }
+
+    [Theory, DefaultAutoData]
+    public void GetBlobStreamReturnsNullIfNoBlobStreamExists(
+      [Greedy] FakeDataProvider sut,
+      Guid blobId,
+      CallContext context)
+    {
+      sut.GetBlobStream(blobId, context).Should().BeNull();
     }
 
     [Theory, DefaultAutoData]
@@ -223,7 +244,7 @@
     }
 
     [Theory, DefaultAutoData]
-    public void ShouldreturnNullIfNoPropertySet(FakeDataProvider sut, string name, CallContext context)
+    public void ShouldReturnNullIfNoPropertySet(FakeDataProvider sut, string name, CallContext context)
     {
       sut.GetProperty(name, context).Should().BeNull();
     }
@@ -257,6 +278,17 @@
       var versionUri = new VersionUri(language, version);
 
       sut.GetItemFields(def, versionUri, context).Should().HaveCount(1);
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldSetBlobStreamInDataStorage(
+      [Greedy] FakeDataProvider sut,
+      Guid blobId,
+      [Modest]MemoryStream stream,
+      CallContext context)
+    {
+      sut.SetBlobStream(stream, blobId, context);
+      sut.DataStorage.Received().SetBlobStream(blobId, stream);
     }
   }
 }

@@ -32,11 +32,9 @@
 
       commands.AddFromTemplatePrototype = new AddFromTemplateCommandPrototype(e.Database);
       commands.AddVersionPrototype = new AddVersionCommandProtoype(e.Database);
-      commands.BlobStreamExistsPrototype = new BlobStreamExistsCommandPrototype(e.Database);
       commands.CopyItemPrototype = new CopyItemCommandPrototype(e.Database);
       commands.CreateItemPrototype = new CreateItemCommandPrototype(e.Database);
       commands.DeletePrototype = new DeleteItemCommandPrototype(e.Database);
-      commands.GetBlobStreamPrototype = new GetBlobStreamCommandPrototype(e.Database);
       commands.GetChildrenPrototype = new GetChildrenCommandPrototype(e.Database);
       commands.GetItemPrototype = new GetItemCommandPrototype(e.Database);
       commands.GetParentPrototype = new GetParentCommandPrototype(e.Database);
@@ -46,7 +44,6 @@
       commands.RemoveVersionPrototype = new RemoveVersionCommandPrototype(e.Database);
       commands.ResolvePathPrototype = new ResolvePathCommandPrototype(e.Database);
       commands.SaveItemPrototype = new SaveItemCommandPrototype(e.Database);
-      commands.SetBlobStreamPrototype = new SetBlobStreamCommandPrototype(e.Database);
     }
 
     private static void SetAppDomainAppPath()
