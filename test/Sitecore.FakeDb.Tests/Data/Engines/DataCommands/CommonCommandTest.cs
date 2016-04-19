@@ -22,7 +22,6 @@
     [InlineDefaultAutoData(typeof(GetVersionsCommand))]
     [InlineDefaultAutoData(typeof(MoveItemCommand))]
     [InlineDefaultAutoData(typeof(RemoveVersionCommand))]
-    [InlineDefaultAutoData(typeof(ResolvePathCommand))]
     [InlineDefaultAutoData(typeof(SaveItemCommand))]
     public void DoExecuteThrowsNotSupportedException(Type command, DataStorage dataStorage)
     {

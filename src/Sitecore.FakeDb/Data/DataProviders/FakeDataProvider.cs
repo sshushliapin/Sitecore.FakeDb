@@ -152,6 +152,23 @@
       return new LanguageCollection { Language.Parse("en") };
     }
 
+    public override ID ResolvePath(string itemPath, CallContext context)
+    {
+      var storage = this.DataStorage;
+      // TODO: Move the validation to a global place
+      Assert.IsNotNull(storage, "Sitecore.FakeDb.Db instance has not been initialized.");
+
+      if (ID.IsID(itemPath))
+      {
+        return new ID(itemPath);
+      }
+
+      itemPath = StringUtil.RemovePostfix("/", itemPath);
+      var item = storage.GetFakeItems().FirstOrDefault(fi => string.Compare(fi.FullPath, itemPath, StringComparison.OrdinalIgnoreCase) == 0);
+
+      return item != null ? item.ID : null;
+    }
+
     public override ID SelectSingleID(string query, CallContext context)
     {
       query = query.Replace("fast:", string.Empty);

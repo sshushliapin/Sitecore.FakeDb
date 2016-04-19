@@ -290,5 +290,44 @@
       sut.SetBlobStream(stream, blobId, context);
       sut.DataStorage.Received().SetBlobStream(blobId, stream);
     }
+
+    [Theory]
+    [InlineDefaultAutoData("/sitecore/content/home")]
+    [InlineDefaultAutoData("/Sitecore/Content/Home")]
+    [InlineDefaultAutoData("/Sitecore/Content/Home/")]
+    public void ShouldResolvePath(string path, [Greedy] FakeDataProvider sut, DbItem item, CallContext context)
+    {
+      item.FullPath = "/sitecore/content/home";
+      sut.DataStorage.GetFakeItems().Returns(new[] { item });
+
+      sut.ResolvePath(path, context).Should().Be(item.ID);
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldReturnNullIfNoItemFound([Greedy] FakeDataProvider sut, string path, CallContext context)
+    {
+      sut.ResolvePath(path, context).Should().BeNull();
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldReturnIdIfPathIsId([Greedy] FakeDataProvider sut, ID itemId, CallContext context)
+    {
+      sut.ResolvePath(itemId.ToString(), context).Should().Be(itemId);
+    }
+
+    [Theory, DefaultAutoData]
+    public void ShouldResolveFirstItemId(
+      [Greedy] FakeDataProvider sut,
+      DbItem item1,
+      DbItem item2,
+      CallContext context)
+    {
+      const string path = "/sitecore/content/home";
+      item1.FullPath = path;
+      item2.FullPath = path;
+      sut.DataStorage.GetFakeItems().Returns(new[] { item1, item2 });
+
+      sut.ResolvePath(path, context).Should().Be(item1.ID);
+    }
   }
 }

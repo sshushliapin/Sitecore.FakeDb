@@ -24,7 +24,6 @@
     [InlineAutoData(typeof(MoveItemCommandPrototype))]
     [InlineAutoData(typeof(RemoveDataCommandPrototype))]
     [InlineAutoData(typeof(RemoveVersionCommandPrototype))]
-    [InlineAutoData(typeof(ResolvePathCommandPrototype))]
     [InlineAutoData(typeof(SaveItemCommandPrototype))]
     public void DoExecuteThrowsNotSupportedException(Type prototype)
     {

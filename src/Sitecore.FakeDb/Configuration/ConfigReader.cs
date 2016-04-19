@@ -42,7 +42,6 @@
       commands.MoveItemPrototype = new MoveItemCommandPrototype(e.Database);
       commands.RemoveDataPrototype = new RemoveDataCommandPrototype(e.Database);
       commands.RemoveVersionPrototype = new RemoveVersionCommandPrototype(e.Database);
-      commands.ResolvePathPrototype = new ResolvePathCommandPrototype(e.Database);
       commands.SaveItemPrototype = new SaveItemCommandPrototype(e.Database);
     }
 
