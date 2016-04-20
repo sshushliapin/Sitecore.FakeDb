@@ -162,12 +162,48 @@
     }
 
     [Theory, AutoData]
-    public void ShouldReturnFalseIfNoValueFoundForLanguage(DbItem sut, DbField field, string language)
+    public void RemoveVersionReturnsFalseIfNoValueFoundForLanguage(DbItem sut, DbField field, string language)
     {
       field.Values[language] = new Dictionary<int, string>();
       sut.Add(field);
 
       sut.RemoveVersion(language).Should().BeFalse();
+    }
+
+    [Theory, AutoData]
+    public void RemoveVersionReturnsTrueAndRemovesLatestFieldVersion(
+      DbItem sut,
+      [NoAutoProperties]DbField field,
+      string language,
+      string value1,
+      string value2)
+    {
+      field.Add(language, 1, value1);
+      field.Add(language, 2, value2);
+      sut.Fields.Add(field);
+
+      sut.RemoveVersion(language).Should().BeTrue();
+
+      field.GetValue(language, 1).Should().Be(value1);
+      field.GetValue(language, 2).Should().BeEmpty();
+    }
+
+    [Theory, AutoData]
+    public void RemoveVersionByNumberReturnsTrueAndRemovesVersionByNumber(
+      DbItem sut,
+      [NoAutoProperties]DbField field,
+      string language,
+      string value1,
+      string value2)
+    {
+      field.Add(language, 1, value1);
+      field.Add(language, 2, value2);
+      sut.Fields.Add(field);
+
+      sut.RemoveVersion(language, 1).Should().BeTrue();
+
+      field.GetValue(language, 1).Should().BeEmpty();
+      field.GetValue(language, 2).Should().Be(value2);
     }
   }
 }

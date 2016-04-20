@@ -202,6 +202,17 @@ namespace Sitecore.FakeDb
     /// <returns>true if varsion was successfully removed; otherwise, false.</returns>
     public bool RemoveVersion(string language)
     {
+      return this.RemoveVersion(language, 0);
+    }
+
+    /// <summary>
+    /// Removes the item version.
+    /// </summary>
+    /// <param name="language">The language.</param>
+    /// <param name="version">The version number.</param>
+    /// <returns>true if varsion was successfully removed; otherwise, false.</returns>
+    public bool RemoveVersion(string language, int version)
+    {
       Assert.ArgumentNotNull(language, "language");
 
       var removed = false;
@@ -214,9 +225,7 @@ namespace Sitecore.FakeDb
         }
 
         var langValues = field.Values[language];
-        var lastVersion = langValues.LastOrDefault();
-
-        removed = langValues.Remove(lastVersion);
+        removed = version == 0 ? langValues.Remove(langValues.LastOrDefault()) : langValues.Remove(version);
       }
 
       if (!this.versionsCount.ContainsKey(language))
