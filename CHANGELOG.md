@@ -1,4 +1,7 @@
-﻿1.0.1
+﻿1.0.2
+* [FIX] #128: Unable to remove a specific item version
+
+1.0.1
 * [FIX] #126: Remove `Tracking` field from the default configuration
 
 1.0.0
