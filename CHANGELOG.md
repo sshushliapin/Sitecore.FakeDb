@@ -1,4 +1,7 @@
-﻿1.0.2
+﻿1.1.0
+* [NEW] #129: Adding DbFields with standard values to DbTemplates
+
+1.0.2
 * [FIX] #128: Unable to remove a specific item version
 
 1.0.1
