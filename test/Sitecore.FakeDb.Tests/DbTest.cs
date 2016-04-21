@@ -8,6 +8,7 @@
   using Sitecore.Common;
   using Sitecore.Configuration;
   using Sitecore.Data;
+  using Sitecore.Data.Fields;
   using Sitecore.Data.Items;
   using Sitecore.Data.Managers;
   using Sitecore.Exceptions;
@@ -1708,6 +1709,27 @@
         // assert
         Assert.Equal("{E02A54E4-1037-4569-A735-F582B8ABA8A4}", home[FieldIDs.DefaultWorkflow]);
         Assert.Equal("{E02A54E4-1037-4569-A735-F582B8ABA8A4}", home[FieldIDs.Workflow]);
+      }
+    }
+
+    [Fact]
+    public void ShouldCreateTemplateFieldWithStandardValues()
+    {
+      // arrange & act
+      const string checkboxStandardValue = "1";
+      using (var db = new Db
+        {
+          new DbTemplate("Page", this.templateId)
+            {
+              { new DbField("Hide") { Type = "checkbox" }, checkboxStandardValue }
+            },
+          new DbItem("home", ID.NewID, this.templateId)
+        })
+      {
+        var home = db.GetItem("/sitecore/content/home");
+
+        // assert
+        Assert.True(new CheckboxField(home.Fields["Hide"]).Checked);
       }
     }
   }
