@@ -88,11 +88,17 @@
       this.Add(field, standardValue);
     }
 
-    protected void Add(DbField field, string standardValue)
+    public void Add(DbField field, string standardValue)
     {
       this.Fields.Add(field);
 
-      var standardValueField = new DbField(field.Name, field.ID) { Value = standardValue };
+      var standardValueField = new DbField(field.Name, field.ID)
+      {
+        Shared = field.Shared,
+        Source = field.Source,
+        Type = field.Type,
+        Value = standardValue
+      };
       this.StandardValues.Add(standardValueField);
     }
   }

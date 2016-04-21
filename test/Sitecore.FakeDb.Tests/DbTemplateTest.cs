@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
+  using System;
   using System.Linq;
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
@@ -23,20 +24,15 @@
     [Fact]
     public void ShouldCreateTemplateFieldsUsingNamesAsLowercaseKeys()
     {
-      // arrange
       var template = new DbTemplate { "Title", "Description" };
-
-      // assert
       template.Fields.Where(f => !f.Name.StartsWith("__")).Select(f => f.Name).ShouldBeEquivalentTo(new[] { "Title", "Description" });
     }
 
     [Theory, AutoData]
     public void ShouldSetStandardValues([NoAutoProperties]DbTemplate template)
     {
-      // act
       template.Add("Title", "$name");
 
-      // assert
       var id = template.Fields.Single(f => f.Name == "Title").ID;
 
       template.Fields[id].Value.Should().Be(string.Empty);
@@ -46,10 +42,8 @@
     [Theory, AutoData]
     public void ShouldAddFieldById([NoAutoProperties]DbTemplate template, ID fieldId)
     {
-      // act
       template.Add(fieldId);
 
-      // assert
       template.Fields[fieldId].Should().NotBeNull();
       template.Fields[fieldId].Name.Should().Be(fieldId.ToShortID().ToString());
     }
@@ -63,10 +57,8 @@
     [Theory, AutoData]
     public void ShouldGetBaseIdsFromFieldsIfExist([NoAutoProperties]DbTemplate template, ID id1, ID id2)
     {
-      // arrange
       template.Fields.Add(new DbField(FieldIDs.BaseTemplate) { Value = id1 + "|" + id2 });
 
-      // act & assert
       template.BaseIDs[0].Should().Be(id1);
       template.BaseIDs[1].Should().Be(id2);
     }
@@ -75,6 +67,34 @@
     public void ShouldSetDefaultParentId([NoAutoProperties] DbTemplate template)
     {
       template.ParentID.Should().Be(ItemIDs.TemplateRoot);
+    }
+
+    [Theory, AutoData]
+    public void ShouldAddFieldCopyToStandardValues(DbTemplate template, DbField field, string standardValue)
+    {
+      template.Add(field, standardValue);
+
+      template.StandardValues.Should().Contain(
+        f => f.Name == field.Name &&
+             f.ID == field.ID &&
+             f.Shared == field.Shared &&
+             f.Source == field.Source &&
+             f.Type == field.Type &&
+             f.Value == standardValue);
+    }
+
+    [Theory, AutoData]
+    public void ShouldAddFieldToFields(DbTemplate template, DbField field, string standardValue)
+    {
+      template.Add(field, standardValue);
+      template.Fields.Single().Should().BeSameAs(field);
+    }
+
+    [Theory, AutoData]
+    public void AddThrowsIfFieldIsNull(DbTemplate sut, string standardValue)
+    {
+      Action action = () => sut.Add((DbField)null, standardValue);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*field");
     }
   }
 }
