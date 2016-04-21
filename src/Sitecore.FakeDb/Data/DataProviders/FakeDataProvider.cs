@@ -196,6 +196,28 @@
       return new LanguageCollection { Language.Parse("en") };
     }
 
+    public override bool MoveItem(ItemDefinition itemDefinition, ItemDefinition destination, CallContext context)
+    {
+      Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
+      Assert.ArgumentNotNull(destination, "destination");
+
+      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
+      Assert.IsNotNull(item, "Unable to move item. The item '{0}' is not found.", itemDefinition.ID);
+
+      var newDestination = this.DataStorage.GetFakeItem(destination.ID);
+      Assert.IsNotNull(newDestination, "Unable to move item. The destination item '{0}' is not found.", destination.ID);
+
+      var oldParent = this.DataStorage.GetFakeItem(item.ParentID);
+      if (oldParent != null)
+      {
+        oldParent.Children.Remove(item);
+      }
+
+      newDestination.Children.Add(item);
+
+      return true;
+    }
+
     public override bool RemoveVersion(ItemDefinition itemDefinition, VersionUri version, CallContext context)
     {
       Assert.ArgumentNotNull(itemDefinition, "itemDefinition");

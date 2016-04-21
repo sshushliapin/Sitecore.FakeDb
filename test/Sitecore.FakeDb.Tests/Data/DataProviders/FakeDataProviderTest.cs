@@ -399,6 +399,80 @@
     }
 
     [Theory, DefaultAutoData]
+    public void MoveItemThrowsIfItemDefinitionIsNull(FakeDataProvider sut, ItemDefinition destination)
+    {
+      Action action = () => sut.MoveItem(null, destination, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*itemDefinition");
+    }
+
+    [Theory, DefaultAutoData]
+    public void MoveItemThrowsIfDestinationIsNull(FakeDataProvider sut, ItemDefinition itemDefinition)
+    {
+      Action action = () => sut.MoveItem(itemDefinition, null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*destination");
+    }
+
+    [Theory, DefaultAutoData]
+    public void MoveItemThrowsIfItemDefinitionNotFound(
+      [Greedy]FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      ItemDefinition destination)
+    {
+      Action action = () => sut.MoveItem(itemDefinition, destination, null);
+      action.ShouldThrow<InvalidOperationException>()
+        .WithMessage("Unable to move item. The item '{0}' is not found.".FormatWith(itemDefinition.ID));
+    }
+
+    [Theory, DefaultAutoData]
+    public void MoveItemThrowsIfDestinationNotFound(
+     [Greedy]FakeDataProvider sut,
+     ItemDefinition itemDefinition,
+     ItemDefinition destination,
+     DbItem item)
+    {
+      sut.DataStorage.GetFakeItem(itemDefinition.ID).Returns(item);
+      Action action = () => sut.MoveItem(itemDefinition, destination, null);
+      action.ShouldThrow<InvalidOperationException>()
+        .WithMessage("Unable to move item. The destination item '{0}' is not found.".FormatWith(destination.ID));
+    }
+
+    [Theory, DefaultAutoData]
+    public void MoveItemRemovesFromOldParentChildrenIfExists(
+     [Greedy]FakeDataProvider sut,
+     ItemDefinition itemDefinition,
+     ItemDefinition destination,
+     DbItem item,
+     DbItem newDestination,
+     DbItem oldParent)
+    {
+      oldParent.Children.Add(item);
+      sut.DataStorage.GetFakeItem(itemDefinition.ID).Returns(item);
+      sut.DataStorage.GetFakeItem(destination.ID).Returns(newDestination);
+      sut.DataStorage.GetFakeItem(item.ParentID).Returns(oldParent);
+
+      sut.MoveItem(itemDefinition, destination, null);
+
+      oldParent.Children.Should().BeEmpty();
+    }
+
+    [Theory, DefaultAutoData]
+    public void MoveItemToNewDestinationReturnsTrue(
+     [Greedy]FakeDataProvider sut,
+     ItemDefinition itemDefinition,
+     ItemDefinition destination,
+     DbItem item,
+     DbItem newDestination)
+    {
+      sut.DataStorage.GetFakeItem(itemDefinition.ID).Returns(item);
+      sut.DataStorage.GetFakeItem(destination.ID).Returns(newDestination);
+
+      sut.MoveItem(itemDefinition, destination, null).Should().BeTrue();
+
+      newDestination.Children.Single().Should().BeSameAs(item);
+      item.ParentID.Should().Be(newDestination.ID);
+    }
+
+    [Theory, DefaultAutoData]
     public void ShouldSetBlobStreamInDataStorage(
       [Greedy] FakeDataProvider sut,
       Guid blobId,
