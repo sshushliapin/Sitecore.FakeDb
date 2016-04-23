@@ -93,6 +93,33 @@
     }
 
     [Theory, DefaultAutoData]
+    public void DeleteItemThrowsIfItemDefinitionIsNull(FakeDataProvider sut)
+    {
+      Action action = () => sut.DeleteItem(null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*itemDefinition");
+    }
+
+    [Theory, DefaultAutoData]
+    public void DeleteItemReturnsFalseIfNoDbItemFound([Greedy] FakeDataProvider sut, ItemDefinition itemDefinition)
+    {
+      sut.DeleteItem(itemDefinition, null).Should().BeFalse();
+    }
+
+    [Theory, DefaultAutoData]
+    public void DeleteItemReturnsTrueIfRemoved(
+      [Greedy] FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      DbItem item)
+    {
+      sut.DataStorage.GetFakeItem(itemDefinition.ID).Returns(item);
+      sut.DataStorage.RemoveFakeItem(item.ID).Returns(true);
+
+      sut.DeleteItem(itemDefinition, null).Should().BeTrue();
+
+      sut.DataStorage.Received().RemoveFakeItem(item.ID);
+    }
+
+    [Theory, DefaultAutoData]
     public void GetBlobStreamReturnsBlobStreamFromDataStorage(
       [Greedy] FakeDataProvider sut,
       Guid blobId,

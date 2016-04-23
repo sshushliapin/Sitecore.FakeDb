@@ -5,6 +5,7 @@
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class DeleteItemCommand : Sitecore.Data.Engines.DataCommands.DeleteItemCommand
   {
     private readonly DataStorage dataStorage;
