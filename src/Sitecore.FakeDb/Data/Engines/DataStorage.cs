@@ -162,6 +162,17 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public virtual bool RemoveFakeItem(ID itemId)
     {
+      var item = this.GetFakeItem(itemId);
+      if (item == null)
+      {
+        return false;
+      }
+
+      foreach (var child in item.Children)
+      {
+        this.RemoveFakeItem(child.ID);
+      }
+
       return this.FakeItems.Remove(itemId);
     }
 

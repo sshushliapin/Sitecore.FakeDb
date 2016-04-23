@@ -184,5 +184,38 @@
     {
       Assert.Throws<ArgumentNullException>(() => this.dataStorage.SetBlobStream(blobId, null));
     }
+
+    [Theory, AutoData]
+    public void RemoveFakeItemReturnsFalseIfNoItemFound(DbItem item)
+    {
+      this.dataStorage.RemoveFakeItem(item.ID).Should().BeFalse();
+    }
+
+    [Theory, AutoData]
+    public void RemoveFakeItemReturnsTrueIfRemoved([NoAutoProperties] DbItem item)
+    {
+      this.dataStorage.AddFakeItem(item);
+      this.dataStorage.RemoveFakeItem(item.ID).Should().BeTrue();
+      this.dataStorage.GetFakeItem(item.ID).Should().BeNull();
+    }
+
+    [Theory, AutoData]
+    public void RemoveFakeItemRemovesDescendants(
+      [NoAutoProperties] DbItem item,
+      [NoAutoProperties] DbItem child1,
+      [NoAutoProperties] DbItem grandChild1,
+      [NoAutoProperties] DbItem child2)
+    {
+      item.Children.Add(child1);
+      item.Children.Add(grandChild1);
+      item.Children.Add(child2);
+      this.dataStorage.AddFakeItem(item);
+
+      this.dataStorage.RemoveFakeItem(item.ID).Should().BeTrue();
+
+      this.dataStorage.GetFakeItem(child1.ID).Should().BeNull();
+      this.dataStorage.GetFakeItem(grandChild1.ID).Should().BeNull();
+      this.dataStorage.GetFakeItem(child2.ID).Should().BeNull();
+    }
   }
 }
