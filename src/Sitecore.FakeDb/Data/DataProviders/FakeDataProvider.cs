@@ -81,6 +81,19 @@
       return true;
     }
 
+    public override bool DeleteItem(ItemDefinition itemDefinition, CallContext context)
+    {
+      Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
+
+      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
+      if (item == null)
+      {
+        return false;
+      }
+
+      return this.DataStorage.RemoveFakeItem(item.ID);
+    }
+
     public override Stream GetBlobStream(Guid blobId, CallContext context)
     {
       return this.DataStorage.GetBlobStream(blobId);

@@ -33,7 +33,6 @@
       commands.AddFromTemplatePrototype = new AddFromTemplateCommandPrototype(e.Database);
       commands.CopyItemPrototype = new CopyItemCommandPrototype(e.Database);
       commands.CreateItemPrototype = new CreateItemCommandPrototype(e.Database);
-      commands.DeletePrototype = new DeleteItemCommandPrototype(e.Database);
       commands.GetItemPrototype = new GetItemCommandPrototype(e.Database);
       commands.GetVersionsPrototype = new GetVersionsCommandPrototype(e.Database);
       commands.RemoveDataPrototype = new RemoveDataCommandPrototype(e.Database);

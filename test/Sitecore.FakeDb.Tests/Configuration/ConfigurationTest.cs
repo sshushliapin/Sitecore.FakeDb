@@ -15,7 +15,6 @@
     [InlineData("AddFromTemplatePrototype", typeof(AddFromTemplateCommandPrototype))]
     [InlineData("CopyItemPrototype", typeof(CopyItemCommandPrototype))]
     [InlineData("CreateItemPrototype", typeof(CreateItemCommandPrototype))]
-    [InlineData("DeletePrototype", typeof(DeleteItemCommandPrototype))]
     [InlineData("GetItemPrototype", typeof(GetItemCommandPrototype))]
     [InlineData("GetVersionsPrototype", typeof(GetVersionsCommandPrototype))]
     [InlineData("RemoveDataPrototype", typeof(RemoveDataCommandPrototype))]
