@@ -140,10 +140,19 @@ namespace Sitecore.FakeDb.Data.Engines
       this.Database.Engines.TemplateEngine.Reset();
 
       var fakeItem = this.FakeItems[itemId];
-      var itemVersion = version == Version.Latest ? Version.First : version;
-      var fields = this.BuildItemFieldList(fakeItem, fakeItem.TemplateID, language, itemVersion);
 
-      return ItemHelper.CreateInstance(this.database, fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fakeItem.BranchId, fields, language, itemVersion);
+      if (version == Version.Latest)
+      {
+        version = Version.Parse(fakeItem.GetVersionCount(language.Name));
+        if (version == Version.Latest)
+        {
+          version = Version.First;
+        }
+      }
+
+      var fields = this.BuildItemFieldList(fakeItem, fakeItem.TemplateID, language, version);
+
+      return ItemHelper.CreateInstance(this.database, fakeItem.Name, fakeItem.ID, fakeItem.TemplateID, fakeItem.BranchId, fields, language, version);
     }
 
     public virtual IEnumerable<DbItem> GetFakeItems()
