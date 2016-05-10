@@ -52,6 +52,7 @@
     <Compile Include="Deserializer.cs" />
     <Compile Include="DsDbItem.cs" />
     <Compile Include="DsDbTemplate.cs" />
+    <Compile Include="Pipelines\CopyParentId.cs" />
     <Compile Include="Pipelines\CopySharedFields.cs" />
     <Compile Include="Pipelines\CopyVersionedFields.cs" />
     <Compile Include="Pipelines\DeserializeDescendants.cs" />

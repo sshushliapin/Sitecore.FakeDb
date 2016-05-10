@@ -9,9 +9,9 @@
     public DeserializeTree()
     {
       this.Db.Add(new DsDbItem(SerializationId.SampleTemplateFolder, true)
-                    {
-                      ParentID = TemplateIDs.TemplateFolder
-                    });
+      {
+        ParentID = TemplateIDs.TemplateFolder
+      });
     }
 
     [Fact(DisplayName = "Deserializes templates in tree")]
@@ -24,7 +24,7 @@
     public void DeserializesItems()
     {
       var nonTemplateItemCount =
-          this.Db.Database.GetItem(TemplateIDs.TemplateFolder)
+          this.Db.Database.GetItem(ItemIDs.TemplateRoot)
               .Axes.GetDescendants()
               .Count(x =>
                 x.TemplateID != TemplateIDs.Template &&
