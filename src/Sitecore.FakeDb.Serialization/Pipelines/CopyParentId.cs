@@ -1,7 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Serialization.Pipelines
 {
   using Sitecore.Data;
-  using Sitecore.Data.Serialization.ObjectModel;
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Pipelines;
 
@@ -21,6 +20,7 @@
         return;
       }
 
+      // TODO: Avoid type casting.
       ((DbItem)args.DsDbItem).ParentID = parentId;
     }
   }
