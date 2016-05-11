@@ -18,6 +18,8 @@
   [DebuggerDisplay("ID = {ID}, Name = {Name}, Value = {Value}")]
   public class DbField : IEnumerable
   {
+    private static readonly StandardFieldsReference StandardFields = new StandardFieldsReference();
+
     private readonly IDictionary<string, IDictionary<int, string>> values = new Dictionary<string, IDictionary<int, string>>();
 
     public DbField(ID id)
@@ -171,7 +173,7 @@
 
     public bool IsStandard()
     {
-      return this.Name.StartsWith("__");
+      return StandardFields[this.Name] != FieldInfo.Empty;
     }
 
     private int GetLatestVersion(string language)
