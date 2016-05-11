@@ -20,48 +20,36 @@
     [Fact]
     public void ShouldSetName()
     {
-      // act & assert
       this.field.Name.Should().Be("Title");
     }
 
     [Fact]
     public void ShouldSetType()
     {
-      // arrange
       this.field.Type = "Single-Line Text";
-
-      // act & assert
       this.field.Type.Should().Be("Single-Line Text");
     }
 
     [Fact]
     public void ShouldSetSource()
     {
-      // arrange
       this.field.Source = "/sitecore/content";
-
-      // act & assert
       this.field.Source.Should().Be("/sitecore/content");
     }
 
     [Fact]
     public void ShouldInstantiateVersionsAsSortedDictionary()
     {
-      // act
       this.field.Add("en", "value");
-
-      // assert
       this.field.Values["en"].Should().BeOfType<SortedDictionary<int, string>>();
     }
 
     [Fact]
     public void ShouldAddAndGetLocalizedValues()
     {
-      // act
       this.field.Add("en", "en_value");
       this.field.Add("da", "da_value");
 
-      // assert
       this.field.GetValue("en", 1).Should().Be("en_value");
       this.field.GetValue("da", 1).Should().Be("da_value");
     }
@@ -69,13 +57,11 @@
     [Fact]
     public void ShouldAddAndGetVersionedValues()
     {
-      // act
       this.field.Add("en", 1, "en_value1");
       this.field.Add("en", 2, "en_value2");
       this.field.Add("da", 1, "da_value1");
       this.field.Add("da", 2, "da_value2");
 
-      // assert
       this.field.GetValue("en", 1).Should().Be("en_value1");
       this.field.GetValue("en", 2).Should().Be("en_value2");
       this.field.GetValue("da", 1).Should().Be("da_value1");
@@ -85,13 +71,10 @@
     [Fact]
     public void ShouldGetValueInCurrentLanguage()
     {
-      // arrange
       this.field.Add("en", "en_value");
       this.field.Add("da", "da_value");
-
       var language = Language.Parse("da");
 
-      // act
       using (new LanguageSwitcher(language))
       {
         this.field.Value.Should().Be("da_value");
@@ -101,30 +84,22 @@
     [Fact]
     public void ShouldGetEmptyStringIfNoVersionFound()
     {
-      // arrange
       this.field.Add("en", 1, "value");
-
-      // assert
       this.field.GetValue("en", 100).Should().BeEmpty();
     }
 
     [Fact]
     public void ShouldSetAndGetValueInCurrentLanguage()
     {
-      // act
       this.field.Value = "Hi there!";
-
-      // assert
       this.field.Value.Should().Be("Hi there!");
     }
 
     [Fact]
     public void ShouldReturnEmptyStringIfNoValueFoundInCurrentLanguage()
     {
-      // arrange
       this.field.Add("en", "en_value");
 
-      // act & assert
       using (new LanguageSwitcher(Language.Parse("da")))
       {
         this.field.Value.Should().BeEmpty();
@@ -134,11 +109,9 @@
     [Fact]
     public void ShouldAddFewVersionsWithoutSpecifyingVersionNumber()
     {
-      // act
       this.field.Add("en", "v1");
       this.field.Add("en", "v2");
 
-      // assert
       this.field.Values["en"][1].Should().Be("v1");
       this.field.Values["en"][2].Should().Be("v2");
     }
@@ -146,10 +119,8 @@
     [Fact]
     public void ShouldAddVersionsImplicitly()
     {
-      // act
       this.field.Add("en", 3, "Hello!");
 
-      // assert
       this.field.Values["en"][1].Should().BeEmpty();
       this.field.Values["en"][2].Should().BeEmpty();
       this.field.Values["en"][3].Should().Be("Hello!");
@@ -158,11 +129,9 @@
     [Fact]
     public void ShouldNotOverrideExistingVersionWhenAddingVersionsImplicitly()
     {
-      // act
       this.field.Add("en", 1, "Hello v1!");
       this.field.Add("en", 3, "Hello v3!");
 
-      // assert
       this.field.Values["en"][1].Should().Be("Hello v1!");
       this.field.Values["en"][2].Should().BeEmpty();
       this.field.Values["en"][3].Should().Be("Hello v3!");
@@ -173,60 +142,41 @@
     [InlineData(-1)]
     public void ShouldThrowExceptionIfVersionIsNotPositive(int version)
     {
-      // act
       Action action = () => this.field.Add("en", version, "value");
-
-      // assert
       action.ShouldThrow<ArgumentOutOfRangeException>().WithMessage("Version cannot be zero or negative.*");
     }
 
     [Fact]
     public void ShouldThrowExceptionIfVersionExists()
     {
-      // arrange
       this.field.Add("en", 1, "value");
-
-      // act
       Action action = () => this.field.Add("en", 1, "value");
-
-      // assert
       action.ShouldThrow<ArgumentException>().WithMessage("An item with the same version has already been added.");
     }
 
     [Fact]
     public void ShouldSetAndGetSharedFieldValue()
     {
-      // arrange
       this.field.Shared = true;
-
-      // act
       this.field.Value = "shared value";
-
-      // assert
       this.field.Value.Should().Be("shared value");
     }
 
     [Fact]
     public void ShouldGetEmptySharedFieldValueByDefault()
     {
-      // arrange
       this.field.Shared = true;
-
-      // act & assert
       this.field.Value.Should().BeEmpty();
     }
 
     [Fact]
     public void ShouldIgnoreLocalizedVersionsIfShared()
     {
-      // arrange
       this.field.Shared = true;
 
-      // act
       this.field.Add("en", "shared value");
       this.field.Add("da", "new shared value");
 
-      // assert
       this.field.Value.Should().Be("new shared value");
     }
 
@@ -245,13 +195,8 @@
     [InlineData("{BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}", "__Updated by")]
     public void ShouldMapDefaultFieldNameById(string fieldId, string expectedName)
     {
-      // arrange
       var id = new ID(fieldId);
-
-      // act
       var dbfield = new DbField(id);
-
-      // assert
       dbfield.Name.Should().Be(expectedName);
     }
 
@@ -270,21 +215,16 @@
     [InlineData("__Updated by", "{BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}")]
     public void ShouldMapDefaultFieldIdByName(string fieldName, string expectedId)
     {
-      // act
       var dbfield = new DbField(fieldName);
-
-      // assert
       dbfield.ID.ToString().Should().Be(expectedId);
     }
 
     [Fact]
     public void ShouldSetValueOfMissingLanguageAndVersion()
     {
-      // act
       this.field.SetValue("en", 1, "v1");
       this.field.SetValue("en", 2, "v2");
 
-      // assert
       this.field.Values["en"][1].Should().Be("v1");
       this.field.Values["en"][2].Should().Be("v2");
     }
@@ -292,29 +232,23 @@
     [Theory]
     [InlineData("__Created", true)]
     [InlineData("Title", false)]
-    public void ShouldBeStandardIfNameStartsWithDashes(string name, bool standard)
+    [InlineData("__Not a Standard Field", false)]
+    public void ShouldBeStandardIfExistsInStandardFieldReferences(string name, bool standard)
     {
-      // act & assert
       new DbField(name).IsStandard().Should().Be(standard);
     }
 
     [Theory, AutoData]
     public void ShouldGetEmptyValueForInvariantLanguageIfNotShared(DbField sut)
     {
-      // arrange
       sut.Shared = false;
-
-      // act & assert
       sut.GetValue(Language.Invariant.Name, 0).Should().BeEmpty();
     }
 
     [Theory, AutoData]
     public void ShouldGetSomeValueForInvariantLanguageIfShared(DbField sut)
     {
-      // arrange
       sut.Shared = true;
-
-      // act & assert
       sut.GetValue(Language.Invariant.Name, 0).Should().NotBeEmpty();
     }
 
@@ -323,14 +257,11 @@
     [InlineAutoData(false)]
     public void SetValueTwiceResetsExistingValue(bool shared, DbField sut, string oldValue, string newValue)
     {
-      // arrange
       sut.Shared = shared;
       sut.SetValue("en", oldValue);
 
-      // act
       sut.SetValue("en", newValue);
 
-      // assert
       sut.Value.Should().Be(newValue);
     }
 
