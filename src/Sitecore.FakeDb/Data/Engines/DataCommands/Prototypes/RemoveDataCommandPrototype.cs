@@ -3,13 +3,11 @@
   using System;
   using Sitecore.Data;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class RemoveDataCommandPrototype : Sitecore.Data.Engines.DataCommands.RemoveDataCommand
   {
-    private readonly DataEngineCommand innerCommand;
-
     public RemoveDataCommandPrototype(Database database)
     {
-      this.innerCommand = new DataEngineCommand(database);
     }
 
     protected override Sitecore.Data.Engines.DataCommands.RemoveDataCommand CreateInstance()
