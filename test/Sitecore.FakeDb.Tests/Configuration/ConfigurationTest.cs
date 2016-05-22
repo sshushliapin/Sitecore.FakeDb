@@ -13,7 +13,6 @@
   {
     [Theory]
     [InlineData("CopyItemPrototype", typeof(CopyItemCommandPrototype))]
-    [InlineData("CreateItemPrototype", typeof(CreateItemCommandPrototype))]
     [InlineData("GetItemPrototype", typeof(GetItemCommandPrototype))]
     [InlineData("GetVersionsPrototype", typeof(GetVersionsCommandPrototype))]
     [InlineData("RemoveDataPrototype", typeof(RemoveDataCommandPrototype))]

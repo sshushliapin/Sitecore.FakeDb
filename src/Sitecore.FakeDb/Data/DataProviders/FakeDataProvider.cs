@@ -49,6 +49,22 @@
       return item.GetVersionCount(baseVersion.Language.Name);
     }
 
+    public override bool CreateItem(ID itemId, string itemName, ID templateId, ItemDefinition parent, CallContext context)
+    {
+      Assert.ArgumentNotNull(itemId, "itemId");
+      Assert.ArgumentNotNull(itemName, "itemName");
+      Assert.ArgumentNotNull(templateId, "templateId");
+      Assert.ArgumentNotNull(parent, "parent");
+
+      var item = new DbItem(itemName, itemId, templateId) { ParentID = parent.ID };
+      this.DataStorage.AddFakeItem(item);
+
+      // TODO: Should not require the version removing.
+      item.RemoveVersion(Language.Current.Name);
+
+      return true;
+    }
+
     public override bool DeleteItem(ItemDefinition itemDefinition, CallContext context)
     {
       Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
