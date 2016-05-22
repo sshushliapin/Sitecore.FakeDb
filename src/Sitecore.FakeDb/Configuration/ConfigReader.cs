@@ -31,7 +31,6 @@
       var commands = e.Database.Engines.DataEngine.Commands;
 
       commands.CopyItemPrototype = new CopyItemCommandPrototype(e.Database);
-      commands.CreateItemPrototype = new CreateItemCommandPrototype(e.Database);
       commands.GetItemPrototype = new GetItemCommandPrototype(e.Database);
       commands.GetVersionsPrototype = new GetVersionsCommandPrototype(e.Database);
       commands.RemoveDataPrototype = new RemoveDataCommandPrototype(e.Database);

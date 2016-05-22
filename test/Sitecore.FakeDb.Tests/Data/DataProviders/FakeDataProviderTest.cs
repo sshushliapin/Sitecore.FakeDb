@@ -62,6 +62,64 @@
     }
 
     [Theory, DefaultAutoData]
+    public void CreateItemThrowsIfItemIdIsNull(FakeDataProvider sut)
+    {
+      Action action = () => sut.CreateItem(null, null, null, null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*itemId");
+    }
+
+    [Theory, DefaultAutoData]
+    public void CreateItemThrowsIfItemNameIsNull(FakeDataProvider sut, ID itemId)
+    {
+      Action action = () => sut.CreateItem(itemId, null, null, null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*itemName");
+    }
+
+    [Theory, DefaultAutoData]
+    public void CreateItemThrowsIfTemplateIdIsNull(FakeDataProvider sut, ID itemId, string itemName)
+    {
+      Action action = () => sut.CreateItem(itemId, itemName, null, null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*templateId");
+    }
+
+    [Theory, DefaultAutoData]
+    public void CreateItemThrowsIfParentIsNull(FakeDataProvider sut, ID itemId, string itemName, ID templateId)
+    {
+      Action action = () => sut.CreateItem(itemId, itemName, templateId, null, null);
+      action.ShouldThrow<ArgumentNullException>().WithMessage("*parent");
+    }
+
+    [Theory, DefaultAutoData]
+    public void CreateItemAddsFakeItemToDataStorage(
+      [Greedy] FakeDataProvider sut,
+      ID itemId,
+      string itemName,
+      ID templateId,
+      ItemDefinition parent,
+      CallContext context)
+    {
+      sut.CreateItem(itemId, itemName, templateId, parent, context);
+
+      // TODO: It should be possible to pass an 'expected' item here
+      sut.DataStorage.Received().AddFakeItem(Arg.Is<DbItem>(i => i.Name == itemName &&
+                                                                 i.ID == itemId &&
+                                                                 i.TemplateID == templateId &&
+                                                                 i.ParentID == parent.ID));
+    }
+
+    [Theory, DefaultAutoData]
+    public void CreateItemAddsReturnsTrue(
+      [Greedy] FakeDataProvider sut,
+      ID itemId,
+      string itemName,
+      ID templateId,
+      ItemDefinition parent,
+      CallContext context)
+    {
+      sut.CreateItem(itemId, itemName, templateId, parent, context).Should().BeTrue();
+    }
+
+    [Theory, DefaultAutoData]
     public void ChangeTemplateThrowsIfItemDefinitionIsNull(FakeDataProvider sut)
     {
       Action action = () => sut.ChangeTemplate(null, null, null);
