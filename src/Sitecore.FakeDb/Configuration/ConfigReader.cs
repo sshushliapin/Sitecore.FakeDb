@@ -30,7 +30,6 @@
     {
       var commands = e.Database.Engines.DataEngine.Commands;
 
-      commands.AddFromTemplatePrototype = new AddFromTemplateCommandPrototype(e.Database);
       commands.CopyItemPrototype = new CopyItemCommandPrototype(e.Database);
       commands.CreateItemPrototype = new CreateItemCommandPrototype(e.Database);
       commands.GetItemPrototype = new GetItemCommandPrototype(e.Database);
