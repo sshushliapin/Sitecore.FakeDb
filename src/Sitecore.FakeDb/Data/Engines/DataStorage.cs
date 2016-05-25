@@ -502,6 +502,11 @@ namespace Sitecore.FakeDb.Data.Engines
       }
 
       var sourceUri = fakeItem.Fields[SourceFieldId].Value;
+      if (sourceUri == null)
+      {
+        return null;
+      }
+
       if (!ItemUri.IsItemUri(sourceUri))
       {
         return null;

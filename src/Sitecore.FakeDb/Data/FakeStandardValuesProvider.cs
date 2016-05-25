@@ -29,10 +29,14 @@
       {
         // This will be the case for things like TemplateFieldItem.Type. 
         // We don't have those templates and it's safe to just return an empty string
-        return string.Empty;
+        return null;
       }
 
-      var standardValue = this.FindStandardValueInTheTemplate(template, field) ?? string.Empty;
+      var standardValue = this.FindStandardValueInTheTemplate(template, field);//?? string.Empty;
+      if (standardValue == null)
+      {
+        return null;
+      }
 
       return this.ReplaceTokens(standardValue, field.Item);
     }

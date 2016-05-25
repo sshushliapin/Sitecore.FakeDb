@@ -28,7 +28,7 @@
 
     public void Add(string fieldName)
     {
-      this.Add(fieldName, string.Empty);
+      this.Add(fieldName, null);
     }
 
     public void Add(string fieldName, string fieldValue)
@@ -82,7 +82,7 @@
         return true;
       }
 
-      value = string.Empty;
+      value = null;
       return false;
     }
   }

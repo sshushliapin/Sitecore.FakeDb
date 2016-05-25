@@ -1732,5 +1732,19 @@
         Assert.True(new CheckboxField(home.Fields["Hide"]).Checked);
       }
     }
+
+    [Fact]
+    public void ShouldReturnNullFieldValueIfNotSet()
+    {
+      using (var db = new Db
+        {
+          new DbTemplate(this.templateId) { "Title" }
+        })
+      {
+        var root = db.GetItem("/sitecore/content");
+        var home = root.Add("home", new TemplateID(this.templateId));
+        home.Fields["Title"].Value.Should().BeNull();
+      }
+    }
   }
 }

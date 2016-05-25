@@ -135,14 +135,14 @@
       var hasValueForLanguage = this.values.ContainsKey(language);
       if (!hasValueForLanguage)
       {
-        return string.Empty;
+        return null;
       }
 
       var langValues = this.values[language];
       var hasValueForVersion = langValues.ContainsKey(version);
       if (!hasValueForVersion)
       {
-        return string.Empty;
+        return null;
       }
 
       return langValues[version];
@@ -199,7 +199,7 @@
           break;
         }
 
-        this.values[language].Add(i, string.Empty);
+        this.values[language].Add(i, null);
       }
     }
 

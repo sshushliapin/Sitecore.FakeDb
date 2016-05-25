@@ -40,7 +40,7 @@
         return lv.Value;
       }
 
-      return string.Empty;
+      return null;
     }
   }
 }

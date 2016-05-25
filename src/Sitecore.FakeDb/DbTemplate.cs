@@ -97,7 +97,7 @@
     /// <param name="fieldName">The field name.</param>
     public void Add(string fieldName)
     {
-      this.Add(fieldName, string.Empty);
+      this.Add(fieldName, null);
     }
 
     /// <summary>
@@ -106,7 +106,7 @@
     /// <param name="id">The field id.</param>
     public void Add(ID id)
     {
-      this.Add(id, string.Empty);
+      this.Add(id, null);
     }
 
     /// <summary>
