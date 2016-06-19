@@ -10,7 +10,6 @@
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Engines.DataCommands.Prototypes;
   using Sitecore.IO;
-  using Sitecore.Pipelines;
   using Sitecore.Xml;
   using Sitecore.Xml.Patch;
 
@@ -20,7 +19,6 @@
     {
       SetAppDomainAppPath();
       Database.InstanceCreated += DatabaseInstanceCreated;
-      RunInitializePipeline();
     }
 
     private static void DatabaseInstanceCreated(object sender, InstanceCreatedEventArgs e)
@@ -70,11 +68,6 @@
       }
 
       Sitecore.Configuration.State.HttpRuntime.AppDomainAppPath = directoryName;
-    }
-
-    private static void RunInitializePipeline()
-    {
-      CorePipeline.Run("initialize", new PipelineArgs());
     }
 
     public object Create(object parent, object configContext, XmlNode section)
