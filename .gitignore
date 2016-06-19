@@ -165,3 +165,4 @@ lib/**/*.xml
 
 # Deploy
 output/
+/TestResult.xml

@@ -44,6 +44,7 @@
 
   <Target Name="Tests" DependsOnTargets="Compile">
     <xunit Assemblies="@(TestAssemblies)" ParallelizeTestCollections="false" />
+    <Exec Command="test\Sitecore.FakeDb.NUnitLite.Tests\bin\Release\Sitecore.FakeDb.NUnitLite.Tests.exe" />
   </Target>
 
   <Target Name="Packages" DependsOnTargets="Tests">
