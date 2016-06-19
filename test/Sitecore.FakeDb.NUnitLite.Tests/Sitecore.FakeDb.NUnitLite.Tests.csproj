@@ -71,6 +71,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App.config.transform.xslt" />
     <Content Include="license.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -80,11 +81,13 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <XslTransformation XslInputPath="App.config.transform.xslt" XmlInputPaths="$(SolutionDir)\test\Sitecore.FakeDb.Tests\App.config" OutputPaths="$(OutDir)\$(TargetFileName).config" UseTrustedSettings="true" Condition="$(MSBuildToolsVersion) &gt; 13" />
+    <XslTransformation XslInputPath="App.config.transform.xslt" XmlInputPaths="$(SolutionDir)\test\Sitecore.FakeDb.Tests\App.config" OutputPaths="$(OutDir)\$(TargetFileName).config" Condition="$(MSBuildToolsVersion) &lt; 13" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
   </Target>
   -->
 </Project>
