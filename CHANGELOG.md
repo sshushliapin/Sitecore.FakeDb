@@ -1,4 +1,7 @@
-﻿1.1.1
+﻿1.1.2
+* [FIX] #133: nunitlite-runner.exe not exiting at the end of a test run
+
+1.1.1
 * [FIX] #130: FakeDb.Serialization: Set proper ParentId when deserializing items
 * [FIX] #131: Unable to set a non-standard field value if the field name starts with '__'
 
