@@ -107,6 +107,7 @@
     <Compile Include="DbLinkField.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="Pipelines\AddDbItem\SetWorkflow.cs" />
+    <Compile Include="Pipelines\Initialize\DisableLicenseWatcher.cs" />
     <Compile Include="SharedDbField.cs" />
     <Compile Include="Sites\FakeSiteContextSwitcher.cs" />
     <Compile Include="StandardFieldsReference.cs" />
@@ -202,7 +203,9 @@
     <Compile Include="UnversionedDbField.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Sitecore.config" />
+    <EmbeddedResource Include="Sitecore.config">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
