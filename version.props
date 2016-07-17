@@ -13,6 +13,6 @@
     <!-- This setting allows to specify list of Sitecore versions to build and run tests against before publishing 
          the NuGet packages.
     -->
-    <SupportedSitecoreVersions>SC72;SC80;SC81;SC811</SupportedSitecoreVersions>
+    <SupportedSitecoreVersions>SC72;SC80;SC81;SC811;SC813</SupportedSitecoreVersions>
   </PropertyGroup>
 </Project>
