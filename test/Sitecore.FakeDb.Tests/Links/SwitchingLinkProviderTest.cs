@@ -182,7 +182,7 @@
       sut.ParseRequestUrl(request).Should().NotBeNull();
     }
 
-#if SC81 || SC811
+#if !SC72 && !SC80
     [Theory, SwitchingAutoData]
     public void ResolveTargetSiteCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, Item item)
     {

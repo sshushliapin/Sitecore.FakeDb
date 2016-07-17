@@ -699,7 +699,7 @@
       }
     }
 
-#if SC80 || SC81 || SC811
+#if !SC72
     [Fact]
     public void HowToSwitchLinkProvider()
     {
