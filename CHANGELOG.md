@@ -1,4 +1,7 @@
-﻿1.1.2
+﻿1.1.3
+* [FIX] #136: Setting BranchID is not supported
+
+1.1.2
 * [FIX] #133: nunitlite-runner.exe not exiting at the end of a test run
 
 1.1.1
