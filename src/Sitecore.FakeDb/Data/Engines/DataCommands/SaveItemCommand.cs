@@ -42,12 +42,9 @@
       var oldName = fakeItem.Name;
       var newName = this.Item.Name;
 
-      if (oldName == newName)
-      {
-        return;
-      }
-
       fakeItem.Name = this.Item.Name;
+      fakeItem.BranchId = this.Item.BranchId;
+
       var fullPath = fakeItem.FullPath;
       if (!string.IsNullOrEmpty(fullPath) && fullPath.Contains(oldName))
       {
