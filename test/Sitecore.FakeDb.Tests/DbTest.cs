@@ -1732,5 +1732,21 @@
         Assert.True(new CheckboxField(home.Fields["Hide"]).Checked);
       }
     }
+
+    [Fact]
+    public void ShouldUpdateBranchId()
+    {
+      var branchId = ID.NewID;
+      using (var db = new Db { new DbItem("home") })
+      {
+        var targetItem = db.GetItem("/sitecore/content/home");
+        using (new EditContext(targetItem))
+        {
+          targetItem.BranchId = branchId;
+        }
+
+        targetItem.BranchId.Should().Be(branchId);
+      }
+    }
   }
 }

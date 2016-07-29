@@ -139,5 +139,21 @@
       // assert
       action.ShouldNotThrow();
     }
+
+    [Theory, DefaultAutoData]
+    public void ShouldUpdateBranchId(SaveItemCommand sut, DbItem item, ID branchId, FieldList fields, Language language)
+    {
+      // arrange
+      sut.DataStorage.GetFakeItem(item.ID).Returns(item);
+      var updatedItem = ItemHelper.CreateInstance(sut.Database, "updated item", item.ID, ID.NewID, branchId, fields, language, new Version(0));
+
+      sut.Initialize(updatedItem);
+
+      // act
+      ReflectionUtil.CallMethod(sut, "DoExecute");
+
+      // assert
+      item.BranchId.Should().Be(branchId);
+    }
   }
 }
