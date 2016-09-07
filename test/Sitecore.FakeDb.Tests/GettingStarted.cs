@@ -699,7 +699,7 @@
       }
     }
 
-#if !SC72
+#if !SC72 && !SC820
     [Fact]
     public void HowToSwitchLinkProvider()
     {
