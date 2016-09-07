@@ -96,6 +96,25 @@
     }
 
     [Fact]
+    public void ShouldCreateChildItemInSpecificLanguage()
+    {
+      // arrange
+      using (var db = new Db
+                        {
+                          new DbItem("home")
+                        })
+      {
+        var item = db.GetItem("/sitecore/content/home", Language.Parse("fr-FR").Name);
+
+        // act
+        var child = item.Add("child", item.Template);
+
+        // assert
+        child.Language.Name.Should().Be("fr-FR");
+      }
+    }
+
+    [Fact]
     public void ShouldCreateItemOfPredefinedTemplate()
     {
       // act

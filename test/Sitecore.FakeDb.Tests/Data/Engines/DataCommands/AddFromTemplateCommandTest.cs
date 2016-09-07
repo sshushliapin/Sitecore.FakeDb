@@ -6,6 +6,7 @@
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.Reflection;
+  using Sitecore.Globalization;
   using Xunit;
 
   public class AddFromTemplateCommandTest
@@ -23,14 +24,15 @@
       sut.DataStorage.Received().AddFakeItem(Arg.Is<DbItem>(i => i.Name == name &&
                                                                  i.ID == newId &&
                                                                  i.TemplateID == templateId &&
-                                                                 i.ParentID == destination.ID));
+                                                                 i.ParentID == destination.ID),
+                                             Arg.Is<Language>(l => l.Name == Language.Current.Name));
     }
 
     [Theory, DefaultAutoData]
     public void ShouldReturnCreatedItem(AddFromTemplateCommand sut, Item item, Item destination)
     {
       // arrange
-      sut.DataStorage.GetSitecoreItem(item.ID).Returns(item);
+      sut.DataStorage.GetSitecoreItem(item.ID, item.Language).Returns(item);
       sut.Initialize(item.Name, item.TemplateID, destination, item.ID);
 
       // act
