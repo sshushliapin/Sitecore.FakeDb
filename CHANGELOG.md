@@ -1,4 +1,7 @@
-﻿1.1.3
+﻿1.1.4
+* [FIX] #138: Adding item in non-en language doesn't work (thanks to [@pveller](https://github.com/pveller))
+
+1.1.3
 * [FIX] #136: Setting BranchID is not supported
 
 1.1.2
