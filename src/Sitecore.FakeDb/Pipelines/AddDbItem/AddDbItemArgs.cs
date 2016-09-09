@@ -4,6 +4,7 @@
   using Sitecore.Diagnostics;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.Pipelines;
+  using Sitecore.Globalization;
 
   public class AddDbItemArgs : PipelineArgs
   {
@@ -11,13 +12,21 @@
 
     private readonly DataStorage dataStorage;
 
-    public AddDbItemArgs(DbItem item, DataStorage dataStorage)
+    private readonly Language language;
+
+    public AddDbItemArgs(DbItem item, DataStorage dataStorage) : this(item, dataStorage, Language.Current)
+    {
+    }
+
+    public AddDbItemArgs(DbItem item, DataStorage dataStorage, Language language)
     {
       Assert.ArgumentNotNull(item, "item");
       Assert.ArgumentNotNull(dataStorage, "dataStorage");
+      Assert.ArgumentNotNull(language, "language");
 
       this.item = item;
       this.dataStorage = dataStorage;
+      this.language = language;
     }
 
     public ID DefaultItemRoot
@@ -38,6 +47,11 @@
     public DataStorage DataStorage
     {
       get { return this.dataStorage; }
+    }
+
+    public Language Language
+    {
+      get { return this.language; }
     }
   }
 }

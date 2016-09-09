@@ -6,7 +6,7 @@
   {
     public virtual void Process(AddDbItemArgs args)
     {
-      args.DbItem.AddVersion(Language.Current.Name);
+      args.DbItem.AddVersion(args.Language.Name);
     }
   }
 }

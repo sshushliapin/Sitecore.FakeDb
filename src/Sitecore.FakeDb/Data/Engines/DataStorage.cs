@@ -55,6 +55,11 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public virtual void AddFakeItem(DbItem item)
     {
+      this.AddFakeItem(item, Language.Current);
+    }
+
+    public virtual void AddFakeItem(DbItem item, Language language)
+    {
       Assert.ArgumentNotNull(item, "item");
 
       var loading = item is IDsDbItem;
@@ -78,7 +83,7 @@ namespace Sitecore.FakeDb.Data.Engines
         CorePipeline.Run("loadDsDbItem", new DsItemLoadingArgs(item as IDsDbItem, this));
       }
 
-      CorePipeline.Run("addDbItem", new AddDbItemArgs(item, this));
+      CorePipeline.Run("addDbItem", new AddDbItemArgs(item, this, language));
 
       if (!loading)
       {

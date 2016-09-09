@@ -28,9 +28,9 @@
     protected override Item DoExecute()
     {
       var item = new DbItem(this.ItemName, this.NewId, this.TemplateId) { ParentID = this.Destination.ID };
-      this.dataStorage.AddFakeItem(item);
+      this.dataStorage.AddFakeItem(item, this.Destination.Language);
 
-      return this.dataStorage.GetSitecoreItem(this.NewId);
+      return this.dataStorage.GetSitecoreItem(this.NewId, this.Destination.Language);
     }
   }
 }
