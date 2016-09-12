@@ -1,4 +1,7 @@
-﻿1.1.4
+﻿1.2.0
+* [NEW] #142: Introduce 'databaseType' config variable for switching to Sitecore 8.2
+
+1.1.4
 * [FIX] #138: Adding item in non-en language doesn't work (thanks to [@pveller](https://github.com/pveller))
 
 1.1.3
