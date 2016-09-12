@@ -23,6 +23,8 @@
 
   <Target Name="Compile" DependsOnTargets="Clean">
     <Exec Command="$(NuGet) restore" />
+    <Exec Command="$(NuGet) install Sitecore.Kernel -OutputDirectory packages" />
+
     <Delete Files="@(CleanUp)" />
     <Copy SourceFiles="@(References)" DestinationFolder="lib" />
 
@@ -49,7 +51,7 @@
 
   <Target Name="Tests" DependsOnTargets="Compile">
     <Message Text="=== RUNNING TESTS FOR $(Version) ===" Importance="high" />
-    
+
     <!-- Patch database type for SC82 -->
     <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="$(FakeDbTestsDir)\App_Config\Include" Condition="$(PatchDatabase)" />
     <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="$(AutoFixtureTestsDir)\App_Config\Include" Condition="$(PatchDatabase)" />
