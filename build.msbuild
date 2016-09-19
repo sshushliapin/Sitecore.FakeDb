@@ -7,7 +7,15 @@
 
   <ItemGroup>
     <Versions Include="$(SupportedSitecoreVersions)" />
-    <References Include="lib\$(Version)\*.dll" />
+    <References Include="packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll" />
+    <References Include="packages\Sitecore.Abstractions.$(Version)\lib\NET45\Sitecore.Abstractions.dll" />
+    <References Include="packages\Sitecore.Analytics.$(Version)\lib\NET45\Sitecore.Analytics.dll" />
+    <References Include="packages\Sitecore.Buckets.$(Version)\lib\NET45\Sitecore.Buckets.dll" />
+    <References Include="packages\Sitecore.ContentSearch.$(Version)\lib\NET45\Sitecore.ContentSearch.dll" />
+    <References Include="packages\Sitecore.ContentSearch.Linq.$(Version)\lib\NET45\Sitecore.ContentSearch.Linq.dll" />
+    <References Include="packages\Sitecore.Kernel.$(Version)\lib\NET45\Sitecore.Kernel.dll" />
+    <References Include="packages\Sitecore.Logging.$(Version)\lib\NET45\Sitecore.Logging.dll" />
+    <References Include="packages\Sitecore.Nexus.$(Version)\lib\NET45\Sitecore.Nexus.dll" />
     <CleanUp Include="lib\*.dll" />
     <CleanUp Include="test\**\Sitecore.FakeDb.Tests.config" />
   </ItemGroup>
@@ -23,7 +31,15 @@
 
   <Target Name="Compile" DependsOnTargets="Clean">
     <Exec Command="$(NuGet) restore" />
-    <Exec Command="$(NuGet) install Sitecore.Kernel -OutputDirectory packages" />
+    <Exec Command="$(NuGet) install Lucene.Net -Version 3.0.3 -OutputDirectory packages" />
+    <Exec Command="$(NuGet) install Sitecore.Abstractions -Version $(Version) -OutputDirectory packages" />
+    <Exec Command="$(NuGet) install Sitecore.Analytics-Version $(Version) -OutputDirectory packages" />
+    <Exec Command="$(NuGet) install Sitecore.Buckets -Version $(Version) -OutputDirectory packages" />
+    <Exec Command="$(NuGet) install Sitecore.ContentSearch -Version $(Version) -OutputDirectory packages" />
+    <Exec Command="$(NuGet) install Sitecore.ContentSearch.Linq -Version $(Version) -OutputDirectory packages" />
+    <Exec Command="$(NuGet) install Sitecore.Kernel -Version $(Version) -OutputDirectory packages" />
+    <Exec Command="$(NuGet) install Sitecore.Logging -Version $(Version) -OutputDirectory packages" />
+    <Exec Command="$(NuGet) install Sitecore.Nexus -Version $(Version) -OutputDirectory packages" />
 
     <Delete Files="@(CleanUp)" />
     <Copy SourceFiles="@(References)" DestinationFolder="lib" />
