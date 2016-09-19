@@ -8,7 +8,7 @@
   <ItemGroup>
     <Versions Include="$(SupportedSitecoreVersions)" />
     <References Include="packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll" />
-    <References Include="packages\Sitecore.Abstractions.$(Version)\lib\NET45\Sitecore.Abstractions.dll" />
+    <References Include="packages\Sitecore.Abstractions.$(Version)\lib\NET45\Sitecore.Abstractions.dll" Condition="'$(Version)' != '7.2.160123'" />
     <References Include="packages\Sitecore.Analytics.$(Version)\lib\NET45\Sitecore.Analytics.dll" />
     <References Include="packages\Sitecore.Buckets.$(Version)\lib\NET45\Sitecore.Buckets.dll" />
     <References Include="packages\Sitecore.ContentSearch.$(Version)\lib\NET45\Sitecore.ContentSearch.dll" />
@@ -32,8 +32,8 @@
   <Target Name="Compile" DependsOnTargets="Clean">
     <Exec Command="$(NuGet) restore" />
     <Exec Command="$(NuGet) install Lucene.Net -Version 3.0.3 -OutputDirectory packages" />
-    <Exec Command="$(NuGet) install Sitecore.Abstractions -Version $(Version) -OutputDirectory packages" />
-    <Exec Command="$(NuGet) install Sitecore.Analytics-Version $(Version) -OutputDirectory packages" />
+    <Exec Command="$(NuGet) install Sitecore.Abstractions -Version $(Version) -OutputDirectory packages" Condition="'$(Version)' != '7.2.160123'" />
+    <Exec Command="$(NuGet) install Sitecore.Analytics -Version $(Version) -OutputDirectory packages" />
     <Exec Command="$(NuGet) install Sitecore.Buckets -Version $(Version) -OutputDirectory packages" />
     <Exec Command="$(NuGet) install Sitecore.ContentSearch -Version $(Version) -OutputDirectory packages" />
     <Exec Command="$(NuGet) install Sitecore.ContentSearch.Linq -Version $(Version) -OutputDirectory packages" />
@@ -46,7 +46,11 @@
 
     <Message Text=" " />
     <Message Text="=== BUILDING FOR $(Version) ===" Importance="high" />
-    <MSBuild Projects="$(ProjectToBuild)" Properties="DefineConstants=$(Version);TRACE" />
+
+    <PropertyGroup>
+      <ShortScVersion>SC$(Version.Replace(".",""))</ShortScVersion>
+    </PropertyGroup>
+    <MSBuild Projects="$(ProjectToBuild)" Properties="DefineConstants=$(ShortScVersion);TRACE" />
   </Target>
 
   <ItemGroup>

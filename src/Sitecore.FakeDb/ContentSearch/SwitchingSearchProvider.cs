@@ -1,4 +1,4 @@
-﻿#if !SC72 && !SC80
+﻿#if !SC72160123 && !SC80160115
 namespace Sitecore.FakeDb.ContentSearch
 {
   using Sitecore.Abstractions;

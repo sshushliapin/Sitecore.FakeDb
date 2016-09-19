@@ -1,4 +1,4 @@
-﻿#if !SC72 && !SC820
+﻿#if !SC72160123 && !SC82160729
 namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
 {
   using NSubstitute;
