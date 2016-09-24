@@ -1,4 +1,7 @@
-﻿1.2.0
+﻿1.2.1
+* [FIX] #143: Blobs from FakeDB have different behaviour to SC
+
+1.2.0
 * [NEW] #142: Introduce 'databaseType' config variable for switching to Sitecore 8.2
 
 1.1.4
