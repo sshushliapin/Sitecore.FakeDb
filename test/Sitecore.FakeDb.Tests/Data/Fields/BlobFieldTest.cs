@@ -26,7 +26,8 @@
         }
 
         // assert
-        field.GetBlobStream().Should().BeSameAs(stream);
+        var actual = (MemoryStream)field.GetBlobStream();
+        actual.ToArray().Should().BeEquivalentTo(stream.ToArray());
       }
     }
   }

@@ -171,12 +171,31 @@
     }
 
     [Theory, AutoData]
-    public void SetBlobStreamOverridesExistingStream(Guid blobId, [NoAutoProperties] MemoryStream existing, [NoAutoProperties]MemoryStream @new)
+    public void GetBlobStreamReturnsOpenStreamCopy(
+      Guid blobId,
+      [NoAutoProperties] MemoryStream stream)
+    {
+      this.dataStorage.SetBlobStream(blobId, stream);
+
+      var copy1 = this.dataStorage.GetBlobStream(blobId);
+      copy1.Close();
+
+      var copy2 = this.dataStorage.GetBlobStream(blobId);
+      copy2.CanRead.Should().BeTrue();
+    }
+
+    [Theory, AutoData]
+    public void SetBlobStreamOverridesExistingStream(
+      Guid blobId,
+      [NoAutoProperties] MemoryStream existing,
+      [NoAutoProperties] MemoryStream @new)
     {
       this.dataStorage.SetBlobStream(blobId, existing);
       this.dataStorage.SetBlobStream(blobId, @new);
 
-      this.dataStorage.GetBlobStream(blobId).Should().BeSameAs(@new);
+      var actual = (MemoryStream)this.dataStorage.GetBlobStream(blobId);
+
+      actual.ToArray().Should().BeEquivalentTo(@new.ToArray());
     }
 
     [Theory, AutoData]

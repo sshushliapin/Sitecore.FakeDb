@@ -179,7 +179,15 @@ namespace Sitecore.FakeDb.Data.Engines
 
     public virtual Stream GetBlobStream(Guid blobId)
     {
-      return this.Blobs.ContainsKey(blobId) ? this.Blobs[blobId] : null;
+      if (!this.Blobs.ContainsKey(blobId))
+      {
+        return null;
+      }
+
+      var stream = new MemoryStream();
+      this.Blobs[blobId].CopyTo(stream);
+
+      return stream;
     }
 
     public FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)

@@ -883,7 +883,8 @@
         }
 
         // assert
-        Xunit.Assert.Same(stream, field.GetBlobStream());
+        Xunit.Assert.Equal(stream.ToArray(),
+          ((System.IO.MemoryStream)field.GetBlobStream()).ToArray());
       }
     }
 
