@@ -2,6 +2,7 @@
 {
   using System;
   using System.IO;
+  using System.Text;
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
   using Sitecore.Data;
@@ -198,7 +199,45 @@
       actual.ToArray().Should().BeEquivalentTo(@new.ToArray());
     }
 
-    [Theory, AutoData]
+      [Theory, AutoData]
+      public void SetBlobStreamPositionAndLengthNotChanged(
+          Guid blobId,
+          [NoAutoProperties] MemoryStream @new,
+          string streamData)
+      {
+          var bytes = Encoding.UTF8.GetBytes(streamData);
+          @new.Write(bytes, 0, bytes.Length);
+          var position = bytes.Length/2;
+          var length = bytes.Length;
+
+          @new.Seek(position, SeekOrigin.Begin);
+
+          this.dataStorage.SetBlobStream(blobId, @new);
+
+          @new.Length.ShouldBeEquivalentTo(length);
+          @new.Position.ShouldBeEquivalentTo(position);
+      }
+
+
+      [Theory, AutoData]
+      public void SetBlobStreamFollowedByGetBlobStreamReturnStreamAtPosition0(
+          Guid blobId,
+          [NoAutoProperties] MemoryStream @new,
+          string streamData)
+      {
+          var bytes = Encoding.UTF8.GetBytes(streamData);
+          @new.Write(bytes, 0, bytes.Length);
+
+          this.dataStorage.SetBlobStream(blobId, @new);
+
+          var copy1 = this.dataStorage.GetBlobStream(blobId);
+
+          copy1.Position.ShouldBeEquivalentTo(0);
+          copy1.Length.ShouldBeEquivalentTo(bytes.Length);
+          copy1.Should().NotBe(@new);
+      }
+
+      [Theory, AutoData]
     public void SetBlobStreamThrowsIfStreamIsNull(Guid blobId)
     {
       Assert.Throws<ArgumentNullException>(() => this.dataStorage.SetBlobStream(blobId, null));
