@@ -1,4 +1,7 @@
-﻿1.2.1
+﻿1.2.2
+* [FIX] #144: Fix DataEngine so that blob streams are set to position zero (thanks to [mikeedwards83](https://github.com/mikeedwards83))
+
+1.2.1
 * [FIX] #143: Blobs from FakeDB have different behaviour to SC
 
 1.2.0
