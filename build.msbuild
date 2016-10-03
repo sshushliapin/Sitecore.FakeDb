@@ -7,15 +7,16 @@
 
   <ItemGroup>
     <Versions Include="$(SupportedSitecoreVersions)" />
+    <Versions452 Include="$(SupportedSitecoreVersions452)" />
     <References Include="packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll" />
-    <References Include="packages\Sitecore.Abstractions.$(Version)\lib\NET45\Sitecore.Abstractions.dll" Condition="'$(Version)' != '7.2.160123'" />
-    <References Include="packages\Sitecore.Analytics.$(Version)\lib\NET45\Sitecore.Analytics.dll" />
-    <References Include="packages\Sitecore.Buckets.$(Version)\lib\NET45\Sitecore.Buckets.dll" />
-    <References Include="packages\Sitecore.ContentSearch.$(Version)\lib\NET45\Sitecore.ContentSearch.dll" />
-    <References Include="packages\Sitecore.ContentSearch.Linq.$(Version)\lib\NET45\Sitecore.ContentSearch.Linq.dll" />
-    <References Include="packages\Sitecore.Kernel.$(Version)\lib\NET45\Sitecore.Kernel.dll" />
-    <References Include="packages\Sitecore.Logging.$(Version)\lib\NET45\Sitecore.Logging.dll" />
-    <References Include="packages\Sitecore.Nexus.$(Version)\lib\NET45\Sitecore.Nexus.dll" />
+    <References Include="packages\Sitecore.Abstractions.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Abstractions.dll" Condition="'$(Version)' != '7.2.160123'" />
+    <References Include="packages\Sitecore.Analytics.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Analytics.dll" />
+    <References Include="packages\Sitecore.Buckets.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Buckets.dll" />
+    <References Include="packages\Sitecore.ContentSearch.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.ContentSearch.dll" />
+    <References Include="packages\Sitecore.ContentSearch.Linq.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.ContentSearch.Linq.dll" />
+    <References Include="packages\Sitecore.Kernel.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Kernel.dll" />
+    <References Include="packages\Sitecore.Logging.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Logging.dll" />
+    <References Include="packages\Sitecore.Nexus.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Nexus.dll" />
     <CleanUp Include="lib\*.dll" />
     <CleanUp Include="test\**\Sitecore.FakeDb.Tests.config" />
   </ItemGroup>
@@ -105,7 +106,8 @@
   </Target>
 
   <Target Name="Versions">
-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Packages" Properties="Version=%(Versions.Identity)" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Packages" Properties="Version=%(Versions452.Identity);TargetFrameworkVersion=v4.5.2;TargetFrameworkFolder=NET452;PatchDatabase=true" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Packages" Properties="Version=%(Versions.Identity);TargetFrameworkFolder=NET45" />
   </Target>
 
   <Target Name="Deploy" DependsOnTargets="Versions">
