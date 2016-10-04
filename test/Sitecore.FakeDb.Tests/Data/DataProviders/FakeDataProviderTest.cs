@@ -5,6 +5,7 @@
   using FluentAssertions;
   using NSubstitute;
   using Ploeh.AutoFixture.Xunit2;
+  using Sitecore.Collections;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
   using Sitecore.Data.Templates;
@@ -257,6 +258,48 @@
       var versionUri = new VersionUri(language, version);
 
       sut.GetItemFields(def, versionUri, context).Should().HaveCount(1);
+    }
+
+    [Theory, DefaultAutoData]
+    public void AddToPublishQueueReturnsTrue(
+      [Greedy] FakeDataProvider sut,
+      ID itemId,
+      string action,
+      DateTime date,
+      string language,
+      CallContext context)
+    {
+      sut.AddToPublishQueue(itemId, action, date, language, context).Should().BeTrue();
+    }
+
+    [Theory, DefaultAutoData]
+    public void AddToPublishQueueSameItemIdMultipleTimesReturnsTrue(
+      [Greedy] FakeDataProvider sut,
+      ID itemId,
+      string action,
+      DateTime date,
+      string language,
+      CallContext context)
+    {
+      sut.AddToPublishQueue(itemId, action, date, language, context).Should().BeTrue();
+      sut.AddToPublishQueue(itemId, action, date, language, context).Should().BeTrue();
+      sut.AddToPublishQueue(itemId, action, date, language, context).Should().BeTrue();
+    }
+
+    [Theory, DefaultAutoData]
+    public void GetPublishQueueReturnsIDList(
+      [Greedy] FakeDataProvider sut,
+      ID itemId1,
+      ID itemId2,
+      string action,
+      DateTime date,
+      string language,
+      CallContext context)
+    {
+      sut.AddToPublishQueue(itemId1, action, date, language, context);
+      sut.AddToPublishQueue(itemId2, action, date, language, context);
+      var result = sut.GetPublishQueue(DateTime.MinValue, DateTime.MaxValue, context);
+      result.ShouldBeEquivalentTo(new IDList { itemId1, itemId2 });
     }
   }
 }

@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.DataProviders
 {
+  using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading;
@@ -18,6 +19,8 @@
   {
     private readonly ThreadLocal<Dictionary<string, string>> properties = new ThreadLocal<Dictionary<string, string>>();
 
+    private readonly IDList publishQueue = new IDList();
+
     private readonly DataStorage dataStorage;
 
 
@@ -35,6 +38,12 @@
       get { return this.dataStorage ?? DataStorageSwitcher.CurrentValue(this.Database.Name); }
     }
 
+    public override bool AddToPublishQueue(ID itemId, string action, DateTime date, string language, CallContext context)
+    {
+      this.publishQueue.Add(itemId);
+      return true;
+    }
+
     public override bool ChangeTemplate(ItemDefinition itemDefinition, TemplateChangeList changes, CallContext context)
     {
       Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
@@ -46,6 +55,11 @@
 
       item.TemplateID = changes.Target.ID;
       return true;
+    }
+
+    public override IDList GetPublishQueue(DateTime @from, DateTime to, CallContext context)
+    {
+      return this.publishQueue;
     }
 
     public override IdCollection GetTemplateItemIds(CallContext context)
