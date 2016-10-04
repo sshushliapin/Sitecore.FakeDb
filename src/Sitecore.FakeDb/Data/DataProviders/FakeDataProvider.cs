@@ -19,7 +19,7 @@
   {
     private readonly ThreadLocal<Dictionary<string, string>> properties = new ThreadLocal<Dictionary<string, string>>();
 
-    private readonly IDList publishQueue = new IDList();
+    private readonly List<PublishQueueItem> publishQueue = new List<PublishQueueItem>();
 
     private readonly DataStorage dataStorage;
 
@@ -40,7 +40,7 @@
 
     public override bool AddToPublishQueue(ID itemId, string action, DateTime date, string language, CallContext context)
     {
-      this.publishQueue.Add(itemId);
+      this.publishQueue.Add(new PublishQueueItem(itemId, date));
       return true;
     }
 
@@ -59,7 +59,9 @@
 
     public override IDList GetPublishQueue(DateTime @from, DateTime to, CallContext context)
     {
-      return this.publishQueue;
+      return IDList.Build(
+        this.publishQueue.Where(i => i.Date >= @from && i.Date <= to)
+          .Select(i => i.ItemId).ToArray());
     }
 
     public override IdCollection GetTemplateItemIds(CallContext context)
@@ -251,6 +253,19 @@
       }
 
       return builder.Template;
+    }
+
+    private class PublishQueueItem
+    {
+      public PublishQueueItem(ID itemId, DateTime date)
+      {
+        this.ItemId = itemId;
+        this.Date = date;
+      }
+
+      public ID ItemId { get; private set; }
+
+      public DateTime Date { get; private set; }
     }
   }
 }
