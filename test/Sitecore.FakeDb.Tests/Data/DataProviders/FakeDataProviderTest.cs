@@ -327,5 +327,20 @@
 
       result.Count.Should().Be(expectedCount);
     }
+
+    [Theory, DefaultAutoData]
+    public void GetPublishQueueReturnsIDListWithoutDuplicatedIDs(
+      [Greedy] FakeDataProvider sut,
+      ID itemId,
+      string action,
+      DateTime date,
+      string language,
+      CallContext context)
+    {
+      sut.AddToPublishQueue(itemId, action, date, language, context);
+      sut.AddToPublishQueue(itemId, action, date, language, context);
+      var result = sut.GetPublishQueue(DateTime.MinValue, DateTime.MaxValue, context);
+      result.ShouldBeEquivalentTo(new IDList { itemId });
+    }
   }
 }

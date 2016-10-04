@@ -60,8 +60,11 @@
     public override IDList GetPublishQueue(DateTime @from, DateTime to, CallContext context)
     {
       return IDList.Build(
-        this.publishQueue.Where(i => i.Date >= @from && i.Date <= to)
-          .Select(i => i.ItemId).ToArray());
+        this.publishQueue
+          .Where(i => i.Date >= @from && i.Date <= to)
+          .Select(i => i.ItemId)
+          .Distinct()
+          .ToArray());
     }
 
     public override IdCollection GetTemplateItemIds(CallContext context)
