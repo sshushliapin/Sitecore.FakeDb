@@ -266,14 +266,14 @@
       ID itemId,
       string action,
       DateTime date,
-      string language,
       CallContext context)
     {
-      sut.AddToPublishQueue(itemId, action, date, language, context).Should().BeTrue();
+      sut.AddToPublishQueue(itemId, action, date, context).Should().BeTrue();
     }
 
+#if !SC80160115 // Missing in 8.0
     [Theory, DefaultAutoData]
-    public void AddToPublishQueueSameItemIdMultipleTimesReturnsTrue(
+    public void AddToPublishQueueWithLanguageReturnsTrue(
       [Greedy] FakeDataProvider sut,
       ID itemId,
       string action,
@@ -282,8 +282,20 @@
       CallContext context)
     {
       sut.AddToPublishQueue(itemId, action, date, language, context).Should().BeTrue();
-      sut.AddToPublishQueue(itemId, action, date, language, context).Should().BeTrue();
-      sut.AddToPublishQueue(itemId, action, date, language, context).Should().BeTrue();
+    }
+#endif 
+
+    [Theory, DefaultAutoData]
+    public void AddToPublishQueueSameItemIdMultipleTimesReturnsTrue(
+      [Greedy] FakeDataProvider sut,
+      ID itemId,
+      string action,
+      DateTime date,
+      CallContext context)
+    {
+      sut.AddToPublishQueue(itemId, action, date, context).Should().BeTrue();
+      sut.AddToPublishQueue(itemId, action, date, context).Should().BeTrue();
+      sut.AddToPublishQueue(itemId, action, date, context).Should().BeTrue();
     }
 
     [Theory, DefaultAutoData]
@@ -293,11 +305,10 @@
       ID itemId2,
       string action,
       DateTime date,
-      string language,
       CallContext context)
     {
-      sut.AddToPublishQueue(itemId1, action, date, language, context);
-      sut.AddToPublishQueue(itemId2, action, date, language, context);
+      sut.AddToPublishQueue(itemId1, action, date, context);
+      sut.AddToPublishQueue(itemId2, action, date, context);
       var result = sut.GetPublishQueue(DateTime.MinValue, DateTime.MaxValue, context);
       result.ShouldBeEquivalentTo(new IDList { itemId1, itemId2 });
     }
@@ -316,12 +327,11 @@
       ID itemId,
       string action,
       DateTime date,
-      string language,
       CallContext context)
     {
       var from = date.Add(TimeSpan.FromDays(daysBeforePublishingDate));
       var to = date.Add(TimeSpan.FromDays(daysAfterPublishingDate));
-      sut.AddToPublishQueue(itemId, action, date, language, context);
+      sut.AddToPublishQueue(itemId, action, date, context);
 
       var result = sut.GetPublishQueue(from, to, context);
 
@@ -334,11 +344,10 @@
       ID itemId,
       string action,
       DateTime date,
-      string language,
       CallContext context)
     {
-      sut.AddToPublishQueue(itemId, action, date, language, context);
-      sut.AddToPublishQueue(itemId, action, date, language, context);
+      sut.AddToPublishQueue(itemId, action, date, context);
+      sut.AddToPublishQueue(itemId, action, date, context);
       var result = sut.GetPublishQueue(DateTime.MinValue, DateTime.MaxValue, context);
       result.ShouldBeEquivalentTo(new IDList { itemId });
     }

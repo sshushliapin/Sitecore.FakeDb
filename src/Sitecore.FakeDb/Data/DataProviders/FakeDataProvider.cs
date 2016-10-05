@@ -37,7 +37,7 @@
       get { return this.dataStorage ?? DataStorageSwitcher.CurrentValue(this.Database.Name); }
     }
 
-    public override bool AddToPublishQueue(ID itemId, string action, DateTime date, string language, CallContext context)
+    public override bool AddToPublishQueue(ID itemId, string action, DateTime date, CallContext context)
     {
       if (this.publishQueue.Value == null)
       {
@@ -47,6 +47,13 @@
       this.publishQueue.Value.Add(new PublishQueueItem(itemId, date));
       return true;
     }
+
+#if !SC80160115 // Missing in 8.0
+    public override bool AddToPublishQueue(ID itemId, string action, DateTime date, string language, CallContext context)
+    {
+      return this.AddToPublishQueue(itemId, action, date, context);
+    }
+#endif
 
     public override bool ChangeTemplate(ItemDefinition itemDefinition, TemplateChangeList changes, CallContext context)
     {
