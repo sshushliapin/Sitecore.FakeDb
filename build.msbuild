@@ -111,9 +111,9 @@
   </Target>
 
   <Target Name="Deploy" DependsOnTargets="Versions">
-    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.?.*.?.nupkg" />
-    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.AutoFixture.?.*.?.nupkg" />
-    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.NSubstitute.?.*.?.nupkg" />
-    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.Serialization.?.*.?.nupkg" />
+    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.?.*.?.nupkg -Source https://www.nuget.org/api/v2/package" />
+    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.AutoFixture.?.*.?.nupkg -Source https://www.nuget.org/api/v2/package" />
+    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.NSubstitute.?.*.?.nupkg -Source https://www.nuget.org/api/v2/package" />
+    <Exec Command="$(NuGet) push $(OutputDirectory)\Sitecore.FakeDb.Serialization.?.*.?.nupkg -Source https://www.nuget.org/api/v2/package" />
   </Target>
 </Project>
