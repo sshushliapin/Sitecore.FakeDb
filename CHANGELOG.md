@@ -1,4 +1,7 @@
-﻿1.2.2
+﻿1.3.0
+* [NEW] #147: Implement AddToPublishQueue and GetPublishQueue data provider methods
+
+1.2.2
 * [FIX] #144: Fix DataEngine so that blob streams are set to position zero (thanks to [mikeedwards83](https://github.com/mikeedwards83))
 
 1.2.1
