@@ -1,9 +1,11 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
+  using System;
   using System.Threading;
   using System.Threading.Tasks;
   using FluentAssertions;
   using Ploeh.AutoFixture.Xunit2;
+  using Sitecore.Collections;
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Pipelines;
@@ -171,6 +173,36 @@
         {
           db.Database.Properties[propertyName].Should().BeEmpty("the property is not expected");
           db.Database.Properties[propertyName] = unexpectedValue;
+        }
+      });
+
+      t1.Wait();
+      t2.Wait();
+    }
+
+    [Theory, AutoData]
+    public void ShouldBeThreadLocalPublishQueue(
+      ID expectedValue,
+      ID unexpectedValue,
+      string action,
+      DateTime date)
+    {
+      var t1 = Task.Factory.StartNew(() =>
+      {
+        using (var db = new Db())
+        {
+          db.Database.DataManager.DataSource.AddToPublishQueue(expectedValue, action, date);
+          Thread.Sleep(1000);
+          db.Database.DataManager.DataSource.GetPublishQueue(date, date)
+            .ShouldBeEquivalentTo(new IDList { expectedValue });
+        }
+      });
+
+      var t2 = Task.Factory.StartNew(() =>
+      {
+        using (var db = new Db())
+        {
+          db.Database.DataManager.DataSource.AddToPublishQueue(unexpectedValue, action, date);
         }
       });
 

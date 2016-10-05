@@ -19,11 +19,10 @@
   {
     private readonly ThreadLocal<Dictionary<string, string>> properties = new ThreadLocal<Dictionary<string, string>>();
 
-    private readonly List<PublishQueueItem> publishQueue = new List<PublishQueueItem>();
+    private readonly ThreadLocal<List<PublishQueueItem>> publishQueue = new ThreadLocal<List<PublishQueueItem>>();
 
     private readonly DataStorage dataStorage;
-
-
+    
     public FakeDataProvider()
     {
     }
@@ -40,7 +39,12 @@
 
     public override bool AddToPublishQueue(ID itemId, string action, DateTime date, string language, CallContext context)
     {
-      this.publishQueue.Add(new PublishQueueItem(itemId, date));
+      if (this.publishQueue.Value == null)
+      {
+        this.publishQueue.Value = new List<PublishQueueItem>();
+      }
+
+      this.publishQueue.Value.Add(new PublishQueueItem(itemId, date));
       return true;
     }
 
@@ -60,7 +64,7 @@
     public override IDList GetPublishQueue(DateTime @from, DateTime to, CallContext context)
     {
       return IDList.Build(
-        this.publishQueue
+        this.publishQueue.Value
           .Where(i => i.Date >= @from && i.Date <= to)
           .Select(i => i.ItemId)
           .Distinct()
