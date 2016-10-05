@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Data.DataProviders
 {
+  using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading;
@@ -18,9 +19,10 @@
   {
     private readonly ThreadLocal<Dictionary<string, string>> properties = new ThreadLocal<Dictionary<string, string>>();
 
+    private readonly ThreadLocal<List<PublishQueueItem>> publishQueue = new ThreadLocal<List<PublishQueueItem>>();
+
     private readonly DataStorage dataStorage;
-
-
+    
     public FakeDataProvider()
     {
     }
@@ -35,6 +37,24 @@
       get { return this.dataStorage ?? DataStorageSwitcher.CurrentValue(this.Database.Name); }
     }
 
+    public override bool AddToPublishQueue(ID itemId, string action, DateTime date, CallContext context)
+    {
+      if (this.publishQueue.Value == null)
+      {
+        this.publishQueue.Value = new List<PublishQueueItem>();
+      }
+
+      this.publishQueue.Value.Add(new PublishQueueItem(itemId, date));
+      return true;
+    }
+
+#if !SC80160115 // Missing in 8.0
+    public override bool AddToPublishQueue(ID itemId, string action, DateTime date, string language, CallContext context)
+    {
+      return this.AddToPublishQueue(itemId, action, date, context);
+    }
+#endif
+
     public override bool ChangeTemplate(ItemDefinition itemDefinition, TemplateChangeList changes, CallContext context)
     {
       Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
@@ -46,6 +66,16 @@
 
       item.TemplateID = changes.Target.ID;
       return true;
+    }
+
+    public override IDList GetPublishQueue(DateTime @from, DateTime to, CallContext context)
+    {
+      return IDList.Build(
+        this.publishQueue.Value
+          .Where(i => i.Date >= @from && i.Date <= to)
+          .Select(i => i.ItemId)
+          .Distinct()
+          .ToArray());
     }
 
     public override IdCollection GetTemplateItemIds(CallContext context)
@@ -237,6 +267,19 @@
       }
 
       return builder.Template;
+    }
+
+    private class PublishQueueItem
+    {
+      public PublishQueueItem(ID itemId, DateTime date)
+      {
+        this.ItemId = itemId;
+        this.Date = date;
+      }
+
+      public ID ItemId { get; private set; }
+
+      public DateTime Date { get; private set; }
     }
   }
 }
