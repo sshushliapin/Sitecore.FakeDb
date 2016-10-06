@@ -313,6 +313,15 @@
       result.ShouldBeEquivalentTo(new IDList { itemId1, itemId2 });
     }
 
+    [Theory, DefaultAutoData]
+    public void GetPublishQueueReturnsEmptyIDListIfNoItemsAdded(
+      [Greedy] FakeDataProvider sut,
+      CallContext context)
+    {
+      var result = sut.GetPublishQueue(DateTime.MinValue, DateTime.MaxValue, context);
+      result.Should().BeEmpty();
+    }
+
     [Theory]
     [InlineDefaultAutoData(-1, 0, 1)]
     [InlineDefaultAutoData(0, 0, 1)]
