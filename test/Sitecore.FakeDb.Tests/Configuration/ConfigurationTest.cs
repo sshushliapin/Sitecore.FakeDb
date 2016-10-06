@@ -12,7 +12,6 @@
   public class ConfigurationTest
   {
     [Theory]
-    [InlineData("CopyItemPrototype", typeof(CopyItemCommandPrototype))]
     [InlineData("GetItemPrototype", typeof(GetItemCommandPrototype))]
     [InlineData("GetVersionsPrototype", typeof(GetVersionsCommandPrototype))]
     [InlineData("SaveItemPrototype", typeof(SaveItemCommandPrototype))]

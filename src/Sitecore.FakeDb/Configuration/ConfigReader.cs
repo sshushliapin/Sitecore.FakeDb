@@ -29,8 +29,6 @@
     private static void SetDataEngineCommands(InstanceCreatedEventArgs e)
     {
       var commands = e.Database.Engines.DataEngine.Commands;
-
-      commands.CopyItemPrototype = new CopyItemCommandPrototype(e.Database);
       commands.GetItemPrototype = new GetItemCommandPrototype(e.Database);
       commands.GetVersionsPrototype = new GetVersionsCommandPrototype(e.Database);
       commands.SaveItemPrototype = new SaveItemCommandPrototype(e.Database);

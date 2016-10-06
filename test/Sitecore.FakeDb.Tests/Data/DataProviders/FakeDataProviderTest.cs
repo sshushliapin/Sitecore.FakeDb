@@ -62,6 +62,92 @@
     }
 
     [Theory, DefaultAutoData]
+    public void CopyItemThrowsIfSourceIsNull(FakeDataProvider sut)
+    {
+      Action action = () => sut.CopyItem(null, null, null, ID.Null, null);
+      action.ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("source");
+    }
+
+    [Theory, DefaultAutoData]
+    public void CopyItemThrowsIfDestinationIsNull(
+      FakeDataProvider sut,
+      ItemDefinition source)
+    {
+      Action action = () => sut.CopyItem(source, null, null, ID.Null, null);
+      action.ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("destination");
+    }
+
+    [Theory, DefaultAutoData]
+    public void CopyItemThrowsIfCopyNameIsNull(
+      FakeDataProvider sut,
+      ItemDefinition source,
+      ItemDefinition destination)
+    {
+      Action action = () => sut.CopyItem(source, destination, null, ID.Null, null);
+      action.ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("copyName");
+    }
+
+    [Theory, DefaultAutoData]
+    public void CopyItemThrowsIfCopyIdIsNull(
+      FakeDataProvider sut,
+      ItemDefinition source,
+      ItemDefinition destination,
+      string copyName)
+    {
+      Action action = () => sut.CopyItem(source, destination, copyName, null, null);
+      action.ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("copyId");
+    }
+
+    [Theory, DefaultAutoData]
+    public void CopyItemThrowsIfNoDestinationItemFound(
+      [Greedy] FakeDataProvider sut,
+      ItemDefinition source,
+      ItemDefinition destination,
+      string copyName,
+      ID copyId,
+      CallContext context)
+    {
+      Action action = () => sut.CopyItem(source, destination, copyName, copyId, context);
+      action.ShouldThrow<InvalidOperationException>()
+        .WithMessage("Unable to copy item '{0}'. The source item '{1}' is not found."
+          .FormatWith(copyName, source.ID));
+    }
+
+    [Theory, DefaultAutoData]
+    public void CopyItemReturnsTrue(
+      [Greedy] FakeDataProvider sut,
+      ItemDefinition source,
+      ItemDefinition destination,
+      string copyName,
+      ID copyId,
+      CallContext context,
+      DbItem sourceItem)
+    {
+      sut.DataStorage.GetFakeItem(source.ID).Returns(sourceItem);
+      sut.CopyItem(source, destination, copyName, copyId, context)
+        .Should().BeTrue();
+    }
+
+    [Theory, DefaultAutoData]
+    public void CopyItemAddsCopiedItemToDataStorage(
+      [Greedy] FakeDataProvider sut,
+      ItemDefinition source,
+      ItemDefinition destination,
+      string copyName,
+      ID copyId,
+      CallContext context,
+      DbItem sourceItem)
+    {
+      sut.DataStorage.GetFakeItem(source.ID).Returns(sourceItem);
+      sut.CopyItem(source, destination, copyName, copyId, context);
+      sut.DataStorage.Received().AddFakeItem(
+        Arg.Is<DbItem>(i => i.Name == copyName &&
+                            i.ID == copyId &&
+                            i.TemplateID == source.TemplateID &&
+                            i.ParentID == destination.ID));
+    }
+
+    [Theory, DefaultAutoData]
     public void CreateItemThrowsIfItemIdIsNull(FakeDataProvider sut)
     {
       Action action = () => sut.CreateItem(null, null, null, null, null);
@@ -99,12 +185,11 @@
       CallContext context)
     {
       sut.CreateItem(itemId, itemName, templateId, parent, context);
-
-      // TODO: It should be possible to pass an 'expected' item here
-      sut.DataStorage.Received().AddFakeItem(Arg.Is<DbItem>(i => i.Name == itemName &&
-                                                                 i.ID == itemId &&
-                                                                 i.TemplateID == templateId &&
-                                                                 i.ParentID == parent.ID));
+      sut.DataStorage.Received().AddFakeItem(
+        Arg.Is<DbItem>(i => i.Name == itemName &&
+                            i.ID == itemId &&
+                            i.TemplateID == templateId &&
+                            i.ParentID == parent.ID));
     }
 
     [Theory, DefaultAutoData]
@@ -520,7 +605,7 @@
     }
 
     [Theory, DefaultAutoData]
-    public void GetPublishQueueReturnsIDList(
+    public void GetPublishQueueReturnsIdList(
       [Greedy] FakeDataProvider sut,
       ID itemId1,
       ID itemId2,
@@ -535,7 +620,7 @@
     }
 
     [Theory, DefaultAutoData]
-    public void GetPublishQueueReturnsEmptyIDListIfNoItemsAdded(
+    public void GetPublishQueueReturnsEmptyIdListIfNoItemsAdded(
       [Greedy] FakeDataProvider sut,
       CallContext context)
     {
@@ -549,7 +634,7 @@
     [InlineDefaultAutoData(0, 1, 1)]
     [InlineDefaultAutoData(1, 2, 0)]
     [InlineDefaultAutoData(-2, -1, 0)]
-    public void GetPublishQueueReturnsIDListFilteredByDates(
+    public void GetPublishQueueReturnsIdListFilteredByDates(
       int daysBeforePublishingDate,
       int daysAfterPublishingDate,
       int expectedCount,
@@ -569,7 +654,7 @@
     }
 
     [Theory, DefaultAutoData]
-    public void GetPublishQueueReturnsIDListWithoutDuplicatedIDs(
+    public void GetPublishQueueReturnsIdListWithoutDuplicatedIDs(
       [Greedy] FakeDataProvider sut,
       ID itemId,
       string action,

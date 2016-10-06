@@ -81,6 +81,23 @@
       return true;
     }
 
+    public override bool CopyItem(ItemDefinition source, ItemDefinition destination, string copyName, ID copyId, CallContext context)
+    {
+      Assert.ArgumentNotNull(source, "source");
+      Assert.ArgumentNotNull(destination, "destination");
+      Assert.ArgumentNotNull(copyName, "copyName");
+      Assert.ArgumentNotNull(copyId, "copyId");
+
+      var copy = new DbItem(copyName, copyId, source.TemplateID) { ParentID = destination.ID };
+      var sourceDbItem = this.DataStorage.GetFakeItem(source.ID);
+      Assert.IsNotNull(sourceDbItem, "Unable to copy item '{0}'. The source item '{1}' is not found.", copyName, source.ID);
+
+      CopyFields(sourceDbItem, copy);
+      this.DataStorage.AddFakeItem(copy);
+
+      return true;
+    }
+
     public override bool CreateItem(ID itemId, string itemName, ID templateId, ItemDefinition parent, CallContext context)
     {
       Assert.ArgumentNotNull(itemId, "itemId");
@@ -408,6 +425,34 @@
       }
 
       return builder.Template;
+    }
+
+
+    private static void CopyFields(DbItem source, DbItem copy)
+    {
+      foreach (var field in source.Fields)
+      {
+        copy.Fields.Add(new DbField(field.Name, field.ID)
+        {
+          Shared = field.Shared,
+          Type = field.Type
+        });
+
+        if (field.Shared)
+        {
+          copy.Fields[field.ID].Value = field.Value;
+        }
+        else
+        {
+          foreach (var fieldValue in field.Values)
+          {
+            var language = fieldValue.Key;
+            var versions = fieldValue.Value.ToDictionary(v => v.Key, v => v.Value);
+
+            copy.Fields[field.ID].Values[language] = versions;
+          }
+        }
+      }
     }
 
     private class PublishQueueItem

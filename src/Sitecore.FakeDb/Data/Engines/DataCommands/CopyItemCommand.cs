@@ -7,6 +7,7 @@
   using Sitecore.Data.Managers;
   using Sitecore.Diagnostics;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class CopyItemCommand : Sitecore.Data.Engines.DataCommands.CopyItemCommand
   {
     private readonly DataStorage dataStorage;
