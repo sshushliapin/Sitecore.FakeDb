@@ -22,7 +22,7 @@
     private readonly ThreadLocal<List<PublishQueueItem>> publishQueue = new ThreadLocal<List<PublishQueueItem>>();
 
     private readonly DataStorage dataStorage;
-    
+
     public FakeDataProvider()
     {
     }
@@ -70,6 +70,11 @@
 
     public override IDList GetPublishQueue(DateTime @from, DateTime to, CallContext context)
     {
+      if (this.publishQueue.Value == null)
+      {
+        return new IDList();
+      }
+
       return IDList.Build(
         this.publishQueue.Value
           .Where(i => i.Date >= @from && i.Date <= to)
