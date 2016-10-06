@@ -1,4 +1,7 @@
-﻿1.3.0
+﻿1.3.1
+* [FIX] #148: GetPublishQueue returns empty IDList if no thread local value specified
+
+1.3.0
 * [NEW] #147: Implement AddToPublishQueue and GetPublishQueue data provider methods
 
 1.2.2
