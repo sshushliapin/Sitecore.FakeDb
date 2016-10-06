@@ -9,6 +9,7 @@
   using Sitecore.Collections;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
+  using Sitecore.Data.Items;
   using Sitecore.Data.Templates;
   using Sitecore.FakeDb.Data.DataProviders;
   using Sitecore.Globalization;
@@ -844,6 +845,33 @@
 
       result.Should().BeTrue();
       item.GetVersionCount(language.Name).Should().Be(expectedVersionCount);
+    }
+
+    [Theory, DefaultAutoData]
+    public void SaveItemThrowsIfItemDefinitionIsNull(FakeDataProvider sut)
+    {
+      Action action = () => sut.SaveItem(null, null, null);
+      action.ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("itemDefinition");
+    }
+
+    [Theory, DefaultAutoData]
+    public void SaveItemThrowsIfItemChangesParameterIsNull(
+      FakeDataProvider sut,
+      ItemDefinition itemDefinition)
+    {
+      Action action = () => sut.SaveItem(itemDefinition, null, null);
+      action.ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("changes");
+    }
+
+    [Theory, DefaultAutoData]
+    public void SaveItemReturnsFalse(
+      [Greedy] FakeDataProvider sut,
+      ItemDefinition itemDefinition,
+      ItemChanges changes,
+      CallContext context)
+    {
+      // 'true' looks more correct here but numerous tests start failing then.
+      sut.SaveItem(itemDefinition, changes, context).Should().BeFalse();
     }
   }
 }

@@ -31,7 +31,6 @@
       var commands = e.Database.Engines.DataEngine.Commands;
       commands.GetItemPrototype = new GetItemCommandPrototype(e.Database);
       commands.GetVersionsPrototype = new GetVersionsCommandPrototype(e.Database);
-      commands.SaveItemPrototype = new SaveItemCommandPrototype(e.Database);
     }
 
     private static void SetAppDomainAppPath()

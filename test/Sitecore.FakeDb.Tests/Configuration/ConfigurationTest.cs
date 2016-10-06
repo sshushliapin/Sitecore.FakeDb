@@ -14,7 +14,6 @@
     [Theory]
     [InlineData("GetItemPrototype", typeof(GetItemCommandPrototype))]
     [InlineData("GetVersionsPrototype", typeof(GetVersionsCommandPrototype))]
-    [InlineData("SaveItemPrototype", typeof(SaveItemCommandPrototype))]
     public void ShouldRegisterFakeCommand(string propertyName, Type propertyType)
     {
       // arrange

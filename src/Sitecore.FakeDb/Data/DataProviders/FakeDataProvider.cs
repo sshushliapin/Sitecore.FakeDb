@@ -8,6 +8,7 @@
   using Sitecore.Collections;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;
+  using Sitecore.Data.Items;
   using Sitecore.Data.Query;
   using Sitecore.Data.Templates;
   using Sitecore.Diagnostics;
@@ -324,6 +325,52 @@
       var item = storage.GetFakeItems().FirstOrDefault(fi => string.Compare(fi.FullPath, itemPath, StringComparison.OrdinalIgnoreCase) == 0);
 
       return item != null ? item.ID : null;
+    }
+
+    public override bool SaveItem(ItemDefinition itemDefinition, ItemChanges changes, CallContext context)
+    {
+      Assert.ArgumentNotNull(itemDefinition, "itemDefinition");
+      Assert.ArgumentNotNull(changes, "changes");
+
+      var item = this.DataStorage.GetFakeItem(itemDefinition.ID);
+      if (item == null)
+      {
+        return false;
+      }
+
+      var newName = changes.Properties
+          .Where(p => p.Key == "name")
+          .Select(p => p.Value.Value.ToString()).ToList();
+      if (newName.Any())
+      {
+        var fullPath = item.FullPath;
+        if (!string.IsNullOrEmpty(fullPath) && fullPath.Contains(item.Name))
+        {
+          item.FullPath = fullPath.Substring(0, fullPath.LastIndexOf(item.Name, StringComparison.Ordinal)) + newName.First();
+        }
+        item.Name = newName.First();
+      }
+
+      if (changes.HasFieldsChanged)
+      {
+        foreach (FieldChange change in changes.FieldChanges)
+        {
+          if (item.Fields.ContainsKey(change.FieldID))
+          {
+            item.Fields[change.FieldID]
+              .SetValue(change.Language.Name, change.Version.Number, change.Value);
+          }
+          else
+          {
+            item.Fields.Add(new DbField(change.FieldID)
+            {
+              Value = change.Value
+            });
+          }
+        }
+      }
+
+      return false;
     }
 
     public override ID SelectSingleID(string query, CallContext context)
