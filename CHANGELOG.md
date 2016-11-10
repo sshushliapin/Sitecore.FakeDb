@@ -1,4 +1,7 @@
-﻿1.3.1
+﻿1.3.2
+* [FIX] #149: Toggle ZeroConfiguration property to fix config merging logic
+ 
+1.3.1
 * [FIX] #148: GetPublishQueue returns empty IDList if no thread local value specified
 
 1.3.0
