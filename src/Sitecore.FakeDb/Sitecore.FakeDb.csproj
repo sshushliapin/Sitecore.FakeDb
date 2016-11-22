@@ -201,6 +201,7 @@
     <Compile Include="Tasks\FakeTaskDatabase.cs" />
     <Compile Include="Tasks\TaskDatabaseSwitcher.cs" />
     <Compile Include="UnversionedDbField.cs" />
+    <Compile Include="Workflows\SwitchingWorkflowProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Sitecore.config">

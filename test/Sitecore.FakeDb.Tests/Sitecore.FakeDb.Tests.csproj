@@ -275,6 +275,7 @@
     <Compile Include="Globalization\Translate\AutoTranslateEnabledWithLanguageSuffix.cs" />
     <Compile Include="Globalization\Translate\AutoTranslateDisabled.cs" />
     <Compile Include="UnversionedDbFieldTest.cs" />
+    <Compile Include="Workflows\SwitchingWorkflowProviderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

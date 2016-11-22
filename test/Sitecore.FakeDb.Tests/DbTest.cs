@@ -14,6 +14,7 @@
   using Sitecore.Exceptions;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Security.AccessControl;
+  using Sitecore.FakeDb.Workflows;
   using Sitecore.Globalization;
   using Sitecore.Reflection;
   using Sitecore.Security.AccessControl;
@@ -1766,6 +1767,19 @@
         }
 
         targetItem.BranchId.Should().Be(branchId);
+      }
+    }
+
+    [Theory]
+    [InlineData("core")]
+    [InlineData("master")]
+    [InlineData("web")]
+    public void ShouldGetSampleWorkflow(string databaseName)
+    {
+      using (var db = new Db(databaseName))
+      {
+        db.Database.WorkflowProvider
+          .Should().BeOfType<SwitchingWorkflowProvider>();
       }
     }
   }
