@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Workflows
 {
+  using System.Linq;
   using Sitecore.Common;
   using Sitecore.Data.Items;
   using Sitecore.Workflows;
@@ -12,22 +13,37 @@
   {
     public IWorkflow GetWorkflow(Item item)
     {
-      throw new System.NotImplementedException();
+      var currentProvider = Switcher<IWorkflowProvider>.CurrentValue;
+      return currentProvider != null ?
+        currentProvider.GetWorkflow(item) :
+        null;
     }
 
-    public IWorkflow GetWorkflow(string workflowID)
+    public IWorkflow GetWorkflow(string workflowId)
     {
-      throw new System.NotImplementedException();
+      var currentProvider = Switcher<IWorkflowProvider>.CurrentValue;
+      return currentProvider != null ?
+        currentProvider.GetWorkflow(workflowId) :
+        null;
     }
 
     public IWorkflow[] GetWorkflows()
     {
-      throw new System.NotImplementedException();
+      var currentProvider = Switcher<IWorkflowProvider>.CurrentValue;
+      return currentProvider != null ?
+        currentProvider.GetWorkflows() :
+        Enumerable.Empty<IWorkflow>().ToArray();
     }
 
     public void Initialize(Item configItem)
     {
-      throw new System.NotImplementedException();
+      var currentProvider = Switcher<IWorkflowProvider>.CurrentValue;
+      if (currentProvider == null)
+      {
+        return;
+      }
+
+      currentProvider.Initialize(configItem);
     }
   }
 }
