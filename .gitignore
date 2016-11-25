@@ -166,3 +166,6 @@ lib/**/*.xml
 # Deploy
 output/
 /TestResult.xml
+
+# Tests
+TestResult_*.xml
