@@ -6,6 +6,7 @@ using Xunit;
 
 namespace Sitecore.FakeDb.Tests.Data.Fields
 {
+  [Trait("Category", "RequireLicense")]
   public class LayoutFieldTest
   {
     [Fact]

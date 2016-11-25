@@ -6,6 +6,7 @@
   using Ploeh.AutoFixture.Xunit2;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class ContentAttributeTest
   {
     [Fact]

@@ -9,6 +9,7 @@
   using Sitecore.FakeDb.Pipelines.AddDbItem;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class CreateTemplateTest
   {
     private const string NullTemplateId = "{00000000-0000-0000-0000-000000000000}";

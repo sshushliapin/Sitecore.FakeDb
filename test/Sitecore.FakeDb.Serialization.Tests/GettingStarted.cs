@@ -2,6 +2,7 @@
 {
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class GettingStarted
   {
     [Fact]

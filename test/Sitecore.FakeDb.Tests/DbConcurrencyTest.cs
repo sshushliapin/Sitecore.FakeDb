@@ -11,6 +11,7 @@
   using Sitecore.Pipelines;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class DbConcurrencyTest
   {
     [Fact]

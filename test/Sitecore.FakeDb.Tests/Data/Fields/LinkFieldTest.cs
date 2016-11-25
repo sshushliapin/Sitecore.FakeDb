@@ -9,6 +9,7 @@
   /// Internal link: <link text="Link to Home item" linktype="internal" class="default" title="Home" target='Active Browser' querystring="sc_lang=en" id="{110D559F-DEA5-42EA-9C1C-8A5DF7E70EF9}" />
   /// External link: <link text="Gmail" linktype="external" url="http://gmail.com" anchor="" title="Google mail" class="link" target="Active Browser" />
   /// </summary>
+  [Trait("Category", "RequireLicense")]
   public class LinkFieldTest
   {
     [Fact]
@@ -46,7 +47,7 @@
                             {
                               new DbLinkField("link")
                                 {
-                                  LinkType = "internal", 
+                                  LinkType = "internal",
                                   QueryString = "sc_lang=en",
                                   TargetID = targetId,
                                 }

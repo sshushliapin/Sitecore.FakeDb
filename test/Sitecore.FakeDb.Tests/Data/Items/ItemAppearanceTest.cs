@@ -2,9 +2,9 @@
 {
   using FluentAssertions;
   using Sitecore.Data.Items;
-  using Sitecore.Globalization;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class ItemAppearanceTest
   {
     [Fact]

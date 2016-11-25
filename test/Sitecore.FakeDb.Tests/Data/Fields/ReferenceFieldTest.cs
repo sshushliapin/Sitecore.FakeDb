@@ -5,6 +5,7 @@
   using Sitecore.Data.Fields;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class ReferenceFieldTest
   {
     [Fact]
@@ -14,7 +15,7 @@
       var targetId = ID.NewID;
 
       using (var db = new Db
-                        { 
+                        {
                            new DbItem("source") { { "Reference", "/sitecore/content/target" } },
                            new DbItem("target",  targetId)
                         })
@@ -33,6 +34,7 @@
         referenceField.TargetItem.Should().Be(db.GetItem(targetId));
       }
     }
+
     [Fact]
     public void ShouldGetTargetById()
     {
@@ -40,7 +42,7 @@
       var targetId = ID.NewID;
 
       using (var db = new Db
-                        { 
+                        {
                            new DbItem("source") { { "Reference", targetId.ToString() } },
                            new DbItem("target",  targetId)
                         })

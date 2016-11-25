@@ -22,6 +22,7 @@
   using Xunit;
   using Version = Sitecore.Data.Version;
 
+  [Trait("Category", "RequireLicense")]
   public class DbTest
   {
     private readonly ID itemId = ID.NewID;

@@ -15,12 +15,14 @@
     }
 
     [Fact(DisplayName = "Deserializes templates in tree")]
+    [Trait("Category", "RequireLicense")]
     public void DeserializesTemplates()
     {
       Assert.NotNull(this.Db.Database.GetTemplate(SerializationId.SampleItemTemplate));
     }
 
     [Fact(DisplayName = "Deserializes items in tree")]
+    [Trait("Category", "RequireLicense")]
     public void DeserializesItems()
     {
       var nonTemplateItemCount =

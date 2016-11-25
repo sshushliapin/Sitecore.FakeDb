@@ -10,6 +10,7 @@
   using Xunit;
   using MoveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.MoveItemCommand;
 
+  [Trait("Category", "RequireLicense")]
   public class MoveItemCommandTest
   {
     [Theory, DefaultAutoData]

@@ -111,6 +111,7 @@
     }
 
     [Theory, SwitchingAutoData]
+    [Trait("Category", "RequireLicense")]
     public void GetItemUrlOptionsCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, Item item, UrlOptions options)
     {
       using (new Db())

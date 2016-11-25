@@ -6,6 +6,7 @@
   using Sitecore.Data.Query;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class QueryTest
   {
     [Theory]

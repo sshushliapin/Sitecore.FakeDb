@@ -7,6 +7,7 @@
   using Sitecore.Security.Accounts;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class AuthorizationSwitcherTest
   {
     private readonly AuthorizationProvider provider = Substitute.For<AuthorizationProvider>();

@@ -3,6 +3,7 @@
   using FluentAssertions;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class FastQueryTest
   {
     [Fact]

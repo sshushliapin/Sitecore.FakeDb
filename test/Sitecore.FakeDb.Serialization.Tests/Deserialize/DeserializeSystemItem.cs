@@ -13,6 +13,7 @@ namespace Sitecore.FakeDb.Serialization.Tests.Deserialize
     }
 
     [Fact(DisplayName = "Puts item in the System folder")]
+    [Trait("Category", "RequireLicense")]
     public void PutsItemUnderValidRoot()
     {
       this.Db.GetItem(SerializationId.MySystemItem).Paths.FullPath.Should().Be("/sitecore/system/My System");

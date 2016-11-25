@@ -4,6 +4,7 @@
   using Sitecore.Data;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class BranchRecordsTest
   {
     private readonly ID branchId = ID.NewID;

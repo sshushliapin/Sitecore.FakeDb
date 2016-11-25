@@ -12,6 +12,7 @@ namespace Sitecore.FakeDb.Serialization.Tests.Deserialize
     }
 
     [Fact(DisplayName = "Creates the new item")]
+    [Trait("Category", "RequireLicense")]
     public void CreateNewItem()
     {
       this.Db.GetItem(SerializationId.ContentHomeItem).Should().NotBeNull();

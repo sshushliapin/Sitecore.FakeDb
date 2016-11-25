@@ -5,6 +5,7 @@
   using Sitecore.Configuration;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class GettingStarted
   {
     #region Content
