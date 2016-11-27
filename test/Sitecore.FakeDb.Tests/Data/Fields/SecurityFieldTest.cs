@@ -3,6 +3,7 @@
   using FluentAssertions;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class SecurityFieldTest
   {
     private const string AllowAllAccessRule = "ar|Everyone|p*|+*|";
@@ -24,7 +25,7 @@
     public void ShouldSetSecurityFieldByName()
     {
       // arrange & act
-      using (var db = new Db 
+      using (var db = new Db
                         {
                           new DbItem("home") { { "__Security", AllowAllAccessRule } }
                         })
@@ -40,7 +41,7 @@
     public void ShouldSetSecurityFieldById()
     {
       // arrange & act
-      using (var db = new Db 
+      using (var db = new Db
                         {
                           new DbItem("home") { new DbField(FieldIDs.Security) { Value = AllowAllAccessRule } }
                         })

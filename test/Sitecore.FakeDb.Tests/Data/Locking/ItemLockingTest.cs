@@ -4,6 +4,7 @@
   using Sitecore.Security.Accounts;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class ItemLockingTest
   {
     [Fact]

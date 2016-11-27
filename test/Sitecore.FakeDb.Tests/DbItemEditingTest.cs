@@ -6,9 +6,9 @@
   using Sitecore.Data.Managers;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class DbItemEditingTest
   {
-
     private readonly ID itemId = ID.NewID;
 
     private readonly ID templateId = ID.NewID;

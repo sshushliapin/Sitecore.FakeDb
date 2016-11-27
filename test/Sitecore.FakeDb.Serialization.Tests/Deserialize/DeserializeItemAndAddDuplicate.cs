@@ -20,6 +20,7 @@ namespace Sitecore.FakeDb.Serialization.Tests.Deserialize
     }
 
     [Fact(DisplayName = "Does not overwrite the deserialized item")]
+    [Trait("Category", "RequireLicense")]
     public void DoesNotOverwriteDeserializedItem()
     {
       try

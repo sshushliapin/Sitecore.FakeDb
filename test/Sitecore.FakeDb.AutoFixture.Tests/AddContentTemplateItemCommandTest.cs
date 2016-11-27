@@ -31,7 +31,7 @@
       action.ShouldNotThrow();
     }
 
-    [Fact]
+    [Fact, Trait("Category", "RequireLicense")]
     public void CreateAddsItemToDb()
     {
       var fixture = new Fixture();

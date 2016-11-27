@@ -10,6 +10,7 @@
   using Sitecore.Rules;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class AutoDbCustomizatonTest
   {
     [Theory, AutoDbData]

@@ -6,6 +6,7 @@
   using Sitecore.SecurityModel;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class ItemStatisticsTest
   {
     [Fact]

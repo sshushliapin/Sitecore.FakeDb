@@ -4,6 +4,7 @@
   using Sitecore.Data.Items;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class AutoDbDataAttributeSamples
   {
     [Theory, AutoDbData]

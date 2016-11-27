@@ -6,10 +6,11 @@
   using Sitecore.Data.Items;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class CustomTemplateTest
   {
     [Theory, AutoDbData]
-    public void CreateItemBasedOnCustomTemplate([Content] Item root,[Content] MyHomeTemplate template)
+    public void CreateItemBasedOnCustomTemplate([Content] Item root, [Content] MyHomeTemplate template)
     {
       // act
       var home = root.Add("home", new TemplateID(template.ID));
@@ -37,6 +38,5 @@
         this.Add("Title");
       }
     }
- 
   }
 }

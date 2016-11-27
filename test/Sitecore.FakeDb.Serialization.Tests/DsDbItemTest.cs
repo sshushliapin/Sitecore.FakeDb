@@ -7,6 +7,7 @@
   using Sitecore.Globalization;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class DsDbItemTest
   {
     [Fact]

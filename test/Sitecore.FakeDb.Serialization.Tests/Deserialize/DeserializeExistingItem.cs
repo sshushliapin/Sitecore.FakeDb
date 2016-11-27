@@ -18,6 +18,7 @@
     }
 
     [Fact(DisplayName = "Overwrites the existing item")]
+    [Trait("Category", "RequireLicense")]
     public void OverwriteExisting()
     {
       this.Db.Add(this.DeserializedItem);

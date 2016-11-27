@@ -7,6 +7,7 @@
   using Sitecore.Data.Items;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class TemplatesTest
   {
     [Fact]

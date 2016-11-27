@@ -4,6 +4,7 @@
   using Sitecore.Links;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class LinkManagerTest
   {
     [Fact]

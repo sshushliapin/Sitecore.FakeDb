@@ -16,7 +16,7 @@
       action.ShouldThrow<ArgumentNullException>().WithMessage("*fixture");
     }
 
-    [Fact]
+    [Fact, Trait("Category", "RequireLicense")]
     public void CreatesTemplateItem()
     {
       var fixture = new Fixture();

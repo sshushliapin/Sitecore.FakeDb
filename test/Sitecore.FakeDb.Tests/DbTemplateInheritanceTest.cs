@@ -10,6 +10,7 @@
   using Sitecore.Exceptions;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class DbTemplateInheritanceTest
   {
     private readonly DbTemplate baseTemplateOne;
@@ -23,9 +24,9 @@
       this.baseTemplateOne = new DbTemplate("Base One", ID.NewID) { "Title" };
       this.baseTemplateTwo = new DbTemplate("Base Two", ID.NewID) { "Description" };
       this.baseTemplateThree = new DbTemplate("Base Three", ID.NewID)
-        {
-          BaseIDs = new[] { this.baseTemplateTwo.ID }
-        };
+      {
+        BaseIDs = new[] { this.baseTemplateTwo.ID }
+      };
     }
 
     [Fact]

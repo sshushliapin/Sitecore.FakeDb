@@ -5,6 +5,7 @@
   using Sitecore.Data.Fields;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class FieldTypeManagerTest
   {
     [Theory]

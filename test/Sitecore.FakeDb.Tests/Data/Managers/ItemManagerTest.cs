@@ -6,6 +6,7 @@
   using Sitecore.Data.Managers;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class ItemManagerTest
   {
     private readonly ID templateId = ID.NewID;

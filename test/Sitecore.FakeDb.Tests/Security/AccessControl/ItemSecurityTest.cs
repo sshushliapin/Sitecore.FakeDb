@@ -4,6 +4,7 @@
   using Sitecore.Security.AccessControl;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class ItemSecurityTest
   {
     [Fact]

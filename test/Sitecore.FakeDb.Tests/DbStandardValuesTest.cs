@@ -5,6 +5,7 @@
   using Sitecore.Data.Managers;
   using Xunit;
 
+  [Trait("Category", "RequireLicense")]
   public class DbStandardValuesTest
   {
     private readonly ID templateId = ID.NewID;
