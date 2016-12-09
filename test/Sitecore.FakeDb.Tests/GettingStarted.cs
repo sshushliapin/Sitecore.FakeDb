@@ -1,5 +1,6 @@
 ﻿namespace Examples
 {
+  using System;
   using System.Linq;
   using NSubstitute;
   using Sitecore.Configuration;
@@ -701,6 +702,7 @@
     }
 
 #if !SC72160123 && !SC82160729 && !SC82161115
+    [Obsolete("LinkProviderSwitcher is obsolete.")]
     [Fact]
     public void HowToSwitchLinkProvider()
     {

@@ -1,6 +1,7 @@
 ﻿#if !SC72160123 && !SC82160729 && !SC82161115
 namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
 {
+  using System;
   using NSubstitute;
   using Ploeh.AutoFixture;
   using Ploeh.AutoFixture.AutoNSubstitute;
@@ -16,6 +17,7 @@ namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
   // PM> Install-Package AutoFixture.Xunit2
   // PM> Install-Package AutoFixture.AutoNSubstitute
   // PM> Install-Package Sitecore.FakeDb.AutoFixture
+  [Obsolete("LinkProviderSwitcher is obsolete.")]
   public class SwitchingLinkProviderSample
   {
     [Theory, DefaultAutoData]

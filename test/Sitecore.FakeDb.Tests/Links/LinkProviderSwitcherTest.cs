@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Links
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Ploeh.AutoFixture.Xunit2;
@@ -9,6 +10,7 @@
   using Xunit;
   using LinkProviderSwitcher = Sitecore.FakeDb.Links.LinkProviderSwitcher;
 
+  [Obsolete("LinkProviderSwitcher is obsolete.")]
   public class LinkProviderSwitcherTest
   {
     [Theory, AutoData]
