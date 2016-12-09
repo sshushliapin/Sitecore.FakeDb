@@ -1,11 +1,28 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security.Authentication
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Security.Accounts;
   using Sitecore.Security.Authentication;
   using Xunit;
 
+#if !SC82161115
+  /// <summary>
+  /// Disable the entire test for Sitecore 8.2.1 and later because the 
+  /// existing functionality relies on provider switching which is no longer 
+  /// supported. Starting from Sitecore 8.2.1, the providers used by static 
+  /// managers have been obsoleted. One have to mock new abstractions 
+  /// created for each of the old static managers. For instance, in order to
+  /// mock the <see cref="AuthenticationManager"/> one have to inject
+  /// <see cref="Sitecore.Abstractions.BaseAuthenticationManager"/> into SUT.
+  /// In production, the default implementation will be injected using new
+  /// Sitecore DI.
+  /// 
+  /// Please go to the following thread for details:
+  /// https://github.com/sergeyshushlyapin/Sitecore.FakeDb/issues/154
+  /// </summary>
+  [Obsolete("Not supported in Sitecore 8.2.1 and later.")]
   public class AuthenticationManagerTest
   {
     private readonly AuthenticationProvider provider;
@@ -107,4 +124,5 @@
       }
     }
   }
+#endif
 }
