@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Links
 {
+  using System;
   using System.Collections.Specialized;
   using System.Web;
   using FluentAssertions;
@@ -16,6 +17,7 @@
   using Xunit;
   using StringDictionary = Sitecore.Collections.StringDictionary;
 
+  [Obsolete("SwitchingLinkProvider is obsolete.")]
   public class SwitchingLinkProviderTest
   {
     [Theory, AutoData]

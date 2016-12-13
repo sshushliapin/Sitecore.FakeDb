@@ -1,11 +1,16 @@
 namespace Sitecore.FakeDb.Links
 {
+  using System;
   using System.Web;
   using Sitecore.Common;
   using Sitecore.Data.Items;
   using Sitecore.Links;
   using Sitecore.Web;
 
+  [Obsolete("This class is not supported starting from Sitecore 8.2.0. " +
+            "Instead of switching the LinkProvider, please consider injecting " +
+            "the Sitecore.Abstractions.BaseLinkManager class into your System " +
+            "Under Test (SUT) via constructor.")]
   public class SwitchingLinkProvider : LinkProvider
   {
     public LinkProvider CurrentProvider
