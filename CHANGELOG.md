@@ -1,4 +1,7 @@
-﻿1.3.2
+﻿1.3.3
+* [FIX] #154: Upgrade FakeDb to Sitecore 8.2 Update-1
+
+1.3.2
 * [FIX] #149: Toggle ZeroConfiguration property to fix config merging logic
  
 1.3.1
