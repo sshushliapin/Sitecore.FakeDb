@@ -3,6 +3,17 @@
   using System.Linq;
   using Sitecore.Data;
 
+  /// <summary>
+  /// Creates and fulfills item statistics fields for all the item languages.
+  /// The fields included are 'Created', 'CreatedBy', 'Revision', 'Updated' 
+  /// and 'UpdatedBy'.
+  /// <para>
+  /// The 'Created' and 'Updated' fields are set to the current date in ISO 
+  /// format. The 'CreatedBy' and 'UpdatedBy' fields store the current user 
+  /// name. The 'Revision' field is a <see cref="System.Guid"/> generated for
+  /// each of the item languages.
+  /// </para>
+  /// </summary>
   public class SetStatistics
   {
     public virtual void Process(AddDbItemArgs args)
