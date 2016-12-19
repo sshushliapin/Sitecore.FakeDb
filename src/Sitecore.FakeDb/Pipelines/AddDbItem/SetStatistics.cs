@@ -8,30 +8,44 @@
     public virtual void Process(AddDbItemArgs args)
     {
       var item = args.DbItem;
-
       var date = DateUtil.IsoNow;
       var user = Context.User.Name;
 
-      item.Fields.Add(new DbField("__Created", FieldIDs.Created) { Value = date });
-      item.Fields.Add(new DbField("__Created by", FieldIDs.CreatedBy) { Value = user });
-      item.Fields.Add(new DbField("__Revision", FieldIDs.Revision));
-      item.Fields.Add(new DbField("__Updated", FieldIDs.Updated) { Value = date });
-      item.Fields.Add(new DbField("__Updated by", FieldIDs.UpdatedBy) { Value = user });
-
-      SetRevisionForAllLanguages(item);
+      AddStatisticsFields(item, date, user);
+      SetStatisticsForAllLanguages(item, date, user);
     }
 
-    private static void SetRevisionForAllLanguages(DbItem item)
+    private static void AddStatisticsFields(DbItem item, string date, string user)
     {
-      foreach (var lang in item.Fields.SelectMany(field => field.Values))
+      item.Fields.Add(new DbField("__Created", FieldIDs.Created) { Value = date });
+      item.Fields.Add(new DbField("__Created by", FieldIDs.CreatedBy) { Value = user });
+      item.Fields.Add(new DbField("__Revision", FieldIDs.Revision) { Value = ID.NewID.ToString() });
+      item.Fields.Add(new DbField("__Updated", FieldIDs.Updated) { Value = date });
+      item.Fields.Add(new DbField("__Updated by", FieldIDs.UpdatedBy) { Value = user });
+    }
+
+    private static void SetStatisticsForAllLanguages(DbItem item, string date, string user)
+    {
+      foreach (var lang in item.Fields
+        .SelectMany(field => field.Values)
+        .Select(l => l.Key))
       {
-        var revisionField = item.Fields[FieldIDs.Revision];
-        var revisionSet = !string.IsNullOrEmpty(
-          revisionField.GetValue(lang.Key, Version.Latest.Number));
-        if (!revisionSet)
-        {
-          revisionField.SetValue(lang.Key, ID.NewID.ToString());
-        }
+        SetFieldValue(item.Fields[FieldIDs.Created], lang, date);
+        SetFieldValue(item.Fields[FieldIDs.CreatedBy], lang, user);
+        SetFieldValue(item.Fields[FieldIDs.Revision], lang, ID.NewID.ToString());
+        SetFieldValue(item.Fields[FieldIDs.Updated], lang, date);
+        SetFieldValue(item.Fields[FieldIDs.UpdatedBy], lang, user);
+      }
+    }
+
+    private static void SetFieldValue(DbField field, string lang, string value)
+    {
+      var valueSet = !string.IsNullOrEmpty(
+        field.GetValue(lang, Version.Latest.Number));
+
+      if (!valueSet)
+      {
+        field.SetValue(lang, value);
       }
     }
   }
