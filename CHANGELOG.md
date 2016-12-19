@@ -1,4 +1,7 @@
-﻿1.3.3
+﻿1.3.4
+* [FIX] #156:Generate item statistics for all the specified languages (#155)
+
+1.3.3
 * [FIX] #154: Upgrade FakeDb to Sitecore 8.2 Update-1
 
 1.3.2
