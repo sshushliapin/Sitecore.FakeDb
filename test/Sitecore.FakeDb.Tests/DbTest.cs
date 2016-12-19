@@ -1768,5 +1768,21 @@
         targetItem.BranchId.Should().Be(branchId);
       }
     }
+
+    [Fact]
+    public void ShouldGetVersionedItemRevision()
+    {
+      using (var db = new Db
+        {
+          new DbItem("Home")
+            {
+              new DbField("Value") {{"af-ZA", 1, "test"}}
+            }
+        })
+      {
+        var item = db.GetItem("/sitecore/content/home", "af-ZA");
+        item["__Revision"].Should().NotBeNullOrEmpty();
+      }
+    }
   }
 }

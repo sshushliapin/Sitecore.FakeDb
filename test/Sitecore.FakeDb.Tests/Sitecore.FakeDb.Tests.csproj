@@ -225,6 +225,7 @@
     <Compile Include="Pipelines\AddDbItem\SetWorkflowTest.cs" />
     <Compile Include="Pipelines\CorePipelineFactoryTest.cs" />
     <Compile Include="Pipelines\CorePipelineTest.cs" />
+    <Compile Include="Pipelines\SetStatisticsTest.cs" />
     <Compile Include="Profile\UserProfileTest.cs" />
     <Compile Include="Runtime\FluentAssertionsTest.cs" />
     <Compile Include="Samples\ContentSearchSamples.cs" />
