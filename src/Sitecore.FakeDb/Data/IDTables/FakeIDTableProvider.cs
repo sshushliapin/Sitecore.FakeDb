@@ -29,6 +29,11 @@
       return this.IsLocalProviderSet() ? this.LocalProvider.Value.GetID(prefix, key) : null;
     }
 
+    public override IDTableEntry[] GetKeys(string prefix)
+    {
+      return this.IsLocalProviderSet() ? this.LocalProvider.Value.GetKeys(prefix) : new IDTableEntry[] { };
+    }
+
     public override IDTableEntry[] GetKeys(string prefix, ID id)
     {
       return this.IsLocalProviderSet() ? this.LocalProvider.Value.GetKeys(prefix, id) : new IDTableEntry[] { };
@@ -64,9 +69,9 @@
       {
         return;
       }
-      
+
       this.localProvider.Dispose();
-      
+
       this.disposed = true;
     }
   }

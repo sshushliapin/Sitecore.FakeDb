@@ -68,7 +68,15 @@
     }
 
     [Fact]
-    public void ShouldCallGetKeys()
+    public void ShouldCallGetKeysByPrefix()
+    {
+      var keys = new[] { this.entry };
+      this.behavior.GetKeys("prefix").Returns(keys);
+      this.provider.GetKeys("prefix").Should().BeSameAs(keys);
+    }
+
+    [Fact]
+    public void ShouldCallGetKeysByPrefixAndId()
     {
       // arrange
       var keys = new[] { this.entry };
