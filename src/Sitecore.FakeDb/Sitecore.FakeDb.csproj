@@ -77,6 +77,7 @@
     <Compile Include="Configuration\ConfigReader.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="ContentSearch\SwitchingSearchProvider.cs" />
+    <Compile Include="Data\DataProviders\SwitchingLanguagesDataProvider.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\AddFromTemplateCommandPrototype.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\AddVersionCommandProtoype.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\BlobStreamExistsCommandPrototype.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Data\IDTables\IDTableProviderSwitcher.cs" />
     <Compile Include="Data\Items\ItemWrapper.cs" />
     <Compile Include="Data\IDTables\FakeIDTableProvider.cs" />
+    <Compile Include="DbLanguages.cs" />
     <Compile Include="DbLinkField.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="Pipelines\AddDbItem\SetWorkflow.cs" />
