@@ -121,7 +121,7 @@
     <Compile Include="Buckets\SwitchingBucketProviderTest.cs" />
     <Compile Include="CompositeFieldBuilderTest.cs" />
     <Compile Include="Data\Clones\ClonesTest.cs" />
-    <Compile Include="Data\DataProviders\SwitchingLanguagesDataProviderTest.cs" />
+    <Compile Include="Data\DataProviders\SwitchingLanguageDataProviderTest.cs" />
     <Compile Include="Data\Engines\DataCommands\CommonCommandTest.cs" />
     <Compile Include="Data\Engines\DataCommands\Prototypes\CommonCommandPrototypeTest.cs" />
     <Compile Include="Data\Engines\DataStorageSwitcherTest.cs" />
