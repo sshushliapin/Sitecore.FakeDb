@@ -2,10 +2,10 @@
 {
     using FluentAssertions;
     using Ploeh.AutoFixture.Xunit2;
-    using Sitecore.Collections;
     using Sitecore.Common;
     using Sitecore.Data.DataProviders;
     using Sitecore.FakeDb.Data.DataProviders;
+    using Sitecore.Globalization;
     using Xunit;
     using CallContext = Sitecore.Data.DataProviders.CallContext;
 
@@ -19,24 +19,25 @@
 
         [Theory, DefaultAutoData]
         public void GetLanguagesReturnsEmptyCollectionIfNoLanguagesSwitched(
-          SwitchingLanguageDataProvider sut,
-          CallContext context)
+            SwitchingLanguageDataProvider sut,
+            CallContext context)
         {
             sut.GetLanguages(context)
-              .Should().BeEmpty();
+                .Should().BeEmpty();
         }
 
         [Theory, DefaultAutoData]
         public void GetLanguagesReturnsLanguagesIfSwitched(
-          SwitchingLanguageDataProvider sut,
-          CallContext context,
-          LanguageCollection languages)
+            SwitchingLanguageDataProvider sut,
+            CallContext context)
         {
-            var contextLanguages = new DbLanguages(languages);
+            var en = Language.Parse("en");
+            var da = Language.Parse("da");
+            var contextLanguages = new DbLanguages(en, da);
             using (new Switcher<DbLanguages>(contextLanguages))
             {
                 sut.GetLanguages(context)
-                  .Should().BeSameAs(languages);
+                    .ShouldAllBeEquivalentTo(new[] { en, da });
             }
         }
     }

@@ -69,7 +69,7 @@
       this.databaseLanguages = new Stack<Switcher<DbLanguages>>();
       this.databaseLanguages.Push(
                   new Switcher<DbLanguages>(
-                    new DbLanguages(new LanguageCollection(new[] { Language.Parse("en") }))));
+                          new DbLanguages(Language.Parse("en"))));
 
       var args = new InitDbArgs(this.database, this.dataStorage);
       CorePipeline.Run("initFakeDb", args);
@@ -217,12 +217,18 @@
       return this.Database.GetItem(path, Language.Parse(language), Version.Parse(version));
     }
 
+        /// <summary>
+        /// Specifies a list of available <see cref="Database"/> languages for 
+        /// the given <see cref="Db"/> context. If not called, the 'en' 
+        /// language is used.
+        /// </summary>
+        /// <param name="languages">The list of languages.</param>
+        /// <returns>The same <see cref="Db"/> instance.</returns>
     public Db WithLanguages(params Language[] languages)
     {
       this.databaseLanguages.Push(
           new Switcher<DbLanguages>(
-              new DbLanguages(
-                  new LanguageCollection(languages))));
+                    new DbLanguages(languages)));
 
       return this;
     }
