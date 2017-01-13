@@ -2,8 +2,12 @@
 {
   using System;
   using System.Collections;
+  using System.Collections.Generic;
+  using System.Linq;
   using System.Threading;
   using System.Xml;
+  using Sitecore.Collections;
+  using Sitecore.Common;
   using Sitecore.Configuration;
   using Sitecore.Data;
   using Sitecore.Data.Items;
@@ -31,6 +35,8 @@
     private readonly DataStorageSwitcher dataStorageSwitcher;
 
     private readonly DatabaseSwitcher databaseSwitcher;
+
+    private readonly Stack<Switcher<DbLanguages>> databaseLanguages;
 
     private DbConfiguration configuration;
 
@@ -60,6 +66,10 @@
       this.dataStorage = new DataStorage(this.database);
       this.dataStorageSwitcher = new DataStorageSwitcher(this.dataStorage);
       this.databaseSwitcher = new DatabaseSwitcher(this.database);
+      this.databaseLanguages = new Stack<Switcher<DbLanguages>>();
+      this.databaseLanguages.Push(
+                  new Switcher<DbLanguages>(
+                    new DbLanguages(new LanguageCollection(new[] { Language.Parse("en") }))));
 
       var args = new InitDbArgs(this.database, this.dataStorage);
       CorePipeline.Run("initFakeDb", args);
@@ -207,6 +217,16 @@
       return this.Database.GetItem(path, Language.Parse(language), Version.Parse(version));
     }
 
+    public Db WithLanguages(params Language[] languages)
+    {
+      this.databaseLanguages.Push(
+          new Switcher<DbLanguages>(
+              new DbLanguages(
+                  new LanguageCollection(languages))));
+
+      return this;
+    }
+
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
@@ -236,6 +256,10 @@
 
       this.dataStorageSwitcher.Dispose();
       this.databaseSwitcher.Dispose();
+      while (this.databaseLanguages.Any())
+      {
+        this.databaseLanguages.Pop().Dispose();
+      }
 
       if (Monitor.IsEntered(Lock))
       {
