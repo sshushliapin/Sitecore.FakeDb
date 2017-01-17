@@ -133,9 +133,7 @@
     public void ShouldGetDefaultLanguage([Greedy]FakeDataProvider sut, CallContext context)
     {
       var langs = sut.GetLanguages(context);
-
-      langs.Should().HaveCount(1);
-      langs.First().Name.Should().Be("en");
+      langs.Should().BeEmpty();
     }
 
     [Theory, DefaultAutoData]
@@ -283,7 +281,7 @@
     {
       sut.AddToPublishQueue(itemId, action, date, language, context).Should().BeTrue();
     }
-#endif 
+#endif
 
     [Theory, DefaultAutoData]
     public void AddToPublishQueueSameItemIdMultipleTimesReturnsTrue(

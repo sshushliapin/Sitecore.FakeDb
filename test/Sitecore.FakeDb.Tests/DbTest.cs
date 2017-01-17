@@ -1784,5 +1784,31 @@
         item["__Revision"].Should().NotBeNullOrEmpty();
       }
     }
+
+    [Fact]
+    public void ShouldCreateDbWithEnLanguageByDefault()
+    {
+      using (var db = new Db())
+      {
+        db.Database.Languages
+          .ShouldAllBeEquivalentTo(
+            new[] { Language.Parse("en") });
+      }
+    }
+
+    [Theory]
+    [InlineData("core")]
+    [InlineData("master")]
+    [InlineData("web")]
+    public void ShouldCreateDbWithSpecificLanguages(string database)
+    {
+      using (var db = new Db(database)
+        .WithLanguages(Language.Parse("en"), Language.Parse("da")))
+      {
+        db.Database.Languages
+          .ShouldAllBeEquivalentTo(
+            new[] { Language.Parse("en"), Language.Parse("da") });
+      }
+    }
   }
 }

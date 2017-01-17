@@ -177,7 +177,7 @@
 
     public override LanguageCollection GetLanguages(CallContext context)
     {
-      return new LanguageCollection { Language.Parse("en") };
+      return new LanguageCollection();
     }
 
     public override ID SelectSingleID(string query, CallContext context)
