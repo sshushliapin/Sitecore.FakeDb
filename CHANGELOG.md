@@ -1,4 +1,7 @@
-﻿1.4.0
+﻿1.4.1
+* [FIX] #163: Wildcard items issue
+
+1.4.0
 * [FIX] #161: Add new languages to context database
 
 1.3.5
