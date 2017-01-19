@@ -1810,5 +1810,15 @@
             new[] { Language.Parse("en"), Language.Parse("da") });
       }
     }
+
+    [Fact]
+    public void ShouldAddWildcard()
+    {
+      using (var db = new Db())
+      {
+        var item = db.GetItem("/sitecore/content/");
+        item.Add("*", new TemplateID(TemplateIDs.Folder));
+      }
+    }
   }
 }
