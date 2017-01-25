@@ -1,8 +1,13 @@
-﻿1.4.1
+﻿1.5.0
+* [NEW] #168: Switch from DataEngine Commands to DataProvider
+* [FIX] #166: Disposing Language Switcher fails if current Switcher<> is empty
+* [FIX] #165: Certain template inheritance combinations throw "field not found" error
+
+1.4.1
 * [FIX] #163: Wildcard items issue
 
 1.4.0
-* [FIX] #161: Add new languages to context database
+* [NEW] #161: Add new languages to context database
 
 1.3.5
 * [FIX] #158: Unable to substitute IDTable.GetKeys("prefix") by prefix method
