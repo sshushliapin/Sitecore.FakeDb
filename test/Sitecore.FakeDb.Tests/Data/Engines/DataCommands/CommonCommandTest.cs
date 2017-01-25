@@ -8,20 +8,28 @@
   using Sitecore.Reflection;
   using Xunit;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class CommonCommandTest
   {
     [Theory]
     [InlineDefaultAutoData(typeof(AddFromTemplateCommand))]
     [InlineDefaultAutoData(typeof(AddVersionCommand))]
+    [InlineDefaultAutoData(typeof(BlobStreamExistsCommand))]
     [InlineDefaultAutoData(typeof(CopyItemCommand))]
     [InlineDefaultAutoData(typeof(CreateItemCommand))]
     [InlineDefaultAutoData(typeof(DeleteItemCommand))]
+    [InlineDefaultAutoData(typeof(GetBlobStreamCommand))]
     [InlineDefaultAutoData(typeof(GetChildrenCommand))]
     [InlineDefaultAutoData(typeof(GetItemCommand))]
+    [InlineDefaultAutoData(typeof(GetParentCommand))]
+    [InlineDefaultAutoData(typeof(GetRootItemCommand))]
     [InlineDefaultAutoData(typeof(GetVersionsCommand))]
+    [InlineDefaultAutoData(typeof(HasChildrenCommand))]
     [InlineDefaultAutoData(typeof(MoveItemCommand))]
     [InlineDefaultAutoData(typeof(RemoveVersionCommand))]
+    [InlineDefaultAutoData(typeof(ResolvePathCommand))]
     [InlineDefaultAutoData(typeof(SaveItemCommand))]
+    [InlineDefaultAutoData(typeof(SetBlobStreamCommand))]
     public void DoExecuteThrowsNotSupportedException(Type command, DataStorage dataStorage)
     {
       var sut = ReflectionUtil.CreateObject(command, new object[] { dataStorage });
