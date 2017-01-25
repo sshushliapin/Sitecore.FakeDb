@@ -6,6 +6,7 @@
   using Sitecore.Data.Fields;
   using Sitecore.Diagnostics;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class SaveItemCommand : Sitecore.Data.Engines.DataCommands.SaveItemCommand
   {
     private readonly DataStorage dataStorage;

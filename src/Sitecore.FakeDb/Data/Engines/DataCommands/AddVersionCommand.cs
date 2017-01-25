@@ -5,6 +5,7 @@
   using Sitecore.Diagnostics;
   using Version = Sitecore.Data.Version;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class AddVersionCommand : Sitecore.Data.Engines.DataCommands.AddVersionCommand
   {
     private readonly DataStorage dataStorage;

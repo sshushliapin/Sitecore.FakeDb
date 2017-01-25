@@ -5,6 +5,7 @@
   using Sitecore.Diagnostics;
   using Sitecore.Globalization;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class CreateItemCommand : Sitecore.Data.Engines.DataCommands.CreateItemCommand
   {
     private readonly DataStorage dataStorage;

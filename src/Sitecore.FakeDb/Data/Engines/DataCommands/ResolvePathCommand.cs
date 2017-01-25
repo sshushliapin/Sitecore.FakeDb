@@ -5,6 +5,7 @@
   using Sitecore.Data;
   using Sitecore.Diagnostics;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class ResolvePathCommand : Sitecore.Data.Engines.DataCommands.ResolvePathCommand
   {
     private readonly DataStorage dataStorage;

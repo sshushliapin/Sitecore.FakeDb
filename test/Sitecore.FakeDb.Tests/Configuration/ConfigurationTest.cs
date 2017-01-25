@@ -12,25 +12,8 @@
   public class ConfigurationTest
   {
     [Theory]
-    [InlineData("AddFromTemplatePrototype", typeof(AddFromTemplateCommandPrototype))]
-    [InlineData("AddVersionPrototype", typeof(AddVersionCommandProtoype))]
-    [InlineData("BlobStreamExistsPrototype", typeof(BlobStreamExistsCommandPrototype))]
-    [InlineData("CopyItemPrototype", typeof(CopyItemCommandPrototype))]
-    [InlineData("CreateItemPrototype", typeof(CreateItemCommandPrototype))]
-    [InlineData("DeletePrototype", typeof(DeleteItemCommandPrototype))]
-    [InlineData("GetBlobStreamPrototype", typeof(GetBlobStreamCommandPrototype))]
-    [InlineData("GetChildrenPrototype", typeof(GetChildrenCommandPrototype))]
     [InlineData("GetItemPrototype", typeof(GetItemCommandPrototype))]
-    [InlineData("GetParentPrototype", typeof(GetParentCommandPrototype))]
-    [InlineData("GetRootItemPrototype", typeof(GetRootItemCommandPrototype))]
     [InlineData("GetVersionsPrototype", typeof(GetVersionsCommandPrototype))]
-    [InlineData("HasChildrenPrototype", typeof(HasChildrenCommandPrototype))]
-    [InlineData("MoveItemPrototype", typeof(MoveItemCommandPrototype))]
-    [InlineData("RemoveDataPrototype", typeof(RemoveDataCommandPrototype))]
-    [InlineData("RemoveVersionPrototype", typeof(RemoveVersionCommandPrototype))]
-    [InlineData("ResolvePathPrototype", typeof(ResolvePathCommandPrototype))]
-    [InlineData("SaveItemPrototype", typeof(SaveItemCommandPrototype))]
-    [InlineData("SetBlobStreamPrototype", typeof(SetBlobStreamCommandPrototype))]
     public void ShouldRegisterFakeCommand(string propertyName, Type propertyType)
     {
       // arrange

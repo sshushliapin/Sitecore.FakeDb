@@ -8,6 +8,7 @@
   using Sitecore.Reflection;
   using Xunit;
 
+  [Obsolete("The commands are not expected to be used anymore. All the logic moved to the DataProvider.")]
   public class CommonCommandTest
   {
     [Theory]
