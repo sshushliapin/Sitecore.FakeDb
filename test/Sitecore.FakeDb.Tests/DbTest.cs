@@ -1812,6 +1812,16 @@
     }
 
     [Fact]
+    public void ShouldNotFailIfLanguageSwitcherDisposedElsewhere()
+    {
+      using (new Db()
+        .WithLanguages(Language.Parse("da")))
+      {
+        Switcher<DbLanguages>.Exit();
+      }
+    }
+
+    [Fact]
     public void ShouldAddWildcard()
     {
       using (var db = new Db())

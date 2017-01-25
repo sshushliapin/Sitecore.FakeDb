@@ -6,7 +6,6 @@
   using System.Linq;
   using System.Threading;
   using System.Xml;
-  using Sitecore.Collections;
   using Sitecore.Common;
   using Sitecore.Configuration;
   using Sitecore.Data;
@@ -217,13 +216,13 @@
       return this.Database.GetItem(path, Language.Parse(language), Version.Parse(version));
     }
 
-        /// <summary>
-        /// Specifies a list of available <see cref="Database"/> languages for 
-        /// the given <see cref="Db"/> context. If not called, the 'en' 
-        /// language is used.
-        /// </summary>
-        /// <param name="languages">The list of languages.</param>
-        /// <returns>The same <see cref="Db"/> instance.</returns>
+    /// <summary>
+    /// Specifies a list of available <see cref="Database"/> languages for 
+    /// the given <see cref="Db"/> context. If not called, the 'en' 
+    /// language is used.
+    /// </summary>
+    /// <param name="languages">The list of languages.</param>
+    /// <returns>The same <see cref="Db"/> instance.</returns>
     public Db WithLanguages(params Language[] languages)
     {
       this.databaseLanguages.Push(
@@ -262,9 +261,13 @@
 
       this.dataStorageSwitcher.Dispose();
       this.databaseSwitcher.Dispose();
-      while (this.databaseLanguages.Any())
+
+      foreach (var languageSwitcher in this.databaseLanguages)
       {
-        this.databaseLanguages.Pop().Dispose();
+        if (Switcher<DbLanguages>.CurrentValue != null)
+        {
+          languageSwitcher.Dispose();
+        }
       }
 
       if (Monitor.IsEntered(Lock))
