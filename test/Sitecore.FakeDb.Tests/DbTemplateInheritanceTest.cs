@@ -36,11 +36,11 @@
       ID templateId = ID.NewID;
 
       using (var db = new Db
-      {
-        this.baseTemplateOne,
-        new DbTemplate("My Template", templateId) {BaseIDs = new[] {this.baseTemplateOne.ID}},
-        new DbItem("home", ID.NewID, templateId)
-      })
+        {
+          this.baseTemplateOne,
+          new DbTemplate("My Template", templateId) {BaseIDs = new[] {this.baseTemplateOne.ID}},
+          new DbItem("home", ID.NewID, templateId)
+        })
       {
         // act
         Item home = db.GetItem("/sitecore/content/home");
@@ -70,13 +70,13 @@
       ID myTemplateId = ID.NewID;
 
       using (var db = new Db
-      {
-        this.baseTemplateOne,
-        this.baseTemplateTwo,
-        this.baseTemplateThree,
-        new DbTemplate("Main Template", myTemplateId) {BaseIDs = new[] {this.baseTemplateOne.ID, this.baseTemplateThree.ID}},
-        new DbItem("home", ID.NewID, myTemplateId)
-      })
+        {
+          this.baseTemplateOne,
+          this.baseTemplateTwo,
+          this.baseTemplateThree,
+          new DbTemplate("Main Template", myTemplateId) {BaseIDs = new[] {this.baseTemplateOne.ID, this.baseTemplateThree.ID}},
+          new DbItem("home", ID.NewID, myTemplateId)
+        })
       {
         // act
         Item home = db.GetItem("/sitecore/content/home");
@@ -100,16 +100,16 @@
       ID templateId = ID.NewID;
 
       using (var db = new Db
-      {
-        this.baseTemplateOne,
-        this.baseTemplateTwo,
-        this.baseTemplateThree,
-        new DbTemplate("My Template", templateId)
         {
-          BaseIDs = new ID[] {this.baseTemplateOne.ID, this.baseTemplateThree.ID}
-        },
-        new DbItem("home", ID.NewID, templateId) { { "Title", "Home" }, { "Description", "My Home" } }
-      })
+          this.baseTemplateOne,
+          this.baseTemplateTwo,
+          this.baseTemplateThree,
+          new DbTemplate("My Template", templateId)
+            {
+              BaseIDs = new ID[] {this.baseTemplateOne.ID, this.baseTemplateThree.ID}
+            },
+          new DbItem("home", ID.NewID, templateId) { { "Title", "Home" }, { "Description", "My Home" } }
+        })
       {
         // act
         Item home = db.GetItem("/sitecore/content/home");
@@ -125,11 +125,11 @@
     {
       // arrange
       using (var db = new Db
-                        {
-                          new DbTemplate("base", baseTemplateId) { new DbField(fieldId) },
-                          new DbTemplate("sample", templateId) { BaseIDs = new[] { baseTemplateId } },
-                          new DbItem("Home", ID.NewID, templateId)
-                        })
+        {
+          new DbTemplate("base", baseTemplateId) { new DbField(fieldId) },
+          new DbTemplate("sample", templateId) { BaseIDs = new[] { baseTemplateId } },
+          new DbItem("Home", ID.NewID, templateId)
+        })
       {
         var item = db.GetItem("/sitecore/content/Home");
 
@@ -149,10 +149,10 @@
     {
       // arrange
       using (var db = new Db
-                  {
-                    new DbTemplate(templateId) { BaseIDs = new[] { ID.Null } },
-                    new DbItem("home", ID.NewID, templateId)
-                  })
+        {
+          new DbTemplate(templateId) { BaseIDs = new[] { ID.Null } },
+          new DbItem("home", ID.NewID, templateId)
+        })
       {
         // act
         Action action = () => db.GetItem("/sitecore/content/home");
@@ -169,10 +169,10 @@
       const string MissingBaseTemplateId = "{4F2BBCE8-92EC-4514-8A5F-2C1F432FEE5A}";
 
       using (var db = new Db
-                  {
-                    new DbTemplate(templateId) { BaseIDs = new[] { new ID(MissingBaseTemplateId) } },
-                    new DbItem("home", ID.NewID, templateId)
-                  })
+        {
+          new DbTemplate(templateId) { BaseIDs = new[] { new ID(MissingBaseTemplateId) } },
+          new DbItem("home", ID.NewID, templateId)
+        })
       {
         // act
         Action action = () => db.GetItem("/sitecore/content/home");
@@ -190,6 +190,60 @@
 
       // assert
       standardTemplate.BaseTemplates.Should().BeEmpty();
+    }
+
+    // https://github.com/sergeyshushlyapin/Sitecore.FakeDb/issues/165
+    [Theory, AutoData]
+    public void EditItemsSharedInheritenceFail(
+      ID field1Id,
+      ID field2Id,
+      ID field3Id,
+      ID template1Id,
+      ID template2Id,
+      ID template3Id,
+      ID template4Id,
+      ID item1Id,
+      ID item2Id,
+      ID item3Id)
+    {
+      var field1 = new DbField("Field One", field1Id);
+      var field2 = new DbField("Field Two", field2Id);
+
+      using (var db = new Db())
+      {
+        db.Add(new DbTemplate("Template One", template1Id)
+          {
+            field1
+          });
+        db.Add(new DbTemplate("Template Two", template2Id)
+          {
+            field2
+          });
+        db.Add(new DbTemplate("Template Three", template3Id)
+        {
+          BaseIDs = new[] { template1Id }
+        });
+        db.Add(new DbTemplate("Template Four", template4Id)
+        {
+          BaseIDs = new[] { template1Id, template2Id }
+        });
+
+        db.Add(new DbItem("Item One", item1Id, template3Id));
+        db.Add(new DbItem("Item Two", item2Id, template4Id));
+
+        var item1 = db.GetItem(item1Id);
+        item1.Editing.BeginEdit();
+        item1[field1Id] = "Value One";
+        item1.Editing.EndEdit();
+
+        var item2 = db.GetItem(item2Id);
+        item2.Editing.BeginEdit();
+        item2["Field One"] = "Value One";
+        item2["Field Two"] = "Value Two";
+
+        // next line throws "Item field not found. Item: 'Item Two', '{046655DC-7E41-4BDC-AA78-694524CCADC3}'; field: '{C28F483D-1A31-4EA0-A990-028D76B57F1B}'."
+        item2.Editing.EndEdit();
+      }
     }
   }
 }
