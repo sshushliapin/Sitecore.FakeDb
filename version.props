@@ -5,6 +5,6 @@
          run tests against before publishing the NuGet packages.
     -->
     <SupportedSitecoreVersions>7.2.160123;8.0.160115;8.1.160519</SupportedSitecoreVersions>
-    <SupportedSitecoreVersions452>8.2.160729;8.2.161115</SupportedSitecoreVersions452>
+    <SupportedSitecoreVersions452>8.2.160729;8.2.161115;8.2.161221</SupportedSitecoreVersions452>
   </PropertyGroup>
 </Project>

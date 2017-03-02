@@ -7,7 +7,7 @@
   using Sitecore.Security.Authentication;
   using Xunit;
 
-#if !SC82161115
+#if !SC82161115 && !SC82161221
   /// <summary>
   /// Disable the entire test for Sitecore 8.2.1 and later because the 
   /// existing functionality relies on provider switching which is no longer 
