@@ -3,6 +3,9 @@
   using System.Collections.Specialized;
   using FluentAssertions;
   using NSubstitute;
+  using Ploeh.AutoFixture.Xunit2;
+  using Sitecore.Common;
+  using Sitecore.FakeDb.Security.Authentication;
   using Sitecore.Security.Accounts;
   using Sitecore.Security.Authentication;
   using Xunit;
@@ -17,7 +20,6 @@
     public SwitchingAuthenticationProviderTest()
     {
       this.provider = new SwitchingAuthenticationProvider();
-
       this.user = User.FromName(@"extranet\Rambo", false);
     }
 
@@ -39,7 +41,8 @@
     public void ShouldGetActiveUserFromDefaultProviderIfNoCurrentProviderSet()
     {
       // arrange
-      AuthenticationManager.Providers["fake"].SetActiveUser(this.user);
+      this.provider.DefaultProvider = new FakeAuthenticationProvider();
+      this.provider.DefaultProvider.SetActiveUser(this.user);
 
       try
       {
@@ -52,7 +55,7 @@
       }
       finally
       {
-        AuthenticationManager.Providers["fake"].SetActiveUser((User)null);
+        this.provider.DefaultProvider.SetActiveUser((User)null);
       }
     }
 
@@ -72,6 +75,143 @@
 
       // act & assert
       this.provider.GetActiveUser().Name.Should().Be(@"default\Anonymous");
+    }
+
+    [Theory, DefaultSubstituteAutoData]
+    public void LoginCallsSwithcedProviderIfNotNull(
+      AuthenticationProvider switchedProvider)
+    {
+      using (new Switcher<AuthenticationProvider>(switchedProvider))
+      {
+        var sut = new SwitchingAuthenticationProvider();
+        sut.Login(this.user);
+        switchedProvider.Received().Login(this.user);
+      }
+    }
+
+    [Theory, DefaultSubstituteAutoData]
+    public void LoginCallsDefaultProviderIfNotSwitched(
+      AuthenticationProvider defaultProvider)
+    {
+      var sut = new SwitchingAuthenticationProvider
+      {
+        DefaultProvider = defaultProvider
+      };
+      sut.Login(this.user);
+      defaultProvider.Received().Login(this.user);
+    }
+
+    [Theory, DefaultSubstituteAutoData]
+    public void LoginDoesNotThrowIfNoAnyProfiderSet()
+    {
+      var sut = new SwitchingAuthenticationProvider();
+      sut.Login(this.user);
+    }
+
+    public void LoginByNameAndPersistentCallsSwithcedProviderIfNotNull(
+      AuthenticationProvider switchedProvider,
+      string userName,
+      bool persistent)
+    {
+      using (new Switcher<AuthenticationProvider>(switchedProvider))
+      {
+        var sut = new SwitchingAuthenticationProvider();
+        sut.Login(userName, persistent);
+        switchedProvider.Received().Login(userName, persistent);
+      }
+    }
+
+    [Theory, DefaultSubstituteAutoData]
+    public void LoginByNameAndPersistentCallsDefaultProviderIfNotSwitched(
+      AuthenticationProvider defaultProvider,
+      string userName,
+      bool persistent)
+    {
+      var sut = new SwitchingAuthenticationProvider
+      {
+        DefaultProvider = defaultProvider
+      };
+      sut.Login(userName, persistent);
+      defaultProvider.Received().Login(userName, persistent);
+    }
+
+    [Theory, AutoData]
+    public void LoginByNameAndPersistentDoesNotThrowIfNoAnyProfiderSet(
+      string userName,
+      bool persistent)
+    {
+      var sut = new SwitchingAuthenticationProvider();
+      sut.Login(userName, persistent);
+    }
+
+    public void LoginByNameAndPasswordCallsSwithcedProviderIfNotNull(
+      AuthenticationProvider switchedProvider,
+      string userName,
+      string password,
+      bool persistent)
+    {
+      using (new Switcher<AuthenticationProvider>(switchedProvider))
+      {
+        var sut = new SwitchingAuthenticationProvider();
+        sut.Login(userName, password, persistent);
+        switchedProvider.Received().Login(userName, password, persistent);
+      }
+    }
+
+    [Theory, DefaultSubstituteAutoData]
+    public void LoginByNameAndPasswordCallsDefaultProviderIfNotSwitched(
+      AuthenticationProvider defaultProvider,
+      string userName,
+      string password,
+      bool persistent)
+    {
+      var sut = new SwitchingAuthenticationProvider
+      {
+        DefaultProvider = defaultProvider
+      };
+      sut.Login(userName, password, persistent);
+      defaultProvider.Received().Login(userName, password, persistent);
+    }
+
+    [Theory, AutoData]
+    public void LoginByNameAndPasswordDoesNotThrowIfNoAnyProfiderSet(
+      string userName,
+      string password,
+      bool persistent)
+    {
+      var sut = new SwitchingAuthenticationProvider();
+      sut.Login(userName, password, persistent);
+    }
+
+    [Theory, DefaultSubstituteAutoData]
+    public void LogoutCallsSwithcedProviderIfNotNull(
+      AuthenticationProvider switchedProvider)
+    {
+      using (new Switcher<AuthenticationProvider>(switchedProvider))
+      {
+        var sut = new SwitchingAuthenticationProvider();
+        sut.Logout();
+        switchedProvider.Received().Logout();
+      }
+    }
+
+    [Theory, DefaultSubstituteAutoData]
+    public void LogoutCallsDefaultProviderIfNotSwitched(
+      AuthenticationProvider defaultProvider)
+    {
+      var sut = new SwitchingAuthenticationProvider
+      {
+        DefaultProvider = defaultProvider
+      };
+      sut.Logout();
+      defaultProvider.Received().Logout();
+    }
+
+    [Theory, AutoData]
+    public void LogoutDoesNotThrowIfNoAnyProfiderSet()
+    {
+      var sut = new SwitchingAuthenticationProvider();
+      sut.Logout();
     }
   }
 }
