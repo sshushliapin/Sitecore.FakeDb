@@ -1,11 +1,13 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security.Accounts
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.FakeDb.Security.Accounts;
   using Sitecore.Security.Accounts;
   using Xunit;
 
+  [Obsolete]
   public class RolesInRolesSwitcherTest
   {
     [Fact]

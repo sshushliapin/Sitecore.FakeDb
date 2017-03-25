@@ -1,11 +1,13 @@
 ﻿namespace Sitecore.FakeDb.Tests.Resources.Media
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.FakeDb.Resources.Media;
   using Sitecore.Resources.Media;
   using Xunit;
 
+  [Obsolete]
   public class MediaProviderSwitcherTest
   {
     [Fact]
