@@ -24,7 +24,9 @@
       {
         using (new AuthenticationSwitcher(provider))
         {
+#pragma warning disable 618
           AuthenticationManager.Provider.GetActiveUser().Should().BeSameAs(user);
+#pragma warning restore 618
 
           Thread.Sleep(100);
         }
@@ -33,7 +35,9 @@
       // assert
       var t2 = Task.Factory.StartNew(() =>
       {
+#pragma warning disable 618
         AuthenticationManager.Provider.GetActiveUser().Should().NotBeSameAs(user);
+#pragma warning restore 618
       });
 
       t1.Wait();

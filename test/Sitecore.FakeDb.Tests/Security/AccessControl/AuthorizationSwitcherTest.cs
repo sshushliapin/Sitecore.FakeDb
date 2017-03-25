@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security.AccessControl
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.FakeDb.Security.AccessControl;
@@ -7,6 +8,7 @@
   using Sitecore.Security.Accounts;
   using Xunit;
 
+  [Obsolete]
   [Trait("Category", "RequireLicense")]
   public class AuthorizationSwitcherTest
   {
