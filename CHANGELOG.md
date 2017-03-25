@@ -1,4 +1,8 @@
-﻿1.5.0
+﻿1.6.0
+* [NEW] #175: Obsolete FakeDb Provider Switchers
+* [FIX] #173: Remove dependency from Sitecore SwitchingAuthenticationProvider
+
+1.5.0
 * [NEW] #168: Switch from DataEngine Commands to DataProvider
 * [FIX] #166: Disposing Language Switcher fails if current Switcher<> is empty
 * [FIX] #165: Certain template inheritance combinations throw "field not found" error
