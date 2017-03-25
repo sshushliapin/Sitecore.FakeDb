@@ -10,7 +10,6 @@
     <Versions452 Include="$(SupportedSitecoreVersions452)" />
     <References Include="packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll" />
     <References Include="packages\Sitecore.Abstractions.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Abstractions.dll" Condition="'$(Version)' != '7.2.160123'" />
-    <References Include="packages\Sitecore.Analytics.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Analytics.dll" />
     <References Include="packages\Sitecore.Buckets.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Buckets.dll" />
     <References Include="packages\Sitecore.ContentSearch.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.ContentSearch.dll" />
     <References Include="packages\Sitecore.ContentSearch.Linq.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.ContentSearch.Linq.dll" />
