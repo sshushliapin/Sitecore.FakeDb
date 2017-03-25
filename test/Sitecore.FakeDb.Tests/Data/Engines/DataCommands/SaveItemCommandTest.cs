@@ -13,6 +13,7 @@
   using SaveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.SaveItemCommand;
   using Version = Sitecore.Data.Version;
 
+  [Obsolete]
   public class SaveItemCommandTest
   {
     [Theory, DefaultAutoData]
@@ -129,7 +130,7 @@
     {
       // arrange
       sut.DataStorage.GetFakeItem(item.ID).Returns(item);
-      var updatedItem = ItemHelper.CreateInstance(sut.Database, "updated item", item.ID, ID.NewID, ID.Null, fields, language, new Version(0));
+      var updatedItem = ItemHelper.CreateInstance(sut.Database, "updated item", item.ID, ID.NewID, ID.Null, fields, language, Version.Parse(0));
 
       sut.Initialize(updatedItem);
 
@@ -145,7 +146,7 @@
     {
       // arrange
       sut.DataStorage.GetFakeItem(item.ID).Returns(item);
-      var updatedItem = ItemHelper.CreateInstance(sut.Database, "updated item", item.ID, ID.NewID, branchId, fields, language, new Version(0));
+      var updatedItem = ItemHelper.CreateInstance(sut.Database, "updated item", item.ID, ID.NewID, branchId, fields, language, Version.Parse(0));
 
       sut.Initialize(updatedItem);
 

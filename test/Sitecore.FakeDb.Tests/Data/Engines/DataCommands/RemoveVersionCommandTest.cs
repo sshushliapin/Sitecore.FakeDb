@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
+  using System;
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
@@ -8,6 +9,7 @@
   using Sitecore.Reflection;
   using Xunit;
 
+  [Obsolete]
   public class RemoveVersionCommandTest
   {
     [Theory, DefaultAutoData]

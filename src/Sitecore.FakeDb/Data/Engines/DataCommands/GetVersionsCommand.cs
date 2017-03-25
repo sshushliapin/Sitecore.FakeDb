@@ -38,7 +38,7 @@
       var versionsCount = item.GetVersionCount(this.Language.Name);
       for (var i = 1; i <= versionsCount; i++)
       {
-        versions.Add(new Version(i));
+        versions.Add(Version.Parse(i));
       }
 
       return versions;

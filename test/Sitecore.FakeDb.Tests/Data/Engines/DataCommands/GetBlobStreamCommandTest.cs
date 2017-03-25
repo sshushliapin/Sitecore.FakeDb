@@ -9,6 +9,7 @@
   using Sitecore.Reflection;
   using Xunit;
 
+  [Obsolete]
   public class GetBlobStreamCommandTest
   {
     [Theory, DefaultAutoData]

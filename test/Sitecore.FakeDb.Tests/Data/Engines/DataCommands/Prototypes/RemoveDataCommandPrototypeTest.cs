@@ -7,6 +7,7 @@ namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands.Prototypes
   using Sitecore.Reflection;
   using Xunit;
 
+  [Obsolete]
   public class RemoveDataCommandPrototypeTest
   {
     [Theory, DefaultAutoData]

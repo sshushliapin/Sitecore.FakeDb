@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Collections;
@@ -8,6 +9,7 @@
   using Sitecore.Reflection;
   using Xunit;
 
+  [Obsolete]
   public class GetChildrenCommandTest
   {
     [Theory, DefaultAutoData]

@@ -2,5 +2,6 @@
 <RuleSet Name="Sitecore FakeDb" Description="Sitecore FakeDb rules." ToolsVersion="14.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CS0618" Action="Error" />
   </Rules>
 </RuleSet>

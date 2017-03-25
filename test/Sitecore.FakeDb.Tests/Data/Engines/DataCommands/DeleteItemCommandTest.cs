@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
@@ -9,6 +10,7 @@
   using Sitecore.Reflection;
   using Xunit;
 
+  [Obsolete]
   public class DeleteItemCommandTest
   {
     [Theory, DefaultAutoData]

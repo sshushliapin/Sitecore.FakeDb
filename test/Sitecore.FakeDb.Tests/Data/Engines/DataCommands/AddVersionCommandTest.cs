@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
+  using System;
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
@@ -10,7 +11,9 @@
   using Sitecore.Globalization;
   using Sitecore.Reflection;
   using Xunit;
+  using Version = Sitecore.Data.Version;
 
+  [Obsolete]
   public class AddVersionCommandTest
   {
     [Theory, DefaultAutoData]

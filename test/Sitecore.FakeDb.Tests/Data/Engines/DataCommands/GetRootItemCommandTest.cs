@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data.Items;
@@ -9,6 +10,7 @@
   using Xunit;
   using Version = Sitecore.Data.Version;
 
+  [Obsolete]
   public class GetRootItemCommandTest
   {
     [Theory, DefaultAutoData]

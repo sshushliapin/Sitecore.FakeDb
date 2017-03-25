@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data;
@@ -9,6 +10,7 @@
   using Xunit;
   using MoveItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.MoveItemCommand;
 
+  [Obsolete]
   [Trait("Category", "RequireLicense")]
   public class MoveItemCommandTest
   {

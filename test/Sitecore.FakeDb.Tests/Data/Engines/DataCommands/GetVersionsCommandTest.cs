@@ -39,7 +39,7 @@
 
       // assert
       versionCollection.Count.Should().Be(2);
-      versionCollection.Should().BeEquivalentTo(new Version(1), new Version(2));
+      versionCollection.Should().BeEquivalentTo(Version.Parse(1), Version.Parse(2));
     }
 
     [Theory, DefaultAutoData]
@@ -57,7 +57,7 @@
 
       // assert
       versionCollection.Count.Should().Be(2);
-      versionCollection.Should().BeEquivalentTo(new Version(1), new Version(2));
+      versionCollection.Should().BeEquivalentTo(Version.Parse(1), Version.Parse(2));
     }
   }
 }

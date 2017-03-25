@@ -230,7 +230,7 @@
               continue;
             }
 
-            list.Add(new VersionUri(Language.Parse(language), new Version(version)));
+            list.Add(new VersionUri(Language.Parse(language), Version.Parse(version)));
           }
         }
       }

@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Data.Items;
@@ -8,6 +9,7 @@
   using Xunit;
   using CopyItemCommand = Sitecore.FakeDb.Data.Engines.DataCommands.CopyItemCommand;
 
+  [Obsolete]
   public class CopyItemCommandTest
   {
     [Theory, DefaultAutoData]

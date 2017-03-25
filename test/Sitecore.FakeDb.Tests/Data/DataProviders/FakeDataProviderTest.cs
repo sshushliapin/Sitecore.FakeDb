@@ -53,7 +53,7 @@
       DbItem item)
     {
       sut.DataStorage.GetFakeItem(itemDefinition.ID).Returns(item);
-      var baseVersion = new VersionUri(language, new Version(version));
+      var baseVersion = new VersionUri(language, Version.Parse(version));
       var expectedVersion = version + 1;
 
       var result = sut.AddVersion(itemDefinition, baseVersion, null);
