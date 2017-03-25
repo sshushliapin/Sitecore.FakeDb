@@ -49,7 +49,9 @@
     public void ShouldGetFakeStandardValuesProvider()
     {
       // assert
+#pragma warning disable 618
       StandardValuesManager.Provider.Should().BeOfType<FakeStandardValuesProvider>();
+#pragma warning restore 618
     }
 
     [Fact]

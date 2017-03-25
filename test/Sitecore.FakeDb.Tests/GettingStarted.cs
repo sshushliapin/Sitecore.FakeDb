@@ -259,7 +259,9 @@
           .Returns(new Sitecore.FakeDb.Security.AccessControl.DenyAccessResult());
 
         // switch the authorization provider
+#pragma warning disable 618
         using (new Sitecore.FakeDb.Security.AccessControl.AuthorizationSwitcher(provider))
+#pragma warning restore 618
         {
           // check the user cannot read the item
           bool canRead =
@@ -303,7 +305,9 @@
       provider.IsUserInRole(user, role, true).Returns(true);
 
       // switch the roles-in-roles provider so the mocked version is used
+#pragma warning disable 618
       using (new Sitecore.FakeDb.Security.Accounts.RolesInRolesSwitcher(provider))
+#pragma warning restore 618
       {
         Xunit.Assert.True(user.IsInRole(role));
       }
@@ -343,7 +347,9 @@
         var provider =
           Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
 
+#pragma warning disable 618
         using (new Sitecore.FakeDb.Security.AccessControl.AuthorizationSwitcher(provider))
+#pragma warning restore 618
         {
           // call your business logic that changes the item security, e.g. denies Read
           // for Editors
@@ -745,7 +751,7 @@
       {
         Sitecore.Data.Items.Item mediaItem = db.GetItem(mediaItemId);
 
-        // create media provider mock and configure behaviour
+        // create media provider mock and configure behavior
         Sitecore.Resources.Media.MediaProvider mediaProvider =
           NSubstitute.Substitute.For<Sitecore.Resources.Media.MediaProvider>();
 
@@ -754,7 +760,9 @@
           .Returns(MyImageUrl);
 
         // substitute the original provider with the mocked one
+#pragma warning disable 618
         using (new Sitecore.FakeDb.Resources.Media.MediaProviderSwitcher(mediaProvider))
+#pragma warning restore 618
         {
           string mediaUrl = Sitecore.Resources.Media.MediaManager.GetMediaUrl(mediaItem);
           Xunit.Assert.Equal(MyImageUrl, mediaUrl);

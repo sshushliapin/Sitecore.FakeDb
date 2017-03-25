@@ -11,7 +11,9 @@
     public void ShouldResolveDefaultAuthorizationProvider()
     {
       // act & assert
+#pragma warning disable 618
       AuthorizationManager.Provider.Should().BeOfType<FakeAuthorizationProvider>();
+#pragma warning restore 618
     }
   }
 }
