@@ -16,7 +16,7 @@ namespace Sitecore.FakeDb.Serialization
   {
     public DuplicateIdException(ID id, string firstFile, string secondFile)
       : base(string.Format(
-        "FakeDb.Serialization is unable to process this content tree.\n\nThe item id {0} defined by item file being processed \"{1}\" has already been already used by the item in \"{2}\"", 
+        "FakeDb.Serialization is unable to process this content tree.\n\nThe item id {0} defined by item file being processed \"{1}\" has already been used by the item in \"{2}\"", 
         id, firstFile, secondFile))
     {
     }
