@@ -65,6 +65,10 @@
               }
 
               var itemId = ID.Parse(itemIdStr);
+              if (pathSet.Paths.ContainsKey(itemId))
+              {
+                throw new DuplicateIdException(itemId, file, pathSet.Paths[itemId]);
+              }
               pathSet.Paths.Add(itemId, file);
               if (itemId == id)
               {

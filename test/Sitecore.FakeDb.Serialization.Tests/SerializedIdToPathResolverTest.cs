@@ -16,5 +16,13 @@
       File.Exists(filePath).Should().BeTrue();
       Path.GetFileNameWithoutExtension(filePath).ShouldBeEquivalentTo("Item only available in custom serialization folder");
     }
+
+    [Fact]
+    public void DuplicatedID_Throws_MeaningfulException()
+    {
+      Assert.Throws<DuplicateIdException>(() => {
+        ID.Parse("{108266C2-304B-4AD3-9813-2BE1B88609FF}").FindFilePath("incorrect");
+      });
+    }
   }
 }

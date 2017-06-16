@@ -134,6 +134,7 @@
   <ItemGroup>
     <Folder Include="Data\CoreSerialization\" />
     <Folder Include="Data\CustomSerialization\" />
+    <Folder Include="Data\IncorrectSerialization\" />
     <Folder Include="Data\LargeSetSerialization\" />
     <Folder Include="Data\Serialization\" />
   </ItemGroup>
