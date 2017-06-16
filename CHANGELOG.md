@@ -1,4 +1,7 @@
-﻿1.6.0
+﻿1.6.1
+* [FIX] #181: Adding a meaningful error message if FakeDb.Serialization encounters a duplicated Item ID (thanks to [@jermdavis](https://github.com/jermdavis))
+
+1.6.0
 * [NEW] #175: Obsolete FakeDb Provider Switchers
 * [FIX] #173: Remove dependency from Sitecore SwitchingAuthenticationProvider
 
