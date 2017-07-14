@@ -181,43 +181,43 @@ namespace Sitecore.FakeDb.Data.Engines
       return this.FakeItems.Remove(itemId);
     }
 
-    public virtual void SetBlobStream(Guid blobId, Stream stream)
-    {
-      Assert.ArgumentNotNull(stream, "stream");
-      var currentPostion = stream.Position;
-
-      //it is assumed SC behaviour that when a stream is saved the 
-      //original stream position isn't altered.
-      //A copy of the stream is made so that a subsequent get using GetBlobStream does not
-      //cause a change in original stream position.
-      var storedStream = new MemoryStream();
-      stream.Seek(0, SeekOrigin.Begin);
-      stream.CopyTo(storedStream);
-      storedStream.Seek(0, SeekOrigin.Begin);
-      stream.Seek(currentPostion, SeekOrigin.Begin);
-
-      this.Blobs[blobId] = stream;
-    }
-
-    public virtual Stream GetBlobStream(Guid blobId)
-    {
-      if (!this.Blobs.ContainsKey(blobId))
+      public virtual void SetBlobStream(Guid blobId, Stream stream)
       {
-        return null;
+          Assert.ArgumentNotNull(stream, "stream");
+          var currentPostion = stream.Position;
+
+            //it is assumed SC behaviour that when a stream is saved the 
+            //original stream position isn't altered.
+            //A copy of the stream is made so that a subsequent get using GetBlobStream does not
+            //cause a change in original stream position.
+          var storedStream = new MemoryStream();
+          stream.Seek(0, SeekOrigin.Begin);
+          stream.CopyTo(storedStream);
+          storedStream.Seek(0, SeekOrigin.Begin);
+          stream.Seek(currentPostion, SeekOrigin.Begin);
+
+          this.Blobs[blobId] = stream;
       }
 
-      var stream = new MemoryStream();
-      var storedStream = this.Blobs[blobId];
-      // Reset stored stream to position zero to ensure data is read.
-      storedStream.Seek(0, SeekOrigin.Begin);
-      storedStream.CopyTo(stream);
+      public virtual Stream GetBlobStream(Guid blobId)
+      {
+          if (!this.Blobs.ContainsKey(blobId))
+          {
+              return null;
+          }
 
-      //after copying the stream we must reset the position to 0
-      stream.Seek(0, SeekOrigin.Begin);
-      return stream;
-    }
+          var stream = new MemoryStream();
+          var storedStream = this.Blobs[blobId];
+          // Reset stored stream to position zero to ensure data is read.
+          storedStream.Seek(0,SeekOrigin.Begin);
+          storedStream.CopyTo(stream);
 
-    public FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
+          //after copying the stream we must reset the position to 0
+          stream.Seek(0, SeekOrigin.Begin);
+          return stream;
+      }
+
+      public FieldList BuildItemFieldList(DbItem fakeItem, ID templateId, Language language, Version version)
     {
       // build a sequence of templates that the item inherits from
       var templates = this.ExpandTemplatesSequence(templateId);
@@ -483,10 +483,8 @@ namespace Sitecore.FakeDb.Data.Engines
       this.FakeItems.Add(TemplateIDs.TemplateSection, new DbTemplate(ItemNames.TemplateSection, TemplateIDs.TemplateSection, TemplateIDs.TemplateSection) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/template section" });
       this.FakeItems.Add(TemplateIDs.BranchTemplate, new DbItem(ItemNames.Branch, TemplateIDs.BranchTemplate, TemplateIDs.Template) { ParentID = ItemIDs.TemplateRoot, FullPath = "/sitecore/templates/branch" });
 
-      var marketingCenterItem = new ID("{33CFB9CA-F565-4D5B-B88A-7CDFE29A6D71}");
-      this.AddFakeItem(new DbItem(ItemNames.DefinitionsRoot, marketingCenterItem, TemplateIDs.Folder) { ParentID = ItemIDs.SystemRoot, FullPath = "/sitecore/system/Marketing Control Panel" });
-      var profiles = new ID("{12BD7E35-437B-449C-B931-23CFA12C03D8}");
-      this.AddFakeItem(new DbItem(ItemNames.Profiles, profiles, TemplateIDs.Folder) { ParentID = marketingCenterItem, FullPath = "/sitecore/system/Marketing Control Panel/Profiles" });
+      this.AddFakeItem(new DbItem(ItemNames.DefinitionsRoot, ItemIDs.Analytics.MarketingCenterItem, TemplateIDs.Folder) { ParentID = ItemIDs.SystemRoot, FullPath = "/sitecore/system/Marketing Control Panel" });
+      this.AddFakeItem(new DbItem(ItemNames.Profiles, ItemIDs.Analytics.Profiles, TemplateIDs.Folder) { ParentID = ItemIDs.Analytics.MarketingCenterItem, FullPath = "/sitecore/system/Marketing Control Panel/Profiles" });
 
       if (this.Database.Name == "core")
       {
