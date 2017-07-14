@@ -76,9 +76,7 @@ namespace Sitecore.FakeDb.Tests.Data.Fields
       {
         Item item = db.GetItem("/sitecore/content/page");
 
-#pragma warning disable 618
         Assert.Equal(templateLayout, StandardValuesManager.Provider.GetStandardValue(item.Fields[FieldIDs.LayoutField]));
-#pragma warning restore 618
 
         Assert.Equal(templateLayout, LayoutField.GetFieldValue(item.Fields[FieldIDs.LayoutField]));
         // standard values

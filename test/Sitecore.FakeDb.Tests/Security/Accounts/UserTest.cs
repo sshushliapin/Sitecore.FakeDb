@@ -86,9 +86,7 @@
       var rolesProvider = Substitute.For<RolesInRolesProvider>();
       rolesProvider.IsUserInRole(user, role, true).Returns(isInRole);
 
-#pragma warning disable 618
       using (new RolesInRolesSwitcher(rolesProvider))
-#pragma warning restore 618
       {
         // act & assert
         user.IsInRole(@"sitecore\Editor").Should().Be(isInRole);
