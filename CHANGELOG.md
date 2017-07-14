@@ -1,4 +1,7 @@
-﻿1.6.1
+﻿1.7.0
+* [FIX] #184: Restore obsoleted FakeDb Provider Switchers
+
+1.6.1
 * [FIX] #181: Adding a meaningful error message if FakeDb.Serialization encounters a duplicated Item ID (thanks to [@jermdavis](https://github.com/jermdavis))
 
 1.6.0
