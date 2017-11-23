@@ -1,4 +1,7 @@
-﻿1.7.0
+﻿1.7.1
+* [FIX] #191: Added references to Sitecore pipelines necessary for testing updates to layout fields with Sitecore 9 (thanks to [@AndyButland](https://github.com/AndyButland))
+
+1.7.0
 * [FIX] #184: Restore obsoleted FakeDb Provider Switchers
 
 1.6.1
