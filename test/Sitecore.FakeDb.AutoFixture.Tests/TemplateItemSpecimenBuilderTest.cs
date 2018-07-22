@@ -1,8 +1,8 @@
 ﻿namespace Sitecore.FakeDb.AutoFixture.Tests
 {
   using FluentAssertions;
-  using Ploeh.AutoFixture;
-  using Ploeh.AutoFixture.Kernel;
+  using global::AutoFixture;
+  using global::AutoFixture.Kernel;
   using Sitecore.Data.Items;
   using Xunit;
 

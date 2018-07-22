@@ -1,7 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests.AutoFixture
 {
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Xunit;
 
   [Trait("Category", "RequireLicense")]

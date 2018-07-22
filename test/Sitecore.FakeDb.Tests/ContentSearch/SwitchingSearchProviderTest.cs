@@ -3,7 +3,7 @@ namespace Sitecore.FakeDb.Tests.ContentSearch
 {
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Abstractions;
   using Sitecore.Common;
   using Sitecore.ContentSearch;

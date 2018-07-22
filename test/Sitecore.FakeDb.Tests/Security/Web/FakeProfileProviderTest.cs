@@ -3,7 +3,7 @@
   using System;
   using System.Configuration;
   using System.Web.Profile;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.FakeDb.Security.Web;
   using Xunit;
 

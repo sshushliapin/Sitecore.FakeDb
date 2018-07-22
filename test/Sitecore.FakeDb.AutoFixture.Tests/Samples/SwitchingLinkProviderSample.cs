@@ -3,9 +3,11 @@ namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
 {
   using System;
   using NSubstitute;
-  using Ploeh.AutoFixture;
-  using Ploeh.AutoFixture.AutoNSubstitute;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture;
+  using global::AutoFixture.AutoNSubstitute;
+  using global::AutoFixture;
+  using global::AutoFixture.AutoNSubstitute;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.AutoFixture;
   using Sitecore.Links;

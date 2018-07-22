@@ -1,9 +1,9 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
   using NSubstitute;
-  using Ploeh.AutoFixture;
-  using Ploeh.AutoFixture.AutoNSubstitute;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture;
+  using global::AutoFixture.AutoNSubstitute;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Data.Items;

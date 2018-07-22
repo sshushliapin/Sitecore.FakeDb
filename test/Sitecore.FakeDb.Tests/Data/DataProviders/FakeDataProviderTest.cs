@@ -5,7 +5,7 @@
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Collections;
   using Sitecore.Data;
   using Sitecore.Data.DataProviders;

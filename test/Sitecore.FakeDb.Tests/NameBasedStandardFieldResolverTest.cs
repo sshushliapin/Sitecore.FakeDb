@@ -2,7 +2,7 @@ namespace Sitecore.FakeDb.Tests
 {
   using System;
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Xunit;
 
   public class NameBasedStandardFieldResolverTest

@@ -3,7 +3,7 @@
   using System.Collections;
   using System.Collections.ObjectModel;
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Xunit;
 
   public class DbItemChildCollectionTest

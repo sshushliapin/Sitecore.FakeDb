@@ -13,7 +13,7 @@
     <tags>Sitecore unit-testing testing in-memory TDD mocking mocks</tags>
     <dependencies>
       <dependency id="Sitecore.FakeDb" version="$version$" />
-      <dependency id="AutoFixture" version="[3,4)" />
+      <dependency id="AutoFixture" version="[4,5)" />
     </dependencies>
   </metadata>
 </package>

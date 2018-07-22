@@ -3,7 +3,7 @@
   using System;
   using System.Reflection;
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.FakeDb.Data.Engines.DataCommands.Prototypes;
   using Sitecore.Reflection;

@@ -4,7 +4,7 @@
   using System.Threading;
   using System.Threading.Tasks;
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Collections;
   using Sitecore.Configuration;
   using Sitecore.Data;

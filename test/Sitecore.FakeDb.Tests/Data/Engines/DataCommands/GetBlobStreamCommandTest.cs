@@ -4,7 +4,7 @@
   using System.IO;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.FakeDb.Data.Engines.DataCommands;
   using Sitecore.Reflection;
   using Xunit;

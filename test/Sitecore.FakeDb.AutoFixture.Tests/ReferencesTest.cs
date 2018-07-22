@@ -14,8 +14,8 @@
     public void ShouldReferenceSpecificAutoFixtureVersion()
     {
       typeof(AutoDbCustomization).Assembly.GetReferencedAssemblies()
-        .First(x => x.Name == "Ploeh.AutoFixture")
-        .Version.Should().Be(new Version(3, 32, 0, 0));
+        .First(x => x.Name == "AutoFixture")
+        .Version.Should().Be(new Version(4, 0, 0, 0));
     }
   }
 }

@@ -3,7 +3,7 @@
   using System.Collections.Specialized;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Common;
   using Sitecore.FakeDb.Security.Authentication;
   using Sitecore.Security.Accounts;

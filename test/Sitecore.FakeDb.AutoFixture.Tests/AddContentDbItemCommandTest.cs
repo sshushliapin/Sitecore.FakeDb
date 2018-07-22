@@ -2,9 +2,9 @@
 {
   using System;
   using FluentAssertions;
-  using Ploeh.AutoFixture;
-  using Ploeh.AutoFixture.Kernel;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture;
+  using global::AutoFixture.Kernel;
+  using global::AutoFixture.Xunit2;
   using Xunit;
 
   public class AddContentDbItemCommandTest

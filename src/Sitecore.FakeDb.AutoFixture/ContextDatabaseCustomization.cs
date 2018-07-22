@@ -1,6 +1,6 @@
 ﻿namespace Sitecore.FakeDb.AutoFixture
 {
-  using Ploeh.AutoFixture;
+  using global::AutoFixture;
   using Sitecore.Diagnostics;
 
   public class ContextDatabaseCustomization : ICustomization
