@@ -3,7 +3,7 @@
   using System;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture;
+  using global::AutoFixture;
   using Sitecore.Configuration;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Items;

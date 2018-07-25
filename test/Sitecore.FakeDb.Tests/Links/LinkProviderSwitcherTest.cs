@@ -3,7 +3,7 @@
   using System;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Common;
   using Sitecore.Data.Items;
   using Sitecore.Links;

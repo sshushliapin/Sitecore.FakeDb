@@ -1,6 +1,6 @@
 namespace Sitecore.FakeDb.AutoFixture
 {
-  using Ploeh.AutoFixture.Kernel;
+  using global::AutoFixture.Kernel;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Items;
 
@@ -10,7 +10,7 @@ namespace Sitecore.FakeDb.AutoFixture
     {
       if (!typeof(TemplateItem).Equals(request))
       {
-        return new NoSpecimen(request);
+        return new NoSpecimen();
       }
 
       return new TemplateItem(ItemHelper.CreateInstance());

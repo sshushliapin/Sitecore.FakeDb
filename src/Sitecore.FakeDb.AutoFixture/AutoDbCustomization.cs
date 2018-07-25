@@ -1,7 +1,7 @@
 namespace Sitecore.FakeDb.AutoFixture
 {
-  using Ploeh.AutoFixture;
-  using Ploeh.AutoFixture.Kernel;
+  using global::AutoFixture;
+  using global::AutoFixture.Kernel;
   using Sitecore.Data;
   using Sitecore.Data.Items;
 

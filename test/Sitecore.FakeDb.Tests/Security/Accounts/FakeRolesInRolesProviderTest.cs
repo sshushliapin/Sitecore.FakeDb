@@ -5,7 +5,7 @@
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.FakeDb.Security.Accounts;
   using Sitecore.Reflection;
   using Sitecore.Security.Accounts;

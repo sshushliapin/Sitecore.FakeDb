@@ -1,7 +1,7 @@
 namespace Sitecore.FakeDb.AutoFixture
 {
   using System;
-  using Ploeh.AutoFixture.Kernel;
+  using global::AutoFixture.Kernel;
 
   public class DbItemSpecification : IRequestSpecification
   {

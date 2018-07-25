@@ -1,7 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests.Pipelines
 {
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.FakeDb.Pipelines.AddDbItem;
   using Xunit;

@@ -4,9 +4,9 @@ namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
   using System.Collections.Generic;
   using System.Linq;
   using NSubstitute;
-  using Ploeh.AutoFixture;
-  using Ploeh.AutoFixture.AutoNSubstitute;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture;
+  using global::AutoFixture.AutoNSubstitute;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Abstractions;
   using Sitecore.Common;
   using Sitecore.ContentSearch;
@@ -78,7 +78,7 @@ namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
     private class DefaultAutoDataAttribute : AutoDataAttribute
     {
       public DefaultAutoDataAttribute()
-        : base(new Fixture().Customize(new AutoNSubstituteCustomization()))
+        : base(() => new Fixture().Customize(new AutoNSubstituteCustomization()))
       {
       }
     }

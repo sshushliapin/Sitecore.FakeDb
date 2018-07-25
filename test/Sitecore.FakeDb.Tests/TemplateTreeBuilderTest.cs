@@ -2,7 +2,7 @@
 {
   using System.Linq;
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Xunit;
 
   public class TemplateTreeBuilderTest

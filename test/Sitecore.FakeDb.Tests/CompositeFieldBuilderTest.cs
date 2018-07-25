@@ -3,7 +3,7 @@ namespace Sitecore.FakeDb.Tests
   using System.Linq;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Xunit;
 
   public class CompositeFieldBuilderTest

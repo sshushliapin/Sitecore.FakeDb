@@ -3,7 +3,7 @@
   using System;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture;
+  using global::AutoFixture;
   using Sitecore.Data;
   using Sitecore.Data.IDTables;
   using Sitecore.FakeDb.Data.IDTables;

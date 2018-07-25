@@ -1,6 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines
 {
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Common;
   using Sitecore.FakeDb.Data.Engines;
   using Xunit;

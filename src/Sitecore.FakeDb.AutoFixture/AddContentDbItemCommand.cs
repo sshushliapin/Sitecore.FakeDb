@@ -1,6 +1,6 @@
 namespace Sitecore.FakeDb.AutoFixture
 {
-  using Ploeh.AutoFixture.Kernel;
+  using global::AutoFixture.Kernel;
   using Sitecore.Diagnostics;
 
   public class AddContentDbItemCommand : ISpecimenCommand

@@ -3,7 +3,7 @@
   using System;
   using System.Collections.Generic;
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Globalization;
   using Xunit;

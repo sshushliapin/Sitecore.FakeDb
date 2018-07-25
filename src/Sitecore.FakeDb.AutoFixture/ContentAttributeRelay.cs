@@ -2,7 +2,7 @@ namespace Sitecore.FakeDb.AutoFixture
 {
   using System.Linq;
   using System.Reflection;
-  using Ploeh.AutoFixture.Kernel;
+  using global::AutoFixture.Kernel;
 
   public class ContentAttributeRelay : ISpecimenBuilder
   {
@@ -11,7 +11,7 @@ namespace Sitecore.FakeDb.AutoFixture
       var customAttributeProvider = request as ICustomAttributeProvider;
       if (customAttributeProvider == null)
       {
-        return new NoSpecimen(request);
+        return new NoSpecimen();
       }
 
       var attribute =
@@ -20,13 +20,13 @@ namespace Sitecore.FakeDb.AutoFixture
           .FirstOrDefault();
       if (attribute == null)
       {
-        return new NoSpecimen(request);
+        return new NoSpecimen();
       }
 
       var parameterInfo = request as ParameterInfo;
       if (parameterInfo == null)
       {
-        return new NoSpecimen(request);
+        return new NoSpecimen();
       }
 
       return context.Resolve(parameterInfo.ParameterType);

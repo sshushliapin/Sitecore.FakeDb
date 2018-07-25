@@ -4,7 +4,7 @@
   using System.Reflection;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture.Kernel;
+  using global::AutoFixture.Kernel;
   using Xunit;
 
   public class ContentAttributeRelayTest

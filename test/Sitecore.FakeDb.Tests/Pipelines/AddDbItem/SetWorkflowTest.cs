@@ -3,7 +3,7 @@
   using System;
   using FluentAssertions;
   using NSubstitute;
-  using Ploeh.AutoFixture.AutoNSubstitute;
+  using global::AutoFixture.AutoNSubstitute;
   using Sitecore.FakeDb.Data.Engines;
   using Sitecore.FakeDb.Pipelines.AddDbItem;
   using Xunit;

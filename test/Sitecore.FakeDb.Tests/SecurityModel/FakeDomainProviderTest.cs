@@ -2,7 +2,7 @@
 {
   using System;
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.FakeDb.SecurityModel;
   using Sitecore.Security.Domains;
   using Xunit;

@@ -2,8 +2,8 @@
 {
   using System;
   using FluentAssertions;
-  using Ploeh.AutoFixture;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture;
+  using global::AutoFixture.Xunit2;
   using Xunit;
 
   public class AutoContentDbItemCustomizationTest

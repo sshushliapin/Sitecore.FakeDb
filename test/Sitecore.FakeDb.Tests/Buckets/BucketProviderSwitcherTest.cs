@@ -1,7 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests.Buckets
 {
   using FluentAssertions;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Buckets.Managers;
   using Sitecore.Common;
   using Sitecore.FakeDb.Buckets;

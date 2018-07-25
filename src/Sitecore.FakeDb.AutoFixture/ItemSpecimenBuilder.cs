@@ -1,6 +1,6 @@
 namespace Sitecore.FakeDb.AutoFixture
 {
-  using Ploeh.AutoFixture.Kernel;
+  using global::AutoFixture.Kernel;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.FakeDb.Data.Items;
@@ -24,7 +24,7 @@ namespace Sitecore.FakeDb.AutoFixture
     {
       if (!typeof(Item).Equals(request))
       {
-        return new NoSpecimen(request);
+        return new NoSpecimen();
       }
 
       var database = (Database)context.Resolve(typeof(Database));

@@ -3,7 +3,7 @@
   using System;
   using System.Linq;
   using FluentAssertions;
-  using Ploeh.AutoFixture;
+  using global::AutoFixture;
   using Xunit;
 
   public class ContextDatabaseCustomizationTest

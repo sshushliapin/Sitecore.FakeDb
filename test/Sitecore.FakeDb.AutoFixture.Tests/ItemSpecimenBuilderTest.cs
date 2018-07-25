@@ -1,9 +1,10 @@
 namespace Sitecore.FakeDb.AutoFixture.Tests
 {
   using FluentAssertions;
-  using Ploeh.AutoFixture;
-  using Ploeh.AutoFixture.Kernel;
-  using Ploeh.AutoFixture.Xunit2;
+  using global::AutoFixture;
+  using global::AutoFixture.Kernel;
+  using global::AutoFixture;
+  using global::AutoFixture.Xunit2;
   using Sitecore.Data;
   using Sitecore.Data.Items;
   using Sitecore.Globalization;
@@ -89,10 +90,17 @@ namespace Sitecore.FakeDb.AutoFixture.Tests
 
     private class ItemSpecimenBuilderAutoDataAttribute : AutoDataAttribute
     {
-      public ItemSpecimenBuilderAutoDataAttribute()
+      public ItemSpecimenBuilderAutoDataAttribute() : base(FixtureFactory)
       {
-        this.Fixture.Customizations.Add(new DatabaseSpecimenBuilder("master"));
-        this.Fixture.Customizations.Add(new ItemSpecimenBuilder());
+
+      }
+
+      private static IFixture FixtureFactory()
+      {
+          var fixture = new Fixture();
+          fixture.Customizations.Add(new DatabaseSpecimenBuilder("master"));
+          fixture.Customizations.Add(new ItemSpecimenBuilder());
+          return fixture;
       }
     }
   }
