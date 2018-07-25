@@ -1,4 +1,7 @@
-﻿1.7.2
+﻿2.0.0-alpha1
+* [NEW] #199: Updated references to AutoFixture and xUnit (thanks to [@Tchami](https://github.com/Tchami))
+
+1.7.2
 * [FIX] #195: Content search config in SC9 uses incorrect class name
 
 1.7.1
