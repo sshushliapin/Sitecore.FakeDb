@@ -26,7 +26,7 @@
     private class AutoDbDataAttribute : AutoDataAttribute
     {
       public AutoDbDataAttribute()
-        : base(new Fixture().Customize(new AutoDbCustomization()))
+        : base(() => new Fixture().Customize(new AutoDbCustomization()))
       {
       }
     }

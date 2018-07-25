@@ -28,7 +28,7 @@
     private class DefaultAutoDataAttribute : AutoDataAttribute
     {
       public DefaultAutoDataAttribute()
-        : base(new Fixture().Customize(new AutoNSubstituteCustomization())
+        : base(() => new Fixture().Customize(new AutoNSubstituteCustomization())
                             .Customize(new AutoDbCustomization()))
       {
       }

@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
+  using System;
   using NSubstitute;
   using global::AutoFixture;
   using global::AutoFixture.AutoNSubstitute;
@@ -12,8 +13,14 @@
   internal class DefaultAutoDataAttribute : AutoDataAttribute
   {
     public DefaultAutoDataAttribute()
-      : base(new Fixture().Customize(new DefaultConventions()))
+      : base(() => new Fixture().Customize(new DefaultConventions()))
     {
+    }
+
+    protected DefaultAutoDataAttribute(Func<IFixture> fixtureFactory)
+      : base(fixtureFactory)
+    {
+    
     }
   }
 
@@ -27,9 +34,11 @@
 
   internal class DefaultSubstituteAutoDataAttribute : DefaultAutoDataAttribute
   {
-    public DefaultSubstituteAutoDataAttribute()
+    public DefaultSubstituteAutoDataAttribute() 
+      : base(() => new Fixture()
+            .Customize(new DefaultConventions())
+            .Customize(new AutoNSubstituteCustomization()))
     {
-      this.Fixture.Customize(new AutoNSubstituteCustomization());
     }
   }
 

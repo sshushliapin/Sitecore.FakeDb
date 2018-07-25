@@ -6,7 +6,7 @@ namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
   internal class AutoDbDataAttribute : AutoDataAttribute
   {
     public AutoDbDataAttribute()
-      : base(new Fixture().Customize(new AutoDbCustomization()))
+      : base(() => new Fixture().Customize(new AutoDbCustomization()))
     {
     }
   }

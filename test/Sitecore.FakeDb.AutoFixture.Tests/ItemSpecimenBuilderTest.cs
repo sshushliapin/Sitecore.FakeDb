@@ -90,10 +90,17 @@ namespace Sitecore.FakeDb.AutoFixture.Tests
 
     private class ItemSpecimenBuilderAutoDataAttribute : AutoDataAttribute
     {
-      public ItemSpecimenBuilderAutoDataAttribute()
+      public ItemSpecimenBuilderAutoDataAttribute() : base(FixtureFactory)
       {
-        this.Fixture.Customizations.Add(new DatabaseSpecimenBuilder("master"));
-        this.Fixture.Customizations.Add(new ItemSpecimenBuilder());
+
+      }
+
+      private static IFixture FixtureFactory()
+      {
+          var fixture = new Fixture();
+          fixture.Customizations.Add(new DatabaseSpecimenBuilder("master"));
+          fixture.Customizations.Add(new ItemSpecimenBuilder());
+          return fixture;
       }
     }
   }
