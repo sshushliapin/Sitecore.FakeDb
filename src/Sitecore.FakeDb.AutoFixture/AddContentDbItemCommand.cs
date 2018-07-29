@@ -1,23 +1,23 @@
 namespace Sitecore.FakeDb.AutoFixture
 {
-  using global::AutoFixture.Kernel;
-  using Sitecore.Diagnostics;
+    using global::AutoFixture.Kernel;
+    using Sitecore.Diagnostics;
 
-  public class AddContentDbItemCommand : ISpecimenCommand
-  {
-    public void Execute(object specimen, ISpecimenContext context)
+    public class AddContentDbItemCommand : ISpecimenCommand
     {
-      Assert.ArgumentNotNull(specimen, "specimen");
-      Assert.ArgumentNotNull(context, "context");
+        public void Execute(object specimen, ISpecimenContext context)
+        {
+            Assert.ArgumentNotNull(specimen, "specimen");
+            Assert.ArgumentNotNull(context, "context");
 
-      var item = specimen as DbItem;
-      if (item == null)
-      {
-        return;
-      }
+            var item = specimen as DbItem;
+            if (item == null)
+            {
+                return;
+            }
 
-      var db = (Db)context.Resolve(typeof(Db));
-      db.Add(item);
+            var db = (Db) context.Resolve(typeof(Db));
+            db.Add(item);
+        }
     }
-  }
 }

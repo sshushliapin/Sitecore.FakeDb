@@ -12,9 +12,9 @@ namespace Sitecore.FakeDb.Sites
     /// <summary>
     /// Switches The Site Context and sync context with Factory.Sites 
     /// </summary>
-    public class FakeSiteContextSwitcher: SiteContextSwitcher
+    public class FakeSiteContextSwitcher : SiteContextSwitcher
     {
-        private readonly List<SiteInfo> _pocket = new List<SiteInfo>(); 
+        private readonly List<SiteInfo> _pocket = new List<SiteInfo>();
 
         public FakeSiteContextSwitcher(SiteContext site) : base(site)
         {
@@ -36,6 +36,7 @@ namespace Sitecore.FakeDb.Sites
             {
                 dict.Add(k, col[k]);
             }
+
             return dict;
         }
 

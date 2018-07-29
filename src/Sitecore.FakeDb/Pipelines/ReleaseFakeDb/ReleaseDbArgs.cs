@@ -1,22 +1,22 @@
 ﻿namespace Sitecore.FakeDb.Pipelines.ReleaseFakeDb
 {
-  using Sitecore.Diagnostics;
-  using Sitecore.Pipelines;
+    using Sitecore.Diagnostics;
+    using Sitecore.Pipelines;
 
-  public class ReleaseDbArgs : PipelineArgs
-  {
-    private readonly Db db;
-
-    public ReleaseDbArgs(Db db)
+    public class ReleaseDbArgs : PipelineArgs
     {
-      Assert.ArgumentNotNull(db, "db");
+        private readonly Db db;
 
-      this.db = db;
-    }
+        public ReleaseDbArgs(Db db)
+        {
+            Assert.ArgumentNotNull(db, "db");
 
-    public Db Db
-    {
-      get { return this.db; }
+            this.db = db;
+        }
+
+        public Db Db
+        {
+            get { return this.db; }
+        }
     }
-  }
 }

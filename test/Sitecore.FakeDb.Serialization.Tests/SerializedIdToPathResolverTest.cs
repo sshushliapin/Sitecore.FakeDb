@@ -1,28 +1,26 @@
 ﻿namespace Sitecore.FakeDb.Serialization.Tests
 {
-  using System.IO;
-  using FluentAssertions;
-  using Sitecore.Data;
-  using Xunit;
+    using System.IO;
+    using FluentAssertions;
+    using Sitecore.Data;
+    using Xunit;
 
-  public class SerializedIdToPathResolverTest
-  {
-    [Fact]
-    public void ShouldFindPathForId()
+    public class SerializedIdToPathResolverTest
     {
-      string filePath = ID.Parse("{108266C2-304B-4AD3-9813-2BE1B88609FF}").FindFilePath("custom");
+        [Fact]
+        public void ShouldFindPathForId()
+        {
+            string filePath = ID.Parse("{108266C2-304B-4AD3-9813-2BE1B88609FF}").FindFilePath("custom");
 
-      filePath.Should().NotBeNullOrWhiteSpace();
-      File.Exists(filePath).Should().BeTrue();
-      Path.GetFileNameWithoutExtension(filePath).ShouldBeEquivalentTo("Item only available in custom serialization folder");
-    }
+            filePath.Should().NotBeNullOrWhiteSpace();
+            File.Exists(filePath).Should().BeTrue();
+            Path.GetFileNameWithoutExtension(filePath).ShouldBeEquivalentTo("Item only available in custom serialization folder");
+        }
 
-    [Fact]
-    public void DuplicatedID_Throws_MeaningfulException()
-    {
-      Assert.Throws<DuplicateIdException>(() => {
-        ID.Parse("{108266C2-304B-4AD3-9813-2BE1B88609FF}").FindFilePath("incorrect");
-      });
+        [Fact]
+        public void DuplicatedID_Throws_MeaningfulException()
+        {
+            Assert.Throws<DuplicateIdException>(() => { ID.Parse("{108266C2-304B-4AD3-9813-2BE1B88609FF}").FindFilePath("incorrect"); });
+        }
     }
-  }
 }

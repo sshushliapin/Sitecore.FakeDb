@@ -1,17 +1,20 @@
 ﻿namespace Sitecore.FakeDb.Tests.ContentSearch
 {
-  using System;
-  using FluentAssertions;
-  using Sitecore.ContentSearch;
-  using Xunit;
+    using System;
+    using FluentAssertions;
+    using Sitecore.ContentSearch;
+    using Xunit;
 
-  public class ContentSearchManagerTest
-  {
-    [Fact]
-    public void ShouldGetContentSearchConfiguration()
+    public class ContentSearchManagerTest
     {
-      Action a = () => { var c = ContentSearchManager.SearchConfiguration; };
-      a.ShouldNotThrow();
+        [Fact]
+        public void ShouldGetContentSearchConfiguration()
+        {
+            Action a = () =>
+            {
+                var c = ContentSearchManager.SearchConfiguration;
+            };
+            a.ShouldNotThrow();
+        }
     }
-  }
 }

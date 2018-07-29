@@ -1,12 +1,12 @@
 ﻿namespace Sitecore.FakeDb.Tests
 {
-  using System;
+    using System;
 
-  internal static class StringExtensions
-  {
-    public static void ToConsoleOut(this string str)
+    internal static class StringExtensions
     {
-      Console.Out.WriteLine("str = {0}", str);
+        public static void ToConsoleOut(this string str)
+        {
+            Console.Out.WriteLine("str = {0}", str);
+        }
     }
-  }
 }

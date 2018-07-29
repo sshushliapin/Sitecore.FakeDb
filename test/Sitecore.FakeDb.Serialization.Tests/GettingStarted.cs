@@ -1,24 +1,24 @@
 ﻿namespace Examples.Serialization
 {
-  using Xunit;
+    using Xunit;
 
-  [Trait("Category", "RequireLicense")]
-  public class GettingStarted
-  {
-    [Fact]
-    public void HowToDeserializeItem()
+    [Trait("Category", "RequireLicense")]
+    public class GettingStarted
     {
-      using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+        [Fact]
+        public void HowToDeserializeItem()
         {
-          new Sitecore.FakeDb.Serialization.DsDbTemplate(
-            "/sitecore/templates/Sample/Sample Item"),
-          new Sitecore.FakeDb.Serialization.DsDbItem(
-            "/sitecore/content/home", true)
-        })
-      {
-        var home = db.GetItem("/sitecore/content/home");
-        Assert.Equal("Sitecore", home["Title"]);
-      }
+            using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
+                {
+                    new Sitecore.FakeDb.Serialization.DsDbTemplate(
+                        "/sitecore/templates/Sample/Sample Item"),
+                    new Sitecore.FakeDb.Serialization.DsDbItem(
+                        "/sitecore/content/home", true)
+                })
+            {
+                var home = db.GetItem("/sitecore/content/home");
+                Assert.Equal("Sitecore", home["Title"]);
+            }
+        }
     }
-  }
 }

@@ -1,23 +1,23 @@
 ﻿namespace Sitecore.FakeDb.Tests.Configuration
 {
-  using System.Xml;
-  using FluentAssertions;
-  using Sitecore.FakeDb.Configuration;
-  using Xunit;
+    using System.Xml;
+    using FluentAssertions;
+    using Sitecore.FakeDb.Configuration;
+    using Xunit;
 
-  public class DbConfigurationTest
-  {
-    [Fact]
-    public void ShouldPassConfigSectionToSettings()
+    public class DbConfigurationTest
     {
-      // arrange
-      var config = new XmlDocument();
+        [Fact]
+        public void ShouldPassConfigSectionToSettings()
+        {
+            // arrange
+            var config = new XmlDocument();
 
-      // act
-      var configuration = new DbConfiguration(config);
+            // act
+            var configuration = new DbConfiguration(config);
 
-      // assert
-      configuration.Settings.ConfigSection.Should().BeEquivalentTo(config);
+            // assert
+            configuration.Settings.ConfigSection.Should().BeEquivalentTo(config);
+        }
     }
-  }
 }

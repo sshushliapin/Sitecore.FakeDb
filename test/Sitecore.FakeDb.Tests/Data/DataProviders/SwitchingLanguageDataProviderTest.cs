@@ -37,7 +37,7 @@
             using (new Switcher<DbLanguages>(contextLanguages))
             {
                 sut.GetLanguages(context)
-                    .ShouldAllBeEquivalentTo(new[] { en, da });
+                    .ShouldAllBeEquivalentTo(new[] {en, da});
             }
         }
     }

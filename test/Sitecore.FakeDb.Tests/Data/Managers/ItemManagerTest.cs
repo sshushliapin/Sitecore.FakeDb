@@ -1,66 +1,66 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Managers
 {
-  using FluentAssertions;
-  using Sitecore.Data;
-  using Sitecore.Data.Items;
-  using Sitecore.Data.Managers;
-  using Xunit;
+    using FluentAssertions;
+    using Sitecore.Data;
+    using Sitecore.Data.Items;
+    using Sitecore.Data.Managers;
+    using Xunit;
 
-  [Trait("Category", "RequireLicense")]
-  public class ItemManagerTest
-  {
-    private readonly ID templateId = ID.NewID;
-
-    [Fact]
-    public void ShouldCreateAndEditItemUsingItemManager()
+    [Trait("Category", "RequireLicense")]
+    public class ItemManagerTest
     {
-      // arrange
-      using (var db = new Db { new DbTemplate("Sample", this.templateId) { "Title" } })
-      {
-        var root = db.GetItem("/sitecore/content");
+        private readonly ID templateId = ID.NewID;
 
-        // act
-        var item = ItemManager.AddFromTemplate("home", this.templateId, root);
-        using (new EditContext(item))
+        [Fact]
+        public void ShouldCreateAndEditItemUsingItemManager()
         {
-          item["Title"] = "Hello";
+            // arrange
+            using (var db = new Db {new DbTemplate("Sample", this.templateId) {"Title"}})
+            {
+                var root = db.GetItem("/sitecore/content");
+
+                // act
+                var item = ItemManager.AddFromTemplate("home", this.templateId, root);
+                using (new EditContext(item))
+                {
+                    item["Title"] = "Hello";
+                }
+
+                // assert
+                item["Title"].Should().Be("Hello");
+            }
         }
 
-        // assert
-        item["Title"].Should().Be("Hello");
-      }
+        [Fact]
+        public void ShouldAddVersionOneWhenAddFromTemplate()
+        {
+            // arrange
+            using (var db = new Db {new DbTemplate("Sample", this.templateId) {"Title"}})
+            {
+                var root = db.GetItem("/sitecore/content");
+
+                // act
+                var item = ItemManager.AddFromTemplate("home", this.templateId, root);
+
+                // assert
+                item.Versions.Count.Should().Be(1);
+            }
+        }
+
+        [Fact]
+        public void ShouldNotAddVersionWhenCreateItem()
+        {
+            // arrange
+            using (var db = new Db {new DbTemplate("Sample", this.templateId) {"Title"}})
+            {
+                var root = db.GetItem("/sitecore/content");
+
+                // act
+                var item = ItemManager.CreateItem("home", root, this.templateId);
+
+                // assert
+                item.Versions.Count.Should().Be(0);
+            }
+        }
     }
-
-    [Fact]
-    public void ShouldAddVersionOneWhenAddFromTemplate()
-    {
-      // arrange
-      using (var db = new Db { new DbTemplate("Sample", this.templateId) { "Title" } })
-      {
-        var root = db.GetItem("/sitecore/content");
-
-        // act
-        var item = ItemManager.AddFromTemplate("home", this.templateId, root);
-
-        // assert
-        item.Versions.Count.Should().Be(1);
-      }
-    }
-
-    [Fact]
-    public void ShouldNotAddVersionWhenCreateItem()
-    {
-      // arrange
-      using (var db = new Db { new DbTemplate("Sample", this.templateId) { "Title" } })
-      {
-        var root = db.GetItem("/sitecore/content");
-
-        // act
-        var item = ItemManager.CreateItem("home", root, this.templateId);
-
-        // assert
-        item.Versions.Count.Should().Be(0);
-      }
-    }
-  }
 }

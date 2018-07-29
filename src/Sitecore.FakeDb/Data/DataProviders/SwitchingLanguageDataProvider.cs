@@ -25,8 +25,8 @@
         public override LanguageCollection GetLanguages(CallContext context)
         {
             return Switcher<DbLanguages>.CurrentValue == null
-              ? new LanguageCollection()
-              : Switcher<DbLanguages>.CurrentValue.GetLanguages();
+                ? new LanguageCollection()
+                : Switcher<DbLanguages>.CurrentValue.GetLanguages();
         }
     }
 }

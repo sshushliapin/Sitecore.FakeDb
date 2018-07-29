@@ -1,35 +1,35 @@
 ﻿namespace Sitecore.FakeDb.Tests.Pipelines
 {
-  using FluentAssertions;
-  using Sitecore.Pipelines;
-  using Xunit;
+    using FluentAssertions;
+    using Sitecore.Pipelines;
+    using Xunit;
 
-  public class CorePipelineFactoryTest
-  {
-    private const string PipelineName = "mypipeline";
-
-    [Fact]
-    public void ShouldGetNullIfNoPipelineConfigured()
+    public class CorePipelineFactoryTest
     {
-      // arrange
-      using (new Db())
-      {
-        // act & assert
-        CorePipelineFactory.GetPipeline(PipelineName, string.Empty).Should().BeNull();
-      }
-    }
+        private const string PipelineName = "mypipeline";
 
-    [Fact]
-    public void ShouldGetPipelineByName()
-    {
-      // arrange
-      using (var db = new Db())
-      {
-        db.PipelineWatcher.Expects(PipelineName);
+        [Fact]
+        public void ShouldGetNullIfNoPipelineConfigured()
+        {
+            // arrange
+            using (new Db())
+            {
+                // act & assert
+                CorePipelineFactory.GetPipeline(PipelineName, string.Empty).Should().BeNull();
+            }
+        }
 
-        // act & assert
-        CorePipelineFactory.GetPipeline(PipelineName, string.Empty).Should().NotBeNull();
-      }
+        [Fact]
+        public void ShouldGetPipelineByName()
+        {
+            // arrange
+            using (var db = new Db())
+            {
+                db.PipelineWatcher.Expects(PipelineName);
+
+                // act & assert
+                CorePipelineFactory.GetPipeline(PipelineName, string.Empty).Should().NotBeNull();
+            }
+        }
     }
-  }
 }

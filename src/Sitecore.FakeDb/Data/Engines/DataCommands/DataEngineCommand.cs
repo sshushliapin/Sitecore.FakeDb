@@ -1,34 +1,34 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using System;
-  using Sitecore.Data;
-  using Sitecore.Diagnostics;
+    using System;
+    using Sitecore.Data;
+    using Sitecore.Diagnostics;
 
-  public class DataEngineCommand
-  {
-    private const string ExceptionText = "Sitecore.FakeDb.Db instance has not been initialized.";
-
-    private readonly string databaseName;
-
-    public DataEngineCommand(Database database)
+    public class DataEngineCommand
     {
-      Assert.IsNotNull(database, "database");
+        private const string ExceptionText = "Sitecore.FakeDb.Db instance has not been initialized.";
 
-      this.databaseName = database.Name;
-    }
+        private readonly string databaseName;
 
-    public virtual DataStorage DataStorage
-    {
-      get
-      {
-        var dataStorage = DataStorageSwitcher.CurrentValue(this.databaseName);
-        if (dataStorage == null)
+        public DataEngineCommand(Database database)
         {
-          throw new InvalidOperationException(ExceptionText);
+            Assert.IsNotNull(database, "database");
+
+            this.databaseName = database.Name;
         }
 
-        return dataStorage;
-      }
+        public virtual DataStorage DataStorage
+        {
+            get
+            {
+                var dataStorage = DataStorageSwitcher.CurrentValue(this.databaseName);
+                if (dataStorage == null)
+                {
+                    throw new InvalidOperationException(ExceptionText);
+                }
+
+                return dataStorage;
+            }
+        }
     }
-  }
 }

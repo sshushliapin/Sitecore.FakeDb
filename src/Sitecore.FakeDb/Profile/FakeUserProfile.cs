@@ -2,11 +2,11 @@
 
 namespace Sitecore.FakeDb.Profile
 {
-  public class FakeUserProfile : UserProfile
-  {
-    protected override void SetPropertyValueCore(string propertyName, object value)
+    public class FakeUserProfile : UserProfile
     {
-      // do nothing
+        protected override void SetPropertyValueCore(string propertyName, object value)
+        {
+            // do nothing
+        }
     }
-  }
 }

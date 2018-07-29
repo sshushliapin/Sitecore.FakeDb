@@ -1,31 +1,37 @@
 ﻿namespace Sitecore.FakeDb.Tests.Runtime
 {
-  using System;
-  using FluentAssertions;
-  using Xunit;
+    using System;
+    using FluentAssertions;
+    using Xunit;
 
-  [Trait("Category", "RequireLicense")]
-  public class FluentAssertionsTest
-  {
-    [Fact]
-    public void ShouldNotTimeOutOnFailingFluentAssertion()
+    [Trait("Category", "RequireLicense")]
+    public class FluentAssertionsTest
     {
-      // arrange
-      using (var db = new Db
-      {
-        new DbItem("home")
-      })
-      {
-        var home = db.GetItem("/sitecore/content/home");
-
-        Action assertion = () =>
+        [Fact]
+        public void ShouldNotTimeOutOnFailingFluentAssertion()
         {
-          try { home.Should().BeNull(); } catch { }
-        };
+            // arrange
+            using (var db = new Db
+                {
+                    new DbItem("home")
+                })
+            {
+                var home = db.GetItem("/sitecore/content/home");
 
-        // act && assert
-        assertion.ExecutionTime().ShouldNotExceed(1.Seconds());
-      }
+                Action assertion = () =>
+                {
+                    try
+                    {
+                        home.Should().BeNull();
+                    }
+                    catch
+                    {
+                    }
+                };
+
+                // act && assert
+                assertion.ExecutionTime().ShouldNotExceed(1.Seconds());
+            }
+        }
     }
-  }
 }

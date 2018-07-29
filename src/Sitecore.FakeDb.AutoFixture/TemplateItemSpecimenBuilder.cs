@@ -1,19 +1,19 @@
 namespace Sitecore.FakeDb.AutoFixture
 {
-  using global::AutoFixture.Kernel;
-  using Sitecore.Data.Items;
-  using Sitecore.FakeDb.Data.Items;
+    using global::AutoFixture.Kernel;
+    using Sitecore.Data.Items;
+    using Sitecore.FakeDb.Data.Items;
 
-  public class TemplateItemSpecimenBuilder : ISpecimenBuilder
-  {
-    public object Create(object request, ISpecimenContext context)
+    public class TemplateItemSpecimenBuilder : ISpecimenBuilder
     {
-      if (!typeof(TemplateItem).Equals(request))
-      {
-        return new NoSpecimen();
-      }
+        public object Create(object request, ISpecimenContext context)
+        {
+            if (!typeof(TemplateItem).Equals(request))
+            {
+                return new NoSpecimen();
+            }
 
-      return new TemplateItem(ItemHelper.CreateInstance());
+            return new TemplateItem(ItemHelper.CreateInstance());
+        }
     }
-  }
 }
