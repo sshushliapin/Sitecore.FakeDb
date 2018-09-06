@@ -11,6 +11,7 @@
     <References Include="packages\Sitecore.Abstractions.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Abstractions.dll" Condition="'$(Version)' != '7.2.160123'" />
     <References Include="packages\Sitecore.Buckets.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Buckets.dll" />
     <References Include="packages\Sitecore.ContentSearch.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.ContentSearch.dll" />
+    <References Include="packages\Sitecore.ContentSearch.Data.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.ContentSearch.Data.dll" />
     <References Include="packages\Sitecore.ContentSearch.Linq.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.ContentSearch.Linq.dll" />
     <References Include="packages\Sitecore.Kernel.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Kernel.dll" />
     <References Include="packages\Sitecore.Logging.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Logging.dll" />
