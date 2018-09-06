@@ -22,7 +22,8 @@
     <DefineConstants>DEBUG;TRACE;$(VSDebugSitecoreVersion)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Sitecore.FakeDb.AutoFixture.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Sitecore.FakeDb.AutoFixture.xml</DocumentationFile>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
