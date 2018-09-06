@@ -1,7 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Buckets
 {
     using FluentAssertions;
-    using global::AutoFixture.Xunit2;
     using Sitecore.Buckets.Managers;
     using Sitecore.Common;
     using Sitecore.FakeDb.Buckets;
@@ -16,9 +15,13 @@
         }
 
         [Theory, DefaultSubstituteAutoData]
-        public void SutSwitchesSwitcherCurrentValue([Frozen] BucketProvider provider, BucketProviderSwitcher sut)
+        public void SutSwitchesSwitcherCurrentValue(
+            BucketProvider expected)
         {
-            BucketProviderSwitcher.CurrentValue.Should().BeSameAs(provider);
+            using (new BucketProviderSwitcher(expected))
+            {
+                BucketProviderSwitcher.CurrentValue.Should().BeSameAs(expected);
+            }
         }
     }
 }

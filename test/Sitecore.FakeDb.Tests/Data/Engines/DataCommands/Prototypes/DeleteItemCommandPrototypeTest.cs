@@ -12,9 +12,14 @@ namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands.Prototypes
     public class DeleteItemCommandPrototypeTest
     {
         [Theory, DefaultAutoData]
-        public void ShouldCreateInstance(DeleteItemCommandPrototype sut, DataStorageSwitcher switcher)
+        public void ShouldCreateInstance(
+            DeleteItemCommandPrototype sut,
+            DataStorage dataStorage)
         {
-            ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<DeleteItemCommand>();
+            using (new DataStorageSwitcher(dataStorage))
+            {
+                ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<DeleteItemCommand>();
+            }
         }
     }
 }

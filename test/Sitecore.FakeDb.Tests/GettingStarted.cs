@@ -252,8 +252,8 @@
             {
                 string[] resultRoles = System.Web.Security.Roles.GetAllRoles();
 
-                Xunit.Assert.True(resultRoles.Contains(@"sitecore/Authors"));
-                Xunit.Assert.True(resultRoles.Contains(@"sitecore/Editors"));
+                Xunit.Assert.Contains(@"sitecore/Authors", resultRoles);
+                Xunit.Assert.Contains(@"sitecore/Editors", resultRoles);
             }
         }
 
@@ -585,22 +585,23 @@
                     });
 
                 // link database is clean
-                Xunit.Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
+                Xunit.Assert.Empty(Sitecore.Globals.LinkDatabase.GetReferrers(source));
 
                 using (new Sitecore.FakeDb.Links.LinkDatabaseSwitcher(behavior))
                 {
                     Sitecore.Links.ItemLink[] referrers =
                         Sitecore.Globals.LinkDatabase.GetReferrers(source);
 
-                    Xunit.Assert.Equal(referrers.Count(), 2);
-                    Xunit.Assert.Equal(referrers.Count(r => r.SourceItemID == clone.ID
-                                                            && r.TargetItemID == source.ID), 1);
-                    Xunit.Assert.Equal(referrers.Count(r => r.SourceItemID == alias.ID
-                                                            && r.TargetItemID == source.ID), 1);
+                    const int expected = 2;
+                    Xunit.Assert.Equal(referrers.Count(), expected);
+                    Xunit.Assert.Single(referrers.Where(r => r.SourceItemID == clone.ID
+                                                            && r.TargetItemID == source.ID));
+                    Xunit.Assert.Single(referrers.Where(r => r.SourceItemID == alias.ID
+                                                            && r.TargetItemID == source.ID));
                 }
 
                 // link database is clean again
-                Xunit.Assert.Equal(Sitecore.Globals.LinkDatabase.GetReferrers(source).Count(), 0);
+                Xunit.Assert.Empty(Sitecore.Globals.LinkDatabase.GetReferrers(source));
             }
         }
 
@@ -608,6 +609,7 @@
         public void HowToWorkWithQueryApi()
         {
             const string Query = "/sitecore/content/*[@@key = 'home']";
+            const string expected = "home";
 
             using (new Sitecore.FakeDb.Db
                 {
@@ -617,8 +619,8 @@
                 Sitecore.Data.Items.Item[] result =
                     Sitecore.Data.Query.Query.SelectItems(Query);
 
-                Xunit.Assert.Equal(result.Count(), 1);
-                Xunit.Assert.Equal(result[0].Key, "home");
+                Xunit.Assert.Single(result);
+                Xunit.Assert.Equal(result[0].Key, expected);
             }
         }
 
@@ -626,6 +628,7 @@
         public void HowToWorkWithFastQueryApi()
         {
             const string Query = "fast:/sitecore/content/*[@@key = 'home']";
+            const string expected = "home";
 
             using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
                 {
@@ -634,7 +637,7 @@
             {
                 Sitecore.Data.Items.Item homeItem = db.Database.SelectSingleItem(Query);
 
-                Xunit.Assert.Equal(homeItem.Key, "home");
+                Xunit.Assert.Equal(homeItem.Key, expected);
             }
         }
 

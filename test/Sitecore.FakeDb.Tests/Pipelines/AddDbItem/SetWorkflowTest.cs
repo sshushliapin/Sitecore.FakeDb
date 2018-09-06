@@ -32,8 +32,7 @@
             SetWorkflow sut,
             DbItem item,
             DbTemplate template,
-            [Substitute] DataStorage dataStorage,
-            string workflowId)
+            [Substitute] DataStorage dataStorage)
         {
             dataStorage.GetFakeTemplate(item.TemplateID).Returns(template);
             var args = new AddDbItemArgs(item, dataStorage);

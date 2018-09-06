@@ -19,10 +19,16 @@
     public class SwitchingBucketProviderSample
     {
         [Theory, DefaultAutoData]
-        public void SwitchBucketProvider([Frozen] BucketProvider provider, BucketProviderSwitcher switcher, Item source, Item target)
+        public void SwitchBucketProvider(
+            BucketProvider provider,
+            Item source,
+            Item target)
         {
-            BucketManager.MoveItemIntoBucket(source, target);
-            provider.Received().MoveItemIntoBucket(source, target);
+            using (new BucketProviderSwitcher(provider))
+            {
+                BucketManager.MoveItemIntoBucket(source, target);
+                provider.Received().MoveItemIntoBucket(source, target);
+            }
         }
 
         private class DefaultAutoDataAttribute : AutoDataAttribute

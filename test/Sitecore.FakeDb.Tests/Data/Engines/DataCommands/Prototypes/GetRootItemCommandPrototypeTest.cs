@@ -12,9 +12,14 @@ namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands.Prototypes
     public class GetRootItemCommandPrototypeTest
     {
         [Theory, DefaultAutoData]
-        public void ShouldCreateInstance(GetRootItemCommandPrototype sut, DataStorageSwitcher switcher)
+        public void ShouldCreateInstance(
+            GetRootItemCommandPrototype sut,
+            DataStorage dataStorage)
         {
-            ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<GetRootItemCommand>();
+            using (new DataStorageSwitcher(dataStorage))
+            {
+                ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<GetRootItemCommand>();
+            }
         }
     }
 }

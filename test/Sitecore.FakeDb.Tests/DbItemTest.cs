@@ -55,7 +55,7 @@
             sut.ParentID.Should().BeNull();
         }
 
-        [Theory, AutoData]
+        [Fact]
         public void SutAddsFieldByNameAndValue()
         {
             var sut = new DbItem("home") {{"Title", "Welcome!"}};

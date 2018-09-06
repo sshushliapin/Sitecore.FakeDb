@@ -12,9 +12,14 @@ namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands.Prototypes
     public class HasChildrenCommandPrototypeTest
     {
         [Theory, DefaultAutoData]
-        public void ShouldCreateInstance(HasChildrenCommandPrototype sut, DataStorageSwitcher switcher)
+        public void ShouldCreateInstance(
+            HasChildrenCommandPrototype sut,
+            DataStorage dataStorage)
         {
-            ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<HasChildrenCommand>();
+            using (new DataStorageSwitcher(dataStorage))
+            {
+                ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<HasChildrenCommand>();
+            }
         }
     }
 }

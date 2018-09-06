@@ -30,28 +30,30 @@ namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
             SearchRepository sut,
             ISearchIndex searchIndex,
             IIndexable indexable,
-            [Frozen] SearchProvider provider,
-            Switcher<SearchProvider> switcher)
+            SearchProvider provider)
         {
             // arrange
-            searchIndex
-                .CreateSearchContext()
-                .GetQueryable<ProductSearchResultItem>()
-                .Returns(new[]
-                    {
-                        new ProductSearchResultItem {Free = true},
-                        new ProductSearchResultItem {Free = false},
-                        new ProductSearchResultItem {Free = true}
-                    }.AsQueryable());
+            using (new Switcher<SearchProvider>(provider))
+            {
+                searchIndex
+                    .CreateSearchContext()
+                    .GetQueryable<ProductSearchResultItem>()
+                    .Returns(new[]
+                        {
+                            new ProductSearchResultItem {Free = true},
+                            new ProductSearchResultItem {Free = false},
+                            new ProductSearchResultItem {Free = true}
+                        }.AsQueryable());
 
-            ContentSearchManager.SearchConfiguration.Indexes["indexName"] = searchIndex;
-            provider.GetContextIndexName(indexable, Arg.Any<ICorePipeline>()).Returns("indexName");
+                ContentSearchManager.SearchConfiguration.Indexes["indexName"] = searchIndex;
+                provider.GetContextIndexName(indexable, Arg.Any<ICorePipeline>()).Returns("indexName");
 
-            // act
-            var products = sut.GetProducts(indexable);
+                // act
+                var products = sut.GetProducts(indexable);
 
-            // assert
-            Assert.Equal(2, products.Count());
+                // assert
+                Assert.Equal(2, products.Count());
+            }
         }
 
         public class SearchRepository

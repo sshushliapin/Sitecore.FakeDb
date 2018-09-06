@@ -24,7 +24,9 @@
         }
 
         [Theory, AutoDbData]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public void ShouldNotAddItemsNotMarkedAsContent(Db db, [Content] DbItem item, DbItem foreigner)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             db.GetItem(foreigner.ID).Should().BeNull();
         }

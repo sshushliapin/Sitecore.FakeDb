@@ -14,10 +14,15 @@
     public class FakeStandardValuesProviderTest
     {
         [Theory, DefaultAutoData]
-        public void ShouldReturnEmptyStringIfNoTemplateFound(FakeStandardValuesProvider sut, [Greedy] Field field, DataStorageSwitcher switcher)
+        public void ShouldReturnEmptyStringIfNoTemplateFound(
+            FakeStandardValuesProvider sut,
+            [Greedy] Field field,
+            DataStorage dataStorage)
         {
-            // act & assert
-            sut.GetStandardValue(field).Should().BeEmpty();
+            using (new DataStorageSwitcher(dataStorage))
+            {
+                sut.GetStandardValue(field).Should().BeEmpty();
+            }
         }
 
         [Fact]
@@ -25,7 +30,7 @@
         {
             // arrange
             var sut = Substitute.ForPartsOf<FakeStandardValuesProvider>();
-            sut.DataStorage(Arg.Any<Database>()).Returns((DataStorage) null);
+            sut.DataStorage(Arg.Any<Database>()).Returns((DataStorage)null);
 
             var field = new Field(ID.NewID, ItemHelper.CreateInstance());
 

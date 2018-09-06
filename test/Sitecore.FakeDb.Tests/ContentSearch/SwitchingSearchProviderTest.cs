@@ -13,13 +13,15 @@ namespace Sitecore.FakeDb.Tests.ContentSearch
     public class SwitchingSearchProviderTest
     {
         [Theory, AutoData]
-        public void ShouldReturnNullIfCurrentProviderIsNull(SwitchingSearchProvider sut)
+        public void ShouldReturnNullIfCurrentProviderIsNull(
+            SwitchingSearchProvider sut)
         {
             sut.GetContextIndexName(null).Should().BeNull();
         }
 
         [Theory, AutoData]
-        public void ShouldReturnNullByIIndexableAndIPipelineIfCurrentProviderIsNull(SwitchingSearchProvider sut)
+        public void ShouldReturnNullByIIndexableAndIPipelineIfCurrentProviderIsNull(
+            SwitchingSearchProvider sut)
         {
             sut.GetContextIndexName(null, null).Should().BeNull();
         }
@@ -27,26 +29,30 @@ namespace Sitecore.FakeDb.Tests.ContentSearch
         [Theory, DefaultSubstituteAutoData]
         public void ShouldReturnCurrentName(
             [Frozen] SearchProvider current,
-            Switcher<SearchProvider> switcher,
             IIndexable indexable,
             string expected,
             SwitchingSearchProvider sut)
         {
-            current.GetContextIndexName(indexable).Returns(expected);
-            sut.GetContextIndexName(indexable).Should().Be(expected);
+            using (new Switcher<SearchProvider>(current))
+            {
+                current.GetContextIndexName(indexable).Returns(expected);
+                sut.GetContextIndexName(indexable).Should().Be(expected);
+            }
         }
 
         [Theory, DefaultSubstituteAutoData]
         public void ShouldReturnCurrentNameByIIndexableAndIPipeline(
             [Frozen] SearchProvider current,
-            Switcher<SearchProvider> switcher,
             IIndexable indexable,
             ICorePipeline pipeline,
             string expected,
             SwitchingSearchProvider sut)
         {
-            current.GetContextIndexName(indexable, pipeline).Returns(expected);
-            sut.GetContextIndexName(indexable, pipeline).Should().Be(expected);
+            using (new Switcher<SearchProvider>(current))
+            {
+                current.GetContextIndexName(indexable, pipeline).Returns(expected);
+                sut.GetContextIndexName(indexable, pipeline).Should().Be(expected);
+            }
         }
     }
 }
