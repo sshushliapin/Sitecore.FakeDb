@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Linq;
+    using System.Xml;
     using FluentAssertions;
     using NSubstitute;
     using global::AutoFixture.Xunit2;
@@ -14,6 +15,7 @@
     using Sitecore.FakeDb.Data.DataProviders;
     using Sitecore.Globalization;
     using Sitecore.StringExtensions;
+    using Sitecore.Xml;
     using Xunit;
     using Version = Sitecore.Data.Version;
 
@@ -220,20 +222,20 @@
         }
 
         [Theory, DefaultAutoData]
-        public void ChangeTemplateThrowsIfNoDbItemFound([Greedy] FakeDataProvider sut, ItemDefinition def, TemplateChangeList changes)
+        public void ChangeTemplateThrowsIfNoDbItemFound(
+            [Greedy] FakeDataProvider sut,
+            ItemDefinition def)
         {
+            var doc = new XmlDocument();
+            var template = doc.AppendChild(doc.CreateElement("template"));
+            XmlUtil.AddAttribute("name", "template", template);
+            var changes = new TemplateChangeList(
+                Template.Parse(template, new TemplateCollection()),
+                Template.Parse(template, new TemplateCollection()));
+
             Action action = () => sut.ChangeTemplate(def, changes, null);
             action.ShouldThrow<InvalidOperationException>()
                 .WithMessage("Unable to change item template. The item '{0}' is not found.".FormatWith(def.ID));
-        }
-
-        [Theory, DefaultAutoData]
-        public void ChangeTemplateThrowsIfNoTargetTemplateFound([Greedy] FakeDataProvider sut, ItemDefinition def, TemplateChangeList changes, DbItem item)
-        {
-            sut.DataStorage.GetFakeItem(def.ID).Returns(item);
-            Action action = () => sut.ChangeTemplate(def, changes, null);
-            action.ShouldThrow<InvalidOperationException>()
-                .WithMessage("Unable to change item template. The target template is not found.");
         }
 
         [Theory, DefaultAutoData]
@@ -313,7 +315,7 @@
             sut.DataStorage.GetFakeItem(itemDefinition.ID).Returns(parent);
             parent.Children.Add(child1);
             parent.Children.Add(child2);
-            var expected = new IDList {child1.ID, child2.ID};
+            var expected = new IDList { child1.ID, child2.ID };
 
             sut.GetChildIDs(itemDefinition, context).ShouldBeEquivalentTo(expected);
         }
@@ -363,21 +365,21 @@
         [Theory, DefaultAutoData]
         public void ShouldGetTemplateIds([Greedy] FakeDataProvider sut, DbTemplate template)
         {
-            sut.DataStorage.GetFakeTemplates().Returns(new[] {template});
+            sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
             sut.GetTemplateItemIds(null).Should().Contain(template.ID);
         }
 
         [Theory, DefaultAutoData]
         public void ShouldGetTemplatesFromDataStorage([Greedy] FakeDataProvider sut, DbTemplate template)
         {
-            sut.DataStorage.GetFakeTemplates().Returns(new[] {template});
+            sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
             sut.GetTemplates(null).Should().HaveCount(1);
         }
 
         [Theory, DefaultAutoData]
         public void ShouldGetTemplatesWithDefaultDataSectionFromDataStorage([Greedy] FakeDataProvider sut, DbTemplate template)
         {
-            sut.DataStorage.GetFakeTemplates().Returns(new[] {template});
+            sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
 
             var result = sut.GetTemplates(null).First();
 
@@ -387,7 +389,7 @@
         [Theory, DefaultAutoData]
         public void ShouldHaveStandardBaseTemplate([Greedy] FakeDataProvider sut, [NoAutoProperties] DbTemplate template)
         {
-            sut.DataStorage.GetFakeTemplates().Returns(new[] {template});
+            sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
 
             var result = sut.GetTemplates(null).First();
 
@@ -397,7 +399,7 @@
         [Theory, DefaultAutoData]
         public void ShouldGetTemplateFields([Greedy] FakeDataProvider sut, DbTemplate template)
         {
-            sut.DataStorage.GetFakeTemplates().Returns(new[] {template});
+            sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
             template.Fields.Add("Title");
 
             var result = sut.GetTemplates(null).First();
@@ -408,8 +410,8 @@
         [Theory, DefaultAutoData]
         public void ShouldGetTemplateFieldType([Greedy] FakeDataProvider sut, DbTemplate template)
         {
-            sut.DataStorage.GetFakeTemplates().Returns(new[] {template});
-            template.Fields.Add(new DbField("Link") {Type = "General Link"});
+            sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
+            template.Fields.Add(new DbField("Link") { Type = "General Link" });
 
             var result = sut.GetTemplates(null).First();
 
@@ -419,8 +421,8 @@
         [Theory, DefaultAutoData]
         public void ShouldGetTemplateFieldIsShared([Greedy] FakeDataProvider sut, DbTemplate template)
         {
-            sut.DataStorage.GetFakeTemplates().Returns(new[] {template});
-            template.Fields.Add(new DbField("Title") {Shared = true});
+            sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
+            template.Fields.Add(new DbField("Title") { Shared = true });
 
             var result = sut.GetTemplates(null).First();
 
@@ -430,8 +432,8 @@
         [Theory, DefaultAutoData]
         public void ShouldGetTemplateFieldSource([Greedy] FakeDataProvider sut, DbTemplate template)
         {
-            sut.DataStorage.GetFakeTemplates().Returns(new[] {template});
-            template.Fields.Add(new DbField("Multilist") {Source = "/sitecore/content"});
+            sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
+            template.Fields.Add(new DbField("Multilist") { Source = "/sitecore/content" });
 
             var result = sut.GetTemplates(null).First();
 
@@ -472,13 +474,13 @@
         {
             // arrange
             var item = new DbItem("home", def.ID, def.TemplateID)
-                {
-                    Fields =
+            {
+                Fields =
                         {
                             new DbField("Field 1") {{"en", 1, string.Empty}, {"en", 2, string.Empty}, {"da", 1, string.Empty}},
                             new DbField("Field 2") {{"en", 1, string.Empty}, {"da", 1, string.Empty}, {"da", 2, string.Empty}}
                         }
-                };
+            };
 
             sut.DataStorage.GetFakeItem(def.ID).Returns(item);
 
@@ -617,7 +619,7 @@
             sut.AddToPublishQueue(itemId1, action, date, context);
             sut.AddToPublishQueue(itemId2, action, date, context);
             var result = sut.GetPublishQueue(DateTime.MinValue, DateTime.MaxValue, context);
-            result.ShouldBeEquivalentTo(new IDList {itemId1, itemId2});
+            result.ShouldBeEquivalentTo(new IDList { itemId1, itemId2 });
         }
 
         [Theory, DefaultAutoData]
@@ -665,7 +667,7 @@
             sut.AddToPublishQueue(itemId, action, date, context);
             sut.AddToPublishQueue(itemId, action, date, context);
             var result = sut.GetPublishQueue(DateTime.MinValue, DateTime.MaxValue, context);
-            result.ShouldBeEquivalentTo(new IDList {itemId});
+            result.ShouldBeEquivalentTo(new IDList { itemId });
         }
 
         [Theory, DefaultAutoData]
@@ -760,7 +762,7 @@
         public void ShouldResolvePath(string path, [Greedy] FakeDataProvider sut, DbItem item, CallContext context)
         {
             item.FullPath = "/sitecore/content/home";
-            sut.DataStorage.GetFakeItems().Returns(new[] {item});
+            sut.DataStorage.GetFakeItems().Returns(new[] { item });
 
             sut.ResolvePath(path, context).Should().Be(item.ID);
         }
@@ -787,7 +789,7 @@
             const string path = "/sitecore/content/home";
             item1.FullPath = path;
             item2.FullPath = path;
-            sut.DataStorage.GetFakeItems().Returns(new[] {item1, item2});
+            sut.DataStorage.GetFakeItems().Returns(new[] { item1, item2 });
 
             sut.ResolvePath(path, context).Should().Be(item1.ID);
         }
