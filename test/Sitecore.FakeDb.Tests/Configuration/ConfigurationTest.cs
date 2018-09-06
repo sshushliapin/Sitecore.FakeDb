@@ -46,13 +46,6 @@
         }
 
         [Fact]
-        public void ShouldGetFakeStandardValuesProvider()
-        {
-            // assert
-            StandardValuesManager.Provider.Should().BeOfType<FakeStandardValuesProvider>();
-        }
-
-        [Fact]
         public void ShouldDisableAllDataProviderCaches()
         {
             // assert

@@ -121,7 +121,6 @@
     <Compile Include="IThreadLocalProvider.cs" />
     <Compile Include="Links\FakeLinkDatabase.cs" />
     <Compile Include="Links\LinkDatabaseSwitcher.cs" />
-    <Compile Include="Links\LinkProviderSwitcher.cs" />
     <Compile Include="Links\SwitchingLinkProvider.cs" />
     <Compile Include="IdBasedFieldGenerator.cs" />
     <Compile Include="IdNameFieldBuilder.cs" />
@@ -151,17 +150,14 @@
     <Compile Include="Pipelines\ReleaseFakeDb\ResetTemplateEngine.cs" />
     <Compile Include="Profile\FakeUserProfile.cs" />
     <Compile Include="Security\AccessControl\AllowAccessResult.cs" />
-    <Compile Include="Security\AccessControl\AuthorizationSwitcher.cs" />
     <Compile Include="Security\AccessControl\DenyAccessResult.cs" />
     <Compile Include="Security\Accounts\FakeMembershipUser.cs" />
     <Compile Include="Security\Accounts\FakeRolesInRolesProvider.cs" />
-    <Compile Include="Security\Accounts\RolesInRolesSwitcher.cs" />
     <Compile Include="Security\Web\MembershipSwitcher.cs" />
     <Compile Include="Sites\FakeSiteContext.cs" />
     <Compile Include="TemplateTreeBuilder.cs" />
     <Compile Include="ThreadLocalProviderSwitcher.cs" />
     <Compile Include="Resources\Media\FakeMediaProvider.cs" />
-    <Compile Include="Resources\Media\MediaProviderSwitcher.cs" />
     <Compile Include="Security\AccessControl\DbItemAccess.cs" />
     <Compile Include="Configuration\ClientDataStoreStub.cs" />
     <Compile Include="Data\Engines\DataCommands\AddFromTemplateCommand.cs" />

@@ -143,7 +143,6 @@
     <Compile Include="AddContentItemCommandTest.cs" />
     <Compile Include="Samples\ContentSearchProviderSample.cs" />
     <Compile Include="Samples\SwitchingBucketProviderSample.cs" />
-    <Compile Include="Samples\SwitchingLinkProviderSample.cs" />
     <Compile Include="DatabaseSpecimenBuilderTest.cs" />
     <Compile Include="ItemSpecimenBuilderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

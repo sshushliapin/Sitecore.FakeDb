@@ -181,7 +181,7 @@
             {
                 var item = db.GetItem("/sitecore/content/home");
 
-                var linkField = (Sitecore.Data.Fields.LinkField) item.Fields["link"];
+                var linkField = (Sitecore.Data.Fields.LinkField)item.Fields["link"];
 
                 Xunit.Assert.Equal("external", linkField.LinkType);
                 Xunit.Assert.Equal("http://google.com", linkField.Url);
@@ -205,7 +205,7 @@
             {
                 var item = db.GetItem("/sitecore/content/home");
 
-                var linkField = (Sitecore.Data.Fields.LinkField) item.Fields["link"];
+                var linkField = (Sitecore.Data.Fields.LinkField)item.Fields["link"];
 
                 Xunit.Assert.Equal("external", linkField.LinkType);
                 Xunit.Assert.Equal("http://google.com", linkField.Url);
@@ -239,46 +239,10 @@
         }
 
         [Fact]
-        public void HowToMockAuthorizationProvider()
-        {
-            // create sample user
-            var user = Sitecore.Security.Accounts.User.FromName(@"extranet\John", true);
-
-            using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-                {
-                    new Sitecore.FakeDb.DbItem("home")
-                })
-            {
-                Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
-
-                // configure authorization provider mock to deny item read for the user
-                var provider =
-                    Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
-
-                provider
-                    .GetAccess(home, user, Sitecore.Security.AccessControl.AccessRight.ItemRead)
-                    .Returns(new Sitecore.FakeDb.Security.AccessControl.DenyAccessResult());
-
-                // switch the authorization provider
-                using (new Sitecore.FakeDb.Security.AccessControl.AuthorizationSwitcher(provider))
-                {
-                    // check the user cannot read the item
-                    bool canRead =
-                        Sitecore.Security.AccessControl.AuthorizationManager.IsAllowed(
-                            home,
-                            Sitecore.Security.AccessControl.AccessRight.ItemRead,
-                            user);
-
-                    Xunit.Assert.False(canRead);
-                }
-            }
-        }
-
-        [Fact]
         public void HowToMockRoleProvider()
         {
             // create and configure role provider mock
-            string[] roles = {@"sitecore/Authors", @"sitecore/Editors"};
+            string[] roles = { @"sitecore/Authors", @"sitecore/Editors" };
 
             var provider = Substitute.For<System.Web.Security.RoleProvider>();
             provider.GetAllRoles().Returns(roles);
@@ -290,23 +254,6 @@
 
                 Xunit.Assert.True(resultRoles.Contains(@"sitecore/Authors"));
                 Xunit.Assert.True(resultRoles.Contains(@"sitecore/Editors"));
-            }
-        }
-
-        [Fact]
-        public void HowToMockRolesInRolesProvider()
-        {
-            // create and configure roles-in-roles provider mock
-            var role = Sitecore.Security.Accounts.Role.FromName(@"sitecore/Editors");
-            var user = Sitecore.Security.Accounts.User.FromName(@"sitecore/John", false);
-
-            var provider = Substitute.For<Sitecore.Security.Accounts.RolesInRolesProvider>();
-            provider.IsUserInRole(user, role, true).Returns(true);
-
-            // switch the roles-in-roles provider so the mocked version is used
-            using (new Sitecore.FakeDb.Security.Accounts.RolesInRolesSwitcher(provider))
-            {
-                Xunit.Assert.True(user.IsInRole(role));
             }
         }
 
@@ -326,52 +273,6 @@
                 // check if the user exists
                 var exists = Sitecore.Security.Accounts.User.Exists(@"extranet\John");
                 Xunit.Assert.True(exists);
-            }
-        }
-
-        [Fact]
-        public void HowToUnitTestItemSecurityWithMockedProvider()
-        {
-            // create sample item
-            using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-                {
-                    new Sitecore.FakeDb.DbItem("home")
-                })
-            {
-                Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
-
-                // substitute the authorization provider
-                var provider =
-                    Substitute.For<Sitecore.Security.AccessControl.AuthorizationProvider>();
-
-                using (new Sitecore.FakeDb.Security.AccessControl.AuthorizationSwitcher(provider))
-                {
-                    // call your business logic that changes the item security, e.g. denies Read
-                    // for Editors
-                    var account = Sitecore.Security.Accounts.Role.FromName(@"sitecore\Editors");
-                    var accessRight = Sitecore.Security.AccessControl.AccessRight.ItemRead;
-                    var propagationType = Sitecore.Security.AccessControl.PropagationType.Entity;
-                    var permission = Sitecore.Security.AccessControl.AccessPermission.Deny;
-
-                    Sitecore.Security.AccessControl.AccessRuleCollection rules =
-                        new Sitecore.Security.AccessControl.AccessRuleCollection
-                            {
-                                Sitecore.Security.AccessControl.AccessRule.Create
-                                    (account, accessRight, propagationType, permission)
-                            };
-                    Sitecore.Security.AccessControl.AuthorizationManager.SetAccessRules(home, rules);
-
-                    // check the provider is called with proper arguments
-                    provider
-                        .Received()
-                        .SetAccessRules(
-                            home,
-                            NSubstitute.Arg.Is<Sitecore.Security.AccessControl.AccessRuleCollection>(
-                                r => r[0].Account.Name == @"sitecore\Editors"
-                                     && r[0].AccessRight.Name == "item:read"
-                                     && r[0].PropagationType.ToString() == "Entity"
-                                     && r[0].SecurityPermission.ToString() == "DenyAccess"));
-                }
             }
         }
 
@@ -703,67 +604,6 @@
             }
         }
 
-#if !SC72160123 && !SC82160729 && !SC82161115 && !SC82161221
-        [Obsolete("LinkProviderSwitcher is obsolete.")]
-        [Fact]
-        public void HowToSwitchLinkProvider()
-        {
-            // arrange
-            using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-                {
-                    new Sitecore.FakeDb.DbItem("home")
-                })
-            {
-                Sitecore.Data.Items.Item home = db.GetItem("/sitecore/content/home");
-
-                Sitecore.Links.LinkProvider provider = Substitute.For<Sitecore.Links.LinkProvider>();
-                provider.GetItemUrl(home, Arg.Is<Sitecore.Links.UrlOptions>(x => x.AlwaysIncludeServerUrl))
-                    .Returns("http://myawesomeurl.com");
-
-                using (new Sitecore.FakeDb.Links.LinkProviderSwitcher(provider))
-                {
-                    // act
-                    var result = Sitecore.Links.LinkManager.GetItemUrl(home,
-                        new Sitecore.Links.UrlOptions {AlwaysIncludeServerUrl = true});
-
-                    // assert
-                    Xunit.Assert.Equal("http://myawesomeurl.com", result);
-                }
-            }
-        }
-#endif
-
-        [Fact]
-        public void HowToMockMediaItemProvider()
-        {
-            const string MyImageUrl = "~/media/myimage.ashx";
-            Sitecore.Data.ID mediaItemId = Sitecore.Data.ID.NewID;
-
-            // create some media item. Location, fields and template are not important
-            using (Sitecore.FakeDb.Db db = new Sitecore.FakeDb.Db
-                {
-                    new Sitecore.FakeDb.DbItem("my-image", mediaItemId)
-                })
-            {
-                Sitecore.Data.Items.Item mediaItem = db.GetItem(mediaItemId);
-
-                // create media provider mock and configure behaviour
-                Sitecore.Resources.Media.MediaProvider mediaProvider =
-                    NSubstitute.Substitute.For<Sitecore.Resources.Media.MediaProvider>();
-
-                mediaProvider
-                    .GetMediaUrl(Arg.Is<Sitecore.Data.Items.MediaItem>(i => i.ID == mediaItemId))
-                    .Returns(MyImageUrl);
-
-                // substitute the original provider with the mocked one
-                using (new Sitecore.FakeDb.Resources.Media.MediaProviderSwitcher(mediaProvider))
-                {
-                    string mediaUrl = Sitecore.Resources.Media.MediaManager.GetMediaUrl(mediaItem);
-                    Xunit.Assert.Equal(MyImageUrl, mediaUrl);
-                }
-            }
-        }
-
         [Fact]
         public void HowToWorkWithQueryApi()
         {
@@ -822,7 +662,7 @@
                 // configure a search ndex behavior.
                 index.CreateSearchContext()
                     .GetQueryable<Sitecore.ContentSearch.SearchTypes.SearchResultItem>()
-                    .Returns((new[] {searchResultItem}).AsQueryable());
+                    .Returns((new[] { searchResultItem }).AsQueryable());
 
                 // get the item from the search index and check the expectations.
                 Sitecore.Data.Items.Item actualItem =
@@ -889,7 +729,7 @@
 
                 // assert
                 Xunit.Assert.Equal(stream.ToArray(),
-                    ((System.IO.MemoryStream) field.GetBlobStream()).ToArray());
+                    ((System.IO.MemoryStream)field.GetBlobStream()).ToArray());
             }
         }
 
