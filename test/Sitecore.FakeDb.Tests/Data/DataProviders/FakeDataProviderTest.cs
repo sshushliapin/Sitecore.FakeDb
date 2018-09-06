@@ -505,12 +505,14 @@
             sut.GetItemVersions(def, context).Should().BeEmpty();
         }
 
+        [Obsolete]
         [Theory, DefaultAutoData]
         public void ShouldSetPropertyAndReturnTrue(FakeDataProvider sut, string name, string value, CallContext context)
         {
             sut.SetProperty(name, value, context).Should().BeTrue();
         }
 
+        [Obsolete]
         [Theory, DefaultAutoData]
         public void ShouldThrowIfNameIsNullOnSetProperty(FakeDataProvider sut)
         {
@@ -518,6 +520,7 @@
             action.ShouldThrow<ArgumentNullException>().WithMessage("*name");
         }
 
+        [Obsolete]
         [Theory, DefaultAutoData]
         public void ShouldGetProperty(FakeDataProvider sut, string name, string value, CallContext context)
         {
@@ -525,6 +528,7 @@
             sut.GetProperty(name, context).Should().Be(value);
         }
 
+        [Obsolete]
         [Theory, DefaultAutoData]
         public void ShouldThrowIfNameIsNullOnGetProperty(FakeDataProvider sut)
         {
@@ -532,12 +536,14 @@
             action.ShouldThrow<ArgumentNullException>().WithMessage("*name");
         }
 
+        [Obsolete]
         [Theory, DefaultAutoData]
         public void ShouldReturnNullIfNoPropertySet(FakeDataProvider sut, string name, CallContext context)
         {
             sut.GetProperty(name, context).Should().BeNull();
         }
 
+        [Obsolete]
         [Theory, DefaultAutoData]
         public void ShouldResetPropertyAndReturnTheLatestValue(FakeDataProvider sut, string name, string value1, string value2, CallContext context)
         {

@@ -1,6 +1,6 @@
-﻿#if !SC72160123 && !SC80160115
-namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
+﻿namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using NSubstitute;
@@ -25,6 +25,7 @@ namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
     /// </summary>
     public class ContentSearchProviderSample
     {
+        [Obsolete]
         [Theory, DefaultAutoData]
         public void ShouldGetFreeProducts(
             SearchRepository sut,
@@ -86,4 +87,3 @@ namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
         }
     }
 }
-#endif

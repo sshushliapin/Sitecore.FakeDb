@@ -6,7 +6,7 @@
     public class ClientDataStoreStub : ClientDataStore
     {
         public ClientDataStoreStub()
-            : base(new TimeSpan(), false)
+            : base(new TimeSpan(), new EventQueueStub(), new EventManagerStub())
         {
         }
 

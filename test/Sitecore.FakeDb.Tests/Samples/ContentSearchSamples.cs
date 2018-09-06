@@ -1,6 +1,6 @@
-﻿#if !SC72160123 && !SC80160115
-namespace Sitecore.FakeDb.Tests.Samples
+﻿namespace Sitecore.FakeDb.Tests.Samples
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using NSubstitute;
@@ -15,6 +15,7 @@ namespace Sitecore.FakeDb.Tests.Samples
     /// </summary>
     public class ContentSearchSamples
     {
+        [Obsolete]
         [Fact]
         public void ShouldGetProducts()
         {
@@ -70,4 +71,3 @@ namespace Sitecore.FakeDb.Tests.Samples
         }
     }
 }
-#endif

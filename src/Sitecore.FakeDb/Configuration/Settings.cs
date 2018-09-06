@@ -20,28 +20,25 @@
             this.section = section;
         }
 
-        protected internal XmlDocument ConfigSection
-        {
-            get { return this.section; }
-        }
+        protected internal XmlDocument ConfigSection => this.section;
 
         public bool AutoTranslate
         {
-            get { return MainUtil.GetBool(this[AutoTranslateSetting], false); }
-            set { this[AutoTranslateSetting] = value.ToString().ToLower(); }
+            get => MainUtil.GetBool(this[AutoTranslateSetting], false);
+            set => this[AutoTranslateSetting] = value.ToString().ToLower();
         }
 
 
         public string AutoTranslatePrefix
         {
-            get { return this[AutoTranslatePrefixSetting]; }
-            set { this[AutoTranslatePrefixSetting] = value; }
+            get => this[AutoTranslatePrefixSetting];
+            set => this[AutoTranslatePrefixSetting] = value;
         }
 
         public string AutoTranslateSuffix
         {
-            get { return this[AutoTranslateSuffixSetting]; }
-            set { this[AutoTranslateSuffixSetting] = value; }
+            get => this[AutoTranslateSuffixSetting];
+            set => this[AutoTranslateSuffixSetting] = value;
         }
 
         public virtual string this[string name]
@@ -69,7 +66,9 @@
                     settingsNode.AppendChild(setting);
                 }
 
+#pragma warning disable 618
                 Sitecore.Configuration.Settings.Reset();
+#pragma warning restore 618
             }
         }
 

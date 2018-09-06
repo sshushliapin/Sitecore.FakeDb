@@ -155,6 +155,7 @@
             t2.Wait();
         }
 
+        [Obsolete]
         [Theory(Skip = "Not supported in Sitecore 9"), AutoData]
         public void ShouldBeThreadLocalDatabaseProperties(string propertyName, string expectedValue, string unexpectedValue)
         {

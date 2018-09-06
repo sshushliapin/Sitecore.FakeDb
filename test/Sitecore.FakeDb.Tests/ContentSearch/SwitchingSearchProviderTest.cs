@@ -1,6 +1,6 @@
-﻿#if !SC72160123 && !SC80160115
-namespace Sitecore.FakeDb.Tests.ContentSearch
+﻿namespace Sitecore.FakeDb.Tests.ContentSearch
 {
+    using System;
     using FluentAssertions;
     using NSubstitute;
     using global::AutoFixture.Xunit2;
@@ -19,6 +19,7 @@ namespace Sitecore.FakeDb.Tests.ContentSearch
             sut.GetContextIndexName(null).Should().BeNull();
         }
 
+        [Obsolete]
         [Theory, AutoData]
         public void ShouldReturnNullByIIndexableAndIPipelineIfCurrentProviderIsNull(
             SwitchingSearchProvider sut)
@@ -40,6 +41,7 @@ namespace Sitecore.FakeDb.Tests.ContentSearch
             }
         }
 
+        [Obsolete]
         [Theory, DefaultSubstituteAutoData]
         public void ShouldReturnCurrentNameByIIndexableAndIPipeline(
             [Frozen] SearchProvider current,
@@ -56,4 +58,3 @@ namespace Sitecore.FakeDb.Tests.ContentSearch
         }
     }
 }
-#endif

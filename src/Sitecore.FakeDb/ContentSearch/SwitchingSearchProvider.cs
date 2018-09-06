@@ -1,29 +1,25 @@
-﻿#if !SC72160123 && !SC80160115
-namespace Sitecore.FakeDb.ContentSearch
+﻿namespace Sitecore.FakeDb.ContentSearch
 {
+    using System;
     using Sitecore.Abstractions;
     using Sitecore.Common;
     using Sitecore.ContentSearch;
 
     public class SwitchingSearchProvider : SearchProvider
     {
-        static SwitchingSearchProvider()
-        {
-            // TODO: Workaround. Have to request the Locator property to get the internal field initialized.
-            ContentSearchManager.Locator.GetInstance<ICorePipeline>();
-        }
-
         public override string GetContextIndexName(IIndexable indexable)
         {
             var currentProvider = Switcher<SearchProvider>.CurrentValue;
             return currentProvider != null ? currentProvider.GetContextIndexName(indexable) : null;
         }
 
+        [Obsolete("ICorePipeline is obsolete in Sitecore")]
+#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
         public override string GetContextIndexName(IIndexable indexable, ICorePipeline pipeline)
+#pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
         {
             var currentProvider = Switcher<SearchProvider>.CurrentValue;
-            return currentProvider != null ? currentProvider.GetContextIndexName(indexable, pipeline) : null;
+            return currentProvider?.GetContextIndexName(indexable, pipeline);
         }
     }
 }
-#endif

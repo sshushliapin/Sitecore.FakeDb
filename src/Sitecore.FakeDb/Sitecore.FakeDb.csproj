@@ -79,6 +79,8 @@
     <Compile Include="Buckets\SwitchingBucketProvider.cs" />
     <Compile Include="CompositeFieldBuilder.cs" />
     <Compile Include="Configuration\ConfigReader.cs" />
+    <Compile Include="Configuration\EventManagerStub.cs" />
+    <Compile Include="Configuration\EventQueueStub.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="ContentSearch\SwitchingSearchProvider.cs" />
     <Compile Include="Data\DataProviders\SwitchingLanguageDataProvider.cs" />

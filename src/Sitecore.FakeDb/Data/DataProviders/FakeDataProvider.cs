@@ -34,10 +34,7 @@
             this.dataStorage = dataStorage;
         }
 
-        public virtual DataStorage DataStorage
-        {
-            get { return this.dataStorage ?? DataStorageSwitcher.CurrentValue(this.Database.Name); }
-        }
+        public virtual DataStorage DataStorage => this.dataStorage ?? DataStorageSwitcher.CurrentValue(this.Database.Name);
 
         public override bool AddToPublishQueue(ID itemId, string action, DateTime date, CallContext context)
         {
@@ -50,12 +47,10 @@
             return true;
         }
 
-#if !SC80160115 // Missing in 8.0
         public override bool AddToPublishQueue(ID itemId, string action, DateTime date, string language, CallContext context)
         {
             return this.AddToPublishQueue(itemId, action, date, context);
         }
-#endif
 
         public override int AddVersion(ItemDefinition itemDefinition, VersionUri baseVersion, CallContext context)
         {
@@ -89,7 +84,7 @@
             Assert.ArgumentNotNull(copyName, "copyName");
             Assert.ArgumentNotNull(copyId, "copyId");
 
-            var copy = new DbItem(copyName, copyId, source.TemplateID) {ParentID = destination.ID};
+            var copy = new DbItem(copyName, copyId, source.TemplateID) { ParentID = destination.ID };
             var sourceDbItem = this.DataStorage.GetFakeItem(source.ID);
             Assert.IsNotNull(sourceDbItem, "Unable to copy item '{0}'. The source item '{1}' is not found.", copyName, source.ID);
 
@@ -106,7 +101,7 @@
             Assert.ArgumentNotNull(templateId, "templateId");
             Assert.ArgumentNotNull(parent, "parent");
 
-            var item = new DbItem(itemName, itemId, templateId) {ParentID = parent.ID};
+            var item = new DbItem(itemName, itemId, templateId) { ParentID = parent.ID };
             this.DataStorage.AddFakeItem(item);
 
             // TODO: Should not require the version removing.
@@ -143,7 +138,7 @@
             }
 
             var fakeItem = this.DataStorage.GetFakeItem(itemDefinition.ID);
-            return fakeItem != null ? fakeItem.ParentID : null;
+            return fakeItem?.ParentID;
         }
 
         public override IDList GetPublishQueue(DateTime @from, DateTime to, CallContext context)
@@ -189,18 +184,12 @@
 
             var ids = this.DataStorage.GetFakeTemplates().Select(t => t.ID).ToArray();
 
-            return new IdCollection {ids};
+            return new IdCollection { ids };
         }
 
         public override ItemDefinition GetItemDefinition(ID itemId, CallContext context)
         {
-            if (this.DataStorage == null)
-            {
-                return null;
-            }
-
-            var item = this.DataStorage.GetFakeItem(itemId);
-
+            var item = this.DataStorage?.GetFakeItem(itemId);
             return item != null ? new ItemDefinition(itemId, item.Name, item.TemplateID, ID.Null) : null;
         }
 
@@ -289,11 +278,7 @@
             Assert.IsNotNull(newDestination, "Unable to move item. The destination item '{0}' is not found.", destination.ID);
 
             var oldParent = this.DataStorage.GetFakeItem(item.ParentID);
-            if (oldParent != null)
-            {
-                oldParent.Children.Remove(item);
-            }
-
+            oldParent?.Children.Remove(item);
             newDestination.Children.Add(item);
 
             return true;
@@ -324,7 +309,7 @@
             itemPath = StringUtil.RemovePostfix("/", itemPath);
             var item = storage.GetFakeItems().FirstOrDefault(fi => string.Compare(fi.FullPath, itemPath, StringComparison.OrdinalIgnoreCase) == 0);
 
-            return item != null ? item.ID : null;
+            return item?.ID;
         }
 
         public override bool SaveItem(ItemDefinition itemDefinition, ItemChanges changes, CallContext context)
@@ -364,9 +349,9 @@
                     else
                     {
                         item.Fields.Add(new DbField(change.FieldID)
-                            {
-                                Value = change.Value
-                            });
+                        {
+                            Value = change.Value
+                        });
                     }
                 }
             }
@@ -404,13 +389,14 @@
         /// <param name="value">The property value.</param>
         /// <param name="context">The context. Ignored.</param>
         /// <returns>Always True.</returns>
+        [Obsolete]
         public override bool SetProperty(string name, string value, CallContext context)
         {
             Assert.ArgumentNotNull(name, "name");
             var currentProp = this.properties.Value;
             if (currentProp == null)
             {
-                this.properties.Value = new Dictionary<string, string> {{name, value}};
+                this.properties.Value = new Dictionary<string, string> { { name, value } };
             }
             else
             {
@@ -426,6 +412,7 @@
         /// <param name="name">The property name.</param>
         /// <param name="context">The context. Ignored.</param>
         /// <returns>The property value if exists. Otherwise null.</returns>
+        [Obsolete]
         public override string GetProperty(string name, CallContext context)
         {
             Assert.ArgumentNotNull(name, "name");
@@ -481,10 +468,10 @@
             foreach (var field in source.Fields)
             {
                 copy.Fields.Add(new DbField(field.Name, field.ID)
-                    {
-                        Shared = field.Shared,
-                        Type = field.Type
-                    });
+                {
+                    Shared = field.Shared,
+                    Type = field.Type
+                });
 
                 if (field.Shared)
                 {
@@ -511,9 +498,9 @@
                 this.Date = date;
             }
 
-            public ID ItemId { get; private set; }
+            public ID ItemId { get; }
 
-            public DateTime Date { get; private set; }
+            public DateTime Date { get; }
         }
     }
 }
