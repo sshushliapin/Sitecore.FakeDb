@@ -19,7 +19,7 @@
         {
             var t1 = Task.Factory.StartNew(() =>
             {
-                using (var db = new Db {new DbItem("Home")})
+                using (var db = new Db { new DbItem("Home") })
                 {
                     Thread.Sleep(1000);
                     db.GetItem("/sitecore/content/home").Should().NotBeNull("the Home item is expected");
@@ -45,7 +45,7 @@
 
             var t1 = Task.Factory.StartNew(() =>
             {
-                using (var db = new Db {new DbTemplate(id)})
+                using (var db = new Db { new DbTemplate(id) })
                 {
                     Thread.Sleep(1000);
                     db.Database.Templates[id].Should().NotBeNull("the Home template is expected");
@@ -155,7 +155,7 @@
             t2.Wait();
         }
 
-        [Theory, AutoData]
+        [Theory(Skip = "Not supported in Sitecore 9"), AutoData]
         public void ShouldBeThreadLocalDatabaseProperties(string propertyName, string expectedValue, string unexpectedValue)
         {
             var t1 = Task.Factory.StartNew(() =>
@@ -195,7 +195,7 @@
                     db.Database.DataManager.DataSource.AddToPublishQueue(expectedValue, action, date);
                     Thread.Sleep(1000);
                     db.Database.DataManager.DataSource.GetPublishQueue(date, date)
-                        .ShouldBeEquivalentTo(new IDList {expectedValue});
+                        .ShouldBeEquivalentTo(new IDList { expectedValue });
                 }
             });
 

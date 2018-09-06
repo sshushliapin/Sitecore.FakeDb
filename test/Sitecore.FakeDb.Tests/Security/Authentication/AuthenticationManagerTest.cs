@@ -50,7 +50,7 @@
             }
         }
 
-        [Theory]
+        [Theory(Skip = "Not supported in Sitecore 9")]
         [InlineData(true)]
         [InlineData(false)]
         public void ShouldLoginUser(bool login)
