@@ -1,1 +1,1 @@
-%WINDIR%/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe Build.msbuild /p:Configuration=Release /t:Versions /p:NoWarn=1591 /fileLogger
+"%PROGRAMFILES(X86)%\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe" Build.msbuild /p:Configuration=Release /t:Versions /p:NoWarn=1591 /p:RunCodeAnalysis=true;CodeAnalysisRuleSet=..\..\Sitecore.FakeDb.ruleset /fileLogger
