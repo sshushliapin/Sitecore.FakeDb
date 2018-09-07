@@ -3,7 +3,6 @@
     using System;
     using FluentAssertions;
     using global::AutoFixture;
-    using global::AutoFixture;
     using global::AutoFixture.Xunit2;
     using Xunit;
 
