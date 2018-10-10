@@ -135,13 +135,11 @@ namespace Sitecore.FakeDb.Links
             return current != null ? current.ParseRequestUrl(request) : base.ParseRequestUrl(request);
         }
 
-#if !SC72160123 && !SC80160115
         public override SiteInfo ResolveTargetSite(Item item)
         {
             var current = this.CurrentProvider;
             return current != null ? current.ResolveTargetSite(item) : base.ResolveTargetSite(item);
         }
-#endif
 
         public override string ExpandDynamicLinks(string text, bool resolveSites)
         {
