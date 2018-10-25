@@ -1,4 +1,10 @@
-﻿1.7.1
+﻿1.7.3
+* [FIX] #200: Unable to set to the ValidFrom of the latest version
+
+1.7.2
+* [FIX] #195: Content search config in SC9 uses incorrect class name
+
+1.7.1
 * [FIX] #191: Added references to Sitecore pipelines necessary for testing updates to layout fields with Sitecore 9 (thanks to [@AndyButland](https://github.com/AndyButland))
 
 1.7.0

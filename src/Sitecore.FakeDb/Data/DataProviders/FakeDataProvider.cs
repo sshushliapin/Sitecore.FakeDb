@@ -362,10 +362,9 @@
           }
           else
           {
-            item.Fields.Add(new DbField(change.FieldID)
-            {
-              Value = change.Value
-            });
+            var newField = new DbField(change.FieldID);
+            newField.SetValue(change.Language.Name, change.Version.Number, change.Value);
+            item.Fields.Add(newField);
           }
         }
       }
