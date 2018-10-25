@@ -1,16 +1,19 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Engines
 {
-    using global::AutoFixture.Xunit2;
-    using Sitecore.Common;
     using Sitecore.FakeDb.Data.Engines;
     using Xunit;
 
     public class DataStorageSwitcherTest
     {
         [Theory, DefaultAutoData]
-        public void ShouldSwitchDataStorage([Frozen] DataStorage dataStorage, DataStorageSwitcher sut)
+        public void ShouldSwitchDataStorage(
+            DataStorage expected)
         {
-            Assert.Same(dataStorage, DataStorageSwitcher.CurrentValue(dataStorage.Database.Name));
+            using (new DataStorageSwitcher(expected))
+            {
+                var actual = DataStorageSwitcher.CurrentValue(expected.Database.Name);
+                Assert.Same(expected, actual);
+            }
         }
     }
 }

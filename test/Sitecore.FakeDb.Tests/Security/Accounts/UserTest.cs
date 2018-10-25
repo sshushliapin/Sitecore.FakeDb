@@ -74,25 +74,6 @@
             }
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ShouldCheckIfUserIsInRoleUsingRolesInRolesManager(bool isInRole)
-        {
-            // arrange
-            var user = User.FromName(UserName, true);
-            var role = Role.FromName(@"sitecore\Editor");
-
-            var rolesProvider = Substitute.For<RolesInRolesProvider>();
-            rolesProvider.IsUserInRole(user, role, true).Returns(isInRole);
-
-            using (new RolesInRolesSwitcher(rolesProvider))
-            {
-                // act & assert
-                user.IsInRole(@"sitecore\Editor").Should().Be(isInRole);
-            }
-        }
-
         [Fact]
         public void ShouldNotBeAdministratorByDefault()
         {

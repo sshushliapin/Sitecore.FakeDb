@@ -10,9 +10,14 @@ namespace Sitecore.FakeDb.Tests.Data.Engines.DataCommands.Prototypes
     public class GetVersionsCommandPrototypeTest
     {
         [Theory, DefaultAutoData]
-        public void ShouldCreateInstance(GetVersionsCommandPrototype sut, DataStorageSwitcher switcher)
+        public void ShouldCreateInstance(
+            GetVersionsCommandPrototype sut,
+            DataStorage dataStorage)
         {
-            ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<GetVersionsCommand>();
+            using (new DataStorageSwitcher(dataStorage))
+            {
+                ReflectionUtil.CallMethod(sut, "CreateInstance").Should().BeOfType<GetVersionsCommand>();
+            }
         }
     }
 }

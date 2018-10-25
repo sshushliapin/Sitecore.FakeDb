@@ -162,17 +162,6 @@
         }
 
         [Fact]
-        [Obsolete]
-        public void ShouldGetReferrersDeep()
-        {
-            // arrange
-            this.behavior.GetReferrers(this.item, false).Returns(this.links);
-
-            // act & assert
-            this.linkDatabase.GetReferrers(this.item, false).ShouldBeEquivalentTo(this.links);
-        }
-
-        [Fact]
         public void ShouldCallHasExternalReferrers()
         {
             // arrange

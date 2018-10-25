@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Sitecore FakeDb" Description="Sitecore FakeDb rules." ToolsVersion="14.0">
+<RuleSet Name="Sitecore FakeDb" Description="Sitecore FakeDb rules." ToolsVersion="15.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CS0618" Action="Error" />
     <Rule Id="CS1591" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
+    <Rule Id="CS0105" Action="Error" />
   </Rules>
 </RuleSet>

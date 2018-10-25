@@ -27,9 +27,14 @@
         }
 
         [Theory, AutoData]
-        public void SutGetCurrentProvider(SwitchingLinkProvider sut, Switcher<LinkProvider> switcher)
+        public void SutGetCurrentProvider(
+            SwitchingLinkProvider sut,
+            LinkProvider expected)
         {
-            sut.CurrentProvider.Should().BeSameAs(Switcher<LinkProvider>.CurrentValue);
+            using (new Switcher<LinkProvider>(expected))
+            {
+                sut.CurrentProvider.Should().BeSameAs(expected);
+            }
         }
 
         [Theory, SwitchingAutoData]
@@ -185,7 +190,6 @@
             sut.ParseRequestUrl(request).Should().NotBeNull();
         }
 
-#if !SC72160123 && !SC80160115
         [Theory, SwitchingAutoData]
         public void ResolveTargetSiteCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, Item item)
         {
@@ -196,11 +200,12 @@
         }
 
         [Theory, SwitchingAutoData]
-        public void ResolveTargetSiteCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, HttpRequest request, Item item)
+        public void ResolveTargetSiteCallsBaseProviderIfCurrentNotSet(
+            SwitchingLinkProvider sut,
+            Item item)
         {
             sut.ResolveTargetSite(item);
         }
-#endif
 
         [Theory, SwitchingAutoData]
         public void ExpandDynamicLinksCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, string text, bool resolveSite)
@@ -212,7 +217,10 @@
         }
 
         [Theory, SwitchingAutoData]
-        public void ExpandDynamicLinksCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, HttpRequest request, string text, bool resolveSites)
+        public void ExpandDynamicLinksCallsBaseProviderIfCurrentNotSet(
+            SwitchingLinkProvider sut,
+            string text,
+            bool resolveSites)
         {
             sut.ExpandDynamicLinks(text, resolveSites);
         }

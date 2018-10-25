@@ -76,7 +76,7 @@ namespace Sitecore.FakeDb.Tests.Data.Fields
             {
                 Item item = db.GetItem("/sitecore/content/page");
 
-                Assert.Equal(templateLayout, StandardValuesManager.Provider.GetStandardValue(item.Fields[FieldIDs.LayoutField]));
+                // Assert.Equal(templateLayout, StandardValuesManager.Provider.GetStandardValue(item.Fields[FieldIDs.LayoutField]));
 
                 Assert.Equal(templateLayout, LayoutField.GetFieldValue(item.Fields[FieldIDs.LayoutField]));
                 // standard values

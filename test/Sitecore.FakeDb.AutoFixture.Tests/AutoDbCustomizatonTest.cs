@@ -20,7 +20,9 @@
         }
 
         [Theory, AutoDbData]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public void ShouldInitializeDatabase(Database database)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
             Action action = () => Database.GetDatabase("master").GetItem("/sitecore/content");
             action.ShouldNotThrow();

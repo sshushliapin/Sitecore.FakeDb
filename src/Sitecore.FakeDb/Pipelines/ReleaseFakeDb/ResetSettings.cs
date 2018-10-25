@@ -7,7 +7,9 @@
     {
         public void Process(PipelineArgs args)
         {
+#pragma warning disable 618
             Settings.Reset();
+#pragma warning restore 618
         }
     }
 }

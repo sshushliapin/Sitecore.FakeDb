@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sitecore.FakeDb.Tests</RootNamespace>
     <AssemblyName>Sitecore.FakeDb.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -221,7 +221,6 @@
     <Compile Include="GlobalsTest.cs" />
     <Compile Include="Links\FakeLinkDatabaseTest.cs" />
     <Compile Include="Links\LinkManagerTest.cs" />
-    <Compile Include="Links\LinkProviderSwitcherTest.cs" />
     <Compile Include="Links\SwitchingLinkProviderTest.cs" />
     <Compile Include="IdBasedFieldGeneratorTest.cs" />
     <Compile Include="IdNameFieldBuilderTest.cs" />
@@ -239,13 +238,10 @@
     <Compile Include="Runtime\FluentAssertionsTest.cs" />
     <Compile Include="Samples\ContentSearchSamples.cs" />
     <Compile Include="Security\AccessControl\AllowAccessResultTest.cs" />
-    <Compile Include="Security\AccessControl\AuthorizationSwitcherTest.cs" />
     <Compile Include="Security\AccessControl\DenyAccessResultTest.cs" />
     <Compile Include="Security\AccessControl\ItemSecurityTest.cs" />
     <Compile Include="Security\Accounts\FakeRolesInRolesProviderTest.cs" />
     <Compile Include="Security\Accounts\UserTest.cs" />
-    <Compile Include="Security\Accounts\RolesInRolesSwitcherTest.cs" />
-    <Compile Include="Security\Authentication\AuthenticationSwitcherTest.cs" />
     <Compile Include="Security\MembershipSwitcherTest.cs" />
     <Compile Include="Security\FakeMembershipProviderTest.cs" />
     <Compile Include="Security\RoleProviderSwitcherTest.cs" />
@@ -265,9 +261,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\Query\QueryTest.cs" />
     <Compile Include="Resources\Media\FakeMediaProviderTest.cs" />
-    <Compile Include="Resources\Media\MediaProviderSwitcherTest.cs" />
     <Compile Include="SecurityModel\FakeDomainProviderTest.cs" />
-    <Compile Include="Security\AccessControl\AuthorizationManagerTest.cs" />
     <Compile Include="Security\AccessControl\DbItemAccessTest.cs" />
     <Compile Include="Security\AccessControl\FakeAuthorizationProviderTest.cs" />
     <Compile Include="Security\Accounts\UserSwitcherTest.cs" />

@@ -153,7 +153,7 @@
         public void ShouldCreateItemOfVersionOne()
         {
             // arrange & act
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 var item = db.Database.GetItem("/sitecore/content/home");
 
@@ -168,7 +168,7 @@
         public void ShouldCreateItemTemplate()
         {
             // arrange & act
-            using (var db = new Db {new DbTemplate("products")})
+            using (var db = new Db { new DbTemplate("products") })
             {
                 // assert
                 db.Database.GetTemplate("products").Should().NotBeNull();
@@ -228,7 +228,7 @@
         public void ShouldGetItemInInvariantLanguage()
         {
             // arrange
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 // act
                 var item = db.GetItem("/sitecore/content/home", Language.Invariant.Name);
@@ -243,7 +243,7 @@
         public void ShouldGetItemInInvariantLanguageAndVersion()
         {
             // arrange
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 // act
                 var item = db.GetItem("/sitecore/content/home", Language.Invariant.Name, 1);
@@ -261,7 +261,7 @@
             var id = new ID("{91494A40-B2AE-42B5-9469-1C7B023B886B}");
 
             // act
-            using (var db = new Db {new DbItem("myitem", id)})
+            using (var db = new Db { new DbItem("myitem", id) })
             {
                 var i = db.Database.GetItem(id);
 
@@ -327,10 +327,10 @@
         public void ShouldGenerateTemplateIdIfNotSet()
         {
             // arrange
-            var template = new DbTemplate((ID) null);
+            var template = new DbTemplate((ID)null);
 
             // act
-            using (new Db {template})
+            using (new Db { template })
             {
                 // assert
                 template.ID.Should().NotBeNull();
@@ -343,7 +343,7 @@
         {
             // arrange
             var id = ID.NewID;
-            using (var db = new Db {new DbItem("my item", id)})
+            using (var db = new Db { new DbItem("my item", id) })
             {
                 // act & assert
                 db.GetItem(id).Should().NotBeNull();
@@ -355,7 +355,7 @@
         {
             // arrange
             var id = ID.NewID;
-            using (var db = new Db {new DbItem("my item", id)})
+            using (var db = new Db { new DbItem("my item", id) })
             {
                 // act & assert
                 db.GetItem(id, "en").Should().NotBeNull();
@@ -367,7 +367,7 @@
         {
             // arrange
             var id = ID.NewID;
-            using (var db = new Db {new DbItem("my item", id)})
+            using (var db = new Db { new DbItem("my item", id) })
             {
                 // act & assert
                 db.GetItem(id, "en", 1).Should().NotBeNull();
@@ -378,7 +378,7 @@
         public void ShouldGetItemByPath()
         {
             // arrange
-            using (var db = new Db {new DbItem("my item")})
+            using (var db = new Db { new DbItem("my item") })
             {
                 // act & assert
                 db.GetItem("/sitecore/content/my item").Should().NotBeNull();
@@ -389,7 +389,7 @@
         public void ShouldGetItemByPathAndLanguage()
         {
             // arrange
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 // act & assert
                 db.GetItem("/sitecore/content/home", "en").Should().NotBeNull();
@@ -443,7 +443,7 @@
         public void ShouldGetItemParent()
         {
             // arrange
-            using (var db = new Db {new DbItem("item")})
+            using (var db = new Db { new DbItem("item") })
             {
                 // act
                 var parent = db.GetItem("/sitecore/content/item").Parent;
@@ -621,7 +621,7 @@
         public void ShouldRenameItem()
         {
             // arrange
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 var home = db.Database.GetItem("/sitecore/content/home");
 
@@ -688,7 +688,7 @@
             var child = new DbItem("child");
 
             // act
-            using (var db = new Db {parent})
+            using (var db = new Db { parent })
             {
                 child.ParentID = parent.ID;
                 db.Add(child);
@@ -708,7 +708,7 @@
             parent.Add(child);
 
             // act
-            using (new Db {parent})
+            using (new Db { parent })
             {
                 // assert
                 child.FullPath.Should().Be("/sitecore/content/parent/child");
@@ -730,7 +730,7 @@
         public void ShouldSetDefaultLanguage()
         {
             // arrange & act
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 var item = db.Database.GetItem("/sitecore/content/home");
 
@@ -746,7 +746,7 @@
             var item = new DbItem("home");
 
             // act
-            using (new Db {item})
+            using (new Db { item })
             {
                 // asert
                 item.FullPath.Should().Be("/sitecore/content/home");
@@ -760,7 +760,7 @@
             var item = new DbItem("home");
 
             // act
-            using (new Db {item})
+            using (new Db { item })
             {
                 // assert
                 item.ParentID.Should().Be(ItemIDs.ContentRoot);
@@ -835,7 +835,7 @@
             // arrange
             var id = new ID("{57289DB1-1C33-46DF-A7BA-C214B7F4C54C}");
 
-            using (var db = new Db {new DbItem("old home", id)})
+            using (var db = new Db { new DbItem("old home", id) })
             {
                 // act
                 Action action = () => db.Add(new DbItem("new home", id));
@@ -852,7 +852,7 @@
             // arrange
             var id = new ID("{825697FD-5EED-47ED-8404-E9A47D7D6BDF}");
 
-            using (var db = new Db {new DbTemplate("old product", id)})
+            using (var db = new Db { new DbTemplate("old product", id) })
             {
                 // act
                 Action action = () => db.Add(new DbTemplate("new product", id));
@@ -870,7 +870,7 @@
             var existingItemId = new ID("{61A9DB3D-8929-4472-A952-543F5304E341}");
             var newItemTemplateId = existingItemId;
 
-            using (var db = new Db {new DbItem("existing item", existingItemId)})
+            using (var db = new Db { new DbItem("existing item", existingItemId) })
             {
                 // act
                 Action action = () => db.Add(new DbItem("new item", ID.NewID, newItemTemplateId));
@@ -907,7 +907,7 @@
         public void ShouldBeEqualsButNotSame()
         {
             // arrange
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 // act
                 var item1 = db.GetItem("/sitecore/content/Home");
@@ -1050,8 +1050,8 @@
             using (var db = new Db())
             {
                 // act
-                db.Add(new DbItem("item1") {{"field1", "item1-field1-value"}, {"field2", "item1-field2-value"}});
-                db.Add(new DbItem("item2") {{"field1", "item2-field1-value"}, {"field2", "item2-field2-value"}});
+                db.Add(new DbItem("item1") { { "field1", "item1-field1-value" }, { "field2", "item1-field2-value" } });
+                db.Add(new DbItem("item2") { { "field1", "item2-field1-value" }, { "field2", "item2-field2-value" } });
 
                 // assert
                 db.GetItem("/sitecore/content/item1")["field1"].Should().Be("item1-field1-value");
@@ -1093,7 +1093,7 @@
         public void ShouldCreateItemWithStatisticsUsingItemManager()
         {
             // arrange
-            using (var db = new Db {new DbTemplate("Sample", this.templateId)})
+            using (var db = new Db { new DbTemplate("Sample", this.templateId) })
             {
                 var root = db.Database.GetItem("/sitecore/content");
 
@@ -1113,7 +1113,7 @@
         public void ShouldCheckIfItemHasChildren()
         {
             // arrange
-            using (var db = new Db {new DbItem("Home")})
+            using (var db = new Db { new DbItem("Home") })
             {
                 // act & assert
                 db.GetItem("/sitecore/content").Children.Count.Should().Be(1);
@@ -1125,7 +1125,7 @@
         public void ShouldDeleteItemChildren()
         {
             // arrange
-            using (var db = new Db {new DbItem("Home")})
+            using (var db = new Db { new DbItem("Home") })
             {
                 // act
                 db.GetItem("/sitecore/content").DeleteChildren();
@@ -1140,7 +1140,7 @@
         public void ShouldCreateTemplateIfNoTemplateProvided()
         {
             // arrange
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 // act
                 var item = db.GetItem("/sitecore/content/home");
@@ -1230,7 +1230,7 @@
         public void ShouldAccessTemplateAsTemplate()
         {
             // arrange
-            using (var db = new Db {new DbTemplate("Main", this.templateId)})
+            using (var db = new Db { new DbTemplate("Main", this.templateId) })
             {
                 // act & assert
                 TemplateManager.GetTemplate(this.templateId, db.Database).ID.Should().Be(this.templateId);
@@ -1242,7 +1242,7 @@
         public void ShouldAccessTemplateAsItem()
         {
             // arrange
-            using (var db = new Db {new DbTemplate("Main", this.templateId)})
+            using (var db = new Db { new DbTemplate("Main", this.templateId) })
             {
                 // act
                 var item = db.GetItem("/sitecore/templates/Main");
@@ -1307,19 +1307,19 @@
         }
 
         [Theory]
-        [InlineData("CanRead", WellknownRights.ItemRead, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:read|")]
-        [InlineData("CanRead", WellknownRights.ItemRead, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:read|")]
-        [InlineData("CanWrite", WellknownRights.ItemWrite, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:write|")]
-        [InlineData("CanWrite", WellknownRights.ItemWrite, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:write|")]
-        [InlineData("CanRename", WellknownRights.ItemRename, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:rename|")]
-        [InlineData("CanRename", WellknownRights.ItemRename, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:rename|")]
-        [InlineData("CanCreate", WellknownRights.ItemCreate, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:create|")]
-        [InlineData("CanCreate", WellknownRights.ItemCreate, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:create|")]
-        [InlineData("CanDelete", WellknownRights.ItemDelete, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:delete|")]
-        [InlineData("CanDelete", WellknownRights.ItemDelete, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:delete|")]
-        [InlineData("CanAdmin", WellknownRights.ItemAdmin, true, SecurityPermission.AllowAccess, @"au|extranet\John|pe|+item:admin|")]
-        [InlineData("CanAdmin", WellknownRights.ItemAdmin, false, SecurityPermission.DenyAccess, @"au|extranet\John|pe|-item:admin|")]
-        public void ShouldSetItemAccessRules(string propertyName, string accessRight, bool actualPermission, SecurityPermission expectedPermission, string expectedSecurity)
+        [InlineData("CanRead", true, @"au|extranet\John|pe|+item:read|")]
+        [InlineData("CanRead", false, @"au|extranet\John|pe|-item:read|")]
+        [InlineData("CanWrite", true, @"au|extranet\John|pe|+item:write|")]
+        [InlineData("CanWrite", false, @"au|extranet\John|pe|-item:write|")]
+        [InlineData("CanRename", true, @"au|extranet\John|pe|+item:rename|")]
+        [InlineData("CanRename", false, @"au|extranet\John|pe|-item:rename|")]
+        [InlineData("CanCreate", true, @"au|extranet\John|pe|+item:create|")]
+        [InlineData("CanCreate", false, @"au|extranet\John|pe|-item:create|")]
+        [InlineData("CanDelete", true, @"au|extranet\John|pe|+item:delete|")]
+        [InlineData("CanDelete", false, @"au|extranet\John|pe|-item:delete|")]
+        [InlineData("CanAdmin", true, @"au|extranet\John|pe|+item:admin|")]
+        [InlineData("CanAdmin", false, @"au|extranet\John|pe|-item:admin|")]
+        public void ShouldSetItemAccessRules(string propertyName, bool actualPermission, string expectedSecurity)
         {
             // arrange
             var user = User.FromName(@"extranet\John", false);
@@ -1345,7 +1345,7 @@
         public void ShouldAddTemplateToTemplateRecords()
         {
             // arrange & act
-            using (var db = new Db {new DbTemplate(this.templateId)})
+            using (var db = new Db { new DbTemplate(this.templateId) })
             {
                 // assert
                 db.Database.Templates[this.templateId].Should().NotBeNull();
@@ -1409,7 +1409,7 @@
 
             using (var db = new Db())
             {
-                var homessItem = new DbItem("homeless") {ParentID = new ID(ParentId)};
+                var homessItem = new DbItem("homeless") { ParentID = new ID(ParentId) };
 
                 // act
                 Action action = () => db.Add(homessItem);
@@ -1424,7 +1424,7 @@
         public void ShouldGetBaseTemplates()
         {
             // arrange
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 var item = db.GetItem("/sitecore/content/home");
 
@@ -1496,7 +1496,7 @@
         public void ShouldSupportNestedDatabases()
         {
             // arrange
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 // act
                 using (new Db())
@@ -1511,7 +1511,7 @@
         [Fact]
         public void ShouldRecycleItem()
         {
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 db.GetItem("/sitecore/content/home").Recycle();
             }
@@ -1544,8 +1544,8 @@
         public void ShouldSupportMuiltipleParallelDatabases()
         {
             // arrange
-            using (var core = new Db("core") {new DbItem("core")})
-            using (var master = new Db("master") {new DbItem("master")})
+            using (var core = new Db("core") { new DbItem("core") })
+            using (var master = new Db("master") { new DbItem("master") })
             {
                 // act
                 var coreHome = core.GetItem("/sitecore/content/core");
@@ -1561,7 +1561,7 @@
         public void ShouldNotBeAffectedByMockedHttpContext()
         {
             // arrange
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 var request = new HttpRequest(string.Empty, "http://mysite", string.Empty);
                 var response = new HttpResponse(new StringWriter());
@@ -1628,7 +1628,7 @@
         [Fact]
         public void ShouldHaveOneVersionInDefaultLanguage()
         {
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 db.GetItem("/sitecore/content/home").Versions.Count.Should().Be(1);
             }
@@ -1637,7 +1637,7 @@
         [Fact]
         public void ShouldHaveNoVersionsInCustomLanguage()
         {
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 db.GetItem("/sitecore/content/home", "de").Versions.Count.Should().Be(0);
             }
@@ -1648,7 +1648,7 @@
         [InlineData("de")]
         public void ShouldAlwaysReturnFirstVersionEvenIfNoVersionExists(string language)
         {
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 db.GetItem("/sitecore/content/home", language).Version.Should().Be(Version.First);
             }
@@ -1657,7 +1657,7 @@
         [Fact]
         public void ShouldAddVersionForCustomLanguage()
         {
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 var homeDe = db.GetItem("/sitecore/content/home", "de");
 
@@ -1757,7 +1757,7 @@
         public void ShouldUpdateBranchId()
         {
             var branchId = ID.NewID;
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 var targetItem = db.GetItem("/sitecore/content/home");
                 using (new EditContext(targetItem))
@@ -1792,7 +1792,7 @@
             {
                 db.Database.Languages
                     .ShouldAllBeEquivalentTo(
-                        new[] {Language.Parse("en")});
+                        new[] { Language.Parse("en") });
             }
         }
 
@@ -1807,7 +1807,7 @@
             {
                 db.Database.Languages
                     .ShouldAllBeEquivalentTo(
-                        new[] {Language.Parse("en"), Language.Parse("da")});
+                        new[] { Language.Parse("en"), Language.Parse("da") });
             }
         }
 

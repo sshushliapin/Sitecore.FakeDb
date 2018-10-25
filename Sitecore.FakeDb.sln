@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb", "src\Sitecore.FakeDb\Sitecore.FakeDb.csproj", "{B1B3C599-9284-4653-9F22-FD0F726984BB}"
 EndProject
@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{61B65D79
 		deploy.bat = deploy.bat
 		LICENSE = LICENSE
 		README.md = README.md
+		Sitecore.FakeDb.ruleset = Sitecore.FakeDb.ruleset
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.FakeDb.AutoFixture", "src\Sitecore.FakeDb.AutoFixture\Sitecore.FakeDb.AutoFixture.csproj", "{E1503D66-F2EB-4EC0-829E-F29447DBF92A}"
@@ -125,5 +126,8 @@ Global
 		{0083BA04-3D78-4E08-B178-DFDA4632E2C0} = {61B65D79-BB0C-4A89-A410-E5C90A646ED6}
 		{3017ED04-3340-4971-8B4C-7A00E4B5D435} = {61B65D79-BB0C-4A89-A410-E5C90A646ED6}
 		{CA6AB0BD-0585-403D-91A1-90FAF3190388} = {5A777D0E-BC4F-4CAD-AE83-F95BC7A0788C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {984EE745-FDA3-417D-9610-A29E36BDAE80}
 	EndGlobalSection
 EndGlobal

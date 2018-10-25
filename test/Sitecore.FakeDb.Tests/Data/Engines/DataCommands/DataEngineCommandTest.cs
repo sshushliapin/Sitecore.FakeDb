@@ -8,13 +8,15 @@
     public class DataEngineCommandTest
     {
         [Theory, DefaultAutoData]
-        public void ShouldGetDataStorageFromSwitcher(DataEngineCommand sut, DataStorageSwitcher switcher)
+        public void ShouldGetDataStorageFromSwitcher(
+            DataEngineCommand sut,
+            DataStorage dataStorage)
         {
-            // arrange
-            var databaseName = sut.DataStorage.Database.Name;
-
-            // act && assert
-            sut.DataStorage.Should().Be(DataStorageSwitcher.CurrentValue(databaseName));
+            using (new DataStorageSwitcher(dataStorage))
+            {
+                var databaseName = sut.DataStorage.Database.Name;
+                sut.DataStorage.Should().Be(DataStorageSwitcher.CurrentValue(databaseName));
+            }
         }
     }
 }

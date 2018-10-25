@@ -13,13 +13,16 @@
     public class GetVersionsCommandTest
     {
         [Theory, DefaultAutoData]
-        public void ShouldGetEmptyVersionCollectionIfNoFakeItemFound(GetVersionsCommand sut, Item item, Language language, DbItem dbitem)
+        public void ShouldGetEmptyVersionCollectionIfNoFakeItemFound(
+            GetVersionsCommand sut,
+            Item item,
+            Language language)
         {
             // arrange
             sut.Initialize(item, language);
 
             // act
-            var versionCollection = (VersionCollection) ReflectionUtil.CallMethod(sut, "DoExecute");
+            var versionCollection = (VersionCollection)ReflectionUtil.CallMethod(sut, "DoExecute");
 
             // assert
             versionCollection.Should().BeEmpty();
@@ -29,13 +32,13 @@
         public void ShouldGetItemVersionsForLanguage(GetVersionsCommand sut, Item item, Language language, DbItem versionedItem)
         {
             // arrange
-            versionedItem.Fields.Add(new DbField("Title") {{"en", 1, "value1"}, {"en", 2, "value2"}});
+            versionedItem.Fields.Add(new DbField("Title") { { "en", 1, "value1" }, { "en", 2, "value2" } });
             sut.DataStorage.GetFakeItem(item.ID).Returns(versionedItem);
 
             sut.Initialize(item, language);
 
             // act
-            var versionCollection = (VersionCollection) ReflectionUtil.CallMethod(sut, "DoExecute");
+            var versionCollection = (VersionCollection)ReflectionUtil.CallMethod(sut, "DoExecute");
 
             // assert
             versionCollection.Count.Should().Be(2);
@@ -53,7 +56,7 @@
             sut.Initialize(item, language);
 
             // act
-            var versionCollection = (VersionCollection) ReflectionUtil.CallMethod(sut, "DoExecute");
+            var versionCollection = (VersionCollection)ReflectionUtil.CallMethod(sut, "DoExecute");
 
             // assert
             versionCollection.Count.Should().Be(2);

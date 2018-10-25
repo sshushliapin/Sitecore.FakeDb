@@ -197,14 +197,12 @@
         public void EditItemsSharedInheritenceFail(
             ID field1Id,
             ID field2Id,
-            ID field3Id,
             ID template1Id,
             ID template2Id,
             ID template3Id,
             ID template4Id,
             ID item1Id,
-            ID item2Id,
-            ID item3Id)
+            ID item2Id)
         {
             var field1 = new DbField("Field One", field1Id);
             var field2 = new DbField("Field Two", field2Id);
