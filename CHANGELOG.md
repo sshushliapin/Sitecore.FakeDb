@@ -1,4 +1,7 @@
-﻿2.0.0-alpha1
+﻿2.0.0-beta1
+* [NEW] #202: Upgrade to Sitecore 9
+
+2.0.0-alpha1
 * [NEW] #199: Updated references to AutoFixture and xUnit (thanks to [@Tchami](https://github.com/Tchami))
 
 1.7.3
