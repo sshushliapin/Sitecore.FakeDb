@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security.Authentication
 {
+  using System;
   using FluentAssertions;
   using NSubstitute;
   using Sitecore.Security.Accounts;
@@ -10,6 +11,7 @@
 
   public class AuthenticationSwitcherTest
   {
+    [Obsolete]
     [Fact]
     public void ShouldSwitchAuthenticationProviderInCurrentThreadOnly()
     {

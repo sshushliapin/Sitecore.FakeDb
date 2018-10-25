@@ -45,6 +45,7 @@
       Factory.GetIDTable().Should().BeOfType<FakeIDTableProvider>();
     }
 
+    [Obsolete]
     [Fact]
     public void ShouldGetFakeStandardValuesProvider()
     {

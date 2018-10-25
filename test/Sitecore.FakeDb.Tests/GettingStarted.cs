@@ -237,6 +237,7 @@
       }
     }
 
+    [Obsolete]
     [Fact]
     public void HowToMockAuthorizationProvider()
     {
@@ -292,6 +293,7 @@
       }
     }
 
+    [Obsolete]
     [Fact]
     public void HowToMockRolesInRolesProvider()
     {
@@ -328,6 +330,7 @@
       }
     }
 
+    [Obsolete]
     [Fact]
     public void HowToUnitTestItemSecurityWithMockedProvider()
     {
@@ -731,6 +734,7 @@
     }
 #endif
 
+    [Obsolete]
     [Fact]
     public void HowToMockMediaItemProvider()
     {

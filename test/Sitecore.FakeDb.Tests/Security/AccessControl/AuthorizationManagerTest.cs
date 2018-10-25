@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security.AccessControl
 {
+  using System;
   using FluentAssertions;
   using Sitecore.FakeDb.Security.AccessControl;
   using Sitecore.Security.AccessControl;
@@ -7,6 +8,7 @@
 
   public class AuthorizationManagerTest
   {
+    [Obsolete]
     [Fact]
     public void ShouldResolveDefaultAuthorizationProvider()
     {
