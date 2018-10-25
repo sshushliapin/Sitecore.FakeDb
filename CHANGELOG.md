@@ -1,6 +1,9 @@
 ﻿2.0.0-alpha1
 * [NEW] #199: Updated references to AutoFixture and xUnit (thanks to [@Tchami](https://github.com/Tchami))
 
+1.7.3
+* [FIX] #200: Unable to set to the ValidFrom of the latest version
+
 1.7.2
 * [FIX] #195: Content search config in SC9 uses incorrect class name
 
