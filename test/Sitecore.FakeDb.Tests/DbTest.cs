@@ -1830,5 +1830,38 @@
                 item.Add("*", new TemplateID(TemplateIDs.Folder));
             }
         }
+
+    [Fact]
+    public void EditContextSavesFieldValueOfProperVersion()
+    {
+      var expectedV1 = DateTime.MinValue;
+      var expectedV2 = new DateTime(2018, 10, 25, 15, 14, 00, DateTimeKind.Utc);
+      using (var db = new Db
+        {
+          new DbItem("Home")
+            {
+              new DbField("Text")
+                {
+                  {"en", 1, ""},
+                  {"en", 2, ""}
+                }
+            }
+        })
+      {
+        var homeV2 = db.GetItem("/sitecore/content/Home", "en", 2);
+        using (new EditContext(homeV2))
+        {
+          homeV2.Publishing.ValidFrom = expectedV2;
+        }
+        var homeV1 = db.GetItem("/sitecore/content/Home", "en", 1);
+        homeV2 = db.GetItem("/sitecore/content/Home", "en", 2);
+
+        var actualV1 = homeV1.Publishing.ValidFrom;
+        var actualV2 = homeV2.Publishing.ValidFrom;
+
+        Assert.Equal(expectedV1, actualV1);
+        Assert.Equal(expectedV2, actualV2);
+      }
+    }
     }
 }
