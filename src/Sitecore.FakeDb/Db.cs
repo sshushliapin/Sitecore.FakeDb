@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb
+namespace Sitecore.FakeDb
 {
   using System;
   using System.Collections;

@@ -1,4 +1,4 @@
-﻿1.7.3
+1.7.3
 * [FIX] #200: Unable to set to the ValidFrom of the latest version
 
 1.7.2

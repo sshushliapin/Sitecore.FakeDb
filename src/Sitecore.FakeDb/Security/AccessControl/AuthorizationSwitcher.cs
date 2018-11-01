@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Security.AccessControl
+namespace Sitecore.FakeDb.Security.AccessControl
 {
   using System;
   using Sitecore.Security.AccessControl;
