@@ -1,5 +1,6 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security.Accounts
 {
+  using System;
     using System.Web.Security;
     using FluentAssertions;
     using NSubstitute;
@@ -74,6 +75,7 @@
             }
         }
 
+    [Obsolete]
         [Fact]
         public void ShouldNotBeAdministratorByDefault()
         {

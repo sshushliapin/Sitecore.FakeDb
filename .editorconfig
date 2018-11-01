@@ -1,14 +1,29 @@
-###############################
-# Core EditorConfig Options   #
-###############################
+; EditorConfig to support per-solution formatting.
+; Use the EditorConfig VS add-in to make this work.
+; http://editorconfig.org/
+
+; This is the default for the codeline.
 root = true
 
-# All files
 [*]
 indent_style = space
-
-# Code files
-[*.{cs}]
-indent_size = 4
+charset = utf-8
+trim_trailing_whitespace = true
 insert_final_newline = true
-charset = utf-8-bom
+
+[*.cs]
+indent_size = 4
+dotnet_sort_system_directives_first = true:warning
+
+[*.{xml,config,*proj,nuspec,props,resx,targets,yml,tasks}]
+indent_size = 2
+
+[*.json]
+indent_size = 2
+
+[*.{ps1,psm1}]
+indent_size = 4
+
+[*.sh]
+indent_size = 4
+end_of_line = lf

@@ -6,6 +6,8 @@ using Xunit;
 
 namespace Sitecore.FakeDb.Tests.Data.Fields
 {
+  using System;
+
     [Trait("Category", "RequireLicense")]
     public class LayoutFieldTest
     {
@@ -40,6 +42,7 @@ namespace Sitecore.FakeDb.Tests.Data.Fields
             }
         }
 
+    [Obsolete]
         [Fact]
         public void ShouldWorkWithLayoutDeltas()
         {

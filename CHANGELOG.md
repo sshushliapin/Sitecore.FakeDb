@@ -1,8 +1,13 @@
-﻿2.0.0-beta1
+2.0.0-beta1
 * [NEW] #202: Upgrade to Sitecore 9
 
 2.0.0-alpha1
 * [NEW] #199: Updated references to AutoFixture and xUnit (thanks to [@Tchami](https://github.com/Tchami))
+
+1.7.4
+* [NEW] #175: Obsolete FakeDb Provider Switchers
+* [FIX] #188: SC9: MediaManager no Provider property
+* [FIX] #195: Content search config in SC9 uses incorrect class name (restored)
 
 1.7.3
 * [FIX] #200: Unable to set to the ValidFrom of the latest version

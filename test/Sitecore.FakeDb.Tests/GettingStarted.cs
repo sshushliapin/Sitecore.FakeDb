@@ -238,6 +238,7 @@
             }
         }
 
+    [Obsolete]
         [Fact]
         public void HowToMockRoleProvider()
         {
@@ -257,6 +258,7 @@
             }
         }
 
+    [Obsolete]
         [Fact]
         public void HowToMockMembershipProvider()
         {
@@ -276,6 +278,7 @@
             }
         }
 
+    [Obsolete]
         [Fact]
         public void HowToUnitTestItemSecurityWithFakeProvider()
         {
@@ -605,6 +608,7 @@
             }
         }
 
+    [Obsolete]
         [Fact]
         public void HowToWorkWithQueryApi()
         {
