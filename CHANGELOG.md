@@ -1,3 +1,8 @@
+1.7.4
+* [NEW] #175: Obsolete FakeDb Provider Switchers
+* [FIX] #188: SC9: MediaManager no Provider property
+* [FIX] #195: Content search config in SC9 uses incorrect class name (restored)
+
 1.7.3
 * [FIX] #200: Unable to set to the ValidFrom of the latest version
 
