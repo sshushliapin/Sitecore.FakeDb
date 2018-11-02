@@ -56,19 +56,19 @@ namespace Sitecore.FakeDb
 
         public string Name { get; set; }
 
-        public ID ID { get; private set; }
+        public ID ID { get; }
 
         public ID TemplateID { get; set; }
 
         public ID BranchId { get; set; }
 
-        public DbFieldCollection Fields { get; private set; }
+        public DbFieldCollection Fields { get; }
 
         public ID ParentID { get; set; }
 
-        public string FullPath { get; set; }
+        public string FullPath { get; internal set; }
 
-        public ICollection<DbItem> Children { get; private set; }
+        public ICollection<DbItem> Children { get; }
 
         public DbItemAccess Access { get; set; }
 
