@@ -1,3 +1,6 @@
+2.0.0-beta2
+* [FIX] #172: [Breaking] Unable to add an item to the Media Library
+
 2.0.0-beta1
 * [NEW] #202: Upgrade to Sitecore 9
 
