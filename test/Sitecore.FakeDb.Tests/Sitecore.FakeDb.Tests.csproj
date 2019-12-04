@@ -86,6 +86,9 @@
     <Reference Include="Sitecore.ContentSearch">
       <HintPath>..\..\lib\Sitecore.ContentSearch.dll</HintPath>
     </Reference>
+    <Reference Include="Sitecore.ContentSearch.ContentExtraction, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Sitecore.ContentSearch.ContentExtraction.9.2.0\lib\net471\Sitecore.ContentSearch.ContentExtraction.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.ContentSearch.Linq">
       <HintPath>..\..\lib\Sitecore.ContentSearch.Linq.dll</HintPath>
     </Reference>
@@ -102,6 +105,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.FileSystem.Primitives" />
     <Reference Include="System.Security" />
     <Reference Include="System.Security.Cryptography.Xml, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Security.Cryptography.Xml.4.6.0\lib\net461\System.Security.Cryptography.Xml.dll</HintPath>
