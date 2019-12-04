@@ -4,6 +4,6 @@
     <!-- This setting allows to specify list of Sitecore versions to build and 
          run tests against before publishing the NuGet packages.
     -->
-    <SupportedSitecoreVersions>9.0.171002;9.0.171219;9.0.180604</SupportedSitecoreVersions>
+    <SupportedSitecoreVersions>9.2.0</SupportedSitecoreVersions>
   </PropertyGroup>
 </Project>

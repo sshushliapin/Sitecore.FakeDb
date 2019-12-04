@@ -104,7 +104,7 @@
   </Target>
 
   <Target Name="Versions">
-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Packages" Properties="Version=%(Versions.Identity);TargetFrameworkFolder=NET462" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Packages" Properties="Version=%(Versions.Identity);TargetFrameworkFolder=NET471" />
   </Target>
 
   <Target Name="Deploy" DependsOnTargets="Versions">
