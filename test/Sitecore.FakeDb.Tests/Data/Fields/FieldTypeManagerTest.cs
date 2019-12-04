@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Tests.Data.Fields
+namespace Sitecore.FakeDb.Tests.Data.Fields
 {
     using System;
     using FluentAssertions;
@@ -18,7 +18,9 @@
         [InlineData("Image", typeof(ImageField))]
         [InlineData("Rich Text", typeof(HtmlField))]
         [InlineData("Single-Line Text", typeof(TextField))]
+#pragma warning disable 618
         [InlineData("Word Document", typeof(WordDocumentField))]
+#pragma warning restore 618
         [InlineData("Multi-Line Text", typeof(TextField))]
 
         // List Types
@@ -73,7 +75,7 @@
         [Fact]
         public void ShouldGetLayoutField()
         {
-            using (var db = new Db {new DbItem("home")})
+            using (var db = new Db { new DbItem("home") })
             {
                 var home = db.GetItem("/sitecore/content/home");
 

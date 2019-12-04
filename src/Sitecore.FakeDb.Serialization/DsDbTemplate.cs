@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Serialization
+namespace Sitecore.FakeDb.Serialization
 {
     using System.IO;
     using Sitecore.Data;
@@ -12,7 +12,9 @@
     {
         public string SerializationFolderName { get; private set; }
 
+#pragma warning disable 618
         public SyncItem SyncItem { get; private set; }
+#pragma warning restore 618
 
         public FileInfo File { get; private set; }
 
@@ -41,7 +43,9 @@
         {
         }
 
+#pragma warning disable 618
         internal DsDbTemplate(string serializationFolderName, SyncItem syncItem, FileInfo file)
+#pragma warning restore 618
             : base(syncItem.Name, ID.Parse(syncItem.ID))
         {
             Assert.IsTrue(

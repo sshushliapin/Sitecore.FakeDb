@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Buckets
+namespace Sitecore.FakeDb.Buckets
 {
     using System;
     using System.Collections.Generic;
@@ -39,7 +39,7 @@
             }
         }
 
-        public override Item CloneItem([NotNull] Item source, [NotNull] Item target, bool deep)
+        public override Item CloneItem(Item source, Item target, bool deep)
         {
             var current = this.CurrentProvider;
             return current != null ? current.CloneItem(source, target, deep) : base.CloneItem(source, target, deep);

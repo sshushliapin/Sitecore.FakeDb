@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Data
+namespace Sitecore.FakeDb.Data
 {
     using Sitecore.Data;
     using Sitecore.Data.Fields;
@@ -8,7 +8,9 @@
     using Sitecore.FakeDb.Data.Engines;
     using Sitecore.StringExtensions;
 
+#pragma warning disable 618
     public class FakeStandardValuesProvider : StandardValuesProvider
+#pragma warning restore 618
     {
         public virtual DataStorage DataStorage(Database database)
         {

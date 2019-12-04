@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Serialization.Tests.Pipelines
+namespace Sitecore.FakeDb.Serialization.Tests.Pipelines
 {
     using System;
     using FluentAssertions;
@@ -38,7 +38,9 @@
         {
             var sut = new CopyParentId();
             var dsitem = Substitute.For<IDsDbItem>();
-            dsitem.SyncItem.Returns(new SyncItem {ParentID = "not an id"});
+#pragma warning disable 618
+            dsitem.SyncItem.Returns(new SyncItem { ParentID = "not an id" });
+#pragma warning restore 618
             var dataStorage = Substitute.For<DataStorage>(Database.GetDatabase("master"));
             var args = new DsItemLoadingArgs(dsitem, dataStorage);
 
@@ -53,13 +55,15 @@
             var sut = new CopyParentId();
             var dsitem = Substitute.For<IDsDbItem, DbItem>("item");
             var parentId = ID.NewID;
-            dsitem.SyncItem.Returns(new SyncItem {ParentID = parentId.ToString()});
+#pragma warning disable 618
+            dsitem.SyncItem.Returns(new SyncItem { ParentID = parentId.ToString() });
+#pragma warning restore 618
             var dataStorage = Substitute.For<DataStorage>(Database.GetDatabase("master"));
             var args = new DsItemLoadingArgs(dsitem, dataStorage);
 
             sut.Process(args);
 
-            ((DbItem) dsitem).ParentID.Should().BeNull();
+            ((DbItem)dsitem).ParentID.Should().BeNull();
         }
 
         [Fact]
@@ -68,14 +72,16 @@
             var sut = new CopyParentId();
             var dsitem = Substitute.For<IDsDbItem, DbItem>("item");
             var parentId = ID.NewID;
-            dsitem.SyncItem.Returns(new SyncItem {ParentID = parentId.ToString()});
+#pragma warning disable 618
+            dsitem.SyncItem.Returns(new SyncItem { ParentID = parentId.ToString() });
+#pragma warning restore 618
             var dataStorage = Substitute.For<DataStorage>(Database.GetDatabase("master"));
             dataStorage.GetFakeItem(parentId).Returns(new DbItem("Parent"));
             var args = new DsItemLoadingArgs(dsitem, dataStorage);
 
             sut.Process(args);
 
-            ((DbItem) dsitem).ParentID.Should().Be(parentId);
+            ((DbItem)dsitem).ParentID.Should().Be(parentId);
         }
     }
 }

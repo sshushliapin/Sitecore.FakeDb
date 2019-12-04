@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Serialization
+namespace Sitecore.FakeDb.Serialization
 {
     using System;
     using System.Collections.Generic;
@@ -19,13 +19,17 @@
         /// </summary>
         /// <param name="file">.item file</param>
         /// <returns></returns>
+#pragma warning disable 618
         internal static SyncItem Deserialize(this FileInfo file)
+#pragma warning restore 618
         {
             Assert.ArgumentNotNull(file, "file");
             Assert.IsTrue(file.Exists, string.Format("File '{0}' can not be found or cannot be accessed", file.FullName));
             Assert.IsTrue(".item".Equals(file.Extension, StringComparison.InvariantCultureIgnoreCase), string.Format("File '{0}' is not a .item file", file.FullName));
 
+#pragma warning disable 618
             var item = SyncItem.ReadItem(new Tokenizer(file.OpenText()));
+#pragma warning restore 618
 
             Assert.IsTrue(ID.IsID(item.ID), string.Format("Item id '{0}' is not a valid guid", item.ID));
             Assert.IsTrue(ID.IsID(item.TemplateID), string.Format("Item template id '{0}' is not a valid guid", item.TemplateID));
@@ -42,16 +46,22 @@
         /// <param name="serializationFolder"></param>
         /// <param name="maxDepth"></param>
         /// <returns></returns>
+#pragma warning disable 618
         internal static List<SyncItem> DeserializeAll(this FileInfo itemFile, SyncItem syncItem, DirectoryInfo serializationFolder, int maxDepth)
+#pragma warning restore 618
         {
             if (maxDepth <= 0)
             {
+#pragma warning disable 618
                 return new List<SyncItem>();
+#pragma warning restore 618
             }
 
             Assert.ArgumentNotNull(itemFile, "itemFile");
 
+#pragma warning disable 618
             var result = new List<SyncItem>();
+#pragma warning restore 618
 
             // Find descendants in direct subfolder
             if (itemFile.Directory != null)
@@ -96,7 +106,9 @@
         /// </summary>
         /// <param name="item">Deserialized item</param>
         /// <param name="dsDbItem">FakeDb item to copy values to</param>
+#pragma warning disable 618
         internal static void CopySharedFieldsTo(this SyncItem item, IDsDbItem dsDbItem)
+#pragma warning restore 618
         {
             foreach (var sharedField in item.SharedFields)
             {
@@ -109,7 +121,7 @@
                 }
                 else
                 {
-                    dsDbItem.Add(new DbField(sharedField.FieldName, ID.Parse(sharedField.FieldID)) {Value = sharedField.FieldValue, Shared = true});
+                    dsDbItem.Add(new DbField(sharedField.FieldName, ID.Parse(sharedField.FieldID)) { Value = sharedField.FieldValue, Shared = true });
                 }
             }
         }
@@ -119,7 +131,9 @@
         /// </summary>
         /// <param name="item">Deserialized item</param>
         /// <param name="dsDbItem">FakeDb item to copy values to</param>
+#pragma warning disable 618
         internal static void CopyVersionedFieldsTo(this SyncItem item, IDsDbItem dsDbItem)
+#pragma warning restore 618
         {
             var fields = new List<DbField>();
             foreach (var version in item.Versions)
@@ -132,7 +146,7 @@
 
                     if (dbField == null)
                     {
-                        dbField = new DbField(field.FieldName, fieldId) {Shared = false};
+                        dbField = new DbField(field.FieldName, fieldId) { Shared = false };
                         dsDbItem.Add(dbField);
                         fields.Add(dbField);
                     }
@@ -186,8 +200,8 @@
                     string.Format(
                         "{0}.item",
                         Path.Combine(
-                            serializationFolder.FullName.Trim(new[] {Path.DirectorySeparatorChar}),
-                            truePath.Replace('/', Path.DirectorySeparatorChar).Trim(new[] {Path.DirectorySeparatorChar}))));
+                            serializationFolder.FullName.Trim(new[] { Path.DirectorySeparatorChar }),
+                            truePath.Replace('/', Path.DirectorySeparatorChar).Trim(new[] { Path.DirectorySeparatorChar }))));
 
             Assert.IsTrue(
                 itemLocation.Exists,
