@@ -1,32 +1,32 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Items
 {
-  using FluentAssertions;
-  using Sitecore.Data.Items;
-  using Sitecore.Security.Accounts;
-  using Sitecore.SecurityModel;
-  using Xunit;
+    using FluentAssertions;
+    using Sitecore.Data.Items;
+    using Sitecore.Security.Accounts;
+    using Sitecore.SecurityModel;
+    using Xunit;
 
-  [Trait("Category", "RequireLicense")]
-  public class ItemStatisticsTest
-  {
-    [Fact]
-    public void ShouldUpdateStatistics()
+    [Trait("Category", "RequireLicense")]
+    public class ItemStatisticsTest
     {
-      // arrange
-      using (var db = new Db { new DbItem("Home") })
-      {
-        var item = db.GetItem("/sitecore/content/home");
-
-        // act
-        using (new UserSwitcher("Editor", false))
-        using (new EditContext(item, SecurityCheck.Disable))
+        [Fact]
+        public void ShouldUpdateStatistics()
         {
-          item.Statistics.UpdateRevision();
-        }
+            // arrange
+            using (var db = new Db {new DbItem("Home")})
+            {
+                var item = db.GetItem("/sitecore/content/home");
 
-        // assert
-        item.Statistics.UpdatedBy.Should().Be("Editor");
-      }
+                // act
+                using (new UserSwitcher("Editor", false))
+                using (new EditContext(item, SecurityCheck.Disable))
+                {
+                    item.Statistics.UpdateRevision();
+                }
+
+                // assert
+                item.Statistics.UpdatedBy.Should().Be("Editor");
+            }
+        }
     }
-  }
 }

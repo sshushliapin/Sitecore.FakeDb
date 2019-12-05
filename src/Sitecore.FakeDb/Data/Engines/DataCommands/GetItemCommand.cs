@@ -1,33 +1,33 @@
 ﻿namespace Sitecore.FakeDb.Data.Engines.DataCommands
 {
-  using System;
-  using Sitecore.Data.Items;
-  using Sitecore.Diagnostics;
+    using System;
+    using Sitecore.Data.Items;
+    using Sitecore.Diagnostics;
 
-  public class GetItemCommand : Sitecore.Data.Engines.DataCommands.GetItemCommand
-  {
-    private readonly DataStorage dataStorage;
-
-    public GetItemCommand(DataStorage dataStorage)
+    public class GetItemCommand : Sitecore.Data.Engines.DataCommands.GetItemCommand
     {
-      Assert.ArgumentNotNull(dataStorage, "dataStorage");
+        private readonly DataStorage dataStorage;
 
-      this.dataStorage = dataStorage;
-    }
+        public GetItemCommand(DataStorage dataStorage)
+        {
+            Assert.ArgumentNotNull(dataStorage, "dataStorage");
 
-    public DataStorage DataStorage
-    {
-      get { return this.dataStorage; }
-    }
+            this.dataStorage = dataStorage;
+        }
 
-    protected override Sitecore.Data.Engines.DataCommands.GetItemCommand CreateInstance()
-    {
-      throw new NotSupportedException();
-    }
+        public DataStorage DataStorage
+        {
+            get { return this.dataStorage; }
+        }
 
-    protected override Item DoExecute()
-    {
-      return this.dataStorage.GetSitecoreItem(this.ItemId, this.Language, this.Version);
+        protected override Sitecore.Data.Engines.DataCommands.GetItemCommand CreateInstance()
+        {
+            throw new NotSupportedException();
+        }
+
+        protected override Item DoExecute()
+        {
+            return this.dataStorage.GetSitecoreItem(this.ItemId, this.Language, this.Version);
+        }
     }
-  }
 }

@@ -1,76 +1,76 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Items
 {
-  using FluentAssertions;
-  using Xunit;
+    using FluentAssertions;
+    using Xunit;
 
-  [Trait("Category", "RequireLicense")]
-  public class ItemVersionsTest
-  {
-    [Fact]
-    public void ShouldAddItemVersionAndUpdateCountIfNoVersionedFieldsExist()
+    [Trait("Category", "RequireLicense")]
+    public class ItemVersionsTest
     {
-      // arrange
-      using (var db = new Db { new DbItem("home") })
-      {
-        var item = db.GetItem("/sitecore/content/home");
+        [Fact]
+        public void ShouldAddItemVersionAndUpdateCountIfNoVersionedFieldsExist()
+        {
+            // arrange
+            using (var db = new Db {new DbItem("home")})
+            {
+                var item = db.GetItem("/sitecore/content/home");
 
-        // act
-        var itemV2 = item.Versions.AddVersion();
+                // act
+                var itemV2 = item.Versions.AddVersion();
 
-        // assert
-        itemV2.Versions.Count.Should().Be(2);
-      }
+                // assert
+                itemV2.Versions.Count.Should().Be(2);
+            }
+        }
+
+        [Fact]
+        public void ShouldRemoveItemVersionAndUpdateCountIfNoVersionedFieldsExist()
+        {
+            // arrange
+            using (var db = new Db {new DbItem("home")})
+            {
+                var item = db.GetItem("/sitecore/content/home");
+
+                // act
+                item.Versions.AddVersion()
+                    .Versions.RemoveVersion();
+
+                // assert
+                db.GetItem("/sitecore/content/home").Versions.Count.Should().Be(1);
+            }
+        }
+
+        [Fact]
+        public void ShouldReturnEmptyVersionsCollectionIfNoVersionsFound()
+        {
+            // arrange
+            using (var db = new Db
+                {
+                    new DbItem("home") {new DbField("Title") {{"en", 1, "value"}}}
+                })
+            {
+                // act
+                var target = db.GetItem("/sitecore/content/home", "af-ZA");
+
+                // assert
+                target.Versions.Count.Should().Be(0);
+            }
+        }
+
+        [Fact]
+        public void ShouldReturnLatestVersion()
+        {
+            // arrange
+            using (var db = new Db
+                {
+                    new DbItem("home") {new DbField("Title") {{"en", 1, "Hi!"}, {"en", 2, "Hello!"}}}
+                })
+            {
+                // act
+                var item = db.GetItem("/sitecore/content/home");
+
+                // assert
+                item.Version.Number.Should().Be(2);
+            }
+        }
     }
-
-    [Fact]
-    public void ShouldRemoveItemVersionAndUpdateCountIfNoVersionedFieldsExist()
-    {
-      // arrange
-      using (var db = new Db { new DbItem("home") })
-      {
-        var item = db.GetItem("/sitecore/content/home");
-
-        // act
-        item.Versions.AddVersion()
-            .Versions.RemoveVersion();
-
-        // assert
-        db.GetItem("/sitecore/content/home").Versions.Count.Should().Be(1);
-      }
-    }
-
-    [Fact]
-    public void ShouldReturnEmptyVersionsCollectionIfNoVersionsFound()
-    {
-      // arrange
-      using (var db = new Db
-                        {
-                          new DbItem("home") { new DbField("Title") { { "en", 1, "value" } } }
-                        })
-      {
-        // act
-        var target = db.GetItem("/sitecore/content/home", "af-ZA");
-
-        // assert
-        target.Versions.Count.Should().Be(0);
-      }
-    }
-
-    [Fact]
-    public void ShouldReturnLatestVersion()
-    {
-      // arrange
-      using (var db = new Db
-                        {
-                          new DbItem("home") { new DbField("Title") { { "en", 1, "Hi!" }, { "en", 2, "Hello!" } } }
-                        })
-      {
-        // act
-        var item = db.GetItem("/sitecore/content/home");
-
-        // assert
-        item.Version.Number.Should().Be(2);
-      }
-    }
-  }
 }

@@ -1,35 +1,35 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.Fields
 {
-  using System.IO;
-  using FluentAssertions;
-  using Sitecore.Data.Items;
-  using Xunit;
+    using System.IO;
+    using FluentAssertions;
+    using Sitecore.Data.Items;
+    using Xunit;
 
-  [Trait("Category", "RequireLicense")]
-  public class BlobFieldTest
-  {
-    [Fact]
-    public void ShouldSetAndGetBlobStream()
+    [Trait("Category", "RequireLicense")]
+    public class BlobFieldTest
     {
-      // arrange
-      var stream = new MemoryStream();
-
-      using (var db = new Db { new DbItem("home") { new DbField("field") } })
-      {
-        var item = db.GetItem("/sitecore/content/home");
-        var field = item.Fields["field"];
-
-        using (new EditContext(item))
+        [Fact]
+        public void ShouldSetAndGetBlobStream()
         {
-          // act
-          field.Should().NotBeNull("'item.Fields[\"field\"]' should not be null");
-          field.SetBlobStream(stream);
-        }
+            // arrange
+            var stream = new MemoryStream();
 
-        // assert
-        var actual = (MemoryStream)field.GetBlobStream();
-        actual.ToArray().Should().BeEquivalentTo(stream.ToArray());
-      }
+            using (var db = new Db {new DbItem("home") {new DbField("field")}})
+            {
+                var item = db.GetItem("/sitecore/content/home");
+                var field = item.Fields["field"];
+
+                using (new EditContext(item))
+                {
+                    // act
+                    field.Should().NotBeNull("'item.Fields[\"field\"]' should not be null");
+                    field.SetBlobStream(stream);
+                }
+
+                // assert
+                var actual = (MemoryStream) field.GetBlobStream();
+                actual.ToArray().Should().BeEquivalentTo(stream.ToArray());
+            }
+        }
     }
-  }
 }

@@ -1,19 +1,19 @@
 namespace Sitecore.FakeDb.AutoFixture
 {
-  using System.Reflection;
-  using Ploeh.AutoFixture.Kernel;
+    using System.Reflection;
+    using global::AutoFixture.Kernel;
 
-  public class ItemParameterSpecification : IRequestSpecification
-  {
-    public bool IsSatisfiedBy(object request)
+    public class ItemParameterSpecification : IRequestSpecification
     {
-      var parameterInfo = request as ParameterInfo;
-      if (parameterInfo == null)
-      {
-        return false;
-      }
+        public bool IsSatisfiedBy(object request)
+        {
+            var parameterInfo = request as ParameterInfo;
+            if (parameterInfo == null)
+            {
+                return false;
+            }
 
-      return new ItemSpecification().IsSatisfiedBy(parameterInfo.ParameterType);
+            return new ItemSpecification().IsSatisfiedBy(parameterInfo.ParameterType);
+        }
     }
-  }
 }

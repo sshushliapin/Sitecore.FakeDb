@@ -1,7 +1,7 @@
 ﻿namespace Sitecore.FakeDb.Tests.Data.DataProviders
 {
     using FluentAssertions;
-    using Ploeh.AutoFixture.Xunit2;
+    using global::AutoFixture.Xunit2;
     using Sitecore.Common;
     using Sitecore.Data.DataProviders;
     using Sitecore.FakeDb.Data.DataProviders;
@@ -37,7 +37,7 @@
             using (new Switcher<DbLanguages>(contextLanguages))
             {
                 sut.GetLanguages(context)
-                    .ShouldAllBeEquivalentTo(new[] { en, da });
+                    .ShouldAllBeEquivalentTo(new[] {en, da});
             }
         }
     }

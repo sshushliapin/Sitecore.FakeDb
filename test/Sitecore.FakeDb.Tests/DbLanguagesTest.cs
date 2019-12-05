@@ -21,7 +21,7 @@
         {
             var en = Language.Parse("en");
             var da = Language.Parse("da");
-            var expected = new LanguageCollection { en, da };
+            var expected = new LanguageCollection {en, da};
             var sut = new DbLanguages(en, da);
 
             var actual = sut.GetLanguages();

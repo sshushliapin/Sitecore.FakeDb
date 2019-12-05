@@ -1,26 +1,26 @@
 ﻿namespace Sitecore.FakeDb.Tests.Tasks
 {
-  using FluentAssertions;
-  using NSubstitute;
-  using Sitecore.FakeDb.Tasks;
-  using Sitecore.Tasks;
-  using Xunit;
+    using FluentAssertions;
+    using NSubstitute;
+    using Sitecore.FakeDb.Tasks;
+    using Sitecore.Tasks;
+    using Xunit;
 
-  public class TaskDatabaseSwitcherTest
-  {
-    [Fact]
-    public void ShouldSwitchTaskDatabaseBehavior()
+    public class TaskDatabaseSwitcherTest
     {
-      // arrange
-      Globals.Load();
+        [Fact]
+        public void ShouldSwitchTaskDatabaseBehavior()
+        {
+            // arrange
+            Globals.Load();
 
-      var behavior = Substitute.For<TaskDatabase>();
+            var behavior = Substitute.For<TaskDatabase>();
 
-      // act & assert
-      using (new TaskDatabaseSwitcher(behavior))
-      {
-        ((IThreadLocalProvider<TaskDatabase>)Globals.TaskDatabase).LocalProvider.Value.Should().Be(behavior);
-      }
+            // act & assert
+            using (new TaskDatabaseSwitcher(behavior))
+            {
+                ((IThreadLocalProvider<TaskDatabase>) Globals.TaskDatabase).LocalProvider.Value.Should().Be(behavior);
+            }
+        }
     }
-  }
 }

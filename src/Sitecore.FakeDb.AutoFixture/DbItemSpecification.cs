@@ -1,14 +1,14 @@
 namespace Sitecore.FakeDb.AutoFixture
 {
-  using System;
-  using Ploeh.AutoFixture.Kernel;
+    using System;
+    using global::AutoFixture.Kernel;
 
-  public class DbItemSpecification : IRequestSpecification
-  {
-    public bool IsSatisfiedBy(object request)
+    public class DbItemSpecification : IRequestSpecification
     {
-      var type = request as Type;
-      return typeof(DbItem).IsAssignableFrom(type);
+        public bool IsSatisfiedBy(object request)
+        {
+            var type = request as Type;
+            return typeof(DbItem).IsAssignableFrom(type);
+        }
     }
-  }
 }

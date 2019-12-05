@@ -1,3 +1,15 @@
+2.0.0
+* [NEW] #204: Sitecore 9.1-9.2 support
+
+2.0.0-beta2
+* [FIX] #172: [Breaking] Unable to add an item to the Media Library
+
+2.0.0-beta1
+* [NEW] #202: Upgrade to Sitecore 9
+
+2.0.0-alpha1
+* [NEW] #199: Updated references to AutoFixture and xUnit (thanks to [@Tchami](https://github.com/Tchami))
+
 1.7.4
 * [NEW] #175: Obsolete FakeDb Provider Switchers
 * [FIX] #188: SC9: MediaManager no Provider property

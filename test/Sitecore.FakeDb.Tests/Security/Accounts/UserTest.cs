@@ -1,106 +1,87 @@
 ﻿namespace Sitecore.FakeDb.Tests.Security.Accounts
 {
   using System;
-  using System.Web.Security;
-  using FluentAssertions;
-  using NSubstitute;
-  using Sitecore.FakeDb.Security.Accounts;
-  using Sitecore.FakeDb.Security.Web;
-  using Sitecore.Security.Accounts;
-  using Xunit;
+    using System.Web.Security;
+    using FluentAssertions;
+    using NSubstitute;
+    using Sitecore.FakeDb.Security.Accounts;
+    using Sitecore.FakeDb.Security.Web;
+    using Sitecore.Security.Accounts;
+    using Xunit;
 
-  public class UserTest
-  {
-    private const string UserName = "John";
-
-    private readonly MembershipProvider provider = Substitute.For<MembershipProvider, IThreadLocalProvider<MembershipProvider>>();
-
-    [Fact]
-    public void ShouldCreateUser()
+    public class UserTest
     {
-      // arrange
-      MembershipCreateStatus status;
+        private const string UserName = "John";
 
-      // act
-      using (new MembershipSwitcher(this.provider))
-      {
-        User.Create(UserName, "******");
-      }
+        private readonly MembershipProvider provider = Substitute.For<MembershipProvider, IThreadLocalProvider<MembershipProvider>>();
 
-      this.provider.Received().CreateUser(UserName, "******", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<object>(), out status);
-    }
+        [Fact]
+        public void ShouldCreateUser()
+        {
+            // arrange
+            MembershipCreateStatus status;
 
-    [Fact]
-    public void ShouldDeleteUser()
-    {
-      // arrange
-      var user = User.FromName(UserName, false);
+            // act
+            using (new MembershipSwitcher(this.provider))
+            {
+                User.Create(UserName, "******");
+            }
 
-      using (new MembershipSwitcher(this.provider))
-      {
-        // act
-        user.Delete();
+            this.provider.Received().CreateUser(UserName, "******", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<object>(), out status);
+        }
 
-        // assert
-        this.provider.Received().DeleteUser(UserName, true);
-      }
-    }
+        [Fact]
+        public void ShouldDeleteUser()
+        {
+            // arrange
+            var user = User.FromName(UserName, false);
 
-    [Fact]
-    public void ShouldReturnTrueIfUserExists()
-    {
-      // arrange
-      var user = new FakeMembershipUser();
-      this.provider.GetUser(UserName, true).Returns(user);
+            using (new MembershipSwitcher(this.provider))
+            {
+                // act
+                user.Delete();
 
-      // act
-      using (new MembershipSwitcher(this.provider))
-      {
-        // assert
-        User.Exists(UserName).Should().BeTrue();
-      }
-    }
+                // assert
+                this.provider.Received().DeleteUser(UserName, true);
+            }
+        }
 
-    [Fact]
-    public void ShouldReturnFalseIfUserDoesNotExist()
-    {
-      // arrange
-      this.provider.GetUser(UserName, true).ReturnsForAnyArgs(x => null);
+        [Fact]
+        public void ShouldReturnTrueIfUserExists()
+        {
+            // arrange
+            var user = new FakeMembershipUser();
+            this.provider.GetUser(UserName, true).Returns(user);
 
-      // act
-      using (new MembershipSwitcher(this.provider))
-      {
-        // assert
-        User.Exists(UserName).Should().BeFalse();
-      }
-    }
+            // act
+            using (new MembershipSwitcher(this.provider))
+            {
+                // assert
+                User.Exists(UserName).Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void ShouldReturnFalseIfUserDoesNotExist()
+        {
+            // arrange
+            this.provider.GetUser(UserName, true).ReturnsForAnyArgs(x => null);
+
+            // act
+            using (new MembershipSwitcher(this.provider))
+            {
+                // assert
+                User.Exists(UserName).Should().BeFalse();
+            }
+        }
 
     [Obsolete]
-    [Theory]
-    [InlineData(true)]
-    [InlineData(false)]
-    public void ShouldCheckIfUserIsInRoleUsingRolesInRolesManager(bool isInRole)
-    {
-      // arrange
-      var user = User.FromName(UserName, true);
-      var role = Role.FromName(@"sitecore\Editor");
+        [Fact]
+        public void ShouldNotBeAdministratorByDefault()
+        {
+            var user = User.FromName(UserName, true);
 
-      var rolesProvider = Substitute.For<RolesInRolesProvider>();
-      rolesProvider.IsUserInRole(user, role, true).Returns(isInRole);
-
-      using (new RolesInRolesSwitcher(rolesProvider))
-      {
-        // act & assert
-        user.IsInRole(@"sitecore\Editor").Should().Be(isInRole);
-      }
+            user.IsAdministrator.Should().BeFalse();
+        }
     }
-
-    [Fact]
-    public void ShouldNotBeAdministratorByDefault()
-    {
-      var user = User.FromName(UserName, true);
-
-      user.IsAdministrator.Should().BeFalse();
-    }
-  }
 }

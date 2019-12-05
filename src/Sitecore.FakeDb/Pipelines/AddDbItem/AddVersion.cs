@@ -1,12 +1,12 @@
 ﻿namespace Sitecore.FakeDb.Pipelines.AddDbItem
 {
-  using Sitecore.Globalization;
+    using Sitecore.Globalization;
 
-  public class AddVersion
-  {
-    public virtual void Process(AddDbItemArgs args)
+    public class AddVersion
     {
-      args.DbItem.AddVersion(args.Language.Name);
+        public virtual void Process(AddDbItemArgs args)
+        {
+            args.DbItem.AddVersion(args.Language.Name);
+        }
     }
-  }
 }

@@ -1,22 +1,22 @@
 ﻿namespace Sitecore.FakeDb.Pipelines
 {
-  using System;
-  using Sitecore.Diagnostics;
-  using Sitecore.Pipelines;
+    using System;
+    using Sitecore.Diagnostics;
+    using Sitecore.Pipelines;
 
-  public class PipelineRunEventArgs : EventArgs
-  {
-    public PipelineRunEventArgs(string pipelineName, PipelineArgs pipelineArgs)
+    public class PipelineRunEventArgs : EventArgs
     {
-      Assert.ArgumentNotNullOrEmpty(pipelineName, "pipelineName");
-      Assert.ArgumentNotNull(pipelineArgs, "pipelineArgs");
+        public PipelineRunEventArgs(string pipelineName, PipelineArgs pipelineArgs)
+        {
+            Assert.ArgumentNotNullOrEmpty(pipelineName, "pipelineName");
+            Assert.ArgumentNotNull(pipelineArgs, "pipelineArgs");
 
-      this.PipelineName = pipelineName;
-      this.PipelineArgs = pipelineArgs;
+            this.PipelineName = pipelineName;
+            this.PipelineArgs = pipelineArgs;
+        }
+
+        public string PipelineName { get; private set; }
+
+        public PipelineArgs PipelineArgs { get; private set; }
     }
-
-    public string PipelineName { get; private set; }
-
-    public PipelineArgs PipelineArgs { get; private set; }
-  }
 }

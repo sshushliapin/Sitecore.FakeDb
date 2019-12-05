@@ -1,8 +1,8 @@
 ﻿namespace Examples
 {
-  using Xunit;
+    using Xunit;
 
-  public class GettingStarted
-  {
-  }
+    public class GettingStarted
+    {
+    }
 }
