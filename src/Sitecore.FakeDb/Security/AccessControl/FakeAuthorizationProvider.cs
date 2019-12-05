@@ -21,9 +21,7 @@ namespace Sitecore.FakeDb.Security.AccessControl
         }
 
         public FakeAuthorizationProvider()
-#pragma warning disable 618
-            : this(new ItemAuthorizationHelper())
-#pragma warning restore 618
+            : this(new ItemAuthorizationHelper(null, null, null))
         {
         }
 

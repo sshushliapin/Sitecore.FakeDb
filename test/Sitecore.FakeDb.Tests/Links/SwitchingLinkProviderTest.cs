@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Tests.Links
+namespace Sitecore.FakeDb.Tests.Links
 {
     using System;
     using System.Collections.Specialized;
@@ -176,7 +176,10 @@
         }
 
         [Theory, SwitchingAutoData]
-        public void ParseRequestUrlCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, HttpRequest request)
+        public void ParseRequestUrlCallsCurrentProvider(
+            SwitchingLinkProvider sut,
+            [Substitute] LinkProvider current,
+            HttpRequestBase request)
         {
             using (new Switcher<LinkProvider>(current))
             {
@@ -185,7 +188,9 @@
         }
 
         [Theory, SwitchingAutoData]
-        public void ParseRequestUrlCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, HttpRequest request)
+        public void ParseRequestUrlCallsBaseProviderIfCurrentNotSet(
+            SwitchingLinkProvider sut,
+            HttpRequestBase request)
         {
             sut.ParseRequestUrl(request).Should().NotBeNull();
         }

@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Tests.Data.DataProviders
+namespace Sitecore.FakeDb.Tests.Data.DataProviders
 {
     using System;
     using System.IO;
@@ -265,6 +265,7 @@
             sut.DataStorage.Received().RemoveFakeItem(item.ID);
         }
 
+        [Obsolete]
         [Theory, DefaultAutoData]
         public void GetBlobStreamReturnsBlobStreamFromDataStorage(
             [Greedy] FakeDataProvider sut,
@@ -276,6 +277,7 @@
             sut.GetBlobStream(blobId, context).Should().BeSameAs(stream);
         }
 
+        [Obsolete]
         [Theory, DefaultAutoData]
         public void GetBlobStreamReturnsNullIfNoBlobStreamExists(
             [Greedy] FakeDataProvider sut,
@@ -505,53 +507,6 @@
             sut.GetItemVersions(def, context).Should().BeEmpty();
         }
 
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldSetPropertyAndReturnTrue(FakeDataProvider sut, string name, string value, CallContext context)
-        {
-            sut.SetProperty(name, value, context).Should().BeTrue();
-        }
-
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldThrowIfNameIsNullOnSetProperty(FakeDataProvider sut)
-        {
-            Action action = () => sut.SetProperty(null, null, null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("*name");
-        }
-
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldGetProperty(FakeDataProvider sut, string name, string value, CallContext context)
-        {
-            sut.SetProperty(name, value, context);
-            sut.GetProperty(name, context).Should().Be(value);
-        }
-
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldThrowIfNameIsNullOnGetProperty(FakeDataProvider sut)
-        {
-            Action action = () => sut.GetProperty(null, null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("*name");
-        }
-
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldReturnNullIfNoPropertySet(FakeDataProvider sut, string name, CallContext context)
-        {
-            sut.GetProperty(name, context).Should().BeNull();
-        }
-
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldResetPropertyAndReturnTheLatestValue(FakeDataProvider sut, string name, string value1, string value2, CallContext context)
-        {
-            sut.SetProperty(name, value1, context);
-            sut.SetProperty(name, value2, context);
-            sut.GetProperty(name, context).Should().Be(value2);
-        }
-
         [Theory, DefaultAutoData]
         public void ShouldGetNullItemFieldsIfNoItemFound([Greedy] FakeDataProvider sut, ItemDefinition def, VersionUri versionUri, CallContext context)
         {
@@ -748,6 +703,7 @@
             item.ParentID.Should().Be(newDestination.ID);
         }
 
+        [Obsolete]
         [Theory, DefaultAutoData]
         public void ShouldSetBlobStreamInDataStorage(
             [Greedy] FakeDataProvider sut,

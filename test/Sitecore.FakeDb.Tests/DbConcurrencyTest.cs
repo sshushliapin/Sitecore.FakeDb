@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Tests
+namespace Sitecore.FakeDb.Tests
 {
     using System;
     using System.Threading;
@@ -148,33 +148,6 @@
                 {
                     db.Configuration.Settings["mysetting"] = "abc";
                     Settings.GetSetting("mysetting").Should().Be("abc");
-                }
-            });
-
-            t1.Wait();
-            t2.Wait();
-        }
-
-        [Obsolete]
-        [Theory(Skip = "Not supported in Sitecore 9"), AutoData]
-        public void ShouldBeThreadLocalDatabaseProperties(string propertyName, string expectedValue, string unexpectedValue)
-        {
-            var t1 = Task.Factory.StartNew(() =>
-            {
-                using (var db = new Db())
-                {
-                    db.Database.Properties[propertyName] = expectedValue;
-                    Thread.Sleep(1000);
-                    db.Database.Properties[propertyName].Should().Be(expectedValue);
-                }
-            });
-
-            var t2 = Task.Factory.StartNew(() =>
-            {
-                using (var db = new Db())
-                {
-                    db.Database.Properties[propertyName].Should().BeEmpty("the property is not expected");
-                    db.Database.Properties[propertyName] = unexpectedValue;
                 }
             });
 

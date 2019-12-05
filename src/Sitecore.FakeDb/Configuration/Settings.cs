@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Configuration
+namespace Sitecore.FakeDb.Configuration
 {
     using System.Xml;
     using Sitecore.Diagnostics;
@@ -65,10 +65,6 @@
                     var setting = this.CreateSettingNode(name, value);
                     settingsNode.AppendChild(setting);
                 }
-
-#pragma warning disable 618
-                Sitecore.Configuration.Settings.Reset();
-#pragma warning restore 618
             }
         }
 

@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Configuration
+namespace Sitecore.FakeDb.Configuration
 {
     using System;
     using Sitecore.Abstractions;
@@ -8,27 +8,7 @@
     {
         public override bool Enabled => false;
 
-        [Obsolete]
-        public override void QueueEvent<TEvent>(TEvent @event)
-        {
-        }
-
-        [Obsolete]
-        public override void QueueEvent<TEvent>(TEvent @event, bool addToGlobalQueue, bool addToLocalQueue)
-        {
-        }
-
         public override void RaiseEvent<TEvent>(TEvent @event)
-        {
-        }
-
-        [Obsolete]
-        public override void RaiseQueuedEvents()
-        {
-        }
-
-        [Obsolete]
-        public override void RemoveQueuedEvents(EventQueueQuery query)
         {
         }
 

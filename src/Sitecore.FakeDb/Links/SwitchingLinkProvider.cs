@@ -1,7 +1,6 @@
 namespace Sitecore.FakeDb.Links
 {
     using System;
-    using System.Web;
     using Sitecore.Common;
     using Sitecore.Data.Items;
     using Sitecore.Links;
@@ -99,6 +98,7 @@ namespace Sitecore.FakeDb.Links
             }
         }
 
+        [Obsolete("Please use GetDefaultUrlBuilderOptions() instead.")]
         public override UrlOptions GetDefaultUrlOptions()
         {
             var current = this.CurrentProvider;
@@ -111,6 +111,7 @@ namespace Sitecore.FakeDb.Links
             return current != null ? current.GetDynamicUrl(item, options) : base.GetDynamicUrl(item, options);
         }
 
+        [Obsolete("Please use GetItemUrl(Item, ItemUrlBuilderOptions) instead.")]
         public override string GetItemUrl(Item item, UrlOptions options)
         {
             var current = this.CurrentProvider;
@@ -129,12 +130,7 @@ namespace Sitecore.FakeDb.Links
             return current != null ? current.ParseDynamicLink(linkText) : base.ParseDynamicLink(linkText);
         }
 
-        public override RequestUrl ParseRequestUrl(HttpRequest request)
-        {
-            var current = this.CurrentProvider;
-            return current != null ? current.ParseRequestUrl(request) : base.ParseRequestUrl(request);
-        }
-
+        [Obsolete("Please use IItemBasedSiteResolver instead.")]
         public override SiteInfo ResolveTargetSite(Item item)
         {
             var current = this.CurrentProvider;
