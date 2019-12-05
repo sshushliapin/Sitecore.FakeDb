@@ -2,8 +2,9 @@
 Sitecore FakeDb
 ===============
 
-[![#](https://img.shields.io/nuget/v/Sitecore.FakeDb.svg)](https://www.nuget.org/packages/Sitecore.FakeDb/)
-[![Build Status](https://dev.azure.com/sshushliapin/Sitecore-FakeDb/_apis/build/status/sshushliapin.Sitecore.FakeDb?branchName=master)](https://dev.azure.com/sshushliapin/Sitecore-FakeDb/_build/latest?definitionId=1&branchName=master)
+![#](https://img.shields.io/nuget/v/Sitecore.FakeDb.svg)
+![Build Status](https://dev.azure.com/sshushliapin/Sitecore-FakeDb/_apis/build/status/sshushliapin.Sitecore.FakeDb?branchName=master)
+![tests](https://img.shields.io/azure-devops/tests/sshushliapin/Sitecore-FakeDb/1)
 
 This is the unit testing framework for Sitecore that enables creation and manipulation of Sitecore content in memory. It is designed to minimize efforts for the test content initialization keeping focus on the minimal test data rather than comprehensive content tree representation.
 
