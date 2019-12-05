@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Tests.Data.Templates
+namespace Sitecore.FakeDb.Tests.Data.Templates
 {
     using System.Linq;
     using FluentAssertions;
@@ -35,7 +35,7 @@
         [Theory, AutoData]
         public void ShouldCreateTemplateFieldItemBasedOnFieldId(ID templateId, ID fieldId)
         {
-            using (var db = new Db {new DbTemplate(templateId) {fieldId}})
+            using (var db = new Db { new DbTemplate(templateId) { fieldId } })
             {
                 db.GetItem(fieldId).Should().NotBeNull();
             }
@@ -44,7 +44,7 @@
         [Theory, AutoData]
         public void ShouldCreateTemplateFieldItemBasedOnDbField(ID templateId, DbField field)
         {
-            using (var db = new Db {new DbTemplate(templateId) {field}})
+            using (var db = new Db { new DbTemplate(templateId) { field } })
             {
                 db.GetItem(field.ID).Should().NotBeNull();
             }
@@ -53,9 +53,9 @@
         [Theory, AutoData]
         public void ShouldCreateTemplateFieldItemWithTypeField(ID templateId, DbField field)
         {
-            using (var db = new Db {new DbTemplate(templateId) {field}})
+            using (var db = new Db { new DbTemplate(templateId) { field } })
             {
-                var templateFieldItem = (TemplateFieldItem) db.GetItem(field.ID);
+                var templateFieldItem = (TemplateFieldItem)db.GetItem(field.ID);
 
                 templateFieldItem.Type.Should().Be(field.Type);
             }
@@ -68,9 +68,9 @@
         {
             field.Shared = shared;
 
-            using (var db = new Db {new DbTemplate(templateId) {field}})
+            using (var db = new Db { new DbTemplate(templateId) { field } })
             {
-                var templateFieldItem = (TemplateFieldItem) db.GetItem(field.ID);
+                var templateFieldItem = (TemplateFieldItem)db.GetItem(field.ID);
 
                 templateFieldItem.Shared.Should().Be(shared);
             }
@@ -90,7 +90,7 @@
 
         // Appearance
         [InlineAutoData("__Context Menu", "{D3AE7222-425D-4B77-95D8-EE33AC2B6730}", true, "tree")]
-        [InlineAutoData("__Display name", "{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}", false, "text")]
+        [InlineAutoData("__Display name", "{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}", false, "Single-Line Text")]
         [InlineAutoData("__Editor", "{D85DB4EC-FF89-4F9C-9E7C-A9E0654797FC}", true, "server file")]
         [InlineAutoData("__Editors", "{A0CB3965-8884-4C7A-8815-B6B2E5CED162}", true, "TreelistEx")]
         [InlineAutoData("__Hidden", "{39C4902E-9960-4469-AEEF-E878E9C8218F}", true, "Checkbox")]

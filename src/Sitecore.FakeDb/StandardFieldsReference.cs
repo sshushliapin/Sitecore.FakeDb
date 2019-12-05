@@ -24,7 +24,7 @@ namespace Sitecore.FakeDb
 
                 // Appearance
                 new FieldInfo("__Context Menu", new ID("{D3AE7222-425D-4B77-95D8-EE33AC2B6730}"), true, "tree"),
-                new FieldInfo("__Display name", new ID("{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}"), false, "text"),
+                new FieldInfo("__Display name", new ID("{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}"), false, "Single-Line Text"),
                 new FieldInfo("__Editor", new ID("{D85DB4EC-FF89-4F9C-9E7C-A9E0654797FC}"), true, "server file"),
                 new FieldInfo("__Editors", new ID("{A0CB3965-8884-4C7A-8815-B6B2E5CED162}"), true, "TreelistEx"),
                 new FieldInfo("__Hidden", new ID("{39C4902E-9960-4469-AEEF-E878E9C8218F}"), true, "Checkbox"),
