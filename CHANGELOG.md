@@ -1,3 +1,6 @@
+2.0.1
+* [FIX] #210: Standard field contains old values
+
 2.0.0
 * [NEW] #204: Sitecore 9.1-9.2 support
 
