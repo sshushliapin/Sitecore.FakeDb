@@ -1,3 +1,6 @@
+2.0.0
+* [NEW] #204: Sitecore 9.1-9.2 support
+
 2.0.0-beta2
 * [FIX] #172: [Breaking] Unable to add an item to the Media Library
 
