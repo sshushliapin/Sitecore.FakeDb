@@ -8,7 +8,6 @@
   <ItemGroup>
     <Versions Include="$(SupportedSitecoreVersions)" />
     <References Include="packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll" />
-    <References Include="packages\Sitecore.Abstractions.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Abstractions.dll" Condition="'$(Version)' != '7.2.160123'" />
     <References Include="packages\Sitecore.Buckets.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Buckets.dll" />
     <References Include="packages\Sitecore.ContentSearch.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.ContentSearch.dll" />
     <References Include="packages\Sitecore.ContentSearch.Data.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.ContentSearch.Data.dll" />
@@ -32,7 +31,6 @@
   <Target Name="Compile" DependsOnTargets="Clean">
     <Exec Command="$(NuGet) restore" />
     <Exec Command="$(NuGet) install Lucene.Net -Version 3.0.3 -OutputDirectory packages" />
-    <Exec Command="$(NuGet) install Sitecore.Abstractions -Version $(Version) -OutputDirectory packages" Condition="'$(Version)' != '7.2.160123'" />
     <Exec Command="$(NuGet) install Sitecore.Buckets -Version $(Version) -OutputDirectory packages" />
     <Exec Command="$(NuGet) install Sitecore.ContentSearch -Version $(Version) -OutputDirectory packages" />
     <Exec Command="$(NuGet) install Sitecore.ContentSearch.Linq -Version $(Version) -OutputDirectory packages" />
