@@ -104,6 +104,12 @@
     <Reference Include="Sitecore.ContentSearch.Linq">
       <HintPath>..\..\lib\Sitecore.ContentSearch.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="Sitecore.Framework.Data.Blobs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Sitecore.Framework.Data.Blobs.1.0.0\lib\netstandard2.0\Sitecore.Framework.Data.Blobs.dll</HintPath>
+    </Reference>
+    <Reference Include="Sitecore.Framework.Data.Blobs.Abstractions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Sitecore.Framework.Data.Blobs.Abstractions.1.0.0\lib\netstandard2.0\Sitecore.Framework.Data.Blobs.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\..\lib\Sitecore.Kernel.dll</HintPath>
     </Reference>
