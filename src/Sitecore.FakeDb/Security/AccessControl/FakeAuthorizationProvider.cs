@@ -20,11 +20,6 @@ namespace Sitecore.FakeDb.Security.AccessControl
             get { return this.localProvider; }
         }
 
-        public FakeAuthorizationProvider()
-            : this(new ItemAuthorizationHelper(null, null, null))
-        {
-        }
-
         public FakeAuthorizationProvider(ItemAuthorizationHelper itemHelper)
         {
             Assert.ArgumentNotNull(itemHelper, "itemHelper");
