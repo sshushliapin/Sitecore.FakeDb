@@ -13,6 +13,7 @@ namespace Sitecore.FakeDb.Tests.Links
     using Sitecore.Data.Items;
     using Sitecore.FakeDb.Links;
     using Sitecore.Links;
+    using Sitecore.Links.UrlBuilders;
     using Sitecore.Web;
     using Xunit;
     using StringDictionary = Sitecore.Collections.StringDictionary;
@@ -47,7 +48,9 @@ namespace Sitecore.FakeDb.Tests.Links
         }
 
         [Theory, SwitchingAutoData]
-        public void SutCallsCurrentProviderProperties(SwitchingLinkProvider sut, [Substitute] LinkProvider current)
+        public void SutCallsCurrentProviderProperties(
+            SwitchingLinkProvider sut,
+            [Substitute] LinkProvider current)
         {
             using (new Switcher<LinkProvider>(current))
             {
@@ -64,22 +67,29 @@ namespace Sitecore.FakeDb.Tests.Links
         }
 
         [Theory, SwitchingAutoData]
-        public void SutCallsBaseProviderPropertiesIfCurrentNorSet(SwitchingLinkProvider sut)
+        public void SutCallsBaseProviderDefaultPropertiesIfCurrentNorSet(
+            SwitchingLinkProvider sut,
+            string name,
+            NameValueCollection config)
         {
-            sut.Name.Should().BeNull();
+            sut.Initialize(name, config);
+
+            sut.Name.Should().Be(name);
             sut.AddAspxExtension.Should().BeFalse();
             sut.AlwaysIncludeServerUrl.Should().BeFalse();
-            sut.Description.Should().BeNull();
-            sut.EncodeNames.Should().BeFalse();
+            sut.Description.Should().Be(name);
+            sut.EncodeNames.Should().BeTrue();
             sut.LanguageEmbedding.Should().Be(LanguageEmbedding.AsNeeded);
             sut.LanguageLocation.Should().Be(LanguageLocation.FilePath);
             sut.LowercaseUrls.Should().BeFalse();
-            sut.ShortenUrls.Should().BeFalse();
+            sut.ShortenUrls.Should().BeTrue();
             sut.UseDisplayName.Should().BeFalse();
         }
 
         [Theory, SwitchingAutoData]
-        public void GetDefaultUrlOptionsCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current)
+        public void GetDefaultUrlOptionsCallsCurrentProvider(
+            SwitchingLinkProvider sut,
+            [Substitute] LinkProvider current)
         {
             using (new Switcher<LinkProvider>(current))
             {
@@ -88,13 +98,21 @@ namespace Sitecore.FakeDb.Tests.Links
         }
 
         [Theory, SwitchingAutoData]
-        public void GetDefaultUrlOptionsCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut)
+        public void GetDefaultUrlOptionsCallsBaseProviderIfCurrentNotSet(
+            SwitchingLinkProvider sut,
+            string name,
+            NameValueCollection config)
         {
+            sut.Initialize(name, config);
             sut.GetDefaultUrlOptions().Should().NotBeNull();
         }
 
         [Theory, SwitchingAutoData]
-        public void GetDynamicUrlCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, Item item, LinkUrlOptions options)
+        public void GetDynamicUrlCallsCurrentProvider(
+            SwitchingLinkProvider sut,
+            [Substitute] LinkProvider current,
+            Item item,
+            LinkUrlOptions options)
         {
             using (new Switcher<LinkProvider>(current))
             {
@@ -103,13 +121,20 @@ namespace Sitecore.FakeDb.Tests.Links
         }
 
         [Theory, SwitchingAutoData]
-        public void GetDynamicUrlCallsCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, Item item, LinkUrlOptions options)
+        public void GetDynamicUrlCallsCallsBaseProviderIfCurrentNotSet(
+            SwitchingLinkProvider sut,
+            Item item,
+            LinkUrlOptions options)
         {
             sut.GetDynamicUrl(item, options).Should().NotBeEmpty();
         }
 
         [Theory, SwitchingAutoData]
-        public void GetItemUrlCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, Item item, UrlOptions options)
+        public void GetItemUrlCallsCurrentProvider(
+            SwitchingLinkProvider sut,
+            [Substitute] LinkProvider current,
+            Item item,
+            UrlOptions options)
         {
             using (new Switcher<LinkProvider>(current))
             {
@@ -119,32 +144,60 @@ namespace Sitecore.FakeDb.Tests.Links
 
         [Theory, SwitchingAutoData]
         [Trait("Category", "RequireLicense")]
-        public void GetItemUrlOptionsCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, Item item, UrlOptions options)
+        public void GetItemUrlOptionsCallsBaseProviderIfCurrentNotSet(
+            SwitchingLinkProvider sut,
+            Item item,
+            UrlOptions options)
         {
             using (new Db())
             {
+                sut.Initialize("name", new NameValueCollection());
                 sut.GetItemUrl(item, options).Should().NotBeNull();
             }
         }
 
         [Theory, SwitchingAutoData]
-        public void InitializeCallsBaseProviderIfCurrentSet(SwitchingLinkProvider sut, [Substitute] LinkProvider current, string name, NameValueCollection config)
+        [Trait("Category", "RequireLicense")]
+        public void GetItemUrlWithItemUrlBuilderOptionsCallsBaseProviderIfCurrentNotSet(
+            SwitchingLinkProvider sut,
+            Item item,
+            ItemUrlBuilderOptions options)
         {
-            using (new Switcher<LinkProvider>(current))
+            using (new Db())
             {
-                sut.Initialize(name, config);
-                current.DidNotReceiveWithAnyArgs().Initialize(name, config);
+                sut.Initialize("name", new NameValueCollection());
+                sut.GetItemUrl(item, options).Should().NotBeNull();
             }
         }
 
         [Theory, SwitchingAutoData]
-        public void InitializeCallsBaseProviderIfCurrentNotSet(SwitchingLinkProvider sut, string name, NameValueCollection config)
+        public void InitializeCallsCurrentProviderIfSet(
+            SwitchingLinkProvider sut,
+            [Substitute] LinkProvider current,
+            string name,
+            NameValueCollection config)
+        {
+            using (new Switcher<LinkProvider>(current))
+            {
+                sut.Initialize(name, config);
+                current.Received().Initialize(name, config);
+            }
+        }
+
+        [Theory, SwitchingAutoData]
+        public void InitializeCallsBaseProviderIfCurrentNotSet(
+            SwitchingLinkProvider sut,
+            string name,
+            NameValueCollection config)
         {
             sut.Initialize(name, config);
         }
 
         [Theory, SwitchingAutoData]
-        public void IsDynamicLinkCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, string linkText)
+        public void IsDynamicLinkCallsCurrentProvider(
+            SwitchingLinkProvider sut,
+            [Substitute] LinkProvider current,
+            string linkText)
         {
             using (new Switcher<LinkProvider>(current))
             {
@@ -159,7 +212,10 @@ namespace Sitecore.FakeDb.Tests.Links
         }
 
         [Theory, SwitchingAutoData]
-        public void ParseDynamicLinkCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, ID id)
+        public void ParseDynamicLinkCallsCurrentProvider(
+            SwitchingLinkProvider sut,
+            [Substitute] LinkProvider current,
+            ID id)
         {
             using (new Switcher<LinkProvider>(current))
             {
@@ -196,7 +252,10 @@ namespace Sitecore.FakeDb.Tests.Links
         }
 
         [Theory, SwitchingAutoData]
-        public void ResolveTargetSiteCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, Item item)
+        public void ResolveTargetSiteCallsCurrentProvider(
+            SwitchingLinkProvider sut,
+            [Substitute] LinkProvider current,
+            Item item)
         {
             using (new Switcher<LinkProvider>(current))
             {
@@ -213,7 +272,11 @@ namespace Sitecore.FakeDb.Tests.Links
         }
 
         [Theory, SwitchingAutoData]
-        public void ExpandDynamicLinksCallsCurrentProvider(SwitchingLinkProvider sut, [Substitute] LinkProvider current, string text, bool resolveSite)
+        public void ExpandDynamicLinksCallsCurrentProvider(
+            SwitchingLinkProvider sut,
+            [Substitute] LinkProvider current,
+            string text,
+            bool resolveSite)
         {
             using (new Switcher<LinkProvider>(current))
             {
@@ -224,9 +287,12 @@ namespace Sitecore.FakeDb.Tests.Links
         [Theory, SwitchingAutoData]
         public void ExpandDynamicLinksCallsBaseProviderIfCurrentNotSet(
             SwitchingLinkProvider sut,
+            string name,
+            NameValueCollection config,
             string text,
             bool resolveSites)
         {
+            sut.Initialize(name, config);
             sut.ExpandDynamicLinks(text, resolveSites);
         }
 

@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Tests.Links
+namespace Sitecore.FakeDb.Tests.Links
 {
     using FluentAssertions;
     using Sitecore.Links;
@@ -16,7 +16,7 @@
                 var item = db.GetItem("/sitecore/content/home");
 
                 // act & assert
-                LinkManager.GetItemUrl(item).Should().Be("/en/sitecore/content/home.aspx");
+                LinkManager.GetItemUrl(item).Should().Be("/en/sitecore/content/home");
             }
         }
     }
