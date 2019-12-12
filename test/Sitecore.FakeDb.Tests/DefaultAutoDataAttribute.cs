@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Tests
+namespace Sitecore.FakeDb.Tests
 {
     using System;
     using NSubstitute;
@@ -37,6 +37,14 @@
             : base(() => new Fixture()
                 .Customize(new DefaultConventions())
                 .Customize(new AutoNSubstituteCustomization()))
+        {
+        }
+    }
+
+    internal class InlineDefaultSubstituteAutoDataAttribute : InlineAutoDataAttribute
+    {
+        public InlineDefaultSubstituteAutoDataAttribute(params object[] values)
+            : base(new DefaultSubstituteAutoDataAttribute(), values)
         {
         }
     }
