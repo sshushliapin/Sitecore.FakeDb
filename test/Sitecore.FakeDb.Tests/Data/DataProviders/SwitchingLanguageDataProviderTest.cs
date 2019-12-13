@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Tests.Data.DataProviders
+namespace Sitecore.FakeDb.Tests.Data.DataProviders
 {
     using FluentAssertions;
     using global::AutoFixture.Xunit2;
@@ -17,7 +17,7 @@
             sut.Should().BeAssignableTo<DataProvider>();
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void GetLanguagesReturnsEmptyCollectionIfNoLanguagesSwitched(
             SwitchingLanguageDataProvider sut,
             CallContext context)
@@ -26,7 +26,7 @@
                 .Should().BeEmpty();
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void GetLanguagesReturnsLanguagesIfSwitched(
             SwitchingLanguageDataProvider sut,
             CallContext context)
@@ -37,7 +37,7 @@
             using (new Switcher<DbLanguages>(contextLanguages))
             {
                 sut.GetLanguages(context)
-                    .ShouldAllBeEquivalentTo(new[] {en, da});
+                    .ShouldAllBeEquivalentTo(new[] { en, da });
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace Sitecore.FakeDb.Tests.Resources.Media
+using Sitecore.Links.UrlBuilders;
+
+namespace Sitecore.FakeDb.Tests.Resources.Media
 {
     using System;
     using FluentAssertions;
@@ -37,10 +39,10 @@
             mediaProvider.MediaLinkPrefix.Should().NotBeNull();
             mediaProvider.MimeResolver.Should().NotBeNull();
 
-            mediaProvider.GetMedia((MediaItem) null).Should().BeNull();
-            mediaProvider.GetMedia((MediaUri) null).Should().BeNull();
+            mediaProvider.GetMedia((MediaItem)null).Should().BeNull();
+            mediaProvider.GetMedia((MediaUri)null).Should().BeNull();
             mediaProvider.GetMediaUrl(null).Should().BeNull();
-            mediaProvider.GetMediaUrl(null, null).Should().BeNull();
+            mediaProvider.GetMediaUrl(null, (MediaUrlBuilderOptions)null).Should().BeNull();
             mediaProvider.GetThumbnailUrl(null).Should().BeNull();
             mediaProvider.HasMediaContent(null).Should().BeFalse();
             mediaProvider.IsMediaRequest(null).Should().BeFalse();
@@ -185,10 +187,10 @@
             var mock = CreateMediaItemMock();
 
             // act
-            this.localProvider.GetMediaUrl(mock, null).Returns("http://smth");
+            this.localProvider.GetMediaUrl(mock, (MediaUrlBuilderOptions)null).Returns("http://smth");
 
             // assert
-            this.provider.GetMediaUrl(mock, null).Should().Be("http://smth");
+            this.provider.GetMediaUrl(mock, (MediaUrlBuilderOptions)null).Should().Be("http://smth");
         }
 
         [Fact]

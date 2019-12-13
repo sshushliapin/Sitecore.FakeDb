@@ -42,9 +42,6 @@
       <HintPath>..\..\lib\Lucene.Net.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Sitecore.Abstractions">
-      <HintPath>..\..\lib\Sitecore.Abstractions.dll</HintPath>
-    </Reference>
     <Reference Include="Sitecore.ContentSearch">
       <HintPath>..\..\lib\Sitecore.ContentSearch.dll</HintPath>
     </Reference>

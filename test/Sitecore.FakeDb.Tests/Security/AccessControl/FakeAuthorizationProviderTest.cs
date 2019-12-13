@@ -1,10 +1,10 @@
-﻿namespace Sitecore.FakeDb.Tests.Security.AccessControl
+namespace Sitecore.FakeDb.Tests.Security.AccessControl
 {
     using System;
     using FluentAssertions;
     using NSubstitute;
     using global::AutoFixture;
-    using Sitecore.Configuration;
+    using Sitecore.Abstractions;
     using Sitecore.Data.Items;
     using Sitecore.FakeDb.Data.Items;
     using Sitecore.FakeDb.Security.AccessControl;
@@ -28,10 +28,12 @@
 
         public FakeAuthorizationProviderTest()
         {
-            this.provider = new FakeAuthorizationProvider();
-
             this.localProvider = Substitute.For<AuthorizationProvider>();
-            this.helper = Substitute.For<ItemAuthorizationHelper>();
+            this.helper = Substitute.For<ItemAuthorizationHelper>(
+                Substitute.For<BaseAccessRightManager>(),
+                Substitute.For<BaseRolesInRolesManager>(),
+                Substitute.For<BaseItemManager>());
+            this.provider = new FakeAuthorizationProvider(helper);
 
             this.entity = Substitute.For<ISecurable>();
             this.item = ItemHelper.CreateInstance();

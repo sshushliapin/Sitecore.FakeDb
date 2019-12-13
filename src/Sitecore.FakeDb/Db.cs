@@ -3,7 +3,6 @@ namespace Sitecore.FakeDb
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading;
     using System.Xml;
     using Sitecore.Common;
@@ -261,6 +260,7 @@ namespace Sitecore.FakeDb
 
             this.dataStorageSwitcher.Dispose();
             this.databaseSwitcher.Dispose();
+            this.configuration?.Dispose();
 
             foreach (var languageSwitcher in this.databaseLanguages)
             {

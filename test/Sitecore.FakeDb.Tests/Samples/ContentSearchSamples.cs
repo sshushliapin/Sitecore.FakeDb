@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Tests.Samples
+namespace Sitecore.FakeDb.Tests.Samples
 {
     using System;
     using System.Collections.Generic;
@@ -15,7 +15,6 @@
     /// </summary>
     public class ContentSearchSamples
     {
-        [Obsolete]
         [Fact]
         public void ShouldGetProducts()
         {
@@ -37,7 +36,7 @@
 
             var indexable = Substitute.For<IIndexable>();
             var provider = Substitute.For<SearchProvider>();
-            provider.GetContextIndexName(indexable, Arg.Any<ICorePipeline>()).Returns("fake_index");
+            provider.GetContextIndexName(indexable, Arg.Any<BaseCorePipelineManager>()).Returns("fake_index");
 
             using (new Switcher<SearchProvider>(provider))
             {

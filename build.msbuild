@@ -3,12 +3,11 @@
   <Import Project="Build.config" />
   <Import Project="version.props" />
 
-  <UsingTask TaskName="xunit" AssemblyFile="$(XUnitPath)\xunit.runner.msbuild.dll" />
+  <UsingTask TaskName="xunit" AssemblyFile="$(XUnitPath)\xunit.runner.msbuild.net452.dll" />
 
   <ItemGroup>
     <Versions Include="$(SupportedSitecoreVersions)" />
     <References Include="packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll" />
-    <References Include="packages\Sitecore.Abstractions.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Abstractions.dll" Condition="'$(Version)' != '7.2.160123'" />
     <References Include="packages\Sitecore.Buckets.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.Buckets.dll" />
     <References Include="packages\Sitecore.ContentSearch.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.ContentSearch.dll" />
     <References Include="packages\Sitecore.ContentSearch.Data.$(Version)\lib\$(TargetFrameworkFolder)\Sitecore.ContentSearch.Data.dll" />
@@ -20,10 +19,6 @@
     <CleanUp Include="test\**\Sitecore.FakeDb.Tests.config" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <PatchDatabase>false</PatchDatabase>
-  </PropertyGroup>
-
   <Target Name="Clean">
     <MSBuild Projects="$(ProjectToBuild)" Targets="Clean" />
     <RemoveDir Directories="$(OutputDirectory)" />
@@ -32,7 +27,6 @@
   <Target Name="Compile" DependsOnTargets="Clean">
     <Exec Command="$(NuGet) restore" />
     <Exec Command="$(NuGet) install Lucene.Net -Version 3.0.3 -OutputDirectory packages" />
-    <Exec Command="$(NuGet) install Sitecore.Abstractions -Version $(Version) -OutputDirectory packages" Condition="'$(Version)' != '7.2.160123'" />
     <Exec Command="$(NuGet) install Sitecore.Buckets -Version $(Version) -OutputDirectory packages" />
     <Exec Command="$(NuGet) install Sitecore.ContentSearch -Version $(Version) -OutputDirectory packages" />
     <Exec Command="$(NuGet) install Sitecore.ContentSearch.Linq -Version $(Version) -OutputDirectory packages" />
@@ -70,14 +64,6 @@
 
   <Target Name="Tests" DependsOnTargets="Compile">
     <Message Text="=== RUNNING TESTS FOR $(Version) ===" Importance="high" />
-
-    <!-- Patch database type for SC82 -->
-    <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="$(FakeDbTestsDir)\App_Config\Include" Condition="$(PatchDatabase)" />
-    <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="$(AutoFixtureTestsDir)\App_Config\Include" Condition="$(PatchDatabase)" />
-    <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="$(NSubstituteTestsDir)\App_Config\Include" Condition="$(PatchDatabase)" />
-    <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="$(SerializationTestsDir)\App_Config\Include" Condition="$(PatchDatabase)" />
-    <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="test\Sitecore.FakeDb.NUnitLite.Tests\App_Config\Include" Condition="$(PatchDatabase)" />
-
     <xunit Assemblies="@(TestAssemblies)" ParallelizeTestCollections="false" Xml="TestResult_$(Version).xml" />
     <Exec Command="Sitecore.FakeDb.NUnitLite.Tests.exe" WorkingDirectory="test\Sitecore.FakeDb.NUnitLite.Tests\bin\Release" />
   </Target>

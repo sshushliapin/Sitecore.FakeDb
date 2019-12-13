@@ -20,13 +20,6 @@ namespace Sitecore.FakeDb.Security.AccessControl
             get { return this.localProvider; }
         }
 
-        public FakeAuthorizationProvider()
-#pragma warning disable 618
-            : this(new ItemAuthorizationHelper())
-#pragma warning restore 618
-        {
-        }
-
         public FakeAuthorizationProvider(ItemAuthorizationHelper itemHelper)
         {
             Assert.ArgumentNotNull(itemHelper, "itemHelper");

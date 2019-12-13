@@ -1,9 +1,10 @@
-﻿namespace Sitecore.FakeDb.Resources.Media
+namespace Sitecore.FakeDb.Resources.Media
 {
     using System;
     using System.Threading;
     using System.Web;
     using Sitecore.Data.Items;
+    using Sitecore.Links.UrlBuilders;
     using Sitecore.Resources.Media;
 
     public class FakeMediaProvider : MediaProvider, IThreadLocalProvider<MediaProvider>
@@ -112,7 +113,7 @@
             return this.IsLocalProviderSet() ? this.localProvider.Value.GetMediaUrl(item) : null;
         }
 
-        public override string GetMediaUrl(MediaItem item, MediaUrlOptions options)
+        public override string GetMediaUrl(MediaItem item, MediaUrlBuilderOptions options)
         {
             return this.IsLocalProviderSet() ? this.localProvider.Value.GetMediaUrl(item, options) : null;
         }

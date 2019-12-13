@@ -1,6 +1,5 @@
-﻿namespace Sitecore.FakeDb.Tests.ContentSearch
+namespace Sitecore.FakeDb.Tests.ContentSearch
 {
-    using System;
     using FluentAssertions;
     using NSubstitute;
     using global::AutoFixture.Xunit2;
@@ -19,7 +18,6 @@
             sut.GetContextIndexName(null).Should().BeNull();
         }
 
-        [Obsolete]
         [Theory, AutoData]
         public void ShouldReturnNullByIIndexableAndIPipelineIfCurrentProviderIsNull(
             SwitchingSearchProvider sut)
@@ -41,12 +39,11 @@
             }
         }
 
-        [Obsolete]
         [Theory, DefaultSubstituteAutoData]
         public void ShouldReturnCurrentNameByIIndexableAndIPipeline(
             [Frozen] SearchProvider current,
             IIndexable indexable,
-            ICorePipeline pipeline,
+            BaseCorePipelineManager pipeline,
             string expected,
             SwitchingSearchProvider sut)
         {

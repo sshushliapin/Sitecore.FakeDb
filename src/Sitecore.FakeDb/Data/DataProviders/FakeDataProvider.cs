@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Data.DataProviders
+namespace Sitecore.FakeDb.Data.DataProviders
 {
     using System;
     using System.Collections.Generic;
@@ -123,6 +123,7 @@
             return this.DataStorage.RemoveFakeItem(item.ID);
         }
 
+        [Obsolete("GetBlobStream method is obsolete. Use BlobStorage.GetBlob method instead.")]
         public override Stream GetBlobStream(Guid blobId, CallContext context)
         {
             return this.DataStorage.GetBlobStream(blobId);
@@ -374,54 +375,12 @@
             return items != null ? IDList.Build(items.Select(i => i.ID).ToArray()) : new IDList();
         }
 
+        [Obsolete("SetBlobStream method is obsolete. Use BlobStorage.SetBlob method instead.")]
         public override bool SetBlobStream(Stream stream, Guid blobId, CallContext context)
         {
             this.DataStorage.SetBlobStream(blobId, stream);
 
             return true;
-        }
-
-        /// <summary>
-        /// Sets the property.
-        /// </summary>
-        /// <param name="name">The property name.</param>
-        /// <param name="value">The property value.</param>
-        /// <param name="context">The context. Ignored.</param>
-        /// <returns>Always True.</returns>
-        [Obsolete]
-        public override bool SetProperty(string name, string value, CallContext context)
-        {
-            Assert.ArgumentNotNull(name, "name");
-            var currentProp = this.properties.Value;
-            if (currentProp == null)
-            {
-                this.properties.Value = new Dictionary<string, string> { { name, value } };
-            }
-            else
-            {
-                this.properties.Value[name] = value;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Get the property.
-        /// </summary>
-        /// <param name="name">The property name.</param>
-        /// <param name="context">The context. Ignored.</param>
-        /// <returns>The property value if exists. Otherwise null.</returns>
-        [Obsolete]
-        public override string GetProperty(string name, CallContext context)
-        {
-            Assert.ArgumentNotNull(name, "name");
-            var currentProp = this.properties.Value;
-            if (currentProp == null)
-            {
-                return null;
-            }
-
-            return currentProp.ContainsKey(name) ? currentProp[name] : null;
         }
 
         protected virtual Template BuildTemplate(DbTemplate ft, TemplateCollection templates)

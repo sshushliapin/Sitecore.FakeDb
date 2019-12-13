@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Tests.Data.DataProviders
+namespace Sitecore.FakeDb.Tests.Data.DataProviders
 {
     using System;
     using System.IO;
@@ -101,7 +101,7 @@
             action.ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("copyId");
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void CopyItemThrowsIfNoDestinationItemFound(
             [Greedy] FakeDataProvider sut,
             ItemDefinition source,
@@ -116,7 +116,7 @@
                     .FormatWith(copyName, source.ID));
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void CopyItemReturnsTrue(
             [Greedy] FakeDataProvider sut,
             ItemDefinition source,
@@ -131,7 +131,7 @@
                 .Should().BeTrue();
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void CopyItemAddsCopiedItemToDataStorage(
             [Greedy] FakeDataProvider sut,
             ItemDefinition source,
@@ -178,7 +178,7 @@
             action.ShouldThrow<ArgumentNullException>().WithMessage("*parent");
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void CreateItemAddsFakeItemToDataStorage(
             [Greedy] FakeDataProvider sut,
             ID itemId,
@@ -195,7 +195,7 @@
                                     i.ParentID == parent.ID));
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void CreateItemAddsReturnsTrue(
             [Greedy] FakeDataProvider sut,
             ID itemId,
@@ -265,7 +265,8 @@
             sut.DataStorage.Received().RemoveFakeItem(item.ID);
         }
 
-        [Theory, DefaultAutoData]
+        [Obsolete]
+        [Theory, DefaultSubstituteAutoData]
         public void GetBlobStreamReturnsBlobStreamFromDataStorage(
             [Greedy] FakeDataProvider sut,
             Guid blobId,
@@ -276,7 +277,8 @@
             sut.GetBlobStream(blobId, context).Should().BeSameAs(stream);
         }
 
-        [Theory, DefaultAutoData]
+        [Obsolete]
+        [Theory, DefaultSubstituteAutoData]
         public void GetBlobStreamReturnsNullIfNoBlobStreamExists(
             [Greedy] FakeDataProvider sut,
             Guid blobId,
@@ -285,7 +287,7 @@
             sut.GetBlobStream(blobId, context).Should().BeNull();
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void GetChildIdsThrowsIfItemDefinitionIsNull(
             [Greedy] FakeDataProvider sut,
             CallContext context)
@@ -294,7 +296,7 @@
             action.ShouldThrow<ArgumentNullException>().WithMessage("*itemDefinition");
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void GetChildIdsReturnsEmptyListIfNoItemFound(
             [Greedy] FakeDataProvider sut,
             ItemDefinition itemDefinition,
@@ -303,7 +305,7 @@
             sut.GetChildIDs(itemDefinition, context).Should().BeEmpty();
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void GetChildIdsReturnsChildIds(
             [Greedy] FakeDataProvider sut,
             ItemDefinition itemDefinition,
@@ -320,15 +322,17 @@
             sut.GetChildIDs(itemDefinition, context).ShouldBeEquivalentTo(expected);
         }
 
-        [Theory, DefaultAutoData]
-        public void GetParendIdThrowsIfItemDefinitionIsNull([Greedy] FakeDataProvider sut, CallContext context)
+        [Theory, DefaultSubstituteAutoData]
+        public void GetParentIdThrowsIfItemDefinitionIsNull(
+            [Greedy] FakeDataProvider sut,
+            CallContext context)
         {
             Action action = () => sut.GetParentID(null, context);
             action.ShouldThrow<ArgumentNullException>().WithMessage("*itemDefinition");
         }
 
-        [Theory, DefaultAutoData]
-        public void GetParendIdReturnsParentId(
+        [Theory, DefaultSubstituteAutoData]
+        public void GetParentIdReturnsParentId(
             [Greedy] FakeDataProvider sut,
             ItemDefinition itemDefinition,
             DbItem item,
@@ -339,8 +343,8 @@
             result.Should().Be(item.ParentID);
         }
 
-        [Theory, DefaultAutoData]
-        public void GetParendIdReturnsNullIfNoItemFound(
+        [Theory, DefaultSubstituteAutoData]
+        public void GetParentIdReturnsNullIfNoItemFound(
             [Greedy] FakeDataProvider sut,
             ItemDefinition itemDefinition,
             CallContext context)
@@ -349,8 +353,8 @@
             result.Should().BeNull();
         }
 
-        [Theory, DefaultAutoData]
-        public void GetParendIdReturnsNullForSitecoreRootItem(
+        [Theory, DefaultSubstituteAutoData]
+        public void GetParentIdReturnsNullForSitecoreRootItem(
             [Greedy] FakeDataProvider sut,
             string itemName,
             ID id,
@@ -380,9 +384,7 @@
         public void ShouldGetTemplatesWithDefaultDataSectionFromDataStorage([Greedy] FakeDataProvider sut, DbTemplate template)
         {
             sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
-
             var result = sut.GetTemplates(null).First();
-
             result.GetSection("Data").Should().NotBeNull();
         }
 
@@ -390,9 +392,7 @@
         public void ShouldHaveStandardBaseTemplate([Greedy] FakeDataProvider sut, [NoAutoProperties] DbTemplate template)
         {
             sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
-
             var result = sut.GetTemplates(null).First();
-
             result.BaseIDs.Single().Should().Be(TemplateIDs.StandardTemplate);
         }
 
@@ -401,9 +401,7 @@
         {
             sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
             template.Fields.Add("Title");
-
             var result = sut.GetTemplates(null).First();
-
             result.GetField("Title").Should().NotBeNull();
         }
 
@@ -412,9 +410,7 @@
         {
             sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
             template.Fields.Add(new DbField("Link") { Type = "General Link" });
-
             var result = sut.GetTemplates(null).First();
-
             result.GetField("Link").Type.Should().Be("General Link");
         }
 
@@ -423,9 +419,7 @@
         {
             sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
             template.Fields.Add(new DbField("Title") { Shared = true });
-
             var result = sut.GetTemplates(null).First();
-
             result.GetField("Title").IsShared.Should().BeTrue();
         }
 
@@ -434,21 +428,24 @@
         {
             sut.DataStorage.GetFakeTemplates().Returns(new[] { template });
             template.Fields.Add(new DbField("Multilist") { Source = "/sitecore/content" });
-
             var result = sut.GetTemplates(null).First();
-
             result.GetField("Multilist").Source.Should().Be("/sitecore/content");
         }
 
-        [Theory, DefaultAutoData]
-        public void ShouldGetDefaultLanguage([Greedy] FakeDataProvider sut, CallContext context)
+        [Theory, DefaultSubstituteAutoData]
+        public void ShouldGetDefaultLanguage(
+            [Greedy] FakeDataProvider sut,
+            CallContext context)
         {
-            var langs = sut.GetLanguages(context);
-            langs.Should().BeEmpty();
+            var languages = sut.GetLanguages(context);
+            languages.Should().BeEmpty();
         }
 
-        [Theory, DefaultAutoData]
-        public void ShouldGetItemDefinition([Greedy] FakeDataProvider sut, DbItem item, CallContext context)
+        [Theory, DefaultSubstituteAutoData]
+        public void ShouldGetItemDefinition(
+            [Greedy] FakeDataProvider sut,
+            DbItem item,
+            CallContext context)
         {
             // arrange
             sut.DataStorage.GetFakeItem(item.ID).Returns(item);
@@ -463,14 +460,20 @@
             definition.BranchId.Should().Be(ID.Null);
         }
 
-        [Theory, DefaultAutoData]
-        public void ShouldGetNullItemDefinitionIfNoItemFound([Greedy] FakeDataProvider sut, ID itemId, CallContext context)
+        [Theory, DefaultSubstituteAutoData]
+        public void ShouldGetNullItemDefinitionIfNoItemFound(
+            [Greedy] FakeDataProvider sut,
+            ID itemId,
+            CallContext context)
         {
             sut.GetItemDefinition(itemId, context).Should().BeNull();
         }
 
-        [Theory, DefaultAutoData]
-        public void ShouldGetAllThePossibleItemVersions([Greedy] FakeDataProvider sut, ItemDefinition def, CallContext context)
+        [Theory, DefaultSubstituteAutoData]
+        public void ShouldGetAllThePossibleItemVersions(
+            [Greedy] FakeDataProvider sut,
+            ItemDefinition def,
+            CallContext context)
         {
             // arrange
             var item = new DbItem("home", def.ID, def.TemplateID)
@@ -481,7 +484,6 @@
                             new DbField("Field 2") {{"en", 1, string.Empty}, {"da", 1, string.Empty}, {"da", 2, string.Empty}}
                         }
             };
-
             sut.DataStorage.GetFakeItem(def.ID).Returns(item);
 
             // act
@@ -499,67 +501,33 @@
             versions[3].Version.Number.Should().Be(2);
         }
 
-        [Theory, DefaultAutoData]
-        public void ShouldGetEmptyVersionsIfNoFakeItemFound([Greedy] FakeDataProvider sut, ItemDefinition def, CallContext context)
+        [Theory, DefaultSubstituteAutoData]
+        public void ShouldGetEmptyVersionsIfNoFakeItemFound(
+            [Greedy] FakeDataProvider sut,
+            ItemDefinition def,
+            CallContext context)
         {
             sut.GetItemVersions(def, context).Should().BeEmpty();
         }
 
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldSetPropertyAndReturnTrue(FakeDataProvider sut, string name, string value, CallContext context)
-        {
-            sut.SetProperty(name, value, context).Should().BeTrue();
-        }
-
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldThrowIfNameIsNullOnSetProperty(FakeDataProvider sut)
-        {
-            Action action = () => sut.SetProperty(null, null, null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("*name");
-        }
-
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldGetProperty(FakeDataProvider sut, string name, string value, CallContext context)
-        {
-            sut.SetProperty(name, value, context);
-            sut.GetProperty(name, context).Should().Be(value);
-        }
-
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldThrowIfNameIsNullOnGetProperty(FakeDataProvider sut)
-        {
-            Action action = () => sut.GetProperty(null, null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("*name");
-        }
-
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldReturnNullIfNoPropertySet(FakeDataProvider sut, string name, CallContext context)
-        {
-            sut.GetProperty(name, context).Should().BeNull();
-        }
-
-        [Obsolete]
-        [Theory, DefaultAutoData]
-        public void ShouldResetPropertyAndReturnTheLatestValue(FakeDataProvider sut, string name, string value1, string value2, CallContext context)
-        {
-            sut.SetProperty(name, value1, context);
-            sut.SetProperty(name, value2, context);
-            sut.GetProperty(name, context).Should().Be(value2);
-        }
-
-        [Theory, DefaultAutoData]
-        public void ShouldGetNullItemFieldsIfNoItemFound([Greedy] FakeDataProvider sut, ItemDefinition def, VersionUri versionUri, CallContext context)
+        [Theory, DefaultSubstituteAutoData]
+        public void ShouldGetNullItemFieldsIfNoItemFound(
+            [Greedy] FakeDataProvider sut,
+            ItemDefinition def,
+            VersionUri versionUri,
+            CallContext context)
         {
             sut.GetItemFields(def, versionUri, context).Should().BeNull();
         }
 
-        [Theory, DefaultAutoData]
-        public void ShouldGetItemFields([Greedy] FakeDataProvider sut, DbTemplate template, DbItem item, DbField field, Language language, Version version,
+        [Theory, DefaultSubstituteAutoData]
+        public void ShouldGetItemFields(
+            [Greedy] FakeDataProvider sut,
+            DbTemplate template,
+            DbItem item,
+            DbField field,
+            Language language,
+            Version version,
             CallContext context)
         {
             template.Fields.Add(field);
@@ -575,7 +543,7 @@
             sut.GetItemFields(def, versionUri, context).Should().HaveCount(1);
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void AddToPublishQueueReturnsTrue(
             [Greedy] FakeDataProvider sut,
             ID itemId,
@@ -586,7 +554,7 @@
             sut.AddToPublishQueue(itemId, action, date, context).Should().BeTrue();
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void AddToPublishQueueWithLanguageReturnsTrue(
             [Greedy] FakeDataProvider sut,
             ID itemId,
@@ -598,7 +566,7 @@
             sut.AddToPublishQueue(itemId, action, date, language, context).Should().BeTrue();
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void AddToPublishQueueSameItemIdMultipleTimesReturnsTrue(
             [Greedy] FakeDataProvider sut,
             ID itemId,
@@ -611,7 +579,7 @@
             sut.AddToPublishQueue(itemId, action, date, context).Should().BeTrue();
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void GetPublishQueueReturnsIdList(
             [Greedy] FakeDataProvider sut,
             ID itemId1,
@@ -626,7 +594,7 @@
             result.ShouldBeEquivalentTo(new IDList { itemId1, itemId2 });
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void GetPublishQueueReturnsEmptyIdListIfNoItemsAdded(
             [Greedy] FakeDataProvider sut,
             CallContext context)
@@ -636,11 +604,11 @@
         }
 
         [Theory]
-        [InlineDefaultAutoData(-1, 0, 1)]
-        [InlineDefaultAutoData(0, 0, 1)]
-        [InlineDefaultAutoData(0, 1, 1)]
-        [InlineDefaultAutoData(1, 2, 0)]
-        [InlineDefaultAutoData(-2, -1, 0)]
+        [InlineDefaultSubstituteAutoData(-1, 0, 1)]
+        [InlineDefaultSubstituteAutoData(0, 0, 1)]
+        [InlineDefaultSubstituteAutoData(0, 1, 1)]
+        [InlineDefaultSubstituteAutoData(1, 2, 0)]
+        [InlineDefaultSubstituteAutoData(-2, -1, 0)]
         public void GetPublishQueueReturnsIdListFilteredByDates(
             int daysBeforePublishingDate,
             int daysAfterPublishingDate,
@@ -660,7 +628,7 @@
             result.Count.Should().Be(expectedCount);
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void GetPublishQueueReturnsIdListWithoutDuplicatedIDs(
             [Greedy] FakeDataProvider sut,
             ID itemId,
@@ -748,7 +716,8 @@
             item.ParentID.Should().Be(newDestination.ID);
         }
 
-        [Theory, DefaultAutoData]
+        [Obsolete]
+        [Theory, DefaultSubstituteAutoData]
         public void ShouldSetBlobStreamInDataStorage(
             [Greedy] FakeDataProvider sut,
             Guid blobId,
@@ -760,30 +729,29 @@
         }
 
         [Theory]
-        [InlineDefaultAutoData("/sitecore/content/home")]
-        [InlineDefaultAutoData("/Sitecore/Content/Home")]
-        [InlineDefaultAutoData("/Sitecore/Content/Home/")]
+        [InlineDefaultSubstituteAutoData("/sitecore/content/home")]
+        [InlineDefaultSubstituteAutoData("/Sitecore/Content/Home")]
+        [InlineDefaultSubstituteAutoData("/Sitecore/Content/Home/")]
         public void ShouldResolvePath(string path, [Greedy] FakeDataProvider sut, DbItem item, CallContext context)
         {
             item.FullPath = "/sitecore/content/home";
             sut.DataStorage.GetFakeItems().Returns(new[] { item });
-
             sut.ResolvePath(path, context).Should().Be(item.ID);
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void ShouldReturnNullIfNoItemFound([Greedy] FakeDataProvider sut, string path, CallContext context)
         {
             sut.ResolvePath(path, context).Should().BeNull();
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void ShouldReturnIdIfPathIsId([Greedy] FakeDataProvider sut, ID itemId, CallContext context)
         {
             sut.ResolvePath(itemId.ToString(), context).Should().Be(itemId);
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void ShouldResolveFirstItemId(
             [Greedy] FakeDataProvider sut,
             DbItem item1,
@@ -794,7 +762,6 @@
             item1.FullPath = path;
             item2.FullPath = path;
             sut.DataStorage.GetFakeItems().Returns(new[] { item1, item2 });
-
             sut.ResolvePath(path, context).Should().Be(item1.ID);
         }
 
@@ -845,7 +812,7 @@
             item.AddVersion(language.Name);
             item.AddVersion(language.Name);
             var version = new VersionUri(language, Version.Latest);
-            var expectedVersionCount = 1;
+            const int expectedVersionCount = 1;
 
             var result = sut.RemoveVersion(itemDefinition, version, null);
 
@@ -869,7 +836,7 @@
             action.ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("changes");
         }
 
-        [Theory, DefaultAutoData]
+        [Theory, DefaultSubstituteAutoData]
         public void SaveItemReturnsFalse(
             [Greedy] FakeDataProvider sut,
             ItemDefinition itemDefinition,

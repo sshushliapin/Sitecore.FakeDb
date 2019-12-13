@@ -1,11 +1,15 @@
-﻿namespace Sitecore.FakeDb.Configuration
+namespace Sitecore.FakeDb.Configuration
 {
     using System.Xml;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using Sitecore.Configuration;
     using Sitecore.Diagnostics;
     using Sitecore.StringExtensions;
     using Sitecore.Xml;
 
-    public class Settings
+    public class Settings : IDisposable
     {
         private const string AutoTranslateSetting = "FakeDb.AutoTranslate";
 
@@ -13,14 +17,14 @@
 
         private const string AutoTranslateSuffixSetting = "FakeDb.AutoTranslateSuffix";
 
-        private readonly XmlDocument section;
+        private readonly ICollection<SettingsSwitcher> switchers = new Collection<SettingsSwitcher>();
 
         public Settings(XmlDocument section)
         {
-            this.section = section;
+            ConfigSection = section;
         }
 
-        protected internal XmlDocument ConfigSection => this.section;
+        protected internal XmlDocument ConfigSection { get; }
 
         public bool AutoTranslate
         {
@@ -61,20 +65,18 @@
                 }
                 else
                 {
-                    var settingsNode = XmlUtil.EnsurePath("/sitecore/settings", this.section);
+                    var settingsNode = XmlUtil.EnsurePath("/sitecore/settings", this.ConfigSection);
                     var setting = this.CreateSettingNode(name, value);
                     settingsNode.AppendChild(setting);
                 }
 
-#pragma warning disable 618
-                Sitecore.Configuration.Settings.Reset();
-#pragma warning restore 618
+                switchers.Add(new SettingsSwitcher(name, value));
             }
         }
 
         protected virtual XmlElement CreateSettingNode(string name, string value)
         {
-            var doc = this.section;
+            var doc = this.ConfigSection;
             var setting = doc.CreateElement("setting");
 
             this.AddSettingAttribute("name", name, doc, setting);
@@ -93,7 +95,16 @@
 
         protected virtual XmlNode SelectSettingNode(string name)
         {
-            return this.section.SelectSingleNode("/sitecore/settings/setting[@name='{0}']".FormatWith(name));
+            return this.ConfigSection.SelectSingleNode("/sitecore/settings/setting[@name='{0}']".FormatWith(name));
+        }
+
+        public void Dispose()
+        {
+            foreach (var switcher in switchers)
+            {
+                switcher.Dispose();
+            }
+            GC.SuppressFinalize(this);
         }
     }
 }

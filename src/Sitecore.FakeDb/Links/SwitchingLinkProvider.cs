@@ -1,10 +1,12 @@
 namespace Sitecore.FakeDb.Links
 {
     using System;
+    using System.Collections.Specialized;
     using System.Web;
     using Sitecore.Common;
     using Sitecore.Data.Items;
     using Sitecore.Links;
+    using Sitecore.Links.UrlBuilders;
     using Sitecore.Web;
 
     [Obsolete("This class is not supported starting from Sitecore 8.2.0. " +
@@ -99,10 +101,24 @@ namespace Sitecore.FakeDb.Links
             }
         }
 
+        [Obsolete("Please use GetDefaultUrlBuilderOptions() instead.")]
         public override UrlOptions GetDefaultUrlOptions()
         {
             var current = this.CurrentProvider;
             return current != null ? current.GetDefaultUrlOptions() : base.GetDefaultUrlOptions();
+        }
+
+        public override void Initialize(string name, NameValueCollection config)
+        {
+            var current = this.CurrentProvider;
+            if (current != null)
+            {
+                current.Initialize(name, config);
+            }
+            else
+            {
+                base.Initialize(name, config);
+            }
         }
 
         public override string GetDynamicUrl(Item item, LinkUrlOptions options)
@@ -111,6 +127,13 @@ namespace Sitecore.FakeDb.Links
             return current != null ? current.GetDynamicUrl(item, options) : base.GetDynamicUrl(item, options);
         }
 
+        public override string GetItemUrl(Item item, ItemUrlBuilderOptions options)
+        {
+            var current = this.CurrentProvider;
+            return current != null ? current.GetItemUrl(item, options) : base.GetItemUrl(item, options);
+        }
+
+        [Obsolete("Please use GetItemUrl(Item, ItemUrlBuilderOptions) instead.")]
         public override string GetItemUrl(Item item, UrlOptions options)
         {
             var current = this.CurrentProvider;
@@ -129,12 +152,13 @@ namespace Sitecore.FakeDb.Links
             return current != null ? current.ParseDynamicLink(linkText) : base.ParseDynamicLink(linkText);
         }
 
-        public override RequestUrl ParseRequestUrl(HttpRequest request)
+        public override RequestUrl ParseRequestUrl(HttpRequestBase request)
         {
             var current = this.CurrentProvider;
             return current != null ? current.ParseRequestUrl(request) : base.ParseRequestUrl(request);
         }
 
+        [Obsolete("Please use IItemBasedSiteResolver instead.")]
         public override SiteInfo ResolveTargetSite(Item item)
         {
             var current = this.CurrentProvider;

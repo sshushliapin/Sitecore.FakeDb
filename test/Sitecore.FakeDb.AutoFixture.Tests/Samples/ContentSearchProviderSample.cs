@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
+namespace Sitecore.FakeDb.AutoFixture.Tests.Samples
 {
     using System;
     using System.Collections.Generic;
@@ -47,7 +47,7 @@
                         }.AsQueryable());
 
                 ContentSearchManager.SearchConfiguration.Indexes["indexName"] = searchIndex;
-                provider.GetContextIndexName(indexable, Arg.Any<ICorePipeline>()).Returns("indexName");
+                provider.GetContextIndexName(indexable, Arg.Any<BaseCorePipelineManager>()).Returns("indexName");
 
                 // act
                 var products = sut.GetProducts(indexable);

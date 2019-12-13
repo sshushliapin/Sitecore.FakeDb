@@ -1,19 +1,21 @@
-﻿namespace Sitecore.FakeDb.Configuration
+namespace Sitecore.FakeDb.Configuration
 {
+    using System;
     using System.Xml;
 
-    public class DbConfiguration
+    public class DbConfiguration : IDisposable
     {
-        private readonly Settings settings;
-
         public DbConfiguration(XmlDocument config)
         {
-            this.settings = new Settings(config);
+            Settings = new Settings(config);
         }
 
-        public Settings Settings
+        public Settings Settings { get; }
+
+        public void Dispose()
         {
-            get { return this.settings; }
+            Settings?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

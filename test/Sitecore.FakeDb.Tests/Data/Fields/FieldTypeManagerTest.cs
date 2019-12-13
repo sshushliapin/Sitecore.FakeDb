@@ -18,9 +18,6 @@ namespace Sitecore.FakeDb.Tests.Data.Fields
         [InlineData("Image", typeof(ImageField))]
         [InlineData("Rich Text", typeof(HtmlField))]
         [InlineData("Single-Line Text", typeof(TextField))]
-#pragma warning disable 618
-        [InlineData("Word Document", typeof(WordDocumentField))]
-#pragma warning restore 618
         [InlineData("Multi-Line Text", typeof(TextField))]
 
         // List Types
