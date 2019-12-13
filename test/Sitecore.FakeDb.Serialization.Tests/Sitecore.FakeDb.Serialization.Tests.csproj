@@ -38,11 +38,11 @@
     <CodeAnalysisRuleSet>..\..\Sitecore.FakeDb.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoFixture, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoFixture.4.0.0\lib\net452\AutoFixture.dll</HintPath>
+    <Reference Include="AutoFixture, Version=4.11.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoFixture.4.11.0\lib\net452\AutoFixture.dll</HintPath>
     </Reference>
-    <Reference Include="AutoFixture.AutoNSubstitute, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoFixture.AutoNSubstitute.4.0.0\lib\net452\AutoFixture.AutoNSubstitute.dll</HintPath>
+    <Reference Include="AutoFixture.AutoNSubstitute, Version=4.11.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoFixture.AutoNSubstitute.4.11.0\lib\net452\AutoFixture.AutoNSubstitute.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Castle.Core.4.2.0\lib\net45\Castle.Core.dll</HintPath>
