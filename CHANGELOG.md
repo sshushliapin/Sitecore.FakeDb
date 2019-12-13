@@ -1,8 +1,11 @@
+3.0.0-alpha1
+* [NEW] #215: Upgrade to Sitecore 9.3
+
 2.0.1
 * [FIX] #210: Standard field contains old values
 
 2.0.0
-* [NEW] #204: Sitecore 9.1-9.2 support
+* [NEW] #205: Sitecore 9.1-9.2 support
 
 2.0.0-beta2
 * [FIX] #172: [Breaking] Unable to add an item to the Media Library
