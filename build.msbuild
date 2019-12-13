@@ -3,7 +3,7 @@
   <Import Project="Build.config" />
   <Import Project="version.props" />
 
-  <UsingTask TaskName="xunit" AssemblyFile="$(XUnitPath)\xunit.runner.msbuild.dll" />
+  <UsingTask TaskName="xunit" AssemblyFile="$(XUnitPath)\xunit.runner.msbuild.net452.dll" />
 
   <ItemGroup>
     <Versions Include="$(SupportedSitecoreVersions)" />
