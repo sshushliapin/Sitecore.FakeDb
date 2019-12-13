@@ -19,10 +19,6 @@
     <CleanUp Include="test\**\Sitecore.FakeDb.Tests.config" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <PatchDatabase>false</PatchDatabase>
-  </PropertyGroup>
-
   <Target Name="Clean">
     <MSBuild Projects="$(ProjectToBuild)" Targets="Clean" />
     <RemoveDir Directories="$(OutputDirectory)" />
@@ -68,14 +64,6 @@
 
   <Target Name="Tests" DependsOnTargets="Compile">
     <Message Text="=== RUNNING TESTS FOR $(Version) ===" Importance="high" />
-
-    <!-- Patch database type for SC82 -->
-    <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="$(FakeDbTestsDir)\App_Config\Include" Condition="$(PatchDatabase)" />
-    <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="$(AutoFixtureTestsDir)\App_Config\Include" Condition="$(PatchDatabase)" />
-    <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="$(NSubstituteTestsDir)\App_Config\Include" Condition="$(PatchDatabase)" />
-    <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="$(SerializationTestsDir)\App_Config\Include" Condition="$(PatchDatabase)" />
-    <Copy SourceFiles="lib\SC820\Sitecore.FakeDb.Tests.config" DestinationFolder="test\Sitecore.FakeDb.NUnitLite.Tests\App_Config\Include" Condition="$(PatchDatabase)" />
-
     <xunit Assemblies="@(TestAssemblies)" ParallelizeTestCollections="false" Xml="TestResult_$(Version).xml" />
     <Exec Command="Sitecore.FakeDb.NUnitLite.Tests.exe" WorkingDirectory="test\Sitecore.FakeDb.NUnitLite.Tests\bin\Release" />
   </Target>
