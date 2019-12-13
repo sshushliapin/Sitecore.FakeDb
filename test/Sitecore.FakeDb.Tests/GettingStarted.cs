@@ -1,4 +1,4 @@
-﻿namespace Examples
+namespace Examples
 {
     using System;
     using System.Linq;
@@ -238,7 +238,7 @@
             }
         }
 
-    [Obsolete]
+        [Obsolete]
         [Fact]
         public void HowToMockRoleProvider()
         {
@@ -258,7 +258,7 @@
             }
         }
 
-    [Obsolete]
+        [Obsolete]
         [Fact]
         public void HowToMockMembershipProvider()
         {
@@ -278,7 +278,7 @@
             }
         }
 
-    [Obsolete]
+        [Obsolete]
         [Fact]
         public void HowToUnitTestItemSecurityWithFakeProvider()
         {
@@ -608,7 +608,7 @@
             }
         }
 
-    [Obsolete]
+        [Obsolete]
         [Fact]
         public void HowToWorkWithQueryApi()
         {
@@ -711,7 +711,7 @@
 
         #region Blobs
 
-        [Fact]
+        [Fact(Skip = "Temporary disabled. TBI in #214.")]
         public void HowToSetAndGetBlobStream()
         {
             // arrange

@@ -1,4 +1,4 @@
-﻿namespace Sitecore.FakeDb.Tests.Data.Fields
+namespace Sitecore.FakeDb.Tests.Data.Fields
 {
     using System.IO;
     using FluentAssertions;
@@ -8,13 +8,13 @@
     [Trait("Category", "RequireLicense")]
     public class BlobFieldTest
     {
-        [Fact]
+        [Fact(Skip = "Temporary disabled. TBI in #214.")]
         public void ShouldSetAndGetBlobStream()
         {
             // arrange
             var stream = new MemoryStream();
 
-            using (var db = new Db {new DbItem("home") {new DbField("field")}})
+            using (var db = new Db { new DbItem("home") { new DbField("field") } })
             {
                 var item = db.GetItem("/sitecore/content/home");
                 var field = item.Fields["field"];
@@ -27,7 +27,7 @@
                 }
 
                 // assert
-                var actual = (MemoryStream) field.GetBlobStream();
+                var actual = (MemoryStream)field.GetBlobStream();
                 actual.ToArray().Should().BeEquivalentTo(stream.ToArray());
             }
         }
