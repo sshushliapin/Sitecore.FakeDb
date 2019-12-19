@@ -2,7 +2,7 @@
 Sitecore FakeDb
 ===============
 
-![#](https://img.shields.io/nuget/v/Sitecore.FakeDb.svg)
+![#](https://img.shields.io/nuget/vpre/Sitecore.FakeDb.svg)
 ![Build Status](https://dev.azure.com/sshushliapin/Sitecore-FakeDb/_apis/build/status/sshushliapin.Sitecore.FakeDb?branchName=master)
 ![tests](https://img.shields.io/azure-devops/tests/sshushliapin/Sitecore-FakeDb/1)
 
